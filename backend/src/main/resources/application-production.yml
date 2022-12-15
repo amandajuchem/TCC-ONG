@@ -1,0 +1,23 @@
+jwt:
+  expiration: 43200000
+  secret: zE)*wwRHJ=Dr:jvqC6w)VTDpif1}Xbw>GY}#E!R=6#agoK8XgJmgAxqyU^8!-qdsV
+
+server:
+  port: 8081
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    password: ${APP_DATASOURCE_PASSWORD}
+    url: ${APP_DATASOURCE_URL}
+    username: ${APP_DATASOURCE_USERNAME}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: false
+  web:
+    locale: pt_BR

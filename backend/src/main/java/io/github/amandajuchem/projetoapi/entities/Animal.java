@@ -1,0 +1,92 @@
+package io.github.amandajuchem.projetoapi.entities;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import io.github.amandajuchem.projetoapi.enums.Porte;
+import io.github.amandajuchem.projetoapi.enums.Sexo;
+import io.github.amandajuchem.projetoapi.enums.Situacao;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
+
+/**
+ * The type Animal.
+ */
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity(name = "tb_animais")
+public class Animal extends AbstractEntity {
+
+    @NotEmpty
+    @Column(name = "nome")
+    private String nome;
+
+    @NotNull
+    @Column(name = "idade")
+    private Integer idade;
+
+    @NotEmpty
+    @Column(name = "especie")
+    private String especie;
+
+    @NotEmpty
+    @Column(name = "local")
+    private String local;
+
+    @NotEmpty
+    @Column(name = "local_adocao")
+    private String localAdocao;
+
+    @NotNull
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "sexo")
+    private Sexo sexo;
+
+    @NotEmpty
+    @Column(name = "raca")
+    private String raca;
+
+    @Column
+    private LocalDate dataAdocao;
+
+    @Column
+    private LocalDate dataResgate;
+
+    @NotEmpty
+    @Column(name = "cor")
+    private String cor;
+
+    @NotNull
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "porte")
+    private Porte porte;
+
+    @NotNull
+    @Column(name = "castrado")
+    private Boolean castrado;
+
+    @NotNull
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "situacao")
+    private Situacao situacao;
+
+    @ManyToOne
+    @JoinColumn(name = "tutor_id")
+    @JsonBackReference
+    private Tutor tutor;
+
+    @OneToOne(mappedBy = "animal")
+    private Imagem foto;
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
+}
