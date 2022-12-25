@@ -1,1 +1,27 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import '~bootstrap/dist/css/bootstrap.min.css'
+
+html, body
+    height: 100%
+
+body
+    font-family: Roboto, "Helvetica Neue", sans-serif
+    margin: 0
+
+a, a:hover
+    text-decoration: none
+
+.mat-card-header-text
+    width: 100%
+
+.mat-mdc-snack-bar-container.fail
+    --mdc-snackbar-container-color: #dc3545
+    --mdc-snackbar-supporting-text-color: rgba(255, 255, 255, 0.87)
+
+.mat-mdc-snack-bar-container.success
+    --mdc-snackbar-container-color: #198754
+    --mdc-snackbar-supporting-text-color: rgba(255, 255, 255, 0.87)
+
+::ng-deep snack-bar-container simple-snack-bar .mat-simple-snackbar-action
+    color: #FFFFFF

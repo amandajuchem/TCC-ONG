@@ -79,8 +79,10 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         var responseBody = new HashMap<String, String>();
         var username = ((User) authResult.getPrincipal()).getUsername();
         var token = jwtUtils.generateToken(username);
+        var role = ((User) authResult.getPrincipal()).getAuthorities().stream().findFirst().get().toString();
 
         responseBody.put("access_token", token);
+        responseBody.put("role", role.substring(5));
 
         response.getWriter().print(new ObjectMapper().writeValueAsString(responseBody));
     }
