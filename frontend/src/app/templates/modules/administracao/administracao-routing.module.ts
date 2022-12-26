@@ -4,11 +4,17 @@ import { AuthGuard } from 'src/app/guards/auth.guard';
 
 import { LayoutComponent } from '../../components/layout/layout.component';
 import { PainelComponent } from '../../components/painel/painel.component';
+import { UsuariosComponent } from '../../components/usuarios/usuarios.component';
+import { TutoresComponent } from '../../components/tutores/tutores.component';
+import { AnimaisComponent } from '../../components/animais/animais.component';
 
 const routes: Routes = [
   {
     path: 'administracao', component: LayoutComponent, children: [
-      { path: 'painel', component: PainelComponent, canActivate: [AuthGuard] }
+      { path: 'animais', component: AnimaisComponent, canActivate: [AuthGuard] },
+      { path: 'painel', component: PainelComponent, canActivate: [AuthGuard] },
+      { path: 'tutores', component: TutoresComponent, canActivate: [AuthGuard] },
+      { path: 'usuarios', component: UsuariosComponent, canActivate: [AuthGuard] }
     ]
   }
 ];

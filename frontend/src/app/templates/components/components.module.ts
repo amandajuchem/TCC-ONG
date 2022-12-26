@@ -24,6 +24,10 @@ import { LoginComponent } from './login/login.component';
 import { NotificationComponent } from './notification/notification.component';
 import { PainelComponent } from './painel/painel.component';
 import { LayoutComponent } from './layout/layout.component';
+import { ToolbarComponent } from './toolbar/toolbar.component';
+import { UsuariosComponent } from './usuarios/usuarios.component';
+import { TutoresComponent } from './tutores/tutores.component';
+import { AnimaisComponent } from './animais/animais.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +35,11 @@ import { LayoutComponent } from './layout/layout.component';
     FooterComponent,
     NotificationComponent,
     PainelComponent,
-    LayoutComponent
+    LayoutComponent,
+    ToolbarComponent,
+    UsuariosComponent,
+    TutoresComponent,
+    AnimaisComponent
   ],
   imports: [
     CommonModule,

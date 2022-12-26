@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FacadeService } from 'src/app/services/facade.service';
 
 @Component({
-  selector: 'app-painel',
-  templateUrl: './painel.component.html',
-  styleUrls: ['./painel.component.sass']
+  selector: 'app-animais',
+  templateUrl: './animais.component.html',
+  styleUrls: ['./animais.component.sass']
 })
-export class PainelComponent implements OnInit {
+export class AnimaisComponent implements OnInit {
   
   currentUser: any;
 
@@ -16,5 +16,13 @@ export class PainelComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentUser = this.facade.authGetCurrentUser();
+  }
+
+  add() {
+
+  }
+
+  filter(value: string) {
+    
   }
 }

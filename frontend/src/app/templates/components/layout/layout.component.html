@@ -1,1 +1,11 @@
-<p>layout works!</p>
+<div class="container-fluid p-0">
+    <div id="page-content">
+        <app-toolbar></app-toolbar>
+        
+        <div id="content" class="container py-5">
+            <router-outlet></router-outlet>
+        </div>
+
+        <app-footer></app-footer>
+    </div>
+</div>

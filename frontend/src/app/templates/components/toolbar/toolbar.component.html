@@ -1,0 +1,9 @@
+<mat-toolbar>
+    <mat-toolbar-row>
+        <a class="text-white" [routerLink]="'/' + currentUser.role.toLowerCase() + '/painel'">Projeto API</a>
+        <span class="spacer"></span>
+        <button mat-icon-button class="text-danger" (click)="logout()">
+            <mat-icon>exit_to_app</mat-icon>
+        </button>
+    </mat-toolbar-row>
+</mat-toolbar>
