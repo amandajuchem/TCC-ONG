@@ -8,6 +8,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.io.File;
+
 /**
  * The type Projeto api application.
  */
@@ -38,6 +40,16 @@ public class ProjetoApiApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) {
 		checkDefaultUsuario();
+		createFolders();
+	}
+
+	private void createFolders() {
+
+		var files = new File("files");
+
+		if (!files.exists()) {
+			files.mkdir();
+		}
 	}
 
 	private void checkDefaultUsuario() {

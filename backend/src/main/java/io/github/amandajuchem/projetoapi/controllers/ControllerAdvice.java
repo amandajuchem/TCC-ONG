@@ -1,6 +1,7 @@
 package io.github.amandajuchem.projetoapi.controllers;
 
 import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
+import io.github.amandajuchem.projetoapi.exceptions.OperationFailureException;
 import io.github.amandajuchem.projetoapi.exceptions.StandardError;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +78,20 @@ public class ControllerAdvice {
                 .build();
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(List.of(error));
+    }
+
+    @ExceptionHandler(OperationFailureException.class)
+    public ResponseEntity operationFailureException(OperationFailureException ex, HttpServletRequest request) {
+
+        var error = StandardError.builder()
+                .timestamp(System.currentTimeMillis())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .error("Internal Server Error")
+                .message(ex.getMessage())
+                .path(request.getRequestURI())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(List.of(error));
     }
 
     /**

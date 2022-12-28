@@ -1,8 +1,10 @@
 <div class="row mb-3">
     <div class="col-12">
-        <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+        <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);"
+            aria-label="breadcrumb">
             <ol class="breadcrumb m-0">
-                <li class="breadcrumb-item"><a class="text-white" [routerLink]="'/' + currentUser.role.toLowerCase() + '/painel'">Início</a></li>
+                <li class="breadcrumb-item"><a class="text-white"
+                        [routerLink]="'/' + currentUser.role.toLowerCase() + '/painel'">Início</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Usuários</li>
             </ol>
         </nav>
@@ -21,7 +23,7 @@
                     </div>
                 </div>
             </mat-card-header>
-    
+
             <mat-card-content>
                 <div class="row mb-3">
                     <div class="col-10 col-md-11">
@@ -33,13 +35,58 @@
                             </button>
                         </mat-form-field>
                     </div>
-    
+
                     <div class="col-2 col-md-1">
                         <div class="d-flex align-items-center justify-content-center h-100">
                             <button mat-icon-button class="bg-success text-white" (click)="add()">
                                 <mat-icon>add</mat-icon>
                             </button>
                         </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
+
+<div class="row mb-3" *ngIf="usuariosToShow && usuariosToShow.length > 0">
+    <div class="col-12 col-md-3" *ngFor="let usuario of usuariosToShow">
+        <mat-card>
+            <mat-card-header>
+                <div class="mat-card-header-text mb-3">
+                    <div class="row align-items-center">
+                        <div class="col-12">
+                            <div class="text-end">
+                                <button mat-icon-button [matMenuTriggerFor]="menu">
+                                    <mat-icon>more_vert</mat-icon>
+                                </button>
+                                <mat-menu #menu="matMenu">
+                                    <button mat-menu-item (click)="update(usuario)">
+                                        <mat-icon>edit</mat-icon>
+                                        <span>Editar</span>
+                                    </button>
+                                </mat-menu>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-header>
+
+            <mat-card-content>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="text-center">
+                            <img mat-card-image [src]="apiURL + '/imagens/search?nome=' + usuario.foto.nome" class="mb-3 rounded-circle" *ngIf="usuario.foto">
+                            <img mat-card-image src="assets/images/usuarios.png" class="mb-3 rounded-circle" *ngIf="!usuario.foto">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <h3 class="fw-bold mb-0">{{usuario.nome}}</h3>
+                        <p class="mb-0">{{usuario.cpf | mask: 'CPF_CNPJ'}}</p>
+                        <p class="mb-0">{{usuario.setor | titlecase}}</p>
                     </div>
                 </div>
             </mat-card-content>

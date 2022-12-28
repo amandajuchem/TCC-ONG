@@ -1,6 +1,7 @@
 package io.github.amandajuchem.projetoapi.services;
 
 import io.github.amandajuchem.projetoapi.entities.Animal;
+import io.github.amandajuchem.projetoapi.entities.Imagem;
 import io.github.amandajuchem.projetoapi.entities.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.util.UUID;
 public class FacadeService {
 
     private final AnimalService animalService;
+    private final ImagemService imagemService;
     private final TutorService tutorService;
     private final UsuarioService usuarioService;
 
@@ -22,16 +24,19 @@ public class FacadeService {
      * Instantiates a new Facade service.
      *
      * @param animalService  the animal service
+     * @param imagemService  the imagem service
      * @param tutorService   the tutor service
      * @param usuarioService the usuario service
      */
     @Autowired
     public FacadeService(
             AnimalService animalService,
+            ImagemService imagemService,
             TutorService tutorService,
             UsuarioService usuarioService
     ) {
         this.animalService = animalService;
+        this.imagemService = imagemService;
         this.tutorService = tutorService;
         this.usuarioService = usuarioService;
     }
@@ -66,10 +71,28 @@ public class FacadeService {
         return animalService.save(animal);
     }
 
+    //////////////////////////////////////////////// IMAGEM ////////////////////////////////////////////////
 
+    /**
+     * Imagem delete.
+     *
+     * @param id the id
+     */
+    public void imagemDelete(UUID id) {
+        imagemService.delete(id);
+    }
+
+    /**
+     * Imagem save imagem.
+     *
+     * @param imagem the imagem
+     * @return the imagem
+     */
+    public Imagem imagemSave(Imagem imagem) {
+        return imagemService.save(imagem);
+    }
 
     //////////////////////////////////////////////// TUTOR ////////////////////////////////////////////////
-
 
 
     //////////////////////////////////////////////// USUÁRIO ////////////////////////////////////////////////

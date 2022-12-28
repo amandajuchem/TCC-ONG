@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Departamento } from 'src/app/enums/departamento';
+import { Setor } from 'src/app/enums/setor';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { FacadeService } from 'src/app/services/facade.service';
 
@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
 
       switch (currentUser.role) {
 
-        case Departamento.ADMINISTRACAO:
+        case Setor.ADMINISTRACAO:
           this.router.navigate(['/administracao/painel']);
           break;
       }
@@ -68,7 +68,7 @@ export class LoginComponent implements OnInit {
 
         switch (currentUser.role) {
 
-          case Departamento.ADMINISTRACAO:
+          case Setor.ADMINISTRACAO:
             this.router.navigate(['/administracao/painel']);
             break;
         }
@@ -76,7 +76,7 @@ export class LoginComponent implements OnInit {
 
       error: (error) => {
         console.error(error);
-        this.facade.notificationShowNotification(error.error.message, NotificationType.FAIL);
+        this.facade.notificationsShowNotification(error.error.message, NotificationType.FAIL);
       }
     })
   }

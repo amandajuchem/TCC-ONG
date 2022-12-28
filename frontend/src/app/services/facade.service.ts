@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
-import { AuthService } from './auth.service';
-import { NotificationService } from './notification.service';
+
+import { Usuario } from '../entities/usuario';
 import { NotificationType } from '../enums/notification-type';
+import { AuthService } from './auth.service';
+import { ImagensService } from './imagens.service';
+import { NotificationsService } from './notifications.service';
+import { UsuariosService } from './usuarios.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +14,9 @@ export class FacadeService {
 
   constructor(
     private authService: AuthService,
-    private notificationService: NotificationService
+    private imagensService: ImagensService,
+    private notificationsService: NotificationsService,
+    private usuariosService: UsuariosService
   ) { }
 
   ////////////////////////////////////////////////// AUTHENTICATION //////////////////////////////////////////////////
@@ -57,14 +63,57 @@ export class FacadeService {
     return this.authService.setCurrentUser(currentUser);
   }
 
-  ////////////////////////////////////////////////// NOTIFICATION //////////////////////////////////////////////////
+  ////////////////////////////////////////////////// IMAGENS //////////////////////////////////////////////////
+
+  /**
+   * 
+   * @param imagem 
+   * @returns 
+   */
+  imagensToBase64(imagem: any) {
+    return this.imagensService.toBase64(imagem);
+  }
+
+  ////////////////////////////////////////////////// NOTIFICATIONS //////////////////////////////////////////////////
 
   /**
    * 
    * @param message 
    * @param type 
    */
-  notificationShowNotification(message: string, type: NotificationType) {
-    this.notificationService.showNotification(message, type);
+  notificationsShowNotification(message: string, type: NotificationType) {
+    this.notificationsService.showNotification(message, type);
+  }
+
+  ////////////////////////////////////////////////// USUÁRIOS //////////////////////////////////////////////////
+
+  /**
+   * 
+   * @returns 
+   */
+  usuariosFindAll() {
+    return this.usuariosService.findAll();
+  }
+
+  /**
+   * 
+   * @param usuario 
+   * @param novaFoto 
+   * @param antigaFoto 
+   * @returns 
+   */
+  usuariosSave(usuario: Usuario, novaFoto: any, antigaFoto: any) {
+    return this.usuariosService.save(usuario, novaFoto, antigaFoto);
+  }
+
+  /**
+   * 
+   * @param usuario 
+   * @param novaFoto 
+   * @param antigaFoto 
+   * @returns 
+   */
+  usuariosUpdate(usuario: Usuario, novaFoto: any, antigaFoto: any) {
+    return this.usuariosService.update(usuario, novaFoto, antigaFoto);
   }
 }

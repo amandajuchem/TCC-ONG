@@ -1,4 +1,4 @@
-export enum Departamento {
+export enum Setor {
     ADMINISTRACAO = 'ADMINISTRACAO',
     SUPORTE = 'SUPORTE'
 }

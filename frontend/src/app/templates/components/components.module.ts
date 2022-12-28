@@ -17,17 +17,26 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
+import { NgxMaskModule } from 'ngx-mask';
 import { getDutchPaginatorIntl } from 'src/app/configurations/internacionalization';
 
+import { AnimaisCadastroComponent } from './animais-cadastro/animais-cadastro.component';
+import { AnimaisExcluirComponent } from './animais-excluir/animais-excluir.component';
+import { AnimaisComponent } from './animais/animais.component';
+import { AnimalComponent } from './animal/animal.component';
 import { FooterComponent } from './footer/footer.component';
+import { LayoutComponent } from './layout/layout.component';
 import { LoginComponent } from './login/login.component';
 import { NotificationComponent } from './notification/notification.component';
 import { PainelComponent } from './painel/painel.component';
-import { LayoutComponent } from './layout/layout.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
-import { UsuariosComponent } from './usuarios/usuarios.component';
+import { TutorComponent } from './tutor/tutor.component';
+import { TutoresCadastroComponent } from './tutores-cadastro/tutores-cadastro.component';
+import { TutoresExcluirComponent } from './tutores-excluir/tutores-excluir.component';
 import { TutoresComponent } from './tutores/tutores.component';
-import { AnimaisComponent } from './animais/animais.component';
+import { UsuariosCadastroComponent } from './usuarios-cadastro/usuarios-cadastro.component';
+import { UsuariosComponent } from './usuarios/usuarios.component';
+import { SelecionarImagemComponent } from './selecionar-imagem/selecionar-imagem.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +48,15 @@ import { AnimaisComponent } from './animais/animais.component';
     ToolbarComponent,
     UsuariosComponent,
     TutoresComponent,
-    AnimaisComponent
+    AnimaisComponent,
+    UsuariosCadastroComponent,
+    AnimaisCadastroComponent,
+    AnimaisExcluirComponent,
+    AnimalComponent,
+    TutoresCadastroComponent,
+    TutoresExcluirComponent,
+    TutorComponent,
+    SelecionarImagemComponent
   ],
   imports: [
     CommonModule,
@@ -59,8 +76,9 @@ import { AnimaisComponent } from './animais/animais.component';
     MatSortModule,
     MatTableModule,
     MatToolbarModule,
+    NgxMaskModule.forRoot(),
     ReactiveFormsModule,
-    RouterModule
+    RouterModule,
   ],
   providers: [
     { provide: MatPaginatorIntl, useValue: getDutchPaginatorIntl() },
