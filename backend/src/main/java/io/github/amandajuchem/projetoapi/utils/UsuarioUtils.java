@@ -42,9 +42,9 @@ public class UsuarioUtils {
 
         if (usuario.getId() != null) {
 
-            var usuario_findByCPF = facade.usuarioFindByCpf(usuario.getCpf());
+            var usuario_findByCpf = facade.usuarioFindByCpf(usuario.getCpf());
 
-            if (!usuario.getSenha().equals(usuario_findByCPF.getSenha())) {
+            if (!usuario.getSenha().equals(usuario_findByCpf.getSenha())) {
                 usuario.setSenha(encoder.encode(usuario.getSenha()));
             }
         } else {

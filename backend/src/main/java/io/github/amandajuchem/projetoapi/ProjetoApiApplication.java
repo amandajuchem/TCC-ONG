@@ -21,7 +21,7 @@ public class ProjetoApiApplication implements CommandLineRunner {
 	/**
 	 * Instantiates a new Projeto api application.
 	 *
-	 * @param facade the facade
+	 * @param facade the service
 	 */
 	@Autowired
 	public ProjetoApiApplication(FacadeService facade) {
@@ -55,7 +55,7 @@ public class ProjetoApiApplication implements CommandLineRunner {
 	private void checkDefaultUsuario() {
 
 		try {
-			var usuario = facade.usuarioFindByCpf("99999999999");
+			var usuario = facade.usuarioFindByCpf("07905836584");
 			saveDefaultUsuario(usuario);
 		} catch (Exception ex) {
 			saveDefaultUsuario(new Usuario());
@@ -64,8 +64,8 @@ public class ProjetoApiApplication implements CommandLineRunner {
 
 	private void saveDefaultUsuario(Usuario usuario) {
 
-		usuario.setNome("Administrador");
-		usuario.setCpf("99999999999");
+		usuario.setNome("Edson Isaac");
+		usuario.setCpf("07905836584");
 		usuario.setSenha("$2a$12$xi5jwI8SFzkS.LYJ73OAHOJb3mEhOeFJk2Gj3pzPKcQBM2SGVUr2a");
 		usuario.setSetor(Setor.ADMINISTRACAO);
 		usuario.setStatus(true);
