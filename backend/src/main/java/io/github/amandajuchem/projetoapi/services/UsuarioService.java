@@ -77,7 +77,11 @@ public class UsuarioService {
      */
     private boolean validateUsuario(Usuario usuario) {
 
+        var usuario_findByCPF = repository.findByCpf(usuario.getCpf()).orElse(null);
 
+        if (usuario_findByCPF != null && !usuario.equals(usuario_findByCPF)) {
+            throw new ValidationException("Usuário já cadastrado!");
+        }
 
         return true;
     }

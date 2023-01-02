@@ -56,6 +56,19 @@ public class AnimalService {
     }
 
     /**
+     * Find by id animal.
+     *
+     * @param id the id
+     * @return the animal
+     */
+    public Animal findById(UUID id) {
+
+        return repository.findById(id).orElseThrow(() -> {
+            throw new ObjectNotFoundException(MessageUtils.ANIMAL_NOT_FOUND);
+        });
+    }
+
+    /**
      * Save animal.
      *
      * @param animal the animal

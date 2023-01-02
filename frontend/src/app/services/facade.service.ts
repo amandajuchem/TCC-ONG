@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 
+import { Animal } from '../entities/animal';
 import { Usuario } from '../entities/usuario';
 import { NotificationType } from '../enums/notification-type';
+import { AnimaisService } from './animais.service';
 import { AuthService } from './auth.service';
 import { ImagensService } from './imagens.service';
 import { NotificationsService } from './notifications.service';
@@ -13,18 +15,68 @@ import { UsuariosService } from './usuarios.service';
 export class FacadeService {
 
   constructor(
+    private animaisService: AnimaisService,
     private authService: AuthService,
     private imagensService: ImagensService,
     private notificationsService: NotificationsService,
     private usuariosService: UsuariosService
   ) { }
 
+  ////////////////////////////////////////////////// ANIMAIS //////////////////////////////////////////////////
+
+  /**
+   * 
+   * @param id 
+   * @returns 
+   */
+  animaisDelete(id: string) {
+    return this.animaisService.delete(id);
+  }
+
+  /**
+   * 
+   * @returns 
+   */
+  animaisFindAll() {
+    return this.animaisService.findAll();
+  }
+
+  /**
+   * 
+   * @param id 
+   * @returns 
+   */
+  animaisFindById(id: string) {
+    return this.animaisService.findById(id);
+  }
+
+  /**
+   * 
+   * @param animal 
+   * @param novaFoto 
+   * @returns 
+   */
+  animaisSave(animal: Animal, novaFoto: any) {
+    return this.animaisService.save(animal, novaFoto);
+  }
+
+  /**
+   * 
+   * @param animal 
+   * @param novaFoto 
+   * @param antigaFoto 
+   * @returns 
+   */
+  animaisUpdate(animal: Animal, novaFoto: any, antigaFoto: any) {
+    return this.animaisService.update(animal, novaFoto, antigaFoto);
+  }
+
   ////////////////////////////////////////////////// AUTHENTICATION //////////////////////////////////////////////////
 
   /**
-     * 
-     * @returns 
-     */
+    * 
+    * @returns 
+    */
   authIsAuthenticated() {
     return this.authService.isAuthenticated();
   }
@@ -102,8 +154,8 @@ export class FacadeService {
    * @param antigaFoto 
    * @returns 
    */
-  usuariosSave(usuario: Usuario, novaFoto: any, antigaFoto: any) {
-    return this.usuariosService.save(usuario, novaFoto, antigaFoto);
+  usuariosSave(usuario: Usuario, novaFoto: any) {
+    return this.usuariosService.save(usuario, novaFoto);
   }
 
   /**

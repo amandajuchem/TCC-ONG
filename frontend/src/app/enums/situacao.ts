@@ -1,0 +1,9 @@
+export enum Situacao {
+    ADOTADO = 'ADOTADO',
+    DEVOLVIDO = 'DEVOLVIDO',
+    ESPERANDO = 'ESPERANDO',
+    FALECIDO = 'FALECIDO',
+    ADOTOU = 'ADOTOU',
+    DEVOLVEU = 'DEVOLVEU',
+    FALECEU = 'FALECEU'
+}

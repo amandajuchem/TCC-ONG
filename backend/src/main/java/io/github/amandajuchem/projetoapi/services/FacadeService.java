@@ -62,6 +62,16 @@ public class FacadeService {
     }
 
     /**
+     * Animal find by id animal.
+     *
+     * @param id the id
+     * @return the animal
+     */
+    public Animal animalFindById(UUID id) {
+        return animalService.findById(id);
+    }
+
+    /**
      * Animal save animal.
      *
      * @param animal the animal

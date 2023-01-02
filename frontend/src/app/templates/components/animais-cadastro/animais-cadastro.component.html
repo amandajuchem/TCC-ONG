@@ -1,1 +1,184 @@
-<p>animais-cadastro works!</p>
+<div class="mat-dialog">
+    <h2 class="m-0" mat-dialog-title *ngIf="!data.animal">Cadastrar Animal</h2>
+    <h2 class="m-0" mat-dialog-title *ngIf="data.animal">Editar Animal</h2>
+
+    <div mat-dialog-content class="py-3">
+        <form [formGroup]="form" *ngIf="form">
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="text-center">
+                        <div *ngIf="!foto">
+                            <img src="assets/images/animais.png" width="150px" class="mb-3 rounded-circle">
+                        </div>
+
+                        <div *ngIf="foto && foto.salvo">
+                            <img [src]="apiURL + '/imagens/search?nome=' + foto.nome" width="150px"
+                                class="mb-3 rounded-circle">
+                        </div>
+
+                        <div *ngIf="foto && !foto.salvo">
+                            <img [src]="foto.data" width="150px" class="mb-3 rounded-circle">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="text-center">
+                        <button mat-icon-button type="button" [matMenuTriggerFor]="menuFoto">
+                            <mat-icon>camera_alt</mat-icon>
+                        </button>
+                        <mat-menu #menuFoto="matMenu">
+                            <button mat-menu-item (click)="addFoto()">
+                                <mat-icon>search</mat-icon>
+                                <span>Selecionar Foto</span>
+                            </button>
+                            <button mat-menu-item (click)="removeFoto()" *ngIf="foto">
+                                <mat-icon>delete</mat-icon>
+                                <span>Remover Foto</span>
+                            </button>
+                        </mat-menu>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Nome</mat-label>
+                        <input matInput formControlName="nome">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-md-3">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>idade</mat-label>
+                        <input matInput formControlName="idade" mask="990">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-3">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Sexo</mat-label>
+                        <mat-select formControlName="sexo">
+                            <mat-option value="FEMEA">Fêmea</mat-option>
+                            <mat-option value="MACHO">Macho</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-3">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Cor</mat-label>
+                        <input matInput formControlName="cor">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-3">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Raça</mat-label>
+                        <input matInput formControlName="raca">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-md-3">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Espécie</mat-label>
+                        <input matInput formControlName="especie">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-3">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Porte</mat-label>
+                        <mat-select formControlName="porte">
+                            <mat-option value="MINI">Mini</mat-option>
+                            <mat-option value="PEQUENO">Pequeno</mat-option>
+                            <mat-option value="MEDIO">Medio</mat-option>
+                            <mat-option value="GRANDE">Grande</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-3">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Castrado</mat-label>
+                        <mat-select formControlName="castrado">
+                            <mat-option [value]="true">Sim</mat-option>
+                            <mat-option [value]="false">Não</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-3">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Data de Adoção</mat-label>
+                        <input matInput [matDatepicker]="pickerDataAdocao" formControlName="dataAdocao" readonly>
+                        <mat-datepicker-toggle matIconSuffix [for]="pickerDataAdocao"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerDataAdocao></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-md-3">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Data de Resgate</mat-label>
+                        <input matInput [matDatepicker]="pickerDataResgate" formControlName="dataResgate" readonly>
+                        <mat-datepicker-toggle matIconSuffix [for]="pickerDataResgate"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerDataResgate></mat-datepicker>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-3">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Local</mat-label>
+                        <input matInput formControlName="local">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Local da Adoção</mat-label>
+                        <input matInput formControlName="localAdocao">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-md-3">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Situação</mat-label>
+                        <mat-select formControlName="situacao">
+                            <mat-option value="ADOTADO">Adotado</mat-option>
+                            <mat-option value="DEVOLVIDO">Devolvido</mat-option>
+                            <mat-option value="ESPERANDO">Esperando</mat-option>
+                            <mat-option value="FALECIDO">Falecido</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-9">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Tutor</mat-label>
+                        <input matInput formControlName="tutor" [value]="form.get('tutor')?.value?.nome"  readonly>
+                        <button matSuffix mat-icon-button (click)="selectTutor()">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div mat-dialog-actions layout="row" class="d-flex justify-content-end" *ngIf="form">
+        <button mat-button mat-dialog-close>Cancelar</button>
+        <button mat-button [ngClass]="form.valid ? 'bg-success text-white' : ''" (click)="submit()" [disabled]="!form.valid">OK</button>
+    </div>
+</div>

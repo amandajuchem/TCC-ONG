@@ -36,11 +36,9 @@ public class Animal extends AbstractEntity {
     @Column(name = "especie")
     private String especie;
 
-    @NotEmpty
     @Column(name = "local")
     private String local;
 
-    @NotEmpty
     @Column(name = "local_adocao")
     private String localAdocao;
 

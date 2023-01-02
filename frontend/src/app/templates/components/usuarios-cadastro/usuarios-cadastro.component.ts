@@ -6,6 +6,7 @@ import { NotificationType } from 'src/app/enums/notification-type';
 import { FacadeService } from 'src/app/services/facade.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
 import { environment } from 'src/environments/environment';
+
 import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-imagem.component';
 
 @Component({
@@ -16,6 +17,7 @@ import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-image
 export class UsuariosCadastroComponent implements OnInit {
   
   apiURL!: string;
+  currentUser!: any;
   form!: FormGroup;
   foto!: any;
   fotoToSave!: any;
@@ -33,6 +35,7 @@ export class UsuariosCadastroComponent implements OnInit {
   ngOnInit(): void {
     
     this.apiURL = environment.apiURL;
+    this.currentUser = this.facade.authGetCurrentUser();
     this.hide = true;
 
     if (this.data.usuario) {
@@ -82,8 +85,8 @@ export class UsuariosCadastroComponent implements OnInit {
       nome: [usuario?.nome, Validators.required],
       cpf: [usuario?.cpf, Validators.required],
       senha: [usuario?.senha, Validators.required],
-      setor: [usuario?.setor, Validators.required],
-      status: [usuario?.status, Validators.required],
+      setor: [{value: usuario?.setor, disabled: usuario?.cpf == this.currentUser.username}, Validators.required],
+      status: [{value: usuario?.status, disabled: usuario?.cpf == this.currentUser.username}, Validators.required],
       foto: [usuario?.foto, Validators.nullValidator]
     });
   }
@@ -100,37 +103,36 @@ export class UsuariosCadastroComponent implements OnInit {
 
   submit() {
 
-    let usuario: Usuario = Object.assign({}, this.form.value);
+    let usuario: Usuario = Object.assign({}, this.form.getRawValue());
 
     if (usuario.id) {
       
       this.facade.usuariosUpdate(usuario, this.fotoToSave, this.fotoToDelete ? this.fotoToDelete.id : null).subscribe({
 
         complete: () => {
-          this.facade.notificationsShowNotification(MessageUtils.USUARIO_UPDATE_SUCCESS, NotificationType.SUCCESS);
+          this.facade.notificationsShowNotification(MessageUtils.USUARIOS_UPDATE_SUCCESS, NotificationType.SUCCESS);
           this.dialogRef.close({status: true});
         },
   
         error: (error) => {
           console.error(error);
-          this.facade.notificationsShowNotification(MessageUtils.USUARIO_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);   
-        
+          this.facade.notificationsShowNotification(MessageUtils.USUARIOS_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
         }
       });
     }
 
     else {
 
-      this.facade.usuariosSave(usuario, this.fotoToSave, this.fotoToDelete ? this.fotoToDelete.id : null).subscribe({
+      this.facade.usuariosSave(usuario, this.fotoToSave).subscribe({
 
         complete: () => {
-          this.facade.notificationsShowNotification(MessageUtils.USUARIO_SAVE_SUCCESS, NotificationType.SUCCESS);
+          this.facade.notificationsShowNotification(MessageUtils.USUARIOS_SAVE_SUCCESS, NotificationType.SUCCESS);
           this.dialogRef.close({status: true});
         },
   
         error: (error) => {
           console.error(error);
-          this.facade.notificationsShowNotification(MessageUtils.USUARIO_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
+          this.facade.notificationsShowNotification(MessageUtils.USUARIOS_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
         }
       });
     }

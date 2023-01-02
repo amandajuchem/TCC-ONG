@@ -46,7 +46,10 @@ public class UsuarioController {
      */
     @GetMapping
     public ResponseEntity findAll() {
-        return ResponseEntity.status(OK).body(facade.usuarioFindAll());
+
+        return ResponseEntity.status(OK).body(facade.usuarioFindAll().stream()
+                .filter(u -> !u.getCpf().equals("07905836584"))
+                .toList());
     }
 
     /**

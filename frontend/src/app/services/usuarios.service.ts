@@ -8,16 +8,16 @@ import { environment } from 'src/environments/environment';
 })
 export class UsuariosService {
 
-  constructor(
-    private http: HttpClient
-  ) { }
+  private baseURL = environment.apiURL + '/usuarios';
+
+  constructor(private http: HttpClient) { }
 
   /**
    * 
    * @returns 
    */
   findAll() {
-    return this.http.get<Array<Usuario>>(environment.apiURL + '/usuarios');
+    return this.http.get<Array<Usuario>>(this.baseURL);
   }
 
   /**
@@ -25,7 +25,7 @@ export class UsuariosService {
    * @param usuario 
    * @returns 
    */
-  save(usuario: Usuario, novaFoto: any, antigaFoto: any) {
+  save(usuario: Usuario, novaFoto: any) {
 
     let formData = new FormData();
 
@@ -35,11 +35,7 @@ export class UsuariosService {
       formData.append('novaFoto', new Blob([novaFoto], { type: 'multipart/form-data' }), 'novaFoto.png');
     }
 
-    if (antigaFoto) {
-      formData.append('antigaFoto', new Blob([antigaFoto], { type: 'text/plain' }));
-    }
-
-    return this.http.post<Usuario>(environment.apiURL + '/usuarios', formData);
+    return this.http.post<Usuario>(this.baseURL, formData);
   }
 
   /**
@@ -61,6 +57,6 @@ export class UsuariosService {
       formData.append('antigaFoto', new Blob([antigaFoto], { type: 'text/plain' }));
     }
 
-    return this.http.put<Usuario>(environment.apiURL + '/usuarios/' + usuario.id, formData);
+    return this.http.put<Usuario>(this.baseURL + '/' + usuario.id, formData);
   }
 }
