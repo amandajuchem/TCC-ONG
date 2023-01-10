@@ -29,6 +29,7 @@ public class Imagem extends AbstractEntity {
 
     @OneToOne
     @JoinColumn(name = "animal_id")
+    @JsonBackReference(value = "jsonReferenceAnimal")
     private Animal animal;
 
     @ManyToOne
@@ -37,11 +38,12 @@ public class Imagem extends AbstractEntity {
 
     @OneToOne
     @JoinColumn(name = "tutor_id")
+    @JsonBackReference(value = "jsonReferenceTutor")
     private Tutor tutor;
 
     @OneToOne
     @JoinColumn(name = "usuario_id")
-    @JsonBackReference
+    @JsonBackReference(value = "jsonReferenceUsuario")
     private Usuario usuario;
 
     @Override

@@ -9,16 +9,15 @@
                 <div class="col-12">
                     <div class="text-center">
                         <div *ngIf="!foto">
-                            <img src="assets/images/animais.png" width="150px" class="mb-3 rounded-circle">
+                            <img src="assets/images/animais.png" height="125px" class="mb-3">
                         </div>
 
                         <div *ngIf="foto && foto.salvo">
-                            <img [src]="apiURL + '/imagens/search?nome=' + foto.nome" width="150px"
-                                class="mb-3 rounded-circle">
+                            <img [src]="apiURL + '/imagens/search?nome=' + foto.nome" height="125px" class="mb-3 rounded-circle">
                         </div>
 
                         <div *ngIf="foto && !foto.salvo">
-                            <img [src]="foto.data" width="150px" class="mb-3 rounded-circle">
+                            <img [src]="foto.data" height="125px" class="mb-3 rounded-circle">
                         </div>
                     </div>
                 </div>

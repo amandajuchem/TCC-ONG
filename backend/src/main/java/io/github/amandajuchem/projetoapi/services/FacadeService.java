@@ -2,6 +2,7 @@ package io.github.amandajuchem.projetoapi.services;
 
 import io.github.amandajuchem.projetoapi.entities.Animal;
 import io.github.amandajuchem.projetoapi.entities.Imagem;
+import io.github.amandajuchem.projetoapi.entities.Tutor;
 import io.github.amandajuchem.projetoapi.entities.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -104,6 +105,43 @@ public class FacadeService {
 
     //////////////////////////////////////////////// TUTOR ////////////////////////////////////////////////
 
+    /**
+     * Tutor delete.
+     *
+     * @param id the id
+     */
+    public void tutorDelete(UUID id) {
+        tutorService.delete(id);
+    }
+
+    /**
+     * Tutor find all list.
+     *
+     * @return the list
+     */
+    public List<Tutor> tutorFindAll() {
+        return tutorService.findAll();
+    }
+
+    /**
+     * Tutor find by id tutor.
+     *
+     * @param id the id
+     * @return the tutor
+     */
+    public Tutor tutorFindById(UUID id) {
+        return tutorService.findById(id);
+    }
+
+    /**
+     * Tutor save tutor.
+     *
+     * @param tutor the tutor
+     * @return the tutor
+     */
+    public Tutor tutorSave(Tutor tutor) {
+        return tutorService.save(tutor);
+    }
 
     //////////////////////////////////////////////// USUÁRIO ////////////////////////////////////////////////
 

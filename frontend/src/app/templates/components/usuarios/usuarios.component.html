@@ -76,8 +76,8 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="text-center">
-                            <img mat-card-image [src]="apiURL + '/imagens/search?nome=' + usuario.foto.nome" class="mb-3 rounded-circle" *ngIf="usuario.foto">
-                            <img mat-card-image src="assets/images/usuarios.png" class="mb-3 rounded-circle" *ngIf="!usuario.foto">
+                            <img mat-card-image [src]="apiURL + '/imagens/search?nome=' + usuario.foto.nome" height="125px" class="mb-3 rounded-circle" *ngIf="usuario.foto">
+                            <img mat-card-image src="assets/images/usuarios.png" height="125px" class="mb-3" *ngIf="!usuario.foto">
                         </div>
                     </div>
                 </div>

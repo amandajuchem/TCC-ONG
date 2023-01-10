@@ -44,7 +44,7 @@ public class Usuario extends AbstractEntity {
     private Setor setor;
 
     @OneToOne(mappedBy = "usuario")
-    @JsonManagedReference
+    @JsonManagedReference(value = "jsonReferenceUsuario")
     private Imagem foto;
 
     @Override

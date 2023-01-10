@@ -1,1 +1,16 @@
-<p>animais-excluir works!</p>
+<div class="mat-dialog">
+    <h2 mat-dialog-title>Confirmar exclusão</h2>
+    
+    <div mat-dialog-content>
+        <div class="row">
+            <div class="col-12">
+                <p class="text-dark">Deseja excluir os dados do animal <strong>{{this.data.animal.nome}}?</strong></p>
+            </div>
+        </div>
+    </div>
+    
+    <div mat-dialog-actions layout="row" class="d-flex justify-content-end">
+        <button mat-button mat-dialog-close>Cancelar</button>
+        <button mat-button class="bg-danger text-white" (click)="submit()">OK</button>
+    </div>
+</div>

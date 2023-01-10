@@ -40,6 +40,7 @@ public class AnimalService {
 
             if (repository.existsById(id)) {
                 repository.deleteById(id);
+                return;
             }
         }
 

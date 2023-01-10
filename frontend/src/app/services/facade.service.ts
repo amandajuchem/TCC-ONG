@@ -8,6 +8,8 @@ import { AuthService } from './auth.service';
 import { ImagensService } from './imagens.service';
 import { NotificationsService } from './notifications.service';
 import { UsuariosService } from './usuarios.service';
+import { TutoresService } from './tutores.service';
+import { Tutor } from '../entities/tutor';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +21,7 @@ export class FacadeService {
     private authService: AuthService,
     private imagensService: ImagensService,
     private notificationsService: NotificationsService,
+    private tutoresService: TutoresService,
     private usuariosService: UsuariosService
   ) { }
 
@@ -137,6 +140,55 @@ export class FacadeService {
     this.notificationsService.showNotification(message, type);
   }
 
+  ////////////////////////////////////////////////// TUTORES //////////////////////////////////////////////////
+
+  /**
+   * 
+   * @param id 
+   * @returns 
+   */
+  tutoresDelete(id: string) {
+    return this.tutoresService.delete(id);
+  }
+
+  /**
+   * 
+   * @returns 
+   */
+  tutoresFindAll() {
+    return this.tutoresService.findAll();
+  }
+
+  /**
+   * 
+   * @param id 
+   * @returns 
+   */
+  tutoresFindById(id: string) {
+    return this.tutoresService.findById(id);
+  }
+
+  /**
+   * 
+   * @param tutor 
+   * @param novaFoto 
+   * @returns 
+   */
+  tutoresSave(tutor: Tutor, novaFoto: any) {
+    return this.tutoresService.save(tutor, novaFoto);
+  }
+
+  /**
+   * 
+   * @param tutor 
+   * @param novaFoto 
+   * @param antigaFoto 
+   * @returns 
+   */
+  tutoresUpdate(tutor: Tutor, novaFoto: any, antigaFoto: any) {
+    return this.tutoresService.update(tutor, novaFoto, antigaFoto);
+  }
+ 
   ////////////////////////////////////////////////// USUÁRIOS //////////////////////////////////////////////////
 
   /**

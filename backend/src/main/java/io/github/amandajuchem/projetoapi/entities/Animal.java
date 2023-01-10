@@ -1,6 +1,7 @@
 package io.github.amandajuchem.projetoapi.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.github.amandajuchem.projetoapi.enums.Porte;
 import io.github.amandajuchem.projetoapi.enums.Sexo;
 import io.github.amandajuchem.projetoapi.enums.Situacao;
@@ -77,10 +78,10 @@ public class Animal extends AbstractEntity {
 
     @ManyToOne
     @JoinColumn(name = "tutor_id")
-    @JsonBackReference
     private Tutor tutor;
 
     @OneToOne(mappedBy = "animal")
+    @JsonManagedReference(value = "jsonReferenceAnimal")
     private Imagem foto;
 
     @Override

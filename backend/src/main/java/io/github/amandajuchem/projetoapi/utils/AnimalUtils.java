@@ -3,11 +3,13 @@ package io.github.amandajuchem.projetoapi.utils;
 import io.github.amandajuchem.projetoapi.entities.Animal;
 import io.github.amandajuchem.projetoapi.entities.Imagem;
 import io.github.amandajuchem.projetoapi.exceptions.OperationFailureException;
+import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.FacadeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 
 /**
@@ -60,7 +62,9 @@ public class AnimalUtils {
             }
 
             return facade.animalSave(animal);
-        } catch (Exception ex) {
+        } catch (ValidationException ex) {
+            throw new ValidationException(ex.getMessage());
+        } catch (IOException ex) {
             throw new OperationFailureException(MessageUtils.OPERATION_FAILURE);
         }
     }

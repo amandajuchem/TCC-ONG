@@ -7,6 +7,7 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 import { environment } from 'src/environments/environment';
 
 import { AnimaisCadastroComponent } from '../animais-cadastro/animais-cadastro.component';
+import { AnimaisExcluirComponent } from '../animais-excluir/animais-excluir.component';
 
 @Component({
   selector: 'app-animais',
@@ -15,7 +16,6 @@ import { AnimaisCadastroComponent } from '../animais-cadastro/animais-cadastro.c
 })
 export class AnimaisComponent implements OnInit {
   
-
   animais!: Array<Animal>;
   animaisToShow!: Array<Animal>;
   apiURL!: string;
@@ -47,6 +47,22 @@ export class AnimaisComponent implements OnInit {
         if (result && result.status) {
           this.findAllAnimais();
         }
+      }
+    });
+  }
+
+  delete(animal: Animal) {
+
+    this.dialog.open(AnimaisExcluirComponent, {
+      data: {
+        animal: animal
+      },
+      width: '100%'
+    })
+    .afterClosed().subscribe({
+
+      next: (result) => {
+        this.findAllAnimais();   
       }
     });
   }
