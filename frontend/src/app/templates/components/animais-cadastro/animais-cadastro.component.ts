@@ -8,6 +8,7 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 import { environment } from 'src/environments/environment';
 
 import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-imagem.component';
+import { SelecionarTutorComponent } from '../selecionar-tutor/selecionar-tutor.component';
 
 @Component({
   selector: 'app-animais-cadastro',
@@ -59,7 +60,7 @@ export class AnimaisCadastroComponent implements OnInit {
 
       if (result && result.status) {
 
-        this.facade.imagensToBase64(result.images[0])?.then(data => {
+        this.facade.imagemToBase64(result.images[0])?.then(data => {
 
           if (this.foto && this.foto.salvo) {
             this.fotoToDelete = this.foto;
@@ -108,6 +109,18 @@ export class AnimaisCadastroComponent implements OnInit {
 
   selectTutor() {
 
+    this.dialog.open(SelecionarTutorComponent, {
+      width: '100%'
+    })
+    .afterClosed().subscribe({
+      
+      next: (result) => {
+          
+        if (result) {
+          this.form.get('tutor')?.patchValue(result.tutor);
+        }
+      },
+    });
   }
 
   submit() {
@@ -116,32 +129,32 @@ export class AnimaisCadastroComponent implements OnInit {
 
     if (animal.id) {
       
-      this.facade.animaisUpdate(animal, this.fotoToSave, this.fotoToDelete ? this.fotoToDelete.id : null).subscribe({
+      this.facade.animalUpdate(animal, this.fotoToSave, this.fotoToDelete ? this.fotoToDelete.id : null).subscribe({
 
         complete: () => {
-          this.facade.notificationsShowNotification(MessageUtils.ANIMAIS_UPDATE_SUCCESS, NotificationType.SUCCESS);
+          this.facade.notificationShowNotification(MessageUtils.ANIMAIS_UPDATE_SUCCESS, NotificationType.SUCCESS);
           this.dialogRef.close({status: true});
         },
   
         error: (error) => {
           console.error(error);
-          this.facade.notificationsShowNotification(MessageUtils.ANIMAIS_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
+          this.facade.notificationShowNotification(MessageUtils.ANIMAIS_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
         }
       });
     }
 
     else {
 
-      this.facade.animaisSave(animal, this.fotoToSave).subscribe({
+      this.facade.animalSave(animal, this.fotoToSave).subscribe({
 
         complete: () => {
-          this.facade.notificationsShowNotification(MessageUtils.ANIMAIS_SAVE_SUCCESS, NotificationType.SUCCESS);
+          this.facade.notificationShowNotification(MessageUtils.ANIMAIS_SAVE_SUCCESS, NotificationType.SUCCESS);
           this.dialogRef.close({status: true});
         },
   
         error: (error) => {
           console.error(error);
-          this.facade.notificationsShowNotification(MessageUtils.ANIMAIS_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
+          this.facade.notificationShowNotification(MessageUtils.ANIMAIS_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
         }
       });
     }

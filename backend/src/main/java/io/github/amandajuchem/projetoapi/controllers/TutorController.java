@@ -14,8 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.util.UUID;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 /**
  * The type Tutor controller.
@@ -87,6 +86,22 @@ public class TutorController {
 
         return ResponseEntity.status(CREATED).body(
                 tutorUtils.save(tutor, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null));
+    }
+
+    /**
+     * Search response entity.
+     *
+     * @param nome the nome
+     * @return the response entity
+     */
+    @GetMapping("/search")
+    public ResponseEntity search(@RequestParam(required = false) String nome) {
+
+        if (nome != null) {
+            return ResponseEntity.status(OK).body(facade.tutorFindByNomeContains(nome));
+        }
+
+        return ResponseEntity.status(NOT_FOUND).body(null);
     }
 
     /**

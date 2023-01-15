@@ -19,16 +19,16 @@ export class TutoresExcluirComponent {
 
   submit() {
 
-    this.facade.tutoresDelete(this.data.tutor.id).subscribe({
+    this.facade.tutorDelete(this.data.tutor.id).subscribe({
       
       complete: () => {
-        this.facade.notificationsShowNotification(MessageUtils.TUTORES_DELETE_SUCCESS, NotificationType.SUCCESS);
+        this.facade.notificationShowNotification(MessageUtils.TUTORES_DELETE_SUCCESS, NotificationType.SUCCESS);
         this.dialogRef.close({ status: true });
       },
 
       error: (error) => {
         console.log(error);
-        this.facade.notificationsShowNotification(MessageUtils.TUTORES_DELETE_FAIL, NotificationType.FAIL);
+        this.facade.notificationShowNotification(MessageUtils.TUTORES_DELETE_FAIL, NotificationType.FAIL);
       }
     });
   }

@@ -3,12 +3,12 @@ import { Injectable } from '@angular/core';
 import { Animal } from '../entities/animal';
 import { Usuario } from '../entities/usuario';
 import { NotificationType } from '../enums/notification-type';
-import { AnimaisService } from './animais.service';
+import { AnimalService } from './animal.service';
 import { AuthService } from './auth.service';
-import { ImagensService } from './imagens.service';
-import { NotificationsService } from './notifications.service';
-import { UsuariosService } from './usuarios.service';
-import { TutoresService } from './tutores.service';
+import { ImagemService } from './imagem.service';
+import { NotificationService } from './notification.service';
+import { UsuarioService } from './usuario.service';
+import { TutorService } from './tutor.service';
 import { Tutor } from '../entities/tutor';
 
 @Injectable({
@@ -17,31 +17,31 @@ import { Tutor } from '../entities/tutor';
 export class FacadeService {
 
   constructor(
-    private animaisService: AnimaisService,
-    private authService: AuthService,
-    private imagensService: ImagensService,
-    private notificationsService: NotificationsService,
-    private tutoresService: TutoresService,
-    private usuariosService: UsuariosService
+    private _animalService: AnimalService,
+    private _authService: AuthService,
+    private _imagemService: ImagemService,
+    private _notificationService: NotificationService,
+    private _tutorService: TutorService,
+    private _usuarioService: UsuarioService
   ) { }
 
-  ////////////////////////////////////////////////// ANIMAIS //////////////////////////////////////////////////
+  ////////////////////////////////////////////////// ANIMAL //////////////////////////////////////////////////
 
   /**
    * 
    * @param id 
    * @returns 
    */
-  animaisDelete(id: string) {
-    return this.animaisService.delete(id);
+  animalDelete(id: string) {
+    return this._animalService.delete(id);
   }
 
   /**
    * 
    * @returns 
    */
-  animaisFindAll() {
-    return this.animaisService.findAll();
+  animalFindAll() {
+    return this._animalService.findAll();
   }
 
   /**
@@ -49,8 +49,8 @@ export class FacadeService {
    * @param id 
    * @returns 
    */
-  animaisFindById(id: string) {
-    return this.animaisService.findById(id);
+  animalFindById(id: string) {
+    return this._animalService.findById(id);
   }
 
   /**
@@ -59,8 +59,8 @@ export class FacadeService {
    * @param novaFoto 
    * @returns 
    */
-  animaisSave(animal: Animal, novaFoto: any) {
-    return this.animaisService.save(animal, novaFoto);
+  animalSave(animal: Animal, novaFoto: any) {
+    return this._animalService.save(animal, novaFoto);
   }
 
   /**
@@ -70,8 +70,8 @@ export class FacadeService {
    * @param antigaFoto 
    * @returns 
    */
-  animaisUpdate(animal: Animal, novaFoto: any, antigaFoto: any) {
-    return this.animaisService.update(animal, novaFoto, antigaFoto);
+  animalUpdate(animal: Animal, novaFoto: any, antigaFoto: any) {
+    return this._animalService.update(animal, novaFoto, antigaFoto);
   }
 
   ////////////////////////////////////////////////// AUTHENTICATION //////////////////////////////////////////////////
@@ -81,7 +81,7 @@ export class FacadeService {
     * @returns 
     */
   authIsAuthenticated() {
-    return this.authService.isAuthenticated();
+    return this._authService.isAuthenticated();
   }
 
   /**
@@ -90,7 +90,7 @@ export class FacadeService {
    * @returns 
    */
   authLogin(user: any) {
-    return this.authService.login(user);
+    return this._authService.login(user);
   }
 
   /**
@@ -98,7 +98,7 @@ export class FacadeService {
    * @returns 
    */
   authLogout() {
-    return this.authService.logout();
+    return this._authService.logout();
   }
 
   /**
@@ -106,7 +106,7 @@ export class FacadeService {
    * @returns 
    */
   authGetCurrentUser() {
-    return this.authService.getCurrentUser();
+    return this._authService.getCurrentUser();
   }
 
   /**
@@ -115,48 +115,48 @@ export class FacadeService {
    * @returns 
    */
   authSetCurrentUser(currentUser: any) {
-    return this.authService.setCurrentUser(currentUser);
+    return this._authService.setCurrentUser(currentUser);
   }
 
-  ////////////////////////////////////////////////// IMAGENS //////////////////////////////////////////////////
+  ////////////////////////////////////////////////// IMAGEM //////////////////////////////////////////////////
 
   /**
    * 
    * @param imagem 
    * @returns 
    */
-  imagensToBase64(imagem: any) {
-    return this.imagensService.toBase64(imagem);
+  imagemToBase64(imagem: any) {
+    return this._imagemService.toBase64(imagem);
   }
 
-  ////////////////////////////////////////////////// NOTIFICATIONS //////////////////////////////////////////////////
+  ////////////////////////////////////////////////// NOTIFICATION //////////////////////////////////////////////////
 
   /**
    * 
    * @param message 
    * @param type 
    */
-  notificationsShowNotification(message: string, type: NotificationType) {
-    this.notificationsService.showNotification(message, type);
+  notificationShowNotification(message: string, type: NotificationType) {
+    this._notificationService.showNotification(message, type);
   }
 
-  ////////////////////////////////////////////////// TUTORES //////////////////////////////////////////////////
+  ////////////////////////////////////////////////// TUTOR //////////////////////////////////////////////////
 
   /**
    * 
    * @param id 
    * @returns 
    */
-  tutoresDelete(id: string) {
-    return this.tutoresService.delete(id);
+  tutorDelete(id: string) {
+    return this._tutorService.delete(id);
   }
 
   /**
    * 
    * @returns 
    */
-  tutoresFindAll() {
-    return this.tutoresService.findAll();
+  tutorFindAll() {
+    return this._tutorService.findAll();
   }
 
   /**
@@ -164,8 +164,17 @@ export class FacadeService {
    * @param id 
    * @returns 
    */
-  tutoresFindById(id: string) {
-    return this.tutoresService.findById(id);
+  tutorFindById(id: string) {
+    return this._tutorService.findById(id);
+  }
+
+  /**
+   * 
+   * @param nome 
+   * @returns 
+   */
+  tutorFindByNomeContains(nome: string) {
+    return this._tutorService.findByNomeContains(nome);
   }
 
   /**
@@ -174,8 +183,8 @@ export class FacadeService {
    * @param novaFoto 
    * @returns 
    */
-  tutoresSave(tutor: Tutor, novaFoto: any) {
-    return this.tutoresService.save(tutor, novaFoto);
+  tutorSave(tutor: Tutor, novaFoto: any) {
+    return this._tutorService.save(tutor, novaFoto);
   }
 
   /**
@@ -185,18 +194,18 @@ export class FacadeService {
    * @param antigaFoto 
    * @returns 
    */
-  tutoresUpdate(tutor: Tutor, novaFoto: any, antigaFoto: any) {
-    return this.tutoresService.update(tutor, novaFoto, antigaFoto);
+  tutorUpdate(tutor: Tutor, novaFoto: any, antigaFoto: any) {
+    return this._tutorService.update(tutor, novaFoto, antigaFoto);
   }
  
-  ////////////////////////////////////////////////// USUÁRIOS //////////////////////////////////////////////////
+  ////////////////////////////////////////////////// USUÁRIO //////////////////////////////////////////////////
 
   /**
    * 
    * @returns 
    */
-  usuariosFindAll() {
-    return this.usuariosService.findAll();
+  usuarioFindAll() {
+    return this._usuarioService.findAll();
   }
 
   /**
@@ -206,8 +215,8 @@ export class FacadeService {
    * @param antigaFoto 
    * @returns 
    */
-  usuariosSave(usuario: Usuario, novaFoto: any) {
-    return this.usuariosService.save(usuario, novaFoto);
+  usuarioSave(usuario: Usuario, novaFoto: any) {
+    return this._usuarioService.save(usuario, novaFoto);
   }
 
   /**
@@ -217,7 +226,7 @@ export class FacadeService {
    * @param antigaFoto 
    * @returns 
    */
-  usuariosUpdate(usuario: Usuario, novaFoto: any, antigaFoto: any) {
-    return this.usuariosService.update(usuario, novaFoto, antigaFoto);
+  usuarioUpdate(usuario: Usuario, novaFoto: any, antigaFoto: any) {
+    return this._usuarioService.update(usuario, novaFoto, antigaFoto);
   }
 }

@@ -74,7 +74,7 @@ export class AnimaisComponent implements OnInit {
 
   findAllAnimais() {
 
-    this.facade.animaisFindAll().subscribe({
+    this.facade.animalFindAll().subscribe({
 
       next: (animais) => {
         this.animais = animais;
@@ -83,7 +83,7 @@ export class AnimaisComponent implements OnInit {
 
       error: (error) => {
         console.error(error);
-        this.facade.notificationsShowNotification(MessageUtils.ANIMAIS_GET_FAIL, NotificationType.FAIL); 
+        this.facade.notificationShowNotification(MessageUtils.ANIMAIS_GET_FAIL, NotificationType.FAIL); 
       }
     });
   }

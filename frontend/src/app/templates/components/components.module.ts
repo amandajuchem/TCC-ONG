@@ -37,6 +37,7 @@ import { TutoresComponent } from './tutores/tutores.component';
 import { UsuariosCadastroComponent } from './usuarios-cadastro/usuarios-cadastro.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
 import { SelecionarImagemComponent } from './selecionar-imagem/selecionar-imagem.component';
+import { SelecionarTutorComponent } from './selecionar-tutor/selecionar-tutor.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { SelecionarImagemComponent } from './selecionar-imagem/selecionar-imagem
     TutoresCadastroComponent,
     TutoresExcluirComponent,
     TutorComponent,
-    SelecionarImagemComponent
+    SelecionarImagemComponent,
+    SelecionarTutorComponent
   ],
   imports: [
     CommonModule,

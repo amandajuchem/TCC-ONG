@@ -68,6 +68,17 @@ public class TutorService {
         });
     }
 
+
+    /**
+     * Find by nome like list.
+     *
+     * @param nome the nome
+     * @return the list
+     */
+    public List<Tutor> findByNomeContains(String nome) {
+        return repository.findByNomeContainsIgnoreCase(nome);
+    }
+
     /**
      * Save tutor.
      *

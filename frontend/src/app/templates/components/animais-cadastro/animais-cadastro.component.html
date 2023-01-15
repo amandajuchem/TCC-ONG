@@ -166,7 +166,7 @@
                 <div class="col-12 col-md-9">
                     <mat-form-field appearance="outline" class="w-100">
                         <mat-label>Tutor</mat-label>
-                        <input matInput formControlName="tutor" [value]="form.get('tutor')?.value?.nome"  readonly>
+                        <input matInput [value]="form.get('tutor')?.value?.nome"  readonly>
                         <button matSuffix mat-icon-button (click)="selectTutor()">
                             <mat-icon>search</mat-icon>
                         </button>

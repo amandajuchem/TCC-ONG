@@ -56,7 +56,7 @@ export class UsuariosComponent implements OnInit {
 
   findAllUsuarios() {
 
-    this.facade.usuariosFindAll().subscribe({
+    this.facade.usuarioFindAll().subscribe({
       
       next: (usuarios) => {
         this.usuarios = usuarios;
@@ -65,7 +65,7 @@ export class UsuariosComponent implements OnInit {
 
       error: (error) => {
         console.error(error);
-        this.facade.notificationsShowNotification(MessageUtils.USUARIOS_GET_FAIL, NotificationType.FAIL); 
+        this.facade.notificationShowNotification(MessageUtils.USUARIOS_GET_FAIL, NotificationType.FAIL); 
       }
     });
   }

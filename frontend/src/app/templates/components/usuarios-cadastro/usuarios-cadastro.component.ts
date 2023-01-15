@@ -63,7 +63,7 @@ export class UsuariosCadastroComponent implements OnInit {
 
       if (result && result.status) {
 
-        this.facade.imagensToBase64(result.images[0])?.then(data => {
+        this.facade.imagemToBase64(result.images[0])?.then(data => {
 
           if (this.foto && this.foto.salvo) {
             this.fotoToDelete = this.foto;
@@ -107,32 +107,32 @@ export class UsuariosCadastroComponent implements OnInit {
 
     if (usuario.id) {
       
-      this.facade.usuariosUpdate(usuario, this.fotoToSave, this.fotoToDelete ? this.fotoToDelete.id : null).subscribe({
+      this.facade.usuarioUpdate(usuario, this.fotoToSave, this.fotoToDelete ? this.fotoToDelete.id : null).subscribe({
 
         complete: () => {
-          this.facade.notificationsShowNotification(MessageUtils.USUARIOS_UPDATE_SUCCESS, NotificationType.SUCCESS);
+          this.facade.notificationShowNotification(MessageUtils.USUARIOS_UPDATE_SUCCESS, NotificationType.SUCCESS);
           this.dialogRef.close({status: true});
         },
   
         error: (error) => {
           console.error(error);
-          this.facade.notificationsShowNotification(MessageUtils.USUARIOS_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
+          this.facade.notificationShowNotification(MessageUtils.USUARIOS_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
         }
       });
     }
 
     else {
 
-      this.facade.usuariosSave(usuario, this.fotoToSave).subscribe({
+      this.facade.usuarioSave(usuario, this.fotoToSave).subscribe({
 
         complete: () => {
-          this.facade.notificationsShowNotification(MessageUtils.USUARIOS_SAVE_SUCCESS, NotificationType.SUCCESS);
+          this.facade.notificationShowNotification(MessageUtils.USUARIOS_SAVE_SUCCESS, NotificationType.SUCCESS);
           this.dialogRef.close({status: true});
         },
   
         error: (error) => {
           console.error(error);
-          this.facade.notificationsShowNotification(MessageUtils.USUARIOS_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
+          this.facade.notificationShowNotification(MessageUtils.USUARIOS_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
         }
       });
     }

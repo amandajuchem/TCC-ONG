@@ -2,14 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
-import { Animal } from '../entities/animal';
+import { Tutor } from '../entities/tutor';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AnimaisService {
+export class TutorService {
 
-  private baseURL = environment.apiURL + '/animais';
+  private baseURL = environment.apiURL + '/tutores';
 
   constructor(private http: HttpClient) { }
 
@@ -27,7 +27,7 @@ export class AnimaisService {
    * @returns 
    */
   findAll() {
-    return this.http.get<Array<Animal>>(this.baseURL);
+    return this.http.get<Array<Tutor>>(this.baseURL);
   }
 
   /**
@@ -36,40 +36,49 @@ export class AnimaisService {
    * @returns 
    */
   findById(id: string) {
-    return this.http.get<Animal>(this.baseURL + '/' + id);
+    return this.http.get<Tutor>(this.baseURL + '/' + id);
   }
 
   /**
    * 
-   * @param animal 
+   * @param nome 
+   * @returns 
+   */
+  findByNomeContains(nome: string) {
+    return this.http.get<Array<Tutor>>(this.baseURL + '/search?nome=' + nome);
+  }
+
+  /**
+   * 
+   * @param tutor 
    * @param novaFoto 
    * @returns 
    */
-  save(animal: Animal, novaFoto: any) {
-    
+  save(tutor: Tutor, novaFoto: any) {
+
     let formData = new FormData();
 
-    formData.append('animal', new Blob([JSON.stringify(animal)], { type: 'application/json' }));
+    formData.append('tutor', new Blob([JSON.stringify(tutor)], { type: 'application/json' }));
 
     if (novaFoto) {
       formData.append('novaFoto', new Blob([novaFoto], { type: 'multipart/form-data' }), 'novaFoto.png');
     }
 
-    return this.http.post<Animal>(this.baseURL, formData);
+    return this.http.post<Tutor>(this.baseURL, formData);
   }
 
   /**
    * 
-   * @param animal 
+   * @param tutor 
    * @param novaFoto 
    * @param antigaFoto 
    * @returns 
    */
-  update(animal: Animal, novaFoto: any, antigaFoto: any) {
+  update(tutor: Tutor, novaFoto: any, antigaFoto: any) {
     
     let formData = new FormData();
 
-    formData.append('animal', new Blob([JSON.stringify(animal)], { type: 'application/json' }));
+    formData.append('tutor', new Blob([JSON.stringify(tutor)], { type: 'application/json' }));
 
     if (novaFoto) {
       formData.append('novaFoto', new Blob([novaFoto], { type: 'multipart/form-data' }), 'novaFoto.png');
@@ -79,6 +88,6 @@ export class AnimaisService {
       formData.append('antigaFoto', new Blob([antigaFoto], { type: 'text/plain' }));
     }
 
-    return this.http.put<Animal>(this.baseURL + '/' + animal.id, formData);
+    return this.http.put<Tutor>(this.baseURL + '/' + tutor.id, formData);
   }
 }

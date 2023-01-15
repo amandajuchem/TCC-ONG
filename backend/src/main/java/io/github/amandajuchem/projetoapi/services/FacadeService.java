@@ -133,6 +133,17 @@ public class FacadeService {
         return tutorService.findById(id);
     }
 
+
+    /**
+     * Tutor find by nome contains list.
+     *
+     * @param nome the nome
+     * @return the list
+     */
+    public List<Tutor> tutorFindByNomeContains(String nome) {
+        return tutorService.findByNomeContains(nome);
+    }
+
     /**
      * Tutor save tutor.
      *

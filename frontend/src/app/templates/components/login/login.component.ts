@@ -76,7 +76,7 @@ export class LoginComponent implements OnInit {
 
       error: (error) => {
         console.error(error);
-        this.facade.notificationsShowNotification(error.error.message, NotificationType.FAIL);
+        this.facade.notificationShowNotification(error.error.message, NotificationType.FAIL);
       }
     })
   }

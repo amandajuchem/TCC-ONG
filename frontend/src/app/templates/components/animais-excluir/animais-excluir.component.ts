@@ -19,16 +19,16 @@ export class AnimaisExcluirComponent {
 
   submit() {
 
-    this.facade.animaisDelete(this.data.animal.id).subscribe({
+    this.facade.animalDelete(this.data.animal.id).subscribe({
       
       complete: () => {
-        this.facade.notificationsShowNotification(MessageUtils.ANIMAIS_DELETE_SUCCESS, NotificationType.SUCCESS);
+        this.facade.notificationShowNotification(MessageUtils.ANIMAIS_DELETE_SUCCESS, NotificationType.SUCCESS);
         this.dialogRef.close({ status: true });
       },
 
       error: (error) => {
         console.log(error);
-        this.facade.notificationsShowNotification(MessageUtils.ANIMAIS_DELETE_FAIL, NotificationType.FAIL);
+        this.facade.notificationShowNotification(MessageUtils.ANIMAIS_DELETE_FAIL, NotificationType.FAIL);
       }
     });
   }

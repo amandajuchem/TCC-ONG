@@ -73,7 +73,7 @@ export class TutoresComponent implements OnInit {
 
   findAllTutores() {
 
-    this.facade.tutoresFindAll().subscribe({
+    this.facade.tutorFindAll().subscribe({
 
       next: (tutores) => {
         this.tutores = tutores;
@@ -82,7 +82,7 @@ export class TutoresComponent implements OnInit {
 
       error: (error) => {
         console.error(error);
-        this.facade.notificationsShowNotification(MessageUtils.TUTORES_GET_FAIL, NotificationType.FAIL); 
+        this.facade.notificationShowNotification(MessageUtils.TUTORES_GET_FAIL, NotificationType.FAIL); 
       }
     });
   }
