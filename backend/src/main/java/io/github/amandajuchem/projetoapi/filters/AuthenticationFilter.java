@@ -111,6 +111,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         private String json(HttpServletRequest request) throws JsonProcessingException {
 
+            var mapper = new ObjectMapper();
             var responseBody = new HashMap<String, Object>();
 
             responseBody.put("timestamp", System.currentTimeMillis());
@@ -119,7 +120,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
             responseBody.put("message", "Usuário e/ou senha inválidos!");
             responseBody.put("path", request.getRequestURI());
 
-            return new ObjectMapper().writeValueAsString(responseBody);
+            return mapper.writeValueAsString(responseBody);
         }
     }
 }

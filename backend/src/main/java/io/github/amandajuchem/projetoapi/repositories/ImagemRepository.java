@@ -6,5 +6,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
+/**
+ * The interface Imagem repository.
+ */
 @Repository
 public interface ImagemRepository extends JpaRepository<Imagem, UUID> { }

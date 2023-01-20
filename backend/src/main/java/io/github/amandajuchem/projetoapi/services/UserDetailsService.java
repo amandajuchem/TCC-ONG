@@ -1,6 +1,7 @@
 package io.github.amandajuchem.projetoapi.services;
 
 import io.github.amandajuchem.projetoapi.entities.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,19 +14,10 @@ import java.util.List;
  * The type User details service.
  */
 @Service
+@RequiredArgsConstructor(onConstructor_= {@Autowired})
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
 
     private final FacadeService facade;
-
-    /**
-     * Instantiates a new User details service.
-     *
-     * @param facade the facade
-     */
-    @Autowired
-    public UserDetailsService(FacadeService facade) {
-        this.facade = facade;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

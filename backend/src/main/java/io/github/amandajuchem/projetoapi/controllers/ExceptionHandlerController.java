@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,8 +21,8 @@ import java.util.List;
  *
  * @author Edson Isaac
  */
-@org.springframework.web.bind.annotation.ControllerAdvice
-public class ControllerAdvice {
+@ControllerAdvice
+public class ExceptionHandlerController {
 
     private final MessageSource messageSource;
 
@@ -31,7 +32,7 @@ public class ControllerAdvice {
      * @param messageSource the message source
      */
     @Autowired
-    public ControllerAdvice(MessageSource messageSource) {
+    public ExceptionHandlerController(MessageSource messageSource) {
         this.messageSource = messageSource;
     }
 

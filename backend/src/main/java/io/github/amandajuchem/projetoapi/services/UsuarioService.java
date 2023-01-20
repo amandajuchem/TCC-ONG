@@ -5,6 +5,7 @@ import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.repositories.UsuarioRepository;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,19 +16,10 @@ import java.util.UUID;
  * The type Usuario service.
  */
 @Service
+@RequiredArgsConstructor(onConstructor_= {@Autowired})
 public class UsuarioService {
 
     private final UsuarioRepository repository;
-
-    /**
-     * Instantiates a new Usuario service.
-     *
-     * @param repository the repository
-     */
-    @Autowired
-    public UsuarioService(UsuarioRepository repository) {
-        this.repository = repository;
-    }
 
     /**
      * Find all list.

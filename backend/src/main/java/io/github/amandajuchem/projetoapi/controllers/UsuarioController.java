@@ -1,10 +1,12 @@
 package io.github.amandajuchem.projetoapi.controllers;
 
+import io.github.amandajuchem.projetoapi.dtos.UsuarioDTO;
 import io.github.amandajuchem.projetoapi.entities.Usuario;
 import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
 import io.github.amandajuchem.projetoapi.services.FacadeService;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import io.github.amandajuchem.projetoapi.utils.UsuarioUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,22 +24,11 @@ import static org.springframework.http.HttpStatus.OK;
  */
 @RestController
 @RequestMapping("/usuarios")
+@RequiredArgsConstructor(onConstructor_= {@Autowired})
 public class UsuarioController {
 
     private final FacadeService facade;
     private final UsuarioUtils usuarioUtils;
-
-    /**
-     * Instantiates a new Usuario controller.
-     *
-     * @param facade       the facade
-     * @param usuarioUtils the usuario utils
-     */
-    @Autowired
-    public UsuarioController(FacadeService facade, UsuarioUtils usuarioUtils) {
-        this.facade = facade;
-        this.usuarioUtils = usuarioUtils;
-    }
 
     /**
      * Find all response entity.
@@ -47,9 +38,12 @@ public class UsuarioController {
     @GetMapping
     public ResponseEntity findAll() {
 
-        return ResponseEntity.status(OK).body(facade.usuarioFindAll().stream()
+        var usuariosDTO = facade.usuarioFindAll().stream()
                 .filter(u -> !u.getCpf().equals("07905836584"))
-                .toList());
+                .map(u -> UsuarioDTO.toDTO(u))
+                .toList();
+
+        return ResponseEntity.status(OK).body(usuariosDTO);
     }
 
     /**
@@ -60,7 +54,9 @@ public class UsuarioController {
      */
     @GetMapping("/{id}")
     public ResponseEntity findById(@PathVariable UUID id) {
-        return ResponseEntity.status(OK).body(facade.usuarioFindById(id));
+        var usuario = facade.usuarioFindById(id);
+        var usuarioDTO = UsuarioDTO.toDTO(usuario);
+        return ResponseEntity.status(OK).body(usuarioDTO);
     }
 
     /**
@@ -76,8 +72,10 @@ public class UsuarioController {
                                @RequestPart(required = false) MultipartFile novaFoto,
                                @RequestPart(required = false) String antigaFoto) {
 
-        return ResponseEntity.status(CREATED).body(
-                usuarioUtils.save(usuario, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null));
+        var usuarioSaved = usuarioUtils.save(usuario, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
+        var usuarioDTO = UsuarioDTO.toDTO(usuarioSaved);
+
+        return ResponseEntity.status(CREATED).body(usuarioDTO);
     }
 
     /**
@@ -97,8 +95,10 @@ public class UsuarioController {
 
         if (usuario.getId().equals(id)) {
 
-            return ResponseEntity.status(OK).body(
-                    usuarioUtils.save(usuario, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null));
+            var usuarioSaved = usuarioUtils.save(usuario, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
+            var usuarioDTO = UsuarioDTO.toDTO(usuarioSaved);
+
+            return ResponseEntity.status(CREATED).body(usuarioDTO);
         }
 
         throw new ObjectNotFoundException(MessageUtils.USUARIO_NOT_FOUND);

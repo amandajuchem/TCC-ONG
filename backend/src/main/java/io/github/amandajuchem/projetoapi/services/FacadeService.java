@@ -4,6 +4,7 @@ import io.github.amandajuchem.projetoapi.entities.Animal;
 import io.github.amandajuchem.projetoapi.entities.Imagem;
 import io.github.amandajuchem.projetoapi.entities.Tutor;
 import io.github.amandajuchem.projetoapi.entities.Usuario;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,33 +15,13 @@ import java.util.UUID;
  * The type Facade service.
  */
 @Service
+@RequiredArgsConstructor(onConstructor_= {@Autowired})
 public class FacadeService {
 
     private final AnimalService animalService;
     private final ImagemService imagemService;
     private final TutorService tutorService;
     private final UsuarioService usuarioService;
-
-    /**
-     * Instantiates a new Facade service.
-     *
-     * @param animalService  the animal service
-     * @param imagemService  the imagem service
-     * @param tutorService   the tutor service
-     * @param usuarioService the usuario service
-     */
-    @Autowired
-    public FacadeService(
-            AnimalService animalService,
-            ImagemService imagemService,
-            TutorService tutorService,
-            UsuarioService usuarioService
-    ) {
-        this.animalService = animalService;
-        this.imagemService = imagemService;
-        this.tutorService = tutorService;
-        this.usuarioService = usuarioService;
-    }
 
     //////////////////////////////////////////////// ANIMAL ////////////////////////////////////////////////
 

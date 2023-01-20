@@ -5,6 +5,7 @@ import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.repositories.TutorRepository;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,19 +16,10 @@ import java.util.UUID;
  * The type Tutor service.
  */
 @Service
+@RequiredArgsConstructor(onConstructor_= {@Autowired})
 public class TutorService {
 
     private final TutorRepository repository;
-
-    /**
-     * Instantiates a new Tutor service.
-     *
-     * @param repository the repository
-     */
-    @Autowired
-    public TutorService(TutorRepository repository) {
-        this.repository = repository;
-    }
 
     /**
      * Delete.

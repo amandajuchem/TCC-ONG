@@ -1,10 +1,12 @@
 package io.github.amandajuchem.projetoapi.controllers;
 
+import io.github.amandajuchem.projetoapi.dtos.AnimalDTO;
 import io.github.amandajuchem.projetoapi.entities.Animal;
 import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
 import io.github.amandajuchem.projetoapi.services.FacadeService;
 import io.github.amandajuchem.projetoapi.utils.AnimalUtils;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,22 +24,11 @@ import static org.springframework.http.HttpStatus.OK;
  */
 @RestController
 @RequestMapping("/animais")
+@RequiredArgsConstructor(onConstructor_= {@Autowired})
 public class AnimalController {
 
     private final AnimalUtils animalUtils;
     private final FacadeService facade;
-
-    /**
-     * Instantiates a new Animal controller.
-     *
-     * @param animalUtils the animal utils
-     * @param facade      the facade
-     */
-    @Autowired
-    public AnimalController(AnimalUtils animalUtils, FacadeService facade) {
-        this.animalUtils = animalUtils;
-        this.facade = facade;
-    }
 
     /**
      * Delete response entity.
@@ -58,7 +49,12 @@ public class AnimalController {
      */
     @GetMapping
     public ResponseEntity findAll() {
-        return ResponseEntity.status(OK).body(facade.animalFindAll());
+
+        var animaisDTO = facade.animalFindAll().stream()
+                .map(animal -> AnimalDTO.toDTO(animal))
+                .toList();
+
+        return ResponseEntity.status(OK).body(animaisDTO);
     }
 
     /**
@@ -69,7 +65,9 @@ public class AnimalController {
      */
     @GetMapping("/{id}")
     public ResponseEntity findById(@PathVariable UUID id) {
-        return ResponseEntity.status(OK).body(facade.animalFindById(id));
+        var animal = facade.animalFindById(id);
+        var animalDTO = AnimalDTO.toDTO(animal);
+        return ResponseEntity.status(OK).body(animalDTO);
     }
 
     /**
@@ -85,8 +83,10 @@ public class AnimalController {
                                @RequestPart(required = false) MultipartFile novaFoto,
                                @RequestPart(required = false) String antigaFoto) {
 
-        return ResponseEntity.status(CREATED).body(
-                animalUtils.save(animal, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null));
+        var animalSaved = animalUtils.save(animal, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
+        var animalDTO = AnimalDTO.toDTO(animalSaved);
+
+        return ResponseEntity.status(CREATED).body(animalDTO);
     }
 
     /**
@@ -106,8 +106,10 @@ public class AnimalController {
 
         if (animal.getId().equals(id)) {
 
-            return ResponseEntity.status(OK).body(
-                    animalUtils.save(animal, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null));
+            var animalSaved = animalUtils.save(animal, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
+            var animalDTO = AnimalDTO.toDTO(animalSaved);
+
+            return ResponseEntity.status(OK).body(animalDTO);
         }
 
         throw new ObjectNotFoundException(MessageUtils.ANIMAL_NOT_FOUND);

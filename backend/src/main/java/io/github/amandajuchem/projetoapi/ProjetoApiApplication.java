@@ -3,6 +3,7 @@ package io.github.amandajuchem.projetoapi;
 import io.github.amandajuchem.projetoapi.entities.Usuario;
 import io.github.amandajuchem.projetoapi.enums.Setor;
 import io.github.amandajuchem.projetoapi.services.FacadeService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -14,19 +15,10 @@ import java.io.File;
  * The type Projeto api application.
  */
 @SpringBootApplication
+@RequiredArgsConstructor(onConstructor_= {@Autowired})
 public class ProjetoApiApplication implements CommandLineRunner {
 
 	private final FacadeService facade;
-
-	/**
-	 * Instantiates a new Projeto api application.
-	 *
-	 * @param facade the service
-	 */
-	@Autowired
-	public ProjetoApiApplication(FacadeService facade) {
-		this.facade = facade;
-	}
 
 	/**
 	 * The entry point of application.

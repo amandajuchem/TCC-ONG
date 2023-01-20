@@ -1,10 +1,12 @@
 package io.github.amandajuchem.projetoapi.controllers;
 
+import io.github.amandajuchem.projetoapi.dtos.TutorDTO;
 import io.github.amandajuchem.projetoapi.entities.Tutor;
 import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
 import io.github.amandajuchem.projetoapi.services.FacadeService;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import io.github.amandajuchem.projetoapi.utils.TutorUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,22 +23,11 @@ import static org.springframework.http.HttpStatus.*;
  */
 @RestController
 @RequestMapping("/tutores")
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class TutorController {
 
     private final FacadeService facade;
     private final TutorUtils tutorUtils;
-
-    /**
-     * Instantiates a new Tutor controller.
-     *
-     * @param facade     the facade
-     * @param tutorUtils the tutor utils
-     */
-    @Autowired
-    public TutorController(FacadeService facade, TutorUtils tutorUtils) {
-        this.facade = facade;
-        this.tutorUtils = tutorUtils;
-    }
 
     /**
      * Delete response entity.
@@ -57,7 +48,12 @@ public class TutorController {
      */
     @GetMapping
     public ResponseEntity findAll() {
-        return ResponseEntity.status(OK).body(facade.tutorFindAll());
+
+        var tutoresDTO = facade.tutorFindAll().stream()
+                .map(t -> TutorDTO.toDTO(t))
+                .toList();
+
+        return ResponseEntity.status(OK).body(tutoresDTO);
     }
 
     /**
@@ -68,7 +64,9 @@ public class TutorController {
      */
     @GetMapping("/{id}")
     public ResponseEntity findById(@PathVariable UUID id) {
-        return ResponseEntity.status(OK).body(facade.tutorFindById(id));
+        var tutor = facade.tutorFindById(id);
+        var tutorDTO = TutorDTO.toDTO(tutor);
+        return ResponseEntity.status(OK).body(tutorDTO);
     }
 
     /**
@@ -84,8 +82,10 @@ public class TutorController {
                                @RequestPart(required = false) MultipartFile novaFoto,
                                @RequestPart(required = false) String antigaFoto) {
 
-        return ResponseEntity.status(CREATED).body(
-                tutorUtils.save(tutor, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null));
+        var tutorSaved = tutorUtils.save(tutor, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
+        var tutorDTO = TutorDTO.toDTO(tutorSaved);
+
+        return ResponseEntity.status(CREATED).body(tutorDTO);
     }
 
     /**
@@ -98,7 +98,8 @@ public class TutorController {
     public ResponseEntity search(@RequestParam(required = false) String nome) {
 
         if (nome != null) {
-            return ResponseEntity.status(OK).body(facade.tutorFindByNomeContains(nome));
+            var tutoresDTO = facade.tutorFindByNomeContains(nome).stream().map(t -> TutorDTO.toDTO(t)).toList();
+            return ResponseEntity.status(OK).body(tutoresDTO);
         }
 
         return ResponseEntity.status(NOT_FOUND).body(null);
@@ -121,8 +122,10 @@ public class TutorController {
 
         if (tutor.getId().equals(id)) {
 
-            return ResponseEntity.status(OK).body(
-                    tutorUtils.save(tutor, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null));
+            var tutorSaved = tutorUtils.save(tutor, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
+            var tutorDTO = TutorDTO.toDTO(tutorSaved);
+
+            return ResponseEntity.status(OK).body(tutorDTO);
         }
 
         throw new ObjectNotFoundException(MessageUtils.TUTOR_NOT_FOUND);

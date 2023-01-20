@@ -1,6 +1,7 @@
 package io.github.amandajuchem.projetoapi.configurations;
 
 import io.github.amandajuchem.projetoapi.utils.JWTUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -17,6 +18,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
  */
 @EnableWebSecurity
 @EnableMethodSecurity
+@RequiredArgsConstructor(onConstructor_= {@Autowired})
 public class SecurityConfiguration {
 
     private final CorsConfigurationSource corsConfigurationSource;
@@ -26,20 +28,6 @@ public class SecurityConfiguration {
     private static final String[] PUBLIC_MATCHERS_GET = {
         "/imagens/*"
     };
-
-    /**
-     * Instantiates a new Security configuration.
-     *
-     * @param corsConfigurationSource the cors configuration source
-     * @param jwtUtils                the jwt utils
-     * @param userDetailsService      the user details service
-     */
-    @Autowired
-    public SecurityConfiguration(CorsConfigurationSource corsConfigurationSource, JWTUtils jwtUtils, UserDetailsService userDetailsService) {
-        this.corsConfigurationSource = corsConfigurationSource;
-        this.jwtUtils = jwtUtils;
-        this.userDetailsService = userDetailsService;
-    }
 
     /**
      * Filter chain security filter chain.

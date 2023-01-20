@@ -11,6 +11,7 @@ import org.hibernate.validator.constraints.br.CPF;
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  * The type Tutor.
@@ -26,6 +27,7 @@ public class Tutor extends AbstractEntity {
     @Column(name = "nome")
     private String nome;
 
+    @NotEmpty
     @CPF
     @Column(name = "cpf", length = 11)
     private String cpf;
@@ -33,9 +35,11 @@ public class Tutor extends AbstractEntity {
     @Column(name = "rg", length = 13)
     private String rg;
 
+    @NotEmpty
     @Column(name = "telefone", length = 11)
     private String telefone;
 
+    @NotNull
     @Column(name = "situacao")
     @Enumerated(value = EnumType.STRING)
     private Situacao situacao;

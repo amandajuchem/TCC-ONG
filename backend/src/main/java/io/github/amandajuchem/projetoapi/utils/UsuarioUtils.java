@@ -5,6 +5,7 @@ import io.github.amandajuchem.projetoapi.entities.Usuario;
 import io.github.amandajuchem.projetoapi.exceptions.OperationFailureException;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.FacadeService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -17,22 +18,11 @@ import java.util.UUID;
  * The type Usuario utils.
  */
 @Component
+@RequiredArgsConstructor(onConstructor_= {@Autowired})
 public class UsuarioUtils {
 
     private final BCryptPasswordEncoder encoder;
     private final FacadeService facade;
-
-    /**
-     * Instantiates a new Usuario utils.
-     *
-     * @param encoder the encoder
-     * @param facade  the facade
-     */
-    @Autowired
-    public UsuarioUtils(BCryptPasswordEncoder encoder, FacadeService facade) {
-        this.encoder = encoder;
-        this.facade = facade;
-    }
 
     /**
      * Encode password usuario.

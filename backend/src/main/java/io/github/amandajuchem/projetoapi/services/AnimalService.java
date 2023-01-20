@@ -5,6 +5,7 @@ import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.repositories.AnimalRepository;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,19 +16,10 @@ import java.util.UUID;
  * The type Animal service.
  */
 @Service
+@RequiredArgsConstructor(onConstructor_= {@Autowired})
 public class AnimalService {
 
     private final AnimalRepository repository;
-
-    /**
-     * Instantiates a new Animal service.
-     *
-     * @param repository the repository
-     */
-    @Autowired
-    public AnimalService(AnimalRepository repository) {
-        this.repository = repository;
-    }
 
     /**
      * Delete.

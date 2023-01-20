@@ -6,6 +6,7 @@ import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.repositories.ImagemRepository;
 import io.github.amandajuchem.projetoapi.utils.FileUtils;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,19 +16,10 @@ import java.util.UUID;
  * The type Imagem service.
  */
 @Service
+@RequiredArgsConstructor(onConstructor_= {@Autowired})
 public class ImagemService {
 
     private final ImagemRepository repository;
-
-    /**
-     * Instantiates a new Imagem service.
-     *
-     * @param repository the repository
-     */
-    @Autowired
-    public ImagemService(ImagemRepository repository) {
-        this.repository = repository;
-    }
 
     /**
      * Delete.

@@ -12,8 +12,6 @@ import java.util.Date;
 
 /**
  * The type Jwt utils.
- *
- * @author edson
  */
 @Component
 public class JWTUtils {
@@ -28,7 +26,7 @@ public class JWTUtils {
      * Generate token string.
      *
      * @param username the username
-     * @return string string
+     * @return the string
      */
     public String generateToken (String username) {
 
@@ -43,9 +41,10 @@ public class JWTUtils {
     }
 
     /**
+     * Get claims.
      *
-     * @param token
-     * @return
+     * @param token the token
+     * @return the claims
      */
     private Claims getClaims(String token) {
 
@@ -62,7 +61,7 @@ public class JWTUtils {
      * Gets username.
      *
      * @param token the token
-     * @return username username
+     * @return the username
      */
     public String getUsername(String token) {
         Claims claims = getClaims(token);
@@ -78,7 +77,7 @@ public class JWTUtils {
      * Validate token boolean.
      *
      * @param token the token
-     * @return boolean boolean
+     * @return the boolean
      */
     public boolean validateToken(String token) {
         var claims = getClaims(token);

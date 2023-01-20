@@ -10,12 +10,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * The type File utils.
+ */
 public class FileUtils {
 
     /**
      * The constant DOCUMENTS_DIRECTORY.
      */
     public static final String DOCUMENTS_DIRECTORY = File.separator + "files" + File.separator + "documents";
+
     /**
      * The constant IMAGES_DIRECTORY.
      */
