@@ -1,19 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Animal } from 'src/app/entities/animal';
+import { Usuario } from 'src/app/entities/usuario';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { FacadeService } from 'src/app/services/facade.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
 
 @Component({
-  selector: 'app-animal',
-  templateUrl: './animal.component.html',
-  styleUrls: ['./animal.component.sass']
+  selector: 'app-usuario',
+  templateUrl: './usuario.component.html',
+  styleUrls: ['./usuario.component.sass']
 })
-export class AnimalComponent implements OnInit {
+export class UsuarioComponent implements OnInit {
 
-  animal!: Animal;
-  currentUser: any;
+  currentUser!: any;
+  usuario!: Usuario;
 
   constructor(
     private _activatedRoute: ActivatedRoute,
@@ -21,7 +21,7 @@ export class AnimalComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
+    
     this.currentUser = this._facade.authGetCurrentUser();
 
     this._activatedRoute.params.subscribe({
@@ -30,27 +30,27 @@ export class AnimalComponent implements OnInit {
           
         if (x && x.id) {
           
-          this._facade.animalFindById(x.id).subscribe({
+          this._facade.usuarioFindById(x.id).subscribe({
             
-            next: (animal) => {
-              this._facade.animalSet(animal);
+            next: (usuario) => {
+              this._facade.usuarioSet(usuario);
             },
 
             error: (error) => {
               console.error(error);
-              this._facade.notificationShowNotification(MessageUtils.ANIMAL_GET_FAIL, NotificationType.FAIL); 
+              this._facade.notificationShowNotification(MessageUtils.USUARIO_GET_FAIL, NotificationType.FAIL); 
             }
           });
         }
       },
     });
 
-    this._facade.animalGet().subscribe({
+    this._facade.usuarioGet().subscribe({
 
-      next: (animal) => {
+      next: (usuario) => {
         
-        if (animal) {
-          this.animal = animal;
+        if (usuario) {
+          this.usuario = usuario;
         }
       },
     });

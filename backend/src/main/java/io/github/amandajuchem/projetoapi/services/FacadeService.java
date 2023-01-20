@@ -176,6 +176,16 @@ public class FacadeService {
     }
 
     /**
+     * Usuario find by id usuario.
+     *
+     * @param id the id
+     * @return the usuario
+     */
+    public Usuario usuarioFindById(UUID id) {
+        return usuarioService.findById(id);
+    }
+
+    /**
      * Usuario save usuario.
      *
      * @param usuario the usuario

@@ -6,8 +6,7 @@ import { FacadeService } from 'src/app/services/facade.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
 import { environment } from 'src/environments/environment';
 
-import { AnimaisCadastroComponent } from '../animais-cadastro/animais-cadastro.component';
-import { AnimaisExcluirComponent } from '../animais-excluir/animais-excluir.component';
+import { AnimalCadastroComponent } from '../animal-cadastro/animal-cadastro.component';
 
 @Component({
   selector: 'app-animais',
@@ -22,19 +21,19 @@ export class AnimaisComponent implements OnInit {
   currentUser!: any;
 
   constructor(
-    private dialog: MatDialog,
-    private facade: FacadeService
+    private _dialog: MatDialog,
+    private _facade: FacadeService
   ) { }
 
   ngOnInit(): void {
     this.apiURL = environment.apiURL;
-    this.currentUser = this.facade.authGetCurrentUser();
+    this.currentUser = this._facade.authGetCurrentUser();
     this.findAllAnimais();
   }
 
   add() {
 
-    this.dialog.open(AnimaisCadastroComponent, {
+    this._dialog.open(AnimalCadastroComponent, {
       data: {
         animal: null
       },
@@ -51,22 +50,6 @@ export class AnimaisComponent implements OnInit {
     });
   }
 
-  delete(animal: Animal) {
-
-    this.dialog.open(AnimaisExcluirComponent, {
-      data: {
-        animal: animal
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-
-      next: (result) => {
-        this.findAllAnimais();   
-      }
-    });
-  }
-
   filter(value: string) {
     value = value.toUpperCase();
     this.animaisToShow = this.animais.filter(a => a.nome.toUpperCase().includes(value));
@@ -74,35 +57,16 @@ export class AnimaisComponent implements OnInit {
 
   findAllAnimais() {
 
-    this.facade.animalFindAll().subscribe({
+    this._facade.animalFindAll().subscribe({
 
       next: (animais) => {
-        this.animais = animais;
+        this.animais = animais.sort((a, b) => a.nome.toUpperCase() > b.nome.toUpperCase() ? 1 : -1);
         this.animaisToShow = this.animais;
       },
 
       error: (error) => {
         console.error(error);
-        this.facade.notificationShowNotification(MessageUtils.ANIMAIS_GET_FAIL, NotificationType.FAIL); 
-      }
-    });
-  }
-
-  update(animal: Animal) {
-
-    this.dialog.open(AnimaisCadastroComponent, {
-      data: {
-        animal: animal
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-      
-      next: (result) => {
-        
-        if (result && result.status) {
-          this.findAllAnimais();
-        }
+        this._facade.notificationShowNotification(MessageUtils.ANIMAIS_GET_FAIL, NotificationType.FAIL); 
       }
     });
   }

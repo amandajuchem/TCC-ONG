@@ -37,7 +37,6 @@ public interface TutorRepository extends JpaRepository<Tutor, UUID> {
      * @param nome the nome
      * @return the list
      */
-    //@Query("FROM tb_tutores AS t WHERE t.nome LIKE %?1%")
     List<Tutor> findByNomeContainsIgnoreCase(String nome);
 
     /**

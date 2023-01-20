@@ -53,6 +53,17 @@ public class UsuarioController {
     }
 
     /**
+     * Find by id response entity.
+     *
+     * @param id the id
+     * @return the response entity
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity findById(@PathVariable UUID id) {
+        return ResponseEntity.status(OK).body(facade.usuarioFindById(id));
+    }
+
+    /**
      * Save response entity.
      *
      * @param usuario    the usuario

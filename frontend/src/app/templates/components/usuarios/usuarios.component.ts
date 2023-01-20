@@ -20,19 +20,19 @@ export class UsuariosComponent implements OnInit {
   usuariosToShow!: Array<Usuario>;
 
   constructor(
-    private dialog: MatDialog,
-    private facade: FacadeService
+    private _dialog: MatDialog,
+    private _facade: FacadeService
   ) { }
 
   ngOnInit(): void {
     this.apiURL = environment.apiURL;
-    this.currentUser = this.facade.authGetCurrentUser();
+    this.currentUser = this._facade.authGetCurrentUser();
     this.findAllUsuarios();
   }
 
   add() {
 
-    this.dialog.open(UsuariosCadastroComponent, {
+    this._dialog.open(UsuariosCadastroComponent, {
       data: {
         usuario : null
       },
@@ -56,7 +56,7 @@ export class UsuariosComponent implements OnInit {
 
   findAllUsuarios() {
 
-    this.facade.usuarioFindAll().subscribe({
+    this._facade.usuarioFindAll().subscribe({
       
       next: (usuarios) => {
         this.usuarios = usuarios;
@@ -65,14 +65,14 @@ export class UsuariosComponent implements OnInit {
 
       error: (error) => {
         console.error(error);
-        this.facade.notificationShowNotification(MessageUtils.USUARIOS_GET_FAIL, NotificationType.FAIL); 
+        this._facade.notificationShowNotification(MessageUtils.USUARIOS_GET_FAIL, NotificationType.FAIL); 
       }
     });
   }
 
   update(usuario: Usuario) {
 
-    this.dialog.open(UsuariosCadastroComponent, {
+    this._dialog.open(UsuariosCadastroComponent, {
       data: {
         usuario : usuario
       },

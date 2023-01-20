@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Usuario } from 'src/app/entities/usuario';
+import { Tutor } from 'src/app/entities/tutor';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { FacadeService } from 'src/app/services/facade.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
@@ -10,23 +10,21 @@ import { environment } from 'src/environments/environment';
 import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-imagem.component';
 
 @Component({
-  selector: 'app-usuarios-cadastro',
-  templateUrl: './usuarios-cadastro.component.html',
-  styleUrls: ['./usuarios-cadastro.component.sass']
+  selector: 'app-tutor-cadastro',
+  templateUrl: './tutor-cadastro.component.html',
+  styleUrls: ['./tutor-cadastro.component.sass']
 })
-export class UsuariosCadastroComponent implements OnInit {
-  
+export class TutorCadastroComponent implements OnInit {
+
   apiURL!: string;
-  currentUser!: any;
   form!: FormGroup;
   foto!: any;
   fotoToSave!: any;
-  hide!: boolean;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _dialog: MatDialog,
-    private _dialogRef: MatDialogRef<UsuariosCadastroComponent>,
+    private _dialogRef: MatDialogRef<TutorCadastroComponent>,
     private _facade: FacadeService,
     private _formBuilder: FormBuilder
   ) { }
@@ -34,11 +32,9 @@ export class UsuariosCadastroComponent implements OnInit {
   ngOnInit(): void {
     
     this.apiURL = environment.apiURL;
-    this.currentUser = this._facade.authGetCurrentUser();
-    this.hide = true;
     this.buildForm();
   }
-
+  
   addFoto() {
 
     this._dialog.open(SelecionarImagemComponent, {
@@ -68,34 +64,44 @@ export class UsuariosCadastroComponent implements OnInit {
       id: [null, Validators.nullValidator],
       nome: [null, Validators.required],
       cpf: [null, Validators.required],
-      senha: [null, Validators.required],
-      setor: [null, Validators.required],
-      status: [null, Validators.required],
-      foto: [null, Validators.nullValidator]
+      rg: [null, Validators.nullValidator],
+      telefone: [null, Validators.required],
+      situacao: [null, Validators.required],
+
+      endereco: this._formBuilder.group({
+        id: [null, Validators.nullValidator],
+        rua: [null, Validators.required],
+        numeroResidencia: [null, Validators.required],
+        bairro: [null, Validators.required],
+        complemento: [null, Validators.nullValidator],
+        cidade: [null, Validators.required],
+        estado: [null, Validators.required],
+        cep: [null, Validators.required]
+      })
     });
   }
 
   removeFoto() {
-    
+
     this.foto = null;
     this.form.get('foto')?.patchValue(null);
   }
 
   submit() {
 
-    let usuario: Usuario = Object.assign({}, this.form.getRawValue());
+    let tutor: Tutor = Object.assign({}, this.form.getRawValue());
 
-    this._facade.usuarioSave(usuario, this.fotoToSave).subscribe({
+    this._facade.tutorSave(tutor, this.fotoToSave).subscribe({
 
       complete: () => {
-        this._facade.notificationShowNotification(MessageUtils.USUARIO_SAVE_SUCCESS, NotificationType.SUCCESS);
+        this._facade.notificationShowNotification(MessageUtils.TUTOR_SAVE_SUCCESS, NotificationType.SUCCESS);
         this._dialogRef.close({status: true});
       },
 
       error: (error) => {
         console.error(error);
-        this._facade.notificationShowNotification(MessageUtils.USUARIO_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
+        this._facade.notificationShowNotification(MessageUtils.TUTOR_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
       }
     });
-  }
+  } 
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * The type Usuario service.
@@ -46,6 +47,19 @@ public class UsuarioService {
     public Usuario findByCpf(String cpf) {
 
         return repository.findByCpf(cpf).orElseThrow(() -> {
+            throw new ObjectNotFoundException(MessageUtils.USUARIO_NOT_FOUND);
+        });
+    }
+
+    /**
+     * Find by id usuario.
+     *
+     * @param id the id
+     * @return the usuario
+     */
+    public Usuario findById(UUID id) {
+
+        return repository.findById(id).orElseThrow(() -> {
             throw new ObjectNotFoundException(MessageUtils.USUARIO_NOT_FOUND);
         });
     }

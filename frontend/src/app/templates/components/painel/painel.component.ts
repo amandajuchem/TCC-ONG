@@ -11,10 +11,10 @@ export class PainelComponent implements OnInit {
   currentUser: any;
 
   constructor(
-    private facade: FacadeService
+    private _facade: FacadeService
   ) { }
 
   ngOnInit(): void {
-    this.currentUser = this.facade.authGetCurrentUser();
+    this.currentUser = this._facade.authGetCurrentUser();
   }
 }

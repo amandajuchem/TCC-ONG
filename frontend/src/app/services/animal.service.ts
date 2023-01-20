@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
 import { Animal } from '../entities/animal';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,7 @@ import { Animal } from '../entities/animal';
 export class AnimalService {
 
   private baseURL = environment.apiURL + '/animais';
+  private subject = new BehaviorSubject<Animal | null>(null);
 
   constructor(private http: HttpClient) { }
 
@@ -41,6 +43,14 @@ export class AnimalService {
 
   /**
    * 
+   * @returns 
+   */
+  get() {
+    return this.subject.asObservable();
+  }
+
+  /**
+   * 
    * @param animal 
    * @param novaFoto 
    * @returns 
@@ -56,6 +66,14 @@ export class AnimalService {
     }
 
     return this.http.post<Animal>(this.baseURL, formData);
+  }
+
+  /**
+   * 
+   * @param animal 
+   */
+  set(animal: Animal) {
+    this.subject.next(animal);
   }
 
   /**

@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Usuario } from '../entities/usuario';
+import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
+
+import { Usuario } from '../entities/usuario';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +11,7 @@ import { environment } from 'src/environments/environment';
 export class UsuarioService {
 
   private baseURL = environment.apiURL + '/usuarios';
+  private subject = new BehaviorSubject<Usuario | null>(null);
 
   constructor(private http: HttpClient) { }
 
@@ -18,6 +21,23 @@ export class UsuarioService {
    */
   findAll() {
     return this.http.get<Array<Usuario>>(this.baseURL);
+  }
+
+  /**
+   * 
+   * @param id 
+   * @returns 
+   */
+  findById(id: string) {
+    return this.http.get<Usuario>(this.baseURL + '/' + id);
+  }
+
+  /**
+   * 
+   * @returns 
+   */
+  get() {
+    return this.subject.asObservable();
   }
 
   /**
@@ -36,6 +56,14 @@ export class UsuarioService {
     }
 
     return this.http.post<Usuario>(this.baseURL, formData);
+  }
+  
+  /**
+   * 
+   * @param usuario 
+   */
+  set(usuario: Usuario) {
+    this.subject.next(usuario);
   }
 
   /**

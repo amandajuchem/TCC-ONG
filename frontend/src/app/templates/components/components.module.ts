@@ -15,50 +15,59 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
 import { NgxMaskModule } from 'ngx-mask';
 import { getDutchPaginatorIntl } from 'src/app/configurations/internacionalization';
 
-import { AnimaisCadastroComponent } from './animais-cadastro/animais-cadastro.component';
-import { AnimaisExcluirComponent } from './animais-excluir/animais-excluir.component';
 import { AnimaisComponent } from './animais/animais.component';
+import { AnimalCadastroComponent } from './animal-cadastro/animal-cadastro.component';
+import { AnimalExcluirComponent } from './animal-excluir/animal-excluir.component';
+import { AnimalInformacoesComponent } from './animal-informacoes/animal-informacoes.component';
 import { AnimalComponent } from './animal/animal.component';
 import { FooterComponent } from './footer/footer.component';
 import { LayoutComponent } from './layout/layout.component';
 import { LoginComponent } from './login/login.component';
 import { NotificationComponent } from './notification/notification.component';
 import { PainelComponent } from './painel/painel.component';
-import { ToolbarComponent } from './toolbar/toolbar.component';
-import { TutorComponent } from './tutor/tutor.component';
-import { TutoresCadastroComponent } from './tutores-cadastro/tutores-cadastro.component';
-import { TutoresExcluirComponent } from './tutores-excluir/tutores-excluir.component';
-import { TutoresComponent } from './tutores/tutores.component';
-import { UsuariosCadastroComponent } from './usuarios-cadastro/usuarios-cadastro.component';
-import { UsuariosComponent } from './usuarios/usuarios.component';
 import { SelecionarImagemComponent } from './selecionar-imagem/selecionar-imagem.component';
 import { SelecionarTutorComponent } from './selecionar-tutor/selecionar-tutor.component';
+import { ToolbarComponent } from './toolbar/toolbar.component';
+import { TutorCadastroComponent } from './tutor-cadastro/tutor-cadastro.component';
+import { TutorExcluirComponent } from './tutor-excluir/tutor-excluir.component';
+import { TutorInformacoesComponent } from './tutor-informacoes/tutor-informacoes.component';
+import { TutorComponent } from './tutor/tutor.component';
+import { TutoresComponent } from './tutores/tutores.component';
+import { UsuarioInformacoesComponent } from './usuario-informacoes/usuario-informacoes.component';
+import { UsuarioComponent } from './usuario/usuario.component';
+import { UsuariosCadastroComponent } from './usuarios-cadastro/usuarios-cadastro.component';
+import { UsuariosComponent } from './usuarios/usuarios.component';
 
 @NgModule({
   declarations: [
-    LoginComponent,
+    AnimaisComponent,
+    AnimalCadastroComponent,
+    AnimalExcluirComponent,
+    AnimalInformacoesComponent,
+    AnimalComponent,
     FooterComponent,
+    LayoutComponent,
+    LoginComponent,
     NotificationComponent,
     PainelComponent,
-    LayoutComponent,
-    ToolbarComponent,
-    UsuariosComponent,
-    TutoresComponent,
-    AnimaisComponent,
-    UsuariosCadastroComponent,
-    AnimaisCadastroComponent,
-    AnimaisExcluirComponent,
-    AnimalComponent,
-    TutoresCadastroComponent,
-    TutoresExcluirComponent,
-    TutorComponent,
     SelecionarImagemComponent,
-    SelecionarTutorComponent
+    SelecionarTutorComponent,
+    ToolbarComponent,
+    TutorCadastroComponent,
+    TutorExcluirComponent,
+    TutorInformacoesComponent,
+    TutorComponent,
+    TutoresComponent,
+    UsuarioInformacoesComponent,
+    UsuarioComponent,
+    UsuariosCadastroComponent,
+    UsuariosComponent
   ],
   imports: [
     CommonModule,
@@ -77,6 +86,7 @@ import { SelecionarTutorComponent } from './selecionar-tutor/selecionar-tutor.co
     MatSnackBarModule,
     MatSortModule,
     MatTableModule,
+    MatTabsModule,
     MatToolbarModule,
     NgxMaskModule.forRoot(),
     ReactiveFormsModule,

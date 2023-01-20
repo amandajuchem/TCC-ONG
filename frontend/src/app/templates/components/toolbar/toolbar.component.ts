@@ -12,16 +12,16 @@ export class ToolbarComponent implements OnInit {
   currentUser!: any;
 
   constructor(
-    private facade: FacadeService,
-    private router: Router
+    private _facade: FacadeService,
+    private _router: Router
   ) { }
 
   ngOnInit(): void {
-    this.currentUser = this.facade.authGetCurrentUser();
+    this.currentUser = this._facade.authGetCurrentUser();
   }
 
   logout() {
-    this.facade.authLogout();
-    this.router.navigate(['']);
+    this._facade.authLogout();
+    this._router.navigate(['']);
   }
 }

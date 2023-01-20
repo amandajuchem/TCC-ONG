@@ -55,12 +55,28 @@ export class FacadeService {
 
   /**
    * 
+   * @returns 
+   */
+  animalGet() {
+    return this._animalService.get();
+  }
+
+  /**
+   * 
    * @param animal 
    * @param novaFoto 
    * @returns 
    */
   animalSave(animal: Animal, novaFoto: any) {
     return this._animalService.save(animal, novaFoto);
+  }
+
+  /**
+   * 
+   * @param animal 
+   */
+  animalSet(animal: Animal) {
+    this._animalService.set(animal);
   }
 
   /**
@@ -179,12 +195,28 @@ export class FacadeService {
 
   /**
    * 
+   * @returns 
+   */
+  tutorGet() {
+    return this._tutorService.get();
+  }
+
+  /**
+   * 
    * @param tutor 
    * @param novaFoto 
    * @returns 
    */
   tutorSave(tutor: Tutor, novaFoto: any) {
     return this._tutorService.save(tutor, novaFoto);
+  }
+
+  /**
+   * 
+   * @param tutor 
+   */
+  tutorSet(tutor: Tutor) {
+    this._tutorService.set(tutor);
   }
 
   /**
@@ -210,6 +242,23 @@ export class FacadeService {
 
   /**
    * 
+   * @param id 
+   * @returns 
+   */
+  usuarioFindById(id: string) {
+    return this._usuarioService.findById(id);
+  }
+
+  /**
+   * 
+   * @returns 
+   */
+  usuarioGet() {
+    return this._usuarioService.get();
+  }
+
+  /**
+   * 
    * @param usuario 
    * @param novaFoto 
    * @param antigaFoto 
@@ -217,6 +266,14 @@ export class FacadeService {
    */
   usuarioSave(usuario: Usuario, novaFoto: any) {
     return this._usuarioService.save(usuario, novaFoto);
+  }
+
+  /**
+   * 
+   * @param usuario 
+   */
+  usuarioSet(usuario: Usuario) {
+    this._usuarioService.set(usuario);
   }
 
   /**

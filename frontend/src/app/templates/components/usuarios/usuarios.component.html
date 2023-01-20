@@ -50,47 +50,27 @@
 </div>
 
 <div class="row mb-3" *ngIf="usuariosToShow && usuariosToShow.length > 0">
+
     <div class="col-12 col-md-3" *ngFor="let usuario of usuariosToShow">
-        <mat-card>
-            <mat-card-header>
-                <div class="mat-card-header-text mb-3">
-                    <div class="row align-items-center">
+       
+        <a [routerLink]="'/' + currentUser.role.toLowerCase() + '/usuarios/' + usuario.id">
+            <mat-card>
+                <img mat-card-image [src]="apiURL + '/imagens/search?nome=' + usuario.foto.nome" class="w-100" *ngIf="usuario.foto">
+                <img mat-card-image src="assets/images/usuarios.png" class="w-100" *ngIf="!usuario.foto">
+    
+                <mat-card-content class="p-3">
+                    <div class="row">
                         <div class="col-12">
-                            <div class="text-end">
-                                <button mat-icon-button [matMenuTriggerFor]="menu">
-                                    <mat-icon>more_vert</mat-icon>
-                                </button>
-                                <mat-menu #menu="matMenu">
-                                    <button mat-menu-item (click)="update(usuario)">
-                                        <mat-icon>edit</mat-icon>
-                                        <span>Editar</span>
-                                    </button>
-                                </mat-menu>
+                            <div class="text-dark">
+                                <h3 class="fw-bold mb-0">{{usuario.nome}}</h3>
+                                <p class="mb-0">{{usuario.cpf | mask: 'CPF_CNPJ'}}</p>
+                                <p class="mb-0">{{usuario.setor | titlecase}}</p>
                             </div>
                         </div>
                     </div>
-                </div>
-            </mat-card-header>
-
-            <mat-card-content>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="text-center">
-                            <img mat-card-image [src]="apiURL + '/imagens/search?nome=' + usuario.foto.nome" height="125px" class="mb-3 rounded-circle" *ngIf="usuario.foto">
-                            <img mat-card-image src="assets/images/usuarios.png" height="125px" class="mb-3" *ngIf="!usuario.foto">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-12">
-                        <h3 class="fw-bold mb-0">{{usuario.nome}}</h3>
-                        <p class="mb-0">{{usuario.cpf | mask: 'CPF_CNPJ'}}</p>
-                        <p class="mb-0">{{usuario.setor | titlecase}}</p>
-                    </div>
-                </div>
-            </mat-card-content>
-        </mat-card>
+                </mat-card-content>
+            </mat-card>
+        </a>
     </div>
 </div>
 

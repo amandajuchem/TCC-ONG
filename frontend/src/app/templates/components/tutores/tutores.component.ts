@@ -4,9 +4,9 @@ import { Tutor } from 'src/app/entities/tutor';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { FacadeService } from 'src/app/services/facade.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
-import { TutoresCadastroComponent } from '../tutores-cadastro/tutores-cadastro.component';
-import { TutoresExcluirComponent } from '../tutores-excluir/tutores-excluir.component';
 import { environment } from 'src/environments/environment';
+
+import { TutorCadastroComponent } from '../tutor-cadastro/tutor-cadastro.component';
 
 @Component({
   selector: 'app-tutores',
@@ -21,19 +21,19 @@ export class TutoresComponent implements OnInit {
   tutoresToShow!: Array<Tutor>;
   
   constructor(
-    private dialog: MatDialog,
-    private facade: FacadeService
+    private _dialog: MatDialog,
+    private _facade: FacadeService
   ) { }
 
   ngOnInit(): void {
     this.apiURL = environment.apiURL;
-    this.currentUser = this.facade.authGetCurrentUser();
+    this.currentUser = this._facade.authGetCurrentUser();
     this.findAllTutores();
   }
 
   add() {
 
-    this.dialog.open(TutoresCadastroComponent, {
+    this._dialog.open(TutorCadastroComponent, {
       data: {
         tutor: null
       },
@@ -50,22 +50,6 @@ export class TutoresComponent implements OnInit {
     });
   }
 
-  delete(tutor: Tutor) {
-
-    this.dialog.open(TutoresExcluirComponent, {
-      data: {
-        tutor: tutor
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-
-      next: (result) => {
-        this.findAllTutores();   
-      }
-    });
-  }
-
   filter(value: string) {
     value = value.toUpperCase();
     this.tutoresToShow = this.tutores.filter(t => t.nome.toUpperCase().includes(value) || t.cpf.toUpperCase().includes(value));
@@ -73,35 +57,16 @@ export class TutoresComponent implements OnInit {
 
   findAllTutores() {
 
-    this.facade.tutorFindAll().subscribe({
+    this._facade.tutorFindAll().subscribe({
 
       next: (tutores) => {
-        this.tutores = tutores;
+        this.tutores = tutores.sort((a, b) => a.nome.toUpperCase() > b.nome.toUpperCase() ? 1 : -1);
         this.tutoresToShow = this.tutores;
       },
 
       error: (error) => {
         console.error(error);
-        this.facade.notificationShowNotification(MessageUtils.TUTORES_GET_FAIL, NotificationType.FAIL); 
-      }
-    });
-  }
-
-  update(tutor: Tutor) {
-
-    this.dialog.open(TutoresCadastroComponent, {
-      data: {
-        tutor: tutor
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-      
-      next: (result) => {
-        
-        if (result && result.status) {
-          this.findAllTutores();
-        }
+        this._facade.notificationShowNotification(MessageUtils.TUTORES_GET_FAIL, NotificationType.FAIL); 
       }
     });
   }

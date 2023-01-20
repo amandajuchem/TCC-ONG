@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Setor } from 'src/app/enums/setor';
 import { NotificationType } from 'src/app/enums/notification-type';
+import { Setor } from 'src/app/enums/setor';
 import { FacadeService } from 'src/app/services/facade.service';
 
 @Component({
@@ -16,23 +16,23 @@ export class LoginComponent implements OnInit {
   hide!: boolean;
 
   constructor(
-    private facade: FacadeService,
-    private formBuilder: FormBuilder,
-    private router: Router
+    private _facade: FacadeService,
+    private _formBuilder: FormBuilder,
+    private _router: Router
   ) { }
 
   ngOnInit(): void {
 
     this.hide = true;
 
-    if (this.facade.authIsAuthenticated()) {
+    if (this._facade.authIsAuthenticated()) {
 
-      let currentUser = this.facade.authGetCurrentUser();
+      let currentUser = this._facade.authGetCurrentUser();
 
       switch (currentUser.role) {
 
         case Setor.ADMINISTRACAO:
-          this.router.navigate(['/administracao/painel']);
+          this._router.navigate(['/administracao/painel']);
           break;
       }
     }
@@ -44,7 +44,7 @@ export class LoginComponent implements OnInit {
 
   buildForm() {
 
-    this.form = this.formBuilder.group({
+    this.form = this._formBuilder.group({
       username: [null, Validators.required],
       password: [null, Validators.required]
     });
@@ -53,30 +53,30 @@ export class LoginComponent implements OnInit {
   submit() {
     const user = Object.assign({}, this.form.value);
 
-    this.facade.authLogin(user).subscribe({
+    this._facade.authLogin(user).subscribe({
 
       next: (authentication) => {
         
-        this.facade.authSetCurrentUser({
+        this._facade.authSetCurrentUser({
           token: authentication.access_token,
           role: authentication.role
         })
       },
 
       complete: () => {
-        let currentUser = this.facade.authGetCurrentUser();
+        let currentUser = this._facade.authGetCurrentUser();
 
         switch (currentUser.role) {
 
           case Setor.ADMINISTRACAO:
-            this.router.navigate(['/administracao/painel']);
+            this._router.navigate(['/administracao/painel']);
             break;
         }
       },
 
       error: (error) => {
         console.error(error);
-        this.facade.notificationShowNotification(error.error.message, NotificationType.FAIL);
+        this._facade.notificationShowNotification(error.error.message, NotificationType.FAIL);
       }
     })
   }

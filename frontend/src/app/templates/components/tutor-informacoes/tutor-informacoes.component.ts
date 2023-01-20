@@ -1,56 +1,62 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { Tutor } from 'src/app/entities/tutor';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { FacadeService } from 'src/app/services/facade.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
-import { environment } from 'src/environments/environment';
 
 import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-imagem.component';
+import { TutorExcluirComponent } from '../tutor-excluir/tutor-excluir.component';
+import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-tutores-cadastro',
-  templateUrl: './tutores-cadastro.component.html',
-  styleUrls: ['./tutores-cadastro.component.sass']
+  selector: 'app-tutor-informacoes',
+  templateUrl: './tutor-informacoes.component.html',
+  styleUrls: ['./tutor-informacoes.component.sass']
 })
-export class TutoresCadastroComponent implements OnInit {
+export class TutorInformacoesComponent implements OnInit {
 
   apiURL!: string;
+  currentUser!: any;
   form!: FormGroup;
   foto!: any;
   fotoToSave!: any;
   fotoToDelete!: any;
+  tutor!: Tutor;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private dialog: MatDialog,
-    private dialogRef: MatDialogRef<TutoresCadastroComponent>,
-    private facade: FacadeService,
-    private formBuilder: FormBuilder
+    private _dialog: MatDialog,
+    private _facade: FacadeService,
+    private _formBuilder: FormBuilder,
+    private _router: Router
   ) { }
 
   ngOnInit(): void {
     
     this.apiURL = environment.apiURL;
+    this.currentUser = this._facade.authGetCurrentUser();
 
-    if (this.data.tutor) {
-      
-      this.buildForm(this.data.tutor);
-      
-      if (this.data.tutor.foto) {
-        this.foto = { id: this.data.tutor.foto.id, nome: this.data.tutor.foto.nome, salvo: true};
+    this._facade.tutorGet().subscribe({
+
+      next: (tutor) => {
+          
+        if (tutor) {
+          this.tutor = tutor;
+          this.buildForm(tutor);
+
+          if (tutor.foto) {
+            this.foto = { id: tutor.foto.id, nome: tutor.foto.nome, salvo: true};
+          }
+        }
       }
-    }
-
-    else {
-      this.buildForm(null);
-    }
+    });
   }
-  
+
   addFoto() {
 
-    this.dialog.open(SelecionarImagemComponent, {
+    this._dialog.open(SelecionarImagemComponent, {
       data: {
         multiple: false
       },
@@ -60,7 +66,7 @@ export class TutoresCadastroComponent implements OnInit {
 
       if (result && result.status) {
 
-        this.facade.imagemToBase64(result.images[0])?.then(data => {
+        this._facade.imagemToBase64(result.images[0])?.then(data => {
 
           if (this.foto && this.foto.salvo) {
             this.fotoToDelete = this.foto;
@@ -77,7 +83,7 @@ export class TutoresCadastroComponent implements OnInit {
 
   buildForm(tutor: Tutor | null) {
 
-    this.form = this.formBuilder.group({
+    this.form = this._formBuilder.group({
       id: [tutor?.id, Validators.nullValidator],
       nome: [tutor?.nome, Validators.required],
       cpf: [tutor?.cpf, Validators.required],
@@ -85,7 +91,7 @@ export class TutoresCadastroComponent implements OnInit {
       telefone: [tutor?.telefone, Validators.required],
       situacao: [tutor?.situacao, Validators.required],
 
-      endereco: this.formBuilder.group({
+      endereco: this._formBuilder.group({
         id: [tutor?.endereco.id, Validators.nullValidator],
         rua: [tutor?.endereco.rua, Validators.required],
         numeroResidencia: [tutor?.endereco.numeroResidencia, Validators.required],
@@ -95,6 +101,27 @@ export class TutoresCadastroComponent implements OnInit {
         estado: [tutor?.endereco.estado, Validators.required],
         cep: [tutor?.endereco.cep, Validators.required]
       })
+    });
+
+    this.form.disable();
+  }
+
+  delete() {
+
+    this._dialog.open(TutorExcluirComponent, {
+      data: {
+        tutor: this.tutor
+      },
+      width: '100%'
+    })
+    .afterClosed().subscribe({
+
+      next: (result) => {
+        
+        if (result) {
+          this._router.navigate([this.currentUser.role.toLowerCase() + '/tutores']);
+        }
+      }
     });
   }
 
@@ -112,36 +139,17 @@ export class TutoresCadastroComponent implements OnInit {
 
     let tutor: Tutor = Object.assign({}, this.form.getRawValue());
 
-    if (tutor.id) {
-      
-      this.facade.tutorUpdate(tutor, this.fotoToSave, this.fotoToDelete ? this.fotoToDelete.id : null).subscribe({
+    this._facade.tutorUpdate(tutor, this.fotoToSave, this.fotoToDelete?.id).subscribe({
 
-        complete: () => {
-          this.facade.notificationShowNotification(MessageUtils.TUTORES_UPDATE_SUCCESS, NotificationType.SUCCESS);
-          this.dialogRef.close({status: true});
-        },
-  
-        error: (error) => {
-          console.error(error);
-          this.facade.notificationShowNotification(MessageUtils.TUTORES_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
-        }
-      });
-    }
+      next: (tutor) => {
+        this._facade.notificationShowNotification(MessageUtils.TUTOR_UPDATE_SUCCESS, NotificationType.SUCCESS);
+        this._facade.tutorSet(tutor);
+      },
 
-    else {
-
-      this.facade.tutorSave(tutor, this.fotoToSave).subscribe({
-
-        complete: () => {
-          this.facade.notificationShowNotification(MessageUtils.TUTORES_SAVE_SUCCESS, NotificationType.SUCCESS);
-          this.dialogRef.close({status: true});
-        },
-  
-        error: (error) => {
-          console.error(error);
-          this.facade.notificationShowNotification(MessageUtils.TUTORES_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
-        }
-      });
-    }
-  } 
+      error: (error) => {
+        console.error(error);
+        this._facade.notificationShowNotification(MessageUtils.TUTOR_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
+      }
+    });
+  }
 }

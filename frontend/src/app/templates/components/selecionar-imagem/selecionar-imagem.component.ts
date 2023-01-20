@@ -12,7 +12,7 @@ export class SelecionarImagemComponent {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any, 
-    private matDialogRef: MatDialogRef<SelecionarImagemComponent>
+    private _matDialogRef: MatDialogRef<SelecionarImagemComponent>
   ) { }
 
   ngOnInit(): void { }
@@ -40,7 +40,7 @@ export class SelecionarImagemComponent {
   submit () {
 
     if (this.images && this.images.length > 0) {
-      this.matDialogRef.close({status: true, message: 'Sucesso', images: this.images});
+      this._matDialogRef.close({status: true, message: 'Sucesso', images: this.images});
     }
   }
 }

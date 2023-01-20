@@ -1,32 +1,31 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Usuario } from 'src/app/entities/usuario';
+import { Animal } from 'src/app/entities/animal';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { FacadeService } from 'src/app/services/facade.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
 import { environment } from 'src/environments/environment';
 
 import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-imagem.component';
+import { SelecionarTutorComponent } from '../selecionar-tutor/selecionar-tutor.component';
 
 @Component({
-  selector: 'app-usuarios-cadastro',
-  templateUrl: './usuarios-cadastro.component.html',
-  styleUrls: ['./usuarios-cadastro.component.sass']
+  selector: 'app-animal-cadastro',
+  templateUrl: './animal-cadastro.component.html',
+  styleUrls: ['./animal-cadastro.component.sass']
 })
-export class UsuariosCadastroComponent implements OnInit {
+export class AnimalCadastroComponent implements OnInit {
   
   apiURL!: string;
-  currentUser!: any;
   form!: FormGroup;
   foto!: any;
   fotoToSave!: any;
-  hide!: boolean;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _dialog: MatDialog,
-    private _dialogRef: MatDialogRef<UsuariosCadastroComponent>,
+    private _dialogRef: MatDialogRef<AnimalCadastroComponent>,
     private _facade: FacadeService,
     private _formBuilder: FormBuilder
   ) { }
@@ -34,8 +33,6 @@ export class UsuariosCadastroComponent implements OnInit {
   ngOnInit(): void {
     
     this.apiURL = environment.apiURL;
-    this.currentUser = this._facade.authGetCurrentUser();
-    this.hide = true;
     this.buildForm();
   }
 
@@ -53,7 +50,7 @@ export class UsuariosCadastroComponent implements OnInit {
 
         this._facade.imagemToBase64(result.images[0])?.then(data => {
 
-          let imagem = { id: new Date().getTime(), data: data, nome: null, salvo: false };
+          let imagem = { id: new Date().getTime(), data: data };
 
           this.foto = imagem;
           this.fotoToSave = result.images[0];
@@ -67,34 +64,59 @@ export class UsuariosCadastroComponent implements OnInit {
     this.form = this._formBuilder.group({
       id: [null, Validators.nullValidator],
       nome: [null, Validators.required],
-      cpf: [null, Validators.required],
-      senha: [null, Validators.required],
-      setor: [null, Validators.required],
-      status: [null, Validators.required],
+      idade: [null, Validators.required],
+      sexo: [null, Validators.required],
+      cor: [null, Validators.required],
+      raca: [null, Validators.required],
+      especie: [null, Validators.required],
+      porte: [null, Validators.required],
+      castrado: [null, Validators.required],
+      dataAdocao: [null, Validators.nullValidator],
+      dataResgate: [null, Validators.nullValidator],
+      local: [null, Validators.nullValidator],
+      localAdocao: [null, Validators.nullValidator],
+      situacao: [null, Validators.required],
+      tutor: [null, Validators.nullValidator],
       foto: [null, Validators.nullValidator]
     });
   }
 
   removeFoto() {
-    
+
     this.foto = null;
     this.form.get('foto')?.patchValue(null);
   }
 
+  selectTutor() {
+
+    this._dialog.open(SelecionarTutorComponent, {
+      width: '100%'
+    })
+    .afterClosed().subscribe({
+      
+      next: (result) => {
+          
+        if (result) {
+          this.form.get('tutor')?.patchValue(result.tutor);
+        }
+      },
+    });
+  }
+
   submit() {
 
-    let usuario: Usuario = Object.assign({}, this.form.getRawValue());
+    let animal: Animal = Object.assign({}, this.form.getRawValue());
 
-    this._facade.usuarioSave(usuario, this.fotoToSave).subscribe({
+    this._facade.animalSave(animal, this.fotoToSave).subscribe({
 
       complete: () => {
-        this._facade.notificationShowNotification(MessageUtils.USUARIO_SAVE_SUCCESS, NotificationType.SUCCESS);
+        this._facade.notificationShowNotification(MessageUtils.ANIMAL_SAVE_SUCCESS, NotificationType.SUCCESS);
         this._dialogRef.close({status: true});
       },
 
       error: (error) => {
         console.error(error);
-        this._facade.notificationShowNotification(MessageUtils.USUARIO_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
+        this._facade.notificationShowNotification(MessageUtils.ANIMAL_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
       }
     });
   }

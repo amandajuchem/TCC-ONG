@@ -12,11 +12,7 @@
                             <img src="assets/images/animais.png" height="125px" class="mb-3">
                         </div>
 
-                        <div *ngIf="foto && foto.salvo">
-                            <img [src]="apiURL + '/imagens/search?nome=' + foto.nome" height="125px" class="mb-3 rounded-circle">
-                        </div>
-
-                        <div *ngIf="foto && !foto.salvo">
+                        <div *ngIf="foto">
                             <img [src]="foto.data" height="125px" class="mb-3 rounded-circle">
                         </div>
                     </div>

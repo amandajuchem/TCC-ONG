@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
 import { Tutor } from '../entities/tutor';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,7 @@ import { Tutor } from '../entities/tutor';
 export class TutorService {
 
   private baseURL = environment.apiURL + '/tutores';
+  private subject = new BehaviorSubject<Tutor | null>(null);
 
   constructor(private http: HttpClient) { }
 
@@ -50,6 +52,14 @@ export class TutorService {
 
   /**
    * 
+   * @returns 
+   */
+  get() {
+    return this.subject.asObservable();
+  }
+
+  /**
+   * 
    * @param tutor 
    * @param novaFoto 
    * @returns 
@@ -65,6 +75,14 @@ export class TutorService {
     }
 
     return this.http.post<Tutor>(this.baseURL, formData);
+  }
+
+  /**
+   * 
+   * @param tutor 
+   */
+  set(tutor: Tutor) {
+    this.subject.next(tutor);
   }
 
   /**

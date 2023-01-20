@@ -1,0 +1,106 @@
+<form [formGroup]="form" *ngIf="form" class="overflow-hidden">
+    
+    <div class="row">
+        <div class="col-12">
+            <div class="text-end">
+                <button mat-icon-button (click)="form.enable()" *ngIf="form.disabled">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button (click)="submit()" *ngIf="form.enabled">
+                    <mat-icon>save</mat-icon>
+                </button>
+                <button mat-icon-button (click)="form.disable()" *ngIf="form.enabled">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="text-center">
+                <div *ngIf="!foto">
+                    <img src="assets/images/usuarios.png" height="150px" class="mb-3 rounded">
+                </div>
+
+                <div *ngIf="foto && foto.salvo">
+                    <img [src]="apiURL + '/imagens/search?nome=' + foto.nome" height="150px" class="mb-3 rounded">
+                </div>
+
+                <div *ngIf="foto && !foto.salvo">
+                    <img [src]="foto.data" height="150px" class="mb-3 rounded">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="text-center">
+                <button mat-icon-button type="button" [matMenuTriggerFor]="menuFoto">
+                    <mat-icon>camera_alt</mat-icon>
+                </button>
+                <mat-menu #menuFoto="matMenu">
+                    <button mat-menu-item (click)="addFoto()">
+                        <mat-icon>search</mat-icon>
+                        <span>Selecionar Foto</span>
+                    </button>
+                    <button mat-menu-item (click)="removeFoto()" *ngIf="foto">
+                        <mat-icon>delete</mat-icon>
+                        <span>Remover Foto</span>
+                    </button>
+                </mat-menu>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Nome</mat-label>
+                <input matInput formControlName="nome">
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-3">
+            <mat-form-field appearance="outline" class="w-100">
+                <mat-label>CPF</mat-label>
+                <input matInput formControlName="cpf" mask="CPF_CNPJ">
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-3">
+            <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Senha</mat-label>
+                <input matInput formControlName="senha" [type]="hide ? 'password' : 'text'">
+                <button mat-icon-button matSuffix type="button" (click)="hide = !hide">
+                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-3">
+            <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Setor</mat-label>
+                <mat-select formControlName="setor">
+                    <mat-option value="ADMINISTRACAO">Administração</mat-option>
+                    <mat-option value="FUNCIONARIO">Funcionário</mat-option>
+                    <mat-option value="VETERINARIO">Veterinário</mat-option>
+                    <mat-option value="VOLUNTARIO">Voluntário</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-3">
+            <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Situação</mat-label>
+                <mat-select formControlName="status">
+                    <mat-option [value]="true">Ativo</mat-option>
+                    <mat-option [value]="false">Inativo</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+</form>
