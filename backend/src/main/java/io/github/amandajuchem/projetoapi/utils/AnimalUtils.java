@@ -22,6 +22,23 @@ public class AnimalUtils {
 
     private final FacadeService facade;
 
+
+    /**
+     * Delete animal.
+     *
+     * @param id the id
+     */
+    public void delete(UUID id) {
+
+        var animal = facade.animalFindById(id);
+
+        if (animal.getFoto() != null) {
+            facade.imagemDelete(animal.getFoto().getId());
+        }
+
+        facade.animalDelete(animal.getId());
+    }
+
     /**
      * Save animal.
      *

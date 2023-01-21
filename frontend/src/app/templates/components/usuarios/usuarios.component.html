@@ -55,8 +55,8 @@
        
         <a [routerLink]="'/' + currentUser.role.toLowerCase() + '/usuarios/' + usuario.id">
             <mat-card>
-                <img mat-card-image [src]="apiURL + '/imagens/search?nome=' + usuario.foto.nome" class="w-100" *ngIf="usuario.foto">
-                <img mat-card-image src="assets/images/usuarios.png" class="w-100" *ngIf="!usuario.foto">
+                <img mat-card-image [src]="apiURL + '/imagens/search?nome=' + usuario.foto.nome" style="height: 300px;" class="w-100" *ngIf="usuario.foto">
+                <img mat-card-image src="assets/images/usuarios.png" style="height: 300px;" class="w-100" *ngIf="!usuario.foto">
     
                 <mat-card-content class="p-3">
                     <div class="row">

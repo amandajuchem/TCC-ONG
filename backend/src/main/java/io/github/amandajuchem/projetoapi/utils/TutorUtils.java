@@ -23,6 +23,22 @@ public class TutorUtils {
     private final FacadeService facade;
 
     /**
+     * Delete tutor.
+     *
+     * @param id the id
+     */
+    public void delete(UUID id) {
+
+        var tutor = facade.tutorFindById(id);
+
+        if (tutor.getFoto() != null) {
+            facade.imagemDelete(tutor.getFoto().getId());
+        }
+
+        facade.tutorDelete(tutor.getId());
+    }
+
+    /**
      * Save tutor.
      *
      * @param tutor      the tutor

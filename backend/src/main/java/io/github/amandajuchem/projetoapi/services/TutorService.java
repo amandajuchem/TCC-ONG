@@ -32,6 +32,7 @@ public class TutorService {
 
             if (repository.existsById(id)) {
                 repository.deleteById(id);
+                return;
             }
         }
 
@@ -110,10 +111,13 @@ public class TutorService {
             throw new ValidationException("CPF já cadastrado!");
         }
 
-        var tutor_findByRg = repository.findByRg(tutor.getRg()).orElse(null);
+        if (tutor.getRg() != null && !tutor.getRg().isEmpty()) {
 
-        if (tutor_findByRg != null && !tutor_findByRg.equals(tutor)) {
-            throw new ValidationException("RG já cadastrado!");
+            var tutor_findByRg = repository.findByRg(tutor.getRg()).orElse(null);
+
+            if (tutor_findByRg != null && !tutor_findByRg.equals(tutor)) {
+                throw new ValidationException("RG já cadastrado!");
+            }
         }
 
         return true;

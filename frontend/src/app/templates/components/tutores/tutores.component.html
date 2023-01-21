@@ -53,8 +53,8 @@
         
         <a [routerLink]="'/' + currentUser.role.toLowerCase() + '/tutores/' + tutor.id">
             <mat-card>
-                <img mat-card-image [src]="apiURL + '/imagens/search?nome=' + tutor.foto.nome" class="w-100" *ngIf="tutor.foto">
-                <img mat-card-image src="assets/images/tutores.png" class="w-100" *ngIf="!tutor.foto">
+                <img mat-card-image [src]="apiURL + '/imagens/search?nome=' + tutor.foto.nome" *ngIf="tutor.foto">
+                <img mat-card-image src="assets/images/tutores.png" *ngIf="!tutor.foto">
     
                 <mat-card-content class="p-3">
                     <div class="row">

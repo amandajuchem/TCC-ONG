@@ -38,7 +38,7 @@ public class AnimalController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable UUID id) {
-        facade.animalDelete(id);
+        animalUtils.delete(id);
         return ResponseEntity.status(OK).body(null);
     }
 

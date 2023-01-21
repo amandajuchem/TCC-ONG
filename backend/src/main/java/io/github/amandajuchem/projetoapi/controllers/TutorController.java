@@ -37,7 +37,7 @@ public class TutorController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable UUID id) {
-        facade.tutorDelete(id);
+        tutorUtils.delete(id);
         return ResponseEntity.status(OK).body(null);
     }
 
