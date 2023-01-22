@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -57,7 +57,25 @@ export class UsuarioService {
 
     return this.http.post<Usuario>(this.baseURL, formData);
   }
-  
+
+  /**
+   * 
+   * @param cpf 
+   * @returns 
+   */
+  search(cpf: string | null) {
+    
+    let params = new HttpParams();
+
+    if (cpf) {
+      params = params.append('cpf', cpf);
+    }
+
+    return this.http.get<Usuario>(this.baseURL + '/search', {
+      params: params
+    });
+  }
+
   /**
    * 
    * @param usuario 

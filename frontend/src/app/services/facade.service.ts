@@ -270,6 +270,14 @@ export class FacadeService {
 
   /**
    * 
+   * @param cpf 
+   */
+  usuarioSearch(cpf: string | null) {
+    return this._usuarioService.search(cpf);
+  }
+
+  /**
+   * 
    * @param usuario 
    */
   usuarioSet(usuario: Usuario) {

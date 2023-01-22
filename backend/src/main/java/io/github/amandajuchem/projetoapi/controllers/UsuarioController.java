@@ -16,8 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.util.UUID;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 /**
  * The type Usuario controller.
@@ -76,6 +75,24 @@ public class UsuarioController {
         var usuarioDTO = UsuarioDTO.toDTO(usuarioSaved);
 
         return ResponseEntity.status(CREATED).body(usuarioDTO);
+    }
+
+    /**
+     * Search response entity.
+     *
+     * @param cpf the cpf
+     * @return the response entity
+     */
+    @GetMapping("/search")
+    public ResponseEntity search(@RequestParam(required = false) String cpf) {
+
+        if (cpf != null) {
+            var usuario = facade.usuarioFindByCpf(cpf);
+            var usuarioDTO = UsuarioDTO.toDTO(usuario);
+            return ResponseEntity.status(OK).body(usuarioDTO);
+        }
+
+        return ResponseEntity.status(NOT_FOUND).body(null);
     }
 
     /**

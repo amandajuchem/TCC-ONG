@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Usuario } from 'src/app/entities/usuario';
+import { NotificationType } from 'src/app/enums/notification-type';
 import { FacadeService } from 'src/app/services/facade.service';
+import { MessageUtils } from 'src/app/utils/message-utils';
 
 @Component({
   selector: 'app-toolbar',
@@ -10,6 +13,7 @@ import { FacadeService } from 'src/app/services/facade.service';
 export class ToolbarComponent implements OnInit {
 
   currentUser!: any;
+  usuario!: Usuario;
 
   constructor(
     private _facade: FacadeService,
@@ -17,7 +21,20 @@ export class ToolbarComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    
     this.currentUser = this._facade.authGetCurrentUser();
+    
+    this._facade.usuarioSearch(this.currentUser.username).subscribe({
+
+      next: (usuario) => {
+        this.usuario = usuario;    
+      },
+
+      error: (error) => {
+        console.error(error);
+        this._facade.notificationShowNotification(MessageUtils.USUARIO_GET_FAIL, NotificationType.FAIL); 
+      }
+    });
   }
 
   logout() {
