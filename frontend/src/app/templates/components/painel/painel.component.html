@@ -10,7 +10,24 @@
 
 <div class="row">
     <div class="col-12 col-md-3 mb-3">
-        <a [routerLink]="'/' + currentUser.role.toLowerCase() +'/animais'">
+        <a [routerLink]="'/' + user.role.toLowerCase() +'/adocoes'">
+            <mat-card>
+                <mat-card-content>
+                    <div class="text-center">
+                        <img src="assets/images/adocoes.png" width="64px">
+                    </div>
+                </mat-card-content>
+                <mat-card-footer>
+                    <div class="text-center pt-3">
+                        <h2 class="text-dark">Adoções</h2>
+                    </div>
+                </mat-card-footer>
+            </mat-card>
+        </a>
+    </div>
+    
+    <div class="col-12 col-md-3 mb-3">
+        <a [routerLink]="'/' + user.role.toLowerCase() +'/animais'">
             <mat-card>
                 <mat-card-content>
                     <div class="text-center">
@@ -27,7 +44,24 @@
     </div>
 
     <div class="col-12 col-md-3 mb-3">
-        <a [routerLink]="'/' + currentUser.role.toLowerCase() +'/tutores'">
+        <a [routerLink]="'/' + user.role.toLowerCase() +'/atendimentos'">
+            <mat-card>
+                <mat-card-content>
+                    <div class="text-center">
+                        <img src="assets/images/atendimentos.png" width="64px">
+                    </div>
+                </mat-card-content>
+                <mat-card-footer>
+                    <div class="text-center pt-3">
+                        <h2 class="text-dark">Atendimentos</h2>
+                    </div>
+                </mat-card-footer>
+            </mat-card>
+        </a>
+    </div>
+
+    <div class="col-12 col-md-3 mb-3">
+        <a [routerLink]="'/' + user.role.toLowerCase() +'/tutores'">
             <mat-card>
                 <mat-card-content>
                     <div class="text-center">
@@ -44,7 +78,7 @@
     </div>
 
     <div class="col-12 col-md-3 mb-3">
-        <a [routerLink]="'/' + currentUser.role.toLowerCase() +'/usuarios'">
+        <a [routerLink]="'/' + user.role.toLowerCase() +'/usuarios'">
             <mat-card>
                 <mat-card-content>
                     <div class="text-center">

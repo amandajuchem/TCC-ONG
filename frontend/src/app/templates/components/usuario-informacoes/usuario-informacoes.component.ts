@@ -16,12 +16,12 @@ import { environment } from 'src/environments/environment';
 export class UsuarioInformacoesComponent implements OnInit {
 
   apiURL!: string;
-  currentUser!: any;
   form!: FormGroup;
   foto!: any;
   fotoToSave!: any;
   fotoToDelete!: any;
   hide!: boolean;
+  user!: any;
 
   constructor(
     private _dialog: MatDialog,
@@ -32,7 +32,8 @@ export class UsuarioInformacoesComponent implements OnInit {
   ngOnInit(): void {
     
     this.apiURL = environment.apiURL;
-    this.currentUser = this._facade.authGetCurrentUser();
+    this.hide = true;
+    this.user = this._facade.authGetCurrentUser();
 
     this._facade.usuarioGet().subscribe({
 
@@ -83,10 +84,12 @@ export class UsuarioInformacoesComponent implements OnInit {
       nome: [usuario.nome, Validators.required],
       cpf: [usuario.cpf, Validators.required],
       senha: [usuario.senha, Validators.required],
-      setor: [{value: usuario.setor, disabled: usuario.cpf == this.currentUser.username}, Validators.required],
-      status: [{value: usuario.status, disabled: usuario.cpf == this.currentUser.username}, Validators.required],
+      setor: [{value: usuario.setor, disabled: usuario.cpf == this.user.username}, Validators.required],
+      status: [{value: usuario.status, disabled: usuario.cpf == this.user.username}, Validators.required],
       foto: [usuario.foto, Validators.nullValidator]
     });
+
+    this.form.disable();
   }
 
   removeFoto() {

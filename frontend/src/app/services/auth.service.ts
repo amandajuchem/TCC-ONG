@@ -3,37 +3,50 @@ import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment';
 
+import { User } from '../entities/user';
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private jwtHelper: JwtHelperService;
+  private _jwtHelper!: JwtHelperService;
 
-  constructor(private http: HttpClient) {
-    this.jwtHelper = new JwtHelperService();
+  constructor(
+    private _http: HttpClient, 
+  ) {
+    this._jwtHelper = new JwtHelperService();
   }
 
   getCurrentUser() {
-    let currentUser: any = localStorage.getItem("currentUser");
+    
+    let user!: User;
 
     try {
+      
+      let currentUser: any = localStorage.getItem("user");
       currentUser = JSON.parse(currentUser);
-      currentUser.username = this.jwtHelper.decodeToken(currentUser.token).sub;
+
+      user = {
+        username: this._jwtHelper.decodeToken(currentUser.token).sub,
+        access_token: currentUser.token,
+        role: currentUser.role
+      };
+
     } catch (error) { }
 
-    return currentUser;
+    return user;
   }
 
   isAuthenticated() {
-    const currentUser = this.getCurrentUser();
+    const user = this.getCurrentUser();
 
-    if (currentUser) {
+    if (user) {
 
-      const token = currentUser.token.substring(7);
+      const token = user.access_token.substring(7);
 
       if (token) {
-        return !this.jwtHelper.isTokenExpired(token);
+        return !this._jwtHelper.isTokenExpired(token);
       }
     }
 
@@ -41,19 +54,19 @@ export class AuthService {
   }
 
   login(user: any) {
-    return this.http.post<any>(environment.apiURL + '/login', user);
+    return this._http.post<any>(environment.apiURL + '/login', user);
   }
 
   logout() {
-    localStorage.removeItem("currentUser");
+    localStorage.removeItem("user");
   }
 
-  setCurrentUser(currentUser: any) {
+  setCurrentUser(user: any) {
 
-    if (localStorage.getItem("currentUser")) {
-      localStorage.removeItem("currentUser");
+    if (localStorage.getItem("user")) {
+      localStorage.removeItem("user");
     }
 
-    localStorage.setItem("currentUser", JSON.stringify(currentUser));
+    localStorage.setItem("user", JSON.stringify(user));
   }
 }

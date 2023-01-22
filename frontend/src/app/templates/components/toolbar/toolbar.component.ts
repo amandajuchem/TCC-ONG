@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { User } from 'src/app/entities/user';
 import { Usuario } from 'src/app/entities/usuario';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { FacadeService } from 'src/app/services/facade.service';
@@ -12,7 +13,7 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 })
 export class ToolbarComponent implements OnInit {
 
-  currentUser!: any;
+  user!: User;
   usuario!: Usuario;
 
   constructor(
@@ -22,9 +23,9 @@ export class ToolbarComponent implements OnInit {
 
   ngOnInit(): void {
     
-    this.currentUser = this._facade.authGetCurrentUser();
+    this.user = this._facade.authGetCurrentUser();
     
-    this._facade.usuarioSearch(this.currentUser.username).subscribe({
+    this._facade.usuarioSearch(this.user.username).subscribe({
 
       next: (usuario) => {
         this.usuario = usuario;    

@@ -10,10 +10,10 @@ import { Tutor } from '../entities/tutor';
 })
 export class TutorService {
 
-  private baseURL = environment.apiURL + '/tutores';
-  private subject = new BehaviorSubject<Tutor | null>(null);
+  private _baseURL = environment.apiURL + '/tutores';
+  private _subject = new BehaviorSubject<Tutor | null>(null);
 
-  constructor(private http: HttpClient) { }
+  constructor(private _http: HttpClient) { }
 
   /**
    * 
@@ -21,7 +21,7 @@ export class TutorService {
    * @returns 
    */
   delete(id: string) {
-    return this.http.delete(this.baseURL + '/' + id);
+    return this._http.delete(this._baseURL + '/' + id);
   }
 
   /**
@@ -29,7 +29,7 @@ export class TutorService {
    * @returns 
    */
   findAll() {
-    return this.http.get<Array<Tutor>>(this.baseURL);
+    return this._http.get<Array<Tutor>>(this._baseURL);
   }
 
   /**
@@ -38,7 +38,7 @@ export class TutorService {
    * @returns 
    */
   findById(id: string) {
-    return this.http.get<Tutor>(this.baseURL + '/' + id);
+    return this._http.get<Tutor>(this._baseURL + '/' + id);
   }
 
   /**
@@ -47,7 +47,7 @@ export class TutorService {
    * @returns 
    */
   findByNomeContains(nome: string) {
-    return this.http.get<Array<Tutor>>(this.baseURL + '/search?nome=' + nome);
+    return this._http.get<Array<Tutor>>(this._baseURL + '/search?nome=' + nome);
   }
 
   /**
@@ -55,7 +55,7 @@ export class TutorService {
    * @returns 
    */
   get() {
-    return this.subject.asObservable();
+    return this._subject.asObservable();
   }
 
   /**
@@ -74,7 +74,7 @@ export class TutorService {
       formData.append('novaFoto', new Blob([novaFoto], { type: 'multipart/form-data' }), 'novaFoto.png');
     }
 
-    return this.http.post<Tutor>(this.baseURL, formData);
+    return this._http.post<Tutor>(this._baseURL, formData);
   }
 
   /**
@@ -82,7 +82,7 @@ export class TutorService {
    * @param tutor 
    */
   set(tutor: Tutor) {
-    this.subject.next(tutor);
+    this._subject.next(tutor);
   }
 
   /**
@@ -106,6 +106,6 @@ export class TutorService {
       formData.append('antigaFoto', new Blob([antigaFoto], { type: 'text/plain' }));
     }
 
-    return this.http.put<Tutor>(this.baseURL + '/' + tutor.id, formData);
+    return this._http.put<Tutor>(this._baseURL + '/' + tutor.id, formData);
   }
 }

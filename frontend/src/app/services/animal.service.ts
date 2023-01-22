@@ -13,7 +13,7 @@ export class AnimalService {
   private baseURL = environment.apiURL + '/animais';
   private subject = new BehaviorSubject<Animal | null>(null);
 
-  constructor(private http: HttpClient) { }
+  constructor(private _http: HttpClient) { }
 
   /**
    * 
@@ -21,7 +21,7 @@ export class AnimalService {
    * @returns 
    */
   delete(id: string) {
-    return this.http.delete(this.baseURL + '/' + id);
+    return this._http.delete(this.baseURL + '/' + id);
   }
 
   /**
@@ -29,7 +29,7 @@ export class AnimalService {
    * @returns 
    */
   findAll() {
-    return this.http.get<Array<Animal>>(this.baseURL);
+    return this._http.get<Array<Animal>>(this.baseURL);
   }
 
   /**
@@ -38,7 +38,7 @@ export class AnimalService {
    * @returns 
    */
   findById(id: string) {
-    return this.http.get<Animal>(this.baseURL + '/' + id);
+    return this._http.get<Animal>(this.baseURL + '/' + id);
   }
 
   /**
@@ -65,7 +65,7 @@ export class AnimalService {
       formData.append('novaFoto', new Blob([novaFoto], { type: 'multipart/form-data' }), 'novaFoto.png');
     }
 
-    return this.http.post<Animal>(this.baseURL, formData);
+    return this._http.post<Animal>(this.baseURL, formData);
   }
 
   /**
@@ -97,6 +97,6 @@ export class AnimalService {
       formData.append('antigaFoto', new Blob([antigaFoto], { type: 'text/plain' }));
     }
 
-    return this.http.put<Animal>(this.baseURL + '/' + animal.id, formData);
+    return this._http.put<Animal>(this.baseURL + '/' + animal.id, formData);
   }
 }

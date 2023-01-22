@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { Animal } from 'src/app/entities/animal';
+import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { FacadeService } from 'src/app/services/facade.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
 import { environment } from 'src/environments/environment';
-import { SelecionarTutorComponent } from '../selecionar-tutor/selecionar-tutor.component';
-import { MatDialog } from '@angular/material/dialog';
-import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-imagem.component';
+
 import { AnimalExcluirComponent } from '../animal-excluir/animal-excluir.component';
-import { Router } from '@angular/router';
+import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-imagem.component';
+import { SelecionarTutorComponent } from '../selecionar-tutor/selecionar-tutor.component';
 
 @Component({
   selector: 'app-animal-informacoes',
@@ -20,11 +22,11 @@ export class AnimalInformacoesComponent implements OnInit {
 
   animal!: Animal;
   apiURL!: string;
-  currentUser!: any;
   form!: FormGroup;
   foto!: any;
   fotoToSave!: any;
   fotoToDelete!: any;
+  user!: User;
 
   constructor(
     private _dialog: MatDialog,
@@ -36,7 +38,7 @@ export class AnimalInformacoesComponent implements OnInit {
   ngOnInit(): void {
     
     this.apiURL = environment.apiURL;
-    this.currentUser = this._facade.authGetCurrentUser();
+    this.user = this._facade.authGetCurrentUser();
 
     this._facade.animalGet().subscribe({
 
@@ -118,7 +120,7 @@ export class AnimalInformacoesComponent implements OnInit {
       next: (result) => {
         
         if (result) {
-          this._router.navigate([this.currentUser.role.toLowerCase() + '/animais']);
+          this._router.navigate([this.user.role.toLowerCase() + '/animais']);
         }
       }
     });

@@ -2,7 +2,7 @@
     <div class="col-12">
         <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
             <ol class="breadcrumb m-0">
-                <li class="breadcrumb-item"><a class="text-white" [routerLink]="'/' + currentUser.role.toLowerCase() + '/painel'">Início</a></li>
+                <li class="breadcrumb-item"><a class="text-white" [routerLink]="'/' + user.role.toLowerCase() + '/painel'">Início</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Tutores</li>
             </ol>
         </nav>
@@ -51,7 +51,7 @@
 
     <div class="col-12 col-md-3" *ngFor="let tutor of tutoresToShow">
         
-        <a [routerLink]="'/' + currentUser.role.toLowerCase() + '/tutores/' + tutor.id">
+        <a [routerLink]="'/' + user.role.toLowerCase() + '/tutores/' + tutor.id">
             <mat-card>
                 <img mat-card-image [src]="apiURL + '/imagens/search?nome=' + tutor.foto.nome" *ngIf="tutor.foto">
                 <img mat-card-image src="assets/images/tutores.png" *ngIf="!tutor.foto">

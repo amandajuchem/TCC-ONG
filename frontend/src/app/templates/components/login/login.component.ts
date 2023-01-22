@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { Setor } from 'src/app/enums/setor';
 import { FacadeService } from 'src/app/services/facade.service';
@@ -27,9 +28,9 @@ export class LoginComponent implements OnInit {
 
     if (this._facade.authIsAuthenticated()) {
 
-      let currentUser = this._facade.authGetCurrentUser();
+      let user: User = this._facade.authGetCurrentUser();
 
-      switch (currentUser.role) {
+      switch (user.role) {
 
         case Setor.ADMINISTRACAO:
           this._router.navigate(['/administracao/painel']);
@@ -51,6 +52,7 @@ export class LoginComponent implements OnInit {
   }
 
   submit() {
+    
     const user = Object.assign({}, this.form.value);
 
     this._facade.authLogin(user).subscribe({
@@ -64,9 +66,10 @@ export class LoginComponent implements OnInit {
       },
 
       complete: () => {
-        let currentUser = this._facade.authGetCurrentUser();
 
-        switch (currentUser.role) {
+        let user: User = this._facade.authGetCurrentUser();
+
+        switch (user.role) {
 
           case Setor.ADMINISTRACAO:
             this._router.navigate(['/administracao/painel']);

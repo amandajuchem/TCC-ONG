@@ -1,6 +1,6 @@
 <mat-toolbar>
     <mat-toolbar-row>
-        <a class="text-white" [routerLink]="'/' + currentUser.role.toLowerCase() + '/painel'">Projeto API</a>
+        <a class="text-white" [routerLink]="'/' + user.role.toLowerCase() + '/painel'">Projeto API</a>
         <span class="spacer"></span>
         <div *ngIf="usuario">
             <button mat-button [matMenuTriggerFor]="menuUsuario">{{usuario.nome.toUpperCase()}}</button>

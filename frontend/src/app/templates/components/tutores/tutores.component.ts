@@ -7,6 +7,7 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 import { environment } from 'src/environments/environment';
 
 import { TutorCadastroComponent } from '../tutor-cadastro/tutor-cadastro.component';
+import { User } from 'src/app/entities/user';
 
 @Component({
   selector: 'app-tutores',
@@ -16,9 +17,9 @@ import { TutorCadastroComponent } from '../tutor-cadastro/tutor-cadastro.compone
 export class TutoresComponent implements OnInit {
   
   apiURL!: string;
-  currentUser: any;
   tutores!: Array<Tutor>;
   tutoresToShow!: Array<Tutor>;
+  user!: User;
   
   constructor(
     private _dialog: MatDialog,
@@ -27,7 +28,7 @@ export class TutoresComponent implements OnInit {
 
   ngOnInit(): void {
     this.apiURL = environment.apiURL;
-    this.currentUser = this._facade.authGetCurrentUser();
+    this.user = this._facade.authGetCurrentUser();
     this.findAllTutores();
   }
 

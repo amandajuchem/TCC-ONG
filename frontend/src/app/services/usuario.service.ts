@@ -10,17 +10,17 @@ import { Usuario } from '../entities/usuario';
 })
 export class UsuarioService {
 
-  private baseURL = environment.apiURL + '/usuarios';
-  private subject = new BehaviorSubject<Usuario | null>(null);
+  private _baseURL = environment.apiURL + '/usuarios';
+  private _subject = new BehaviorSubject<Usuario | null>(null);
 
-  constructor(private http: HttpClient) { }
+  constructor(private _http: HttpClient) { }
 
   /**
    * 
    * @returns 
    */
   findAll() {
-    return this.http.get<Array<Usuario>>(this.baseURL);
+    return this._http.get<Array<Usuario>>(this._baseURL);
   }
 
   /**
@@ -29,7 +29,7 @@ export class UsuarioService {
    * @returns 
    */
   findById(id: string) {
-    return this.http.get<Usuario>(this.baseURL + '/' + id);
+    return this._http.get<Usuario>(this._baseURL + '/' + id);
   }
 
   /**
@@ -37,7 +37,7 @@ export class UsuarioService {
    * @returns 
    */
   get() {
-    return this.subject.asObservable();
+    return this._subject.asObservable();
   }
 
   /**
@@ -55,7 +55,7 @@ export class UsuarioService {
       formData.append('novaFoto', new Blob([novaFoto], { type: 'multipart/form-data' }), 'novaFoto.png');
     }
 
-    return this.http.post<Usuario>(this.baseURL, formData);
+    return this._http.post<Usuario>(this._baseURL, formData);
   }
 
   /**
@@ -71,7 +71,7 @@ export class UsuarioService {
       params = params.append('cpf', cpf);
     }
 
-    return this.http.get<Usuario>(this.baseURL + '/search', {
+    return this._http.get<Usuario>(this._baseURL + '/search', {
       params: params
     });
   }
@@ -81,7 +81,7 @@ export class UsuarioService {
    * @param usuario 
    */
   set(usuario: Usuario) {
-    this.subject.next(usuario);
+    this._subject.next(usuario);
   }
 
   /**
@@ -103,6 +103,6 @@ export class UsuarioService {
       formData.append('antigaFoto', new Blob([antigaFoto], { type: 'text/plain' }));
     }
 
-    return this.http.put<Usuario>(this.baseURL + '/' + usuario.id, formData);
+    return this._http.put<Usuario>(this._baseURL + '/' + usuario.id, formData);
   }
 }

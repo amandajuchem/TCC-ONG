@@ -9,12 +9,12 @@ import { NotificationComponent } from '../templates/components/notification/noti
 export class NotificationService {
 
   constructor(
-    private snackBar: MatSnackBar
+    private _snackBar: MatSnackBar
   ) { }
 
   showNotification(message: string, type: NotificationType) {
     
-    this.snackBar.openFromComponent(NotificationComponent, {
+    this._snackBar.openFromComponent(NotificationComponent, {
       data: {
         message: message
       },

@@ -17,7 +17,7 @@ import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-image
 export class UsuariosCadastroComponent implements OnInit {
   
   apiURL!: string;
-  currentUser!: any;
+  user!: any;
   form!: FormGroup;
   foto!: any;
   fotoToSave!: any;
@@ -34,7 +34,7 @@ export class UsuariosCadastroComponent implements OnInit {
   ngOnInit(): void {
     
     this.apiURL = environment.apiURL;
-    this.currentUser = this._facade.authGetCurrentUser();
+    this.user = this._facade.authGetCurrentUser();
     this.hide = true;
     this.buildForm();
   }

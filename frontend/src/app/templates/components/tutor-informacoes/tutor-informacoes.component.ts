@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { Tutor } from 'src/app/entities/tutor';
+import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { FacadeService } from 'src/app/services/facade.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
+import { environment } from 'src/environments/environment';
 
 import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-imagem.component';
 import { TutorExcluirComponent } from '../tutor-excluir/tutor-excluir.component';
-import { Router } from '@angular/router';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-tutor-informacoes',
@@ -19,12 +20,12 @@ import { environment } from 'src/environments/environment';
 export class TutorInformacoesComponent implements OnInit {
 
   apiURL!: string;
-  currentUser!: any;
   form!: FormGroup;
   foto!: any;
   fotoToSave!: any;
   fotoToDelete!: any;
   tutor!: Tutor;
+  user!: User;
 
   constructor(
     private _dialog: MatDialog,
@@ -36,7 +37,7 @@ export class TutorInformacoesComponent implements OnInit {
   ngOnInit(): void {
     
     this.apiURL = environment.apiURL;
-    this.currentUser = this._facade.authGetCurrentUser();
+    this.user = this._facade.authGetCurrentUser();
 
     this._facade.tutorGet().subscribe({
 
@@ -119,7 +120,7 @@ export class TutorInformacoesComponent implements OnInit {
       next: (result) => {
         
         if (result) {
-          this._router.navigate([this.currentUser.role.toLowerCase() + '/tutores']);
+          this._router.navigate([this.user.role.toLowerCase() + '/tutores']);
         }
       }
     });

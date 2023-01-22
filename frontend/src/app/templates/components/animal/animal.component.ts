@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Animal } from 'src/app/entities/animal';
+import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { FacadeService } from 'src/app/services/facade.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
@@ -13,7 +14,7 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 export class AnimalComponent implements OnInit {
 
   animal!: Animal;
-  currentUser: any;
+  user!: User;
 
   constructor(
     private _activatedRoute: ActivatedRoute,
@@ -22,7 +23,7 @@ export class AnimalComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.currentUser = this._facade.authGetCurrentUser();
+    this.user = this._facade.authGetCurrentUser();
 
     this._activatedRoute.params.subscribe({
 

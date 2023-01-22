@@ -6,6 +6,7 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { Usuario } from 'src/app/entities/usuario';
 import { environment } from 'src/environments/environment';
+import { User } from 'src/app/entities/user';
 
 @Component({
   selector: 'app-usuarios',
@@ -15,7 +16,7 @@ import { environment } from 'src/environments/environment';
 export class UsuariosComponent implements OnInit {
   
   apiURL!: string;
-  currentUser: any;
+  user!: User;
   usuarios!: Array<Usuario>;
   usuariosToShow!: Array<Usuario>;
 
@@ -26,7 +27,7 @@ export class UsuariosComponent implements OnInit {
 
   ngOnInit(): void {
     this.apiURL = environment.apiURL;
-    this.currentUser = this._facade.authGetCurrentUser();
+    this.user = this._facade.authGetCurrentUser();
     this.findAllUsuarios();
   }
 

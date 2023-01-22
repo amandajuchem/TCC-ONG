@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Animal } from 'src/app/entities/animal';
+import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { FacadeService } from 'src/app/services/facade.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
@@ -18,7 +19,7 @@ export class AnimaisComponent implements OnInit {
   animais!: Array<Animal>;
   animaisToShow!: Array<Animal>;
   apiURL!: string;
-  currentUser!: any;
+  user!: User;
 
   constructor(
     private _dialog: MatDialog,
@@ -27,7 +28,7 @@ export class AnimaisComponent implements OnInit {
 
   ngOnInit(): void {
     this.apiURL = environment.apiURL;
-    this.currentUser = this._facade.authGetCurrentUser();
+    this.user = this._facade.authGetCurrentUser();
     this.findAllAnimais();
   }
 

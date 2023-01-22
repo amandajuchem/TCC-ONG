@@ -15,7 +15,7 @@ export class TokenInterceptor implements HttpInterceptor {
 
       request = request.clone({
         setHeaders: {
-          Authorization: 'Bearer ' + this.facade.authGetCurrentUser().token
+          Authorization: 'Bearer ' + this.facade.authGetCurrentUser().access_token
         }
       })
     }

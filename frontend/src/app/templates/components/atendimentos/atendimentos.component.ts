@@ -3,11 +3,11 @@ import { User } from 'src/app/entities/user';
 import { FacadeService } from 'src/app/services/facade.service';
 
 @Component({
-  selector: 'app-painel',
-  templateUrl: './painel.component.html',
-  styleUrls: ['./painel.component.sass']
+  selector: 'app-atendimentos',
+  templateUrl: './atendimentos.component.html',
+  styleUrls: ['./atendimentos.component.sass']
 })
-export class PainelComponent implements OnInit {
+export class AtendimentosComponent implements OnInit {
   
   user!: User;
 
@@ -17,5 +17,13 @@ export class PainelComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this._facade.authGetCurrentUser();
+  }
+
+  add() {
+
+  }
+
+  filter(value: string) {
+    
   }
 }
