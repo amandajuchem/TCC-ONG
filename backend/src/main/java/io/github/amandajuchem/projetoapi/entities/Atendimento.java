@@ -1,9 +1,7 @@
 package io.github.amandajuchem.projetoapi.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,7 +16,8 @@ import java.util.Set;
  * The type Atendimento.
  */
 @Data
-@Builder
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "tb_atendimentos")
@@ -63,9 +62,4 @@ public class Atendimento extends AbstractEntity {
 
     @OneToOne
     private Usuario usuario;
-
-    @Override
-    public boolean equals(Object o) {
-        return super.equals(o);
-    }
 }

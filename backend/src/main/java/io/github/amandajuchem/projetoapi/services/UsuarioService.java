@@ -8,6 +8,8 @@ import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,7 +18,7 @@ import java.util.UUID;
  * The type Usuario service.
  */
 @Service
-@RequiredArgsConstructor(onConstructor_= {@Autowired})
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class UsuarioService {
 
     private final UsuarioRepository repository;
@@ -26,6 +28,7 @@ public class UsuarioService {
      *
      * @return the list
      */
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<Usuario> findAll() {
         return repository.findAll();
     }
@@ -36,6 +39,7 @@ public class UsuarioService {
      * @param cpf the cpf
      * @return the usuario
      */
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Usuario findByCpf(String cpf) {
 
         return repository.findByCpf(cpf).orElseThrow(() -> {
@@ -49,6 +53,7 @@ public class UsuarioService {
      * @param id the id
      * @return the usuario
      */
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Usuario findById(UUID id) {
 
         return repository.findById(id).orElseThrow(() -> {
@@ -62,9 +67,10 @@ public class UsuarioService {
      * @param usuario the usuario
      * @return the usuario
      */
+    @Transactional(propagation = Propagation.REQUIRED)
     public Usuario save(Usuario usuario) {
 
-        if (usuario ==  null) {
+        if (usuario == null) {
             throw new ValidationException(MessageUtils.USUARIO_NULL);
         }
 

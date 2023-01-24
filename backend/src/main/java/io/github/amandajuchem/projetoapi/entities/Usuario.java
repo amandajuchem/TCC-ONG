@@ -2,10 +2,8 @@ package io.github.amandajuchem.projetoapi.entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.github.amandajuchem.projetoapi.enums.Setor;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.persistence.*;
@@ -16,7 +14,8 @@ import javax.validation.constraints.NotNull;
  * The type User.
  */
 @Data
-@Builder
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "tb_usuarios")
@@ -46,9 +45,4 @@ public class Usuario extends AbstractEntity {
     @OneToOne(mappedBy = "usuario")
     @JsonManagedReference(value = "jsonReferenceUsuario")
     private Imagem foto;
-
-    @Override
-    public boolean equals(Object o) {
-        return super.equals(o);
-    }
 }

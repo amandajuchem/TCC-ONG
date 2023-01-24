@@ -1,9 +1,7 @@
 package io.github.amandajuchem.projetoapi.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,7 +15,8 @@ import java.util.Set;
  * The type Feira adocao.
  */
 @Data
-@Builder
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "tb_feiras_adocao")
@@ -36,9 +35,4 @@ public class FeiraAdocao extends AbstractEntity {
 
     @OneToMany
     private Set<Usuario> usuarios;
-
-    @Override
-    public boolean equals(Object o) {
-        return super.equals(o);
-    }
 }

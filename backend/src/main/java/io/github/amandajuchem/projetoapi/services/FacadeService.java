@@ -1,9 +1,6 @@
 package io.github.amandajuchem.projetoapi.services;
 
-import io.github.amandajuchem.projetoapi.entities.Animal;
-import io.github.amandajuchem.projetoapi.entities.Imagem;
-import io.github.amandajuchem.projetoapi.entities.Tutor;
-import io.github.amandajuchem.projetoapi.entities.Usuario;
+import io.github.amandajuchem.projetoapi.entities.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +12,11 @@ import java.util.UUID;
  * The type Facade service.
  */
 @Service
-@RequiredArgsConstructor(onConstructor_= {@Autowired})
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class FacadeService {
 
     private final AnimalService animalService;
+    private final AtendimentoService atendimentoService;
     private final ImagemService imagemService;
     private final TutorService tutorService;
     private final UsuarioService usuarioService;
@@ -61,6 +59,46 @@ public class FacadeService {
      */
     public Animal animalSave(Animal animal) {
         return animalService.save(animal);
+    }
+
+    //////////////////////////////////////////////// ATENDIMENTO ////////////////////////////////////////////////
+
+    /**
+     * Atendimento delete.
+     *
+     * @param id the id
+     */
+    public void atendimentoDelete(UUID id) {
+        atendimentoService.delete(id);
+    }
+
+    /**
+     * Atendimento find all list.
+     *
+     * @return the list
+     */
+    public List<Atendimento> atendimentoFindAll() {
+        return atendimentoService.findAll();
+    }
+
+    /**
+     * Atendimento find by id atendimento.
+     *
+     * @param id the id
+     * @return the atendimento
+     */
+    public Atendimento atendimentoFindById(UUID id) {
+        return atendimentoService.findById(id);
+    }
+
+    /**
+     * Atendimento save atendimento.
+     *
+     * @param atendimento the atendimento
+     * @return the atendimento
+     */
+    public Atendimento atendimentoSave(Atendimento atendimento) {
+        return atendimentoService.save(atendimento);
     }
 
     //////////////////////////////////////////////// IMAGEM ////////////////////////////////////////////////

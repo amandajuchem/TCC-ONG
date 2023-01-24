@@ -2,10 +2,8 @@ package io.github.amandajuchem.projetoapi.entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.github.amandajuchem.projetoapi.enums.Situacao;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.persistence.*;
@@ -17,7 +15,8 @@ import javax.validation.constraints.NotNull;
  * The type Tutor.
  */
 @Data
-@Builder
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "tb_tutores")
@@ -54,9 +53,4 @@ public class Tutor extends AbstractEntity {
     @Valid
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Endereco endereco;
-
-    @Override
-    public boolean equals(Object o) {
-        return super.equals(o);
-    }
 }

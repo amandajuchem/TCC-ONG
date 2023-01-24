@@ -1,9 +1,9 @@
 package io.github.amandajuchem.projetoapi.services;
 
-import io.github.amandajuchem.projetoapi.entities.Animal;
+import io.github.amandajuchem.projetoapi.entities.Atendimento;
 import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
-import io.github.amandajuchem.projetoapi.repositories.AnimalRepository;
+import io.github.amandajuchem.projetoapi.repositories.AtendimentoRepository;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +15,13 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The type Animal service.
+ * The type Atendimento service.
  */
 @Service
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-public class AnimalService {
+public class AtendimentoService {
 
-    private final AnimalRepository repository;
+    private final AtendimentoRepository repository;
 
     /**
      * Delete.
@@ -39,7 +39,7 @@ public class AnimalService {
             }
         }
 
-        throw new ObjectNotFoundException(MessageUtils.ANIMAL_NOT_FOUND);
+        throw new ObjectNotFoundException(MessageUtils.ATENDIMENTO_NOT_FOUND);
     }
 
     /**
@@ -48,51 +48,51 @@ public class AnimalService {
      * @return the list
      */
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<Animal> findAll() {
+    public List<Atendimento> findAll() {
         return repository.findAll();
     }
 
     /**
-     * Find by id animal.
+     * Find by id atendimento.
      *
      * @param id the id
-     * @return the animal
+     * @return the atendimento
      */
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Animal findById(UUID id) {
+    public Atendimento findById(UUID id) {
 
         return repository.findById(id).orElseThrow(() -> {
-            throw new ObjectNotFoundException(MessageUtils.ANIMAL_NOT_FOUND);
+            throw new ObjectNotFoundException(MessageUtils.ATENDIMENTO_NOT_FOUND);
         });
     }
 
     /**
-     * Save animal.
+     * Save atendimento.
      *
-     * @param animal the animal
-     * @return the animal
+     * @param atendimento the atendimento
+     * @return the atendimento
      */
     @Transactional(propagation = Propagation.REQUIRED)
-    public Animal save(Animal animal) {
+    public Atendimento save(Atendimento atendimento) {
 
-        if (animal == null) {
-            throw new ValidationException(MessageUtils.ANIMAL_NULL);
+        if (atendimento == null) {
+            throw new ValidationException(MessageUtils.ATENDIMENTO_NULL);
         }
 
-        if (validateAnimal(animal)) {
-            animal = repository.save(animal);
+        if (validateAtendimento(atendimento)) {
+            atendimento = repository.save(atendimento);
         }
 
-        return animal;
+        return atendimento;
     }
 
     /**
-     * Validate animal.
+     * Validate atendimento.
      *
-     * @param animal the animal
+     * @param atendimento the atendimento
      * @return the boolean
      */
-    private boolean validateAnimal(Animal animal) {
+    private boolean validateAtendimento(Atendimento atendimento) {
 
 
         return true;

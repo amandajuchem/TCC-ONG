@@ -16,6 +16,16 @@ public class MessageUtils {
     public static final String ANIMAL_NULL = "Animal nulo!";
 
     /**
+     * The constant ATENDIMENTO_NOT_FOUND.
+     */
+    public static final String ATENDIMENTO_NOT_FOUND = "Atendimento não encontrado!";
+
+    /**
+     * The constant ATENDIMENTO_NULL.
+     */
+    public static final String ATENDIMENTO_NULL = "Atendimento nulo!";
+
+    /**
      * The constant IMAGEM_NOT_FOUND.
      */
     public static final String IMAGEM_NOT_FOUND = "Imagem não encontrada!";

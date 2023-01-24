@@ -14,7 +14,7 @@ import java.util.List;
  * The type User details service.
  */
 @Service
-@RequiredArgsConstructor(onConstructor_= {@Autowired})
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
 
     private final FacadeService facade;
@@ -31,7 +31,8 @@ public class UserDetailsService implements org.springframework.security.core.use
                     .enabled(usuario.getStatus())
                     .authorities(List.of(new SimpleGrantedAuthority("ROLE_" + usuario.getSetor().toString())))
                     .build();
-        } catch (Exception ex) { }
+        } catch (Exception ex) {
+        }
 
         throw new UsernameNotFoundException("Usuário e/ou senha inválidos!");
     }

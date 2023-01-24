@@ -9,6 +9,8 @@ import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -16,7 +18,7 @@ import java.util.UUID;
  * The type Imagem service.
  */
 @Service
-@RequiredArgsConstructor(onConstructor_= {@Autowired})
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class ImagemService {
 
     private final ImagemRepository repository;
@@ -26,6 +28,7 @@ public class ImagemService {
      *
      * @param id the id
      */
+    @Transactional(propagation = Propagation.REQUIRED)
     public void delete(UUID id) {
 
         if (repository.existsById(id)) {
@@ -46,6 +49,7 @@ public class ImagemService {
      * @param imagem the imagem
      * @return the imagem
      */
+    @Transactional(propagation = Propagation.REQUIRED)
     public Imagem save(Imagem imagem) {
 
         if (imagem == null) {

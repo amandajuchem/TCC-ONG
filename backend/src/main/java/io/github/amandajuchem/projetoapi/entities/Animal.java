@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.github.amandajuchem.projetoapi.enums.Porte;
 import io.github.amandajuchem.projetoapi.enums.Sexo;
 import io.github.amandajuchem.projetoapi.enums.Situacao;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -18,7 +16,8 @@ import java.time.LocalDate;
  * The type Animal.
  */
 @Data
-@Builder
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "tb_animais")
@@ -82,9 +81,4 @@ public class Animal extends AbstractEntity {
     @OneToOne(mappedBy = "animal")
     @JsonManagedReference(value = "jsonReferenceAnimal")
     private Imagem foto;
-
-    @Override
-    public boolean equals(Object o) {
-        return super.equals(o);
-    }
 }
