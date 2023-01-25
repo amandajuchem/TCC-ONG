@@ -49,6 +49,7 @@ import { UsuarioInformacoesComponent } from './usuario-informacoes/usuario-infor
 import { UsuarioComponent } from './usuario/usuario.component';
 import { UsuariosCadastroComponent } from './usuarios-cadastro/usuarios-cadastro.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
+import { NgxMatDatetimePickerModule, NgxMatNativeDateModule } from '@angular-material-components/datetime-picker';
 
 @NgModule({
   declarations: [
@@ -101,6 +102,8 @@ import { UsuariosComponent } from './usuarios/usuarios.component';
     MatTabsModule,
     MatToolbarModule,
     NgxMaskModule.forRoot(),
+    NgxMatDatetimePickerModule,
+    NgxMatNativeDateModule,
     ReactiveFormsModule,
     RouterModule,
   ],

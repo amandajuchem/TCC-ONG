@@ -51,7 +51,7 @@ CREATE TABLE tb_atendimentos
     procedimentos      VARCHAR(255),
     posologia          VARCHAR(255),
     animal_id          UUID,
-    usuario_id         UUID,
+    veterinario_id     UUID,
     CONSTRAINT pk_tb_atendimentos PRIMARY KEY (id)
 );
 
@@ -129,7 +129,7 @@ CREATE TABLE tb_imagens
 
 CREATE TABLE tb_tutores
 (
-    id                 UUID NOT NULL,
+    id                 UUID         NOT NULL,
     created_date       TIMESTAMP WITHOUT TIME ZONE,
     last_modified_date TIMESTAMP WITHOUT TIME ZONE,
     created_by_user    VARCHAR(255),
@@ -138,7 +138,7 @@ CREATE TABLE tb_tutores
     cpf                VARCHAR(11),
     rg                 VARCHAR(13),
     telefone           VARCHAR(11),
-    situacao           VARCHAR(255),
+    situacao           VARCHAR(255) NOT NULL,
     observacao         TEXT,
     endereco_id        UUID,
     CONSTRAINT pk_tb_tutores PRIMARY KEY (id)
@@ -175,7 +175,7 @@ ALTER TABLE tb_atendimentos
     ADD CONSTRAINT FK_TB_ATENDIMENTOS_ON_ANIMAL FOREIGN KEY (animal_id) REFERENCES tb_animais (id);
 
 ALTER TABLE tb_atendimentos
-    ADD CONSTRAINT FK_TB_ATENDIMENTOS_ON_USUARIO FOREIGN KEY (usuario_id) REFERENCES tb_usuarios (id);
+    ADD CONSTRAINT FK_TB_ATENDIMENTOS_ON_VETERINARIO FOREIGN KEY (veterinario_id) REFERENCES tb_usuarios (id);
 
 ALTER TABLE tb_castracoes
     ADD CONSTRAINT FK_TB_CASTRACOES_ON_ANIMAL FOREIGN KEY (animal_id) REFERENCES tb_animais (id);

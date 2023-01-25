@@ -1,1 +1,131 @@
-<p>atendimento-cadastro works!</p>
+<div class="mat-dialog">
+    <h2 class="m-0" mat-dialog-title *ngIf="!data.atendimento">Cadastrar Atendimento</h2>
+    <h2 class="m-0" mat-dialog-title *ngIf="data.atendimento">Editar dados do Atendimento</h2>
+
+    <div mat-dialog-content class="py-3">
+
+        <form [formGroup]="form" *ngIf="form">
+
+            <div class="row">
+                <div class="col-12">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Animal</mat-label>
+                        <input matInput [value]="form.get('animal')?.value?.nome" readonly required>
+                        <button matSuffix mat-icon-button (click)="selectAnimal()">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Comorbidades</mat-label>
+                        <input matInput [value]="form.get('comorbidades')?.value" readonly required>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Motivo</mat-label>
+                        <mat-select formControlName="motivo">
+                            <mat-option value="ATROPELAMENTO">Atropelamento</mat-option>
+                            <mat-option value="CASTRAÇÃO SOLIDÁRIA">Castração Solidária</mat-option>
+                            <mat-option value="MAUS TRATOS">Maus tratos</mat-option>
+                            <mat-option value="OUTROS">Outros</mat-option>
+                            <mat-option value="VALE CASTRAÇÃO">Vale Castração</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-3">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Data do atendimento</mat-label>
+                        <input matInput [ngxMatDatetimePicker]="pickerDataHoraAtendimento" formControlName="dataHora" readonly>
+                        <mat-datepicker-toggle matIconSuffix [for]="$any(pickerDataHoraAtendimento)"></mat-datepicker-toggle>
+                        <ngx-mat-datetime-picker #pickerDataHoraAtendimento></ngx-mat-datetime-picker>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-3">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Data do retorno</mat-label>
+                        <input matInput [ngxMatDatetimePicker]="pickerDataHoraRetorno" formControlName="dataHoraRetorno" readonly>
+                        <mat-datepicker-toggle matIconSuffix [for]="$any(pickerDataHoraRetorno)"></mat-datepicker-toggle>
+                        <ngx-mat-datetime-picker #pickerDataHoraRetorno></ngx-mat-datetime-picker>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Diagnóstico</mat-label>
+                        <textarea matInput formControlName="diagnostico"></textarea>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Exames</mat-label>
+                        <input matInput formControlName="exames">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Procedimentos</mat-label>
+                        <textarea matInput formControlName="procedimentos"></textarea>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Posologia</mat-label>
+                        <input matInput formControlName="posologia">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Veterinário</mat-label>
+                        <input matInput [value]="form.get('usuario')?.value?.nome" readonly required>
+                        <button matSuffix mat-icon-button (click)="selectVeterinario()">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <h3 class="text-dark">Documentos</h3>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="text-center">
+                        <button mat-button>Adicionar Imagem</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div mat-dialog-actions layout="row" class="d-flex justify-content-end" *ngIf="form">
+        <button mat-button mat-dialog-close>Cancelar</button>
+        <button mat-button [ngClass]="form.valid ? 'bg-success text-white' : ''" (click)="submit()" [disabled]="!form.valid">OK</button>
+    </div>
+</div>

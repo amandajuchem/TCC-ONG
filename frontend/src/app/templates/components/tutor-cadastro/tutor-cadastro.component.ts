@@ -1,6 +1,6 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Tutor } from 'src/app/entities/tutor';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { FacadeService } from 'src/app/services/facade.service';
@@ -22,7 +22,6 @@ export class TutorCadastroComponent implements OnInit {
   fotoToSave!: any;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
     private _dialog: MatDialog,
     private _dialogRef: MatDialogRef<TutorCadastroComponent>,
     private _facade: FacadeService,

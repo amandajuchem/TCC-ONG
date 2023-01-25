@@ -61,5 +61,5 @@ public class Atendimento extends AbstractEntity {
     private Animal animal;
 
     @OneToOne
-    private Usuario usuario;
+    private Usuario veterinario;
 }

@@ -22,7 +22,6 @@ public class AnimalUtils {
 
     private final FacadeService facade;
 
-
     /**
      * Delete animal.
      *

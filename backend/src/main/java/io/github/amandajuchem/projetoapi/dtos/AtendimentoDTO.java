@@ -28,8 +28,8 @@ public record AtendimentoDTO(
         @NotEmpty String procedimentos,
         @NotEmpty String posologia,
         Set<ImagemDTO> documentos,
-        AnimalDTO animal,
-        UsuarioDTO usuario
+        @NotNull AnimalDTO animal,
+        @NotNull UsuarioDTO veterinario
 ) implements Serializable {
 
     /**
@@ -56,7 +56,7 @@ public record AtendimentoDTO(
                 atendimento.getPosologia(),
                 atendimento.getDocumentos() != null ? atendimento.getDocumentos().stream().map(d -> ImagemDTO.toDTO(d)).collect(Collectors.toSet()) : null,
                 atendimento.getAnimal() != null ? AnimalDTO.toDTO(atendimento.getAnimal()) : null,
-                atendimento.getUsuario() != null ? UsuarioDTO.toDTO(atendimento.getUsuario()) : null
+                atendimento.getVeterinario() != null ? UsuarioDTO.toDTO(atendimento.getVeterinario()) : null
         );
     }
 }
