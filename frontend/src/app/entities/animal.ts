@@ -2,6 +2,7 @@ import { Porte } from '../enums/porte';
 import { Sexo } from '../enums/sexo';
 import { Situacao } from '../enums/situacao';
 import { AbstractEntity } from './abstract-entity';
+import { FichaMedica } from './ficha-medica';
 import { Tutor } from './tutor';
 
 export interface Animal extends AbstractEntity {
@@ -20,4 +21,5 @@ export interface Animal extends AbstractEntity {
     situacao: Situacao;
     tutor: Tutor;
     foto: any;
+    fichaMedica: FichaMedica;
 }

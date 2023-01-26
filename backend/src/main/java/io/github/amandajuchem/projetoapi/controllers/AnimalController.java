@@ -16,15 +16,14 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.util.UUID;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 /**
  * The type Animal controller.
  */
 @RestController
 @RequestMapping("/animais")
-@RequiredArgsConstructor(onConstructor_= {@Autowired})
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class AnimalController {
 
     private final AnimalUtils animalUtils;
@@ -87,6 +86,21 @@ public class AnimalController {
         var animalDTO = AnimalDTO.toDTO(animalSaved);
 
         return ResponseEntity.status(CREATED).body(animalDTO);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity search(@RequestParam(required = false) String nome) {
+
+        if (nome != null) {
+
+            var animaisDTO = facade.animalFindByNomeContains(nome).stream()
+                    .map(a -> AnimalDTO.toDTO(a))
+                    .toList();
+
+            return ResponseEntity.status(OK).body(animaisDTO);
+        }
+
+        return ResponseEntity.status(NOT_FOUND).body(null);
     }
 
     /**

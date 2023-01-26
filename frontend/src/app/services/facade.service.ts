@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
 
 import { Animal } from '../entities/animal';
+import { Atendimento } from '../entities/atendimento';
+import { Tutor } from '../entities/tutor';
 import { Usuario } from '../entities/usuario';
 import { NotificationType } from '../enums/notification-type';
 import { AnimalService } from './animal.service';
+import { AtendimentoService } from './atendimento.service';
 import { AuthService } from './auth.service';
 import { ImagemService } from './imagem.service';
 import { NotificationService } from './notification.service';
-import { UsuarioService } from './usuario.service';
 import { TutorService } from './tutor.service';
-import { Tutor } from '../entities/tutor';
+import { UsuarioService } from './usuario.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +20,7 @@ export class FacadeService {
 
   constructor(
     private _animalService: AnimalService,
+    private _atendimentoService: AtendimentoService,
     private _authService: AuthService,
     private _imagemService: ImagemService,
     private _notificationService: NotificationService,
@@ -55,6 +58,15 @@ export class FacadeService {
 
   /**
    * 
+   * @param nome 
+   * @returns 
+   */
+  animalFindByNomeContains(nome: string) {
+    return this._animalService.findByNomeContains(nome);
+  }
+
+  /**
+   * 
    * @returns 
    */
   animalGet() {
@@ -88,6 +100,46 @@ export class FacadeService {
    */
   animalUpdate(animal: Animal, novaFoto: any, antigaFoto: any) {
     return this._animalService.update(animal, novaFoto, antigaFoto);
+  }
+
+  ////////////////////////////////////////////////// ATENDIMENTO //////////////////////////////////////////////////
+
+  /**
+   * 
+   * @param id 
+   * @returns 
+   */
+  atendimentoDelete(id: string) {
+    return this._atendimentoService.delete(id);
+  }
+
+  /**
+   * 
+   * @returns 
+   */
+  atendimentoFindAll() {
+    return this._atendimentoService.findAll();
+  }
+
+  /**
+   * 
+   * @param atendimento 
+   * @param documentosToSave 
+   * @returns 
+   */
+  atendimentoSave(atendimento: Atendimento, documentosToSave: Array<File> | null) {
+    return this._atendimentoService.save(atendimento, documentosToSave);
+  }
+
+  /**
+   * 
+   * @param atendimento 
+   * @param documentosToSave 
+   * @param documentosToDelete 
+   * @returns 
+   */
+  atendimentoUpdate(atendimento: Atendimento, documentosToSave: Array<File> | null, documentosToDelete: Array<string> | null) {
+    return this._atendimentoService.update(atendimento, documentosToSave, documentosToDelete);
   }
 
   ////////////////////////////////////////////////// AUTHENTICATION //////////////////////////////////////////////////
@@ -242,11 +294,29 @@ export class FacadeService {
 
   /**
    * 
+   * @param cpf 
+   * @returns 
+   */
+  usuarioFindByCpf(cpf: string) {
+    return this._usuarioService.findByCpf(cpf);
+  }
+
+  /**
+   * 
    * @param id 
    * @returns 
    */
   usuarioFindById(id: string) {
     return this._usuarioService.findById(id);
+  }
+
+  /**
+   * 
+   * @param nome 
+   * @returns 
+   */
+  usuarioFindByNomeContains(nome: string) {
+    return this._usuarioService.findByNomeContains(nome);
   }
 
   /**
@@ -266,14 +336,6 @@ export class FacadeService {
    */
   usuarioSave(usuario: Usuario, novaFoto: any) {
     return this._usuarioService.save(usuario, novaFoto);
-  }
-
-  /**
-   * 
-   * @param cpf 
-   */
-  usuarioSearch(cpf: string | null) {
-    return this._usuarioService.search(cpf);
   }
 
   /**

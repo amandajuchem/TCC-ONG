@@ -1,13 +1,13 @@
 <div class="mat-dialog">
-    <h2 class="m-0" mat-dialog-title>Selecionar Tutor</h2>
+    <h2 class="m-0" mat-dialog-title>Selecionar Animal</h2>
 
     <div mat-dialog-content class="py-3">
         <div class="row">
             <div class="col-12">
                 <mat-form-field appearance="outline" class="w-100">
-                    <mat-label>Tutor</mat-label>
-                    <input matInput #searchTutor placeholder="Nome" (keydown.enter)="search(searchTutor.value)">
-                    <button matSuffix mat-icon-button (click)="search(searchTutor.value)">
+                    <mat-label>Animal</mat-label>
+                    <input matInput #searchAnimal placeholder="Nome" (keydown.enter)="search(searchAnimal.value)">
+                    <button matSuffix mat-icon-button (click)="search(searchAnimal.value)">
                         <mat-icon>search</mat-icon>
                     </button>
                 </mat-form-field>
@@ -22,23 +22,29 @@
                         <!-- Index column -->
                         <ng-container matColumnDef="index">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-index">#</th>
-                            <td mat-cell *matCellDef="let tutor; let i = index">{{i+1}}</td>
+                            <td mat-cell *matCellDef="let animal; let i = index">{{i+1}}</td>
                         </ng-container>
 
                         <!-- Nome Column -->
                         <ng-container matColumnDef="nome">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-nome">Nome</th>
-                            <td mat-cell *matCellDef="let tutor">{{tutor.nome}}</td>
+                            <td mat-cell *matCellDef="let animal">{{animal.nome}}</td>
                         </ng-container>
 
-                        <!-- CPF Column -->
-                        <ng-container matColumnDef="cpf">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-cpf">CPF</th>
-                            <td mat-cell *matCellDef="let tutor">{{tutor.cpf | mask: 'CPF_CNPJ'}}</td>
+                        <!-- Sexo Column -->
+                        <ng-container matColumnDef="sexo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-sexo">Sexo</th>
+                            <td mat-cell *matCellDef="let animal">{{animal.sexo | titlecase}}</td>
+                        </ng-container>
+
+                        <!-- Idade Column -->
+                        <ng-container matColumnDef="idade">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-idade">Idade</th>
+                            <td mat-cell *matCellDef="let animal">{{animal.idade + ' Anos'}}</td>
                         </ng-container>
 
                         <tr mat-header-row *matHeaderRowDef="columns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: columns;" [ngClass]="tutor && tutor.id === row.id ? 'selected-row' : ''" (click)="select(row)"></tr>
+                        <tr mat-row *matRowDef="let row; columns: columns;" [ngClass]="animal && animal.id === row.id ? 'selected-row' : ''" (click)="select(row)"></tr>
                     </table>
                 </div>
             </div>
@@ -47,6 +53,6 @@
 
     <div mat-dialog-actions layout="row" class="d-flex justify-content-end">
         <button mat-button mat-dialog-close>Cancelar</button>
-        <button mat-button [ngClass]="tutor ? 'bg-success text-white' : ''" (click)="submit()" [disabled]="!tutor">OK</button>
+        <button mat-button [ngClass]="animal ? 'bg-success text-white' : ''" (click)="submit()" [disabled]="!animal">OK</button>
     </div>
 </div>

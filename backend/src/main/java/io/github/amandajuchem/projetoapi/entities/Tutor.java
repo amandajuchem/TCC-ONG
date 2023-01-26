@@ -47,7 +47,7 @@ public class Tutor extends AbstractEntity {
     private String observacao;
 
     @OneToOne(mappedBy = "tutor")
-    @JsonManagedReference(value = "jsonReferenceTutor")
+    @JsonManagedReference(value = "jsonReferenceFotoTutor")
     private Imagem foto;
 
     @Valid

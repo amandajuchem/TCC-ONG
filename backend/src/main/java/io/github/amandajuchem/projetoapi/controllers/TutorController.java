@@ -98,7 +98,11 @@ public class TutorController {
     public ResponseEntity search(@RequestParam(required = false) String nome) {
 
         if (nome != null) {
-            var tutoresDTO = facade.tutorFindByNomeContains(nome).stream().map(t -> TutorDTO.toDTO(t)).toList();
+
+            var tutoresDTO = facade.tutorFindByNomeContains(nome).stream()
+                    .map(t -> TutorDTO.toDTO(t))
+                    .toList();
+
             return ResponseEntity.status(OK).body(tutoresDTO);
         }
 

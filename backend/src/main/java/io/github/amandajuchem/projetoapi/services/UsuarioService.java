@@ -62,6 +62,17 @@ public class UsuarioService {
     }
 
     /**
+     * Find by nome contains list.
+     *
+     * @param nome the nome
+     * @return the list
+     */
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public List<Usuario> findByNomeContains(String nome) {
+        return repository.findByNomeContainsIgnoreCase(nome);
+    }
+
+    /**
      * Save usuario.
      *
      * @param usuario the usuario

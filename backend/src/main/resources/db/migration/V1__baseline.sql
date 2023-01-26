@@ -45,7 +45,6 @@ CREATE TABLE tb_atendimentos
     data_hora          TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     data_hora_retorno  TIMESTAMP WITHOUT TIME ZONE,
     motivo             VARCHAR(255),
-    comorbidades       TEXT,
     diagnostico        TEXT,
     exames             VARCHAR(255),
     procedimentos      VARCHAR(255),
@@ -109,6 +108,18 @@ CREATE TABLE tb_feiras_adocao_usuarios
     tb_feiras_adocao_id UUID NOT NULL,
     usuarios_id         UUID NOT NULL,
     CONSTRAINT pk_tb_feiras_adocao_usuarios PRIMARY KEY (tb_feiras_adocao_id, usuarios_id)
+);
+
+CREATE TABLE tb_fichas_medicas
+(
+    id                 UUID NOT NULL,
+    created_date       TIMESTAMP WITHOUT TIME ZONE,
+    last_modified_date TIMESTAMP WITHOUT TIME ZONE,
+    created_by_user    VARCHAR(255),
+    modified_by_user   VARCHAR(255),
+    comorbidades       TEXT,
+    animal_id          UUID,
+    CONSTRAINT pk_tb_fichas_medicas PRIMARY KEY (id)
 );
 
 CREATE TABLE tb_imagens
@@ -182,6 +193,9 @@ ALTER TABLE tb_castracoes
 
 ALTER TABLE tb_castracoes
     ADD CONSTRAINT FK_TB_CASTRACOES_ON_USUARIO FOREIGN KEY (usuario_id) REFERENCES tb_usuarios (id);
+
+ALTER TABLE tb_fichas_medicas
+    ADD CONSTRAINT FK_TB_FICHAS_MEDICAS_ON_ANIMAL FOREIGN KEY (animal_id) REFERENCES tb_animais (id);
 
 ALTER TABLE tb_imagens
     ADD CONSTRAINT FK_TB_IMAGENS_ON_ADOCAO FOREIGN KEY (adocao_id) REFERENCES tb_adocoes (id);

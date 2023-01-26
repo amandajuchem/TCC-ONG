@@ -36,7 +36,8 @@ public record AnimalDTO(
         @NotNull Boolean castrado,
         @NotNull Situacao situacao,
         TutorDTO tutor,
-        ImagemDTO foto
+        ImagemDTO foto,
+        FichaMedicaDTO fichaMedica
 ) implements Serializable {
 
     /**
@@ -67,7 +68,8 @@ public record AnimalDTO(
                 animal.getCastrado(),
                 animal.getSituacao(),
                 animal.getTutor() != null ? TutorDTO.toDTO(animal.getTutor()) : null,
-                animal.getFoto() != null ? ImagemDTO.toDTO(animal.getFoto()) : null
+                animal.getFoto() != null ? ImagemDTO.toDTO(animal.getFoto()) : null,
+                animal.getFichaMedica() != null ? FichaMedicaDTO.toDTO(animal.getFichaMedica()) : null
         );
     }
 }

@@ -25,11 +25,39 @@ export class UsuarioService {
 
   /**
    * 
+   * @param cpf 
+   * @returns 
+   */
+  findByCpf(cpf: string) {
+
+    return this._http.get<Usuario>(this._baseURL + '/search', {
+      params: {
+        cpf: cpf
+      }
+    })
+  }
+
+  /**
+   * 
    * @param id 
    * @returns 
    */
   findById(id: string) {
     return this._http.get<Usuario>(this._baseURL + '/' + id);
+  }
+
+  /**
+   * 
+   * @param nome
+   * @returns 
+   */
+  findByNomeContains(nome: string) {
+    
+    return this._http.get<Array<Usuario>>(this._baseURL + '/search', {
+      params: {
+        nome: nome
+      }
+    });
   }
 
   /**
@@ -56,24 +84,6 @@ export class UsuarioService {
     }
 
     return this._http.post<Usuario>(this._baseURL, formData);
-  }
-
-  /**
-   * 
-   * @param cpf 
-   * @returns 
-   */
-  search(cpf: string | null) {
-    
-    let params = new HttpParams();
-
-    if (cpf) {
-      params = params.append('cpf', cpf);
-    }
-
-    return this._http.get<Usuario>(this._baseURL + '/search', {
-      params: params
-    });
   }
 
   /**

@@ -1,3 +1,4 @@
+import { NgxMatDatetimePickerModule, NgxMatNativeDateModule } from '@angular-material-components/datetime-picker';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -37,6 +38,7 @@ import { LayoutComponent } from './layout/layout.component';
 import { LoginComponent } from './login/login.component';
 import { NotificationComponent } from './notification/notification.component';
 import { PainelComponent } from './painel/painel.component';
+import { SelecionarAnimaisComponent } from './selecionar-animais/selecionar-animais.component';
 import { SelecionarImagemComponent } from './selecionar-imagem/selecionar-imagem.component';
 import { SelecionarTutorComponent } from './selecionar-tutor/selecionar-tutor.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
@@ -49,7 +51,8 @@ import { UsuarioInformacoesComponent } from './usuario-informacoes/usuario-infor
 import { UsuarioComponent } from './usuario/usuario.component';
 import { UsuariosCadastroComponent } from './usuarios-cadastro/usuarios-cadastro.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
-import { NgxMatDatetimePickerModule, NgxMatNativeDateModule } from '@angular-material-components/datetime-picker';
+import { SelecionarAnimalComponent } from './selecionar-animal/selecionar-animal.component';
+import { SelecionarUsuarioComponent } from './selecionar-usuario/selecionar-usuario.component';
 
 @NgModule({
   declarations: [
@@ -69,6 +72,7 @@ import { NgxMatDatetimePickerModule, NgxMatNativeDateModule } from '@angular-mat
     LoginComponent,
     NotificationComponent,
     PainelComponent,
+    SelecionarAnimaisComponent,
     SelecionarImagemComponent,
     SelecionarTutorComponent,
     ToolbarComponent,
@@ -80,7 +84,9 @@ import { NgxMatDatetimePickerModule, NgxMatNativeDateModule } from '@angular-mat
     UsuarioInformacoesComponent,
     UsuarioComponent,
     UsuariosCadastroComponent,
-    UsuariosComponent
+    UsuariosComponent,
+    SelecionarAnimalComponent,
+    SelecionarUsuarioComponent
   ],
   imports: [
     CommonModule,

@@ -84,12 +84,22 @@ public class UsuarioController {
      * @return the response entity
      */
     @GetMapping("/search")
-    public ResponseEntity search(@RequestParam(required = false) String cpf) {
+    public ResponseEntity search(@RequestParam(required = false) String cpf,
+                                 @RequestParam(required = false) String nome) {
 
         if (cpf != null) {
             var usuario = facade.usuarioFindByCpf(cpf);
             var usuarioDTO = UsuarioDTO.toDTO(usuario);
             return ResponseEntity.status(OK).body(usuarioDTO);
+        }
+
+        if (nome != null) {
+
+            var usuariosDTO = facade.usuarioFindByNomeContains(nome).stream()
+                    .map(u -> UsuarioDTO.toDTO(u))
+                    .toList();
+
+            return ResponseEntity.status(OK).body(usuariosDTO);
         }
 
         return ResponseEntity.status(NOT_FOUND).body(null);

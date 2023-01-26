@@ -35,10 +35,6 @@ public class Atendimento extends AbstractEntity {
     private String motivo;
 
     @NotEmpty
-    @Column(name = "comorbidades", columnDefinition = "TEXT")
-    private String comorbidades;
-
-    @NotEmpty
     @Column(name = "diagnostico", columnDefinition = "TEXT")
     private String diagnostico;
 

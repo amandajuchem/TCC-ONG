@@ -67,6 +67,17 @@ public class AnimalService {
     }
 
     /**
+     * Find by nome contains list.
+     *
+     * @param nome the nome
+     * @return the list
+     */
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public List<Animal> findByNomeContains(String nome) {
+        return repository.findByNomeContainsIgnoreCase(nome);
+    }
+
+    /**
      * Save animal.
      *
      * @param animal the animal

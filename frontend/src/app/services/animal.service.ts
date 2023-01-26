@@ -43,6 +43,20 @@ export class AnimalService {
 
   /**
    * 
+   * @param nome 
+   * @returns 
+   */
+  findByNomeContains(nome: string) {
+    
+    return this._http.get<Array<Animal>>(this.baseURL + '/search', {
+      params: {
+        nome: nome
+      }
+    })
+  }
+
+  /**
+   * 
    * @returns 
    */
   get() {

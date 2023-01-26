@@ -9,6 +9,14 @@ export class MessageUtils {
     static ANIMAL_UPDATE_FAIL = 'Não foi possível atualizar os dados do animal! ';
     static ANIMAL_UPDATE_SUCCESS = 'Dados do animal atualizados com sucesso!';
 
+    static ATENDIMENTOS_GET_FAIL = 'Não foi possível obter a lista de atendimentos! Por favor, contate o suporte técnico!';
+    static ATENDIMENTO_DELETE_FAIL = 'Não foi possível excluir o atendimento! ';
+    static ATENDIMENTO_DELETE_SUCCESS = 'Atendimento excluído com sucesso!';
+    static ATENDIMENTO_SAVE_FAIL = 'Não foi possível cadastrar o atendimento! ';
+    static ATENDIMENTO_SAVE_SUCCESS = 'Atendimento cadastrado com sucesso!';
+    static ATENDIMENTO_UPDATE_FAIL = 'Não foi possível atualizar os dados do atendimento! ';
+    static ATENDIMENTO_UPDATE_SUCCESS = 'Dados do atendimento atualizados com sucesso!';
+
     static TUTORES_GET_FAIL = 'Não foi possível obter a lista de tutores! Por favor, contate o suporte técnico!';
     static TUTOR_DELETE_FAIL = 'Não foi possível excluir o tutor! ';
     static TUTOR_DELETE_SUCCESS = 'Tutor excluído com sucesso!';

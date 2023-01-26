@@ -47,7 +47,12 @@ export class TutorService {
    * @returns 
    */
   findByNomeContains(nome: string) {
-    return this._http.get<Array<Tutor>>(this._baseURL + '/search?nome=' + nome);
+    
+    return this._http.get<Array<Tutor>>(this._baseURL + '/search', {
+      params: {
+        nome: nome
+      }
+    });
   }
 
   /**

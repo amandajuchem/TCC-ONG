@@ -46,7 +46,7 @@
                         <mat-label>Data do atendimento</mat-label>
                         <input matInput [ngxMatDatetimePicker]="pickerDataHoraAtendimento" formControlName="dataHora" readonly>
                         <mat-datepicker-toggle matIconSuffix [for]="$any(pickerDataHoraAtendimento)"></mat-datepicker-toggle>
-                        <ngx-mat-datetime-picker #pickerDataHoraAtendimento></ngx-mat-datetime-picker>
+                        <ngx-mat-datetime-picker #pickerDataHoraAtendimento [showSeconds]="true"></ngx-mat-datetime-picker>
                     </mat-form-field>
                 </div>
 
@@ -55,7 +55,7 @@
                         <mat-label>Data do retorno</mat-label>
                         <input matInput [ngxMatDatetimePicker]="pickerDataHoraRetorno" formControlName="dataHoraRetorno" readonly>
                         <mat-datepicker-toggle matIconSuffix [for]="$any(pickerDataHoraRetorno)"></mat-datepicker-toggle>
-                        <ngx-mat-datetime-picker #pickerDataHoraRetorno></ngx-mat-datetime-picker>
+                        <ngx-mat-datetime-picker #pickerDataHoraRetorno [showSeconds]="true"></ngx-mat-datetime-picker>
                     </mat-form-field>
                 </div>
             </div>
@@ -100,7 +100,7 @@
                 <div class="col-12">
                     <mat-form-field appearance="outline" class="w-100">
                         <mat-label>Veterinário</mat-label>
-                        <input matInput [value]="form.get('usuario')?.value?.nome" readonly required>
+                        <input matInput [value]="form.get('veterinario')?.value?.nome" readonly required>
                         <button matSuffix mat-icon-button (click)="selectVeterinario()">
                             <mat-icon>search</mat-icon>
                         </button>

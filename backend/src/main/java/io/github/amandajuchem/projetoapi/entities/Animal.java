@@ -50,10 +50,10 @@ public class Animal extends AbstractEntity {
     @Column(name = "raca")
     private String raca;
 
-    @Column
+    @Column(name = "data_adocao")
     private LocalDate dataAdocao;
 
-    @Column
+    @Column(name = "data_resgate")
     private LocalDate dataResgate;
 
     @NotEmpty
@@ -79,6 +79,10 @@ public class Animal extends AbstractEntity {
     private Tutor tutor;
 
     @OneToOne(mappedBy = "animal")
-    @JsonManagedReference(value = "jsonReferenceAnimal")
+    @JsonManagedReference(value = "jsonReferenceFotoAnimal")
     private Imagem foto;
+
+    @OneToOne(mappedBy = "animal")
+    @JsonManagedReference(value = "jsonReferenceFichaMedicaAnimal")
+    private FichaMedica fichaMedica;
 }

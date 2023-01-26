@@ -14,5 +14,5 @@ export interface Atendimento extends AbstractEntity {
     documentos: Array<any>;
 
     animal: Animal;
-    usuario: Usuario;
+    veterinario: Usuario;
 }

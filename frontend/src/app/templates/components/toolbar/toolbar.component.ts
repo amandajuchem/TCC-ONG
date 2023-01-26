@@ -25,7 +25,7 @@ export class ToolbarComponent implements OnInit {
     
     this.user = this._facade.authGetCurrentUser();
     
-    this._facade.usuarioSearch(this.user.username).subscribe({
+    this._facade.usuarioFindByCpf(this.user.username).subscribe({
 
       next: (usuario) => {
         this.usuario = usuario;    

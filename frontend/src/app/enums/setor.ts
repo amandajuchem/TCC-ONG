@@ -1,4 +1,5 @@
 export enum Setor {
     ADMINISTRACAO = 'ADMINISTRACAO',
-    SUPORTE = 'SUPORTE'
+    SUPORTE = 'SUPORTE',
+    VETERINARIO = 'VETERINARIO'
 }

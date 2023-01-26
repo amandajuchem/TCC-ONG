@@ -95,7 +95,7 @@ export class AnimalCadastroComponent implements OnInit {
       
       next: (result) => {
           
-        if (result) {
+        if (result && result.status) {
           this.form.get('tutor')?.patchValue(result.tutor);
         }
       },

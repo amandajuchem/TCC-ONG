@@ -52,6 +52,16 @@ public class FacadeService {
     }
 
     /**
+     * Animal find by nome contains list.
+     *
+     * @param nome the nome
+     * @return the list
+     */
+    public List<Animal> animalFindByNomeContains(String nome) {
+        return animalService.findByNomeContains(nome);
+    }
+
+    /**
      * Animal save animal.
      *
      * @param animal the animal
@@ -202,6 +212,16 @@ public class FacadeService {
      */
     public Usuario usuarioFindById(UUID id) {
         return usuarioService.findById(id);
+    }
+
+    /**
+     * Usuario find by nome contains list.
+     *
+     * @param nome the nome
+     * @return the list
+     */
+    public List<Usuario> usuarioFindByNomeContains(String nome) {
+        return usuarioService.findByNomeContains(nome);
     }
 
     /**
