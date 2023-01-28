@@ -1,13 +1,15 @@
 package io.github.amandajuchem.projetoapi.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.github.amandajuchem.projetoapi.enums.Porte;
 import io.github.amandajuchem.projetoapi.enums.Sexo;
 import io.github.amandajuchem.projetoapi.enums.Situacao;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -16,7 +18,6 @@ import java.time.LocalDate;
  * The type Animal.
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -78,11 +79,16 @@ public class Animal extends AbstractEntity {
     @JoinColumn(name = "tutor_id")
     private Tutor tutor;
 
-    @OneToOne(mappedBy = "animal")
-    @JsonManagedReference(value = "jsonReferenceFotoAnimal")
+    @Valid
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Imagem foto;
 
-    @OneToOne(mappedBy = "animal")
-    @JsonManagedReference(value = "jsonReferenceFichaMedicaAnimal")
+    @Valid
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private FichaMedica fichaMedica;
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
 }

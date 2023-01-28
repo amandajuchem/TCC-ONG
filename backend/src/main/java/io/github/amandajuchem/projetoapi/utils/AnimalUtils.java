@@ -31,11 +31,11 @@ public class AnimalUtils {
 
         var animal = facade.animalFindById(id);
 
-        if (animal.getFoto() != null) {
-            facade.imagemDelete(animal.getFoto().getId());
-        }
-
         facade.animalDelete(animal.getId());
+
+        if (animal.getFoto() != null) {
+            FileUtils.delete(animal.getFoto().getNome(), FileUtils.IMAGES_DIRECTORY);
+        }
     }
 
     /**
@@ -58,10 +58,8 @@ public class AnimalUtils {
 
                 var imagem = Imagem.builder()
                         .nome(file.getName())
-                        .animal(animal)
                         .build();
 
-                imagem = facade.imagemSave(imagem);
                 animal.setFoto(imagem);
             }
 

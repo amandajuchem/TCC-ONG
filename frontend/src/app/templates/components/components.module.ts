@@ -53,6 +53,8 @@ import { UsuariosCadastroComponent } from './usuarios-cadastro/usuarios-cadastro
 import { UsuariosComponent } from './usuarios/usuarios.component';
 import { SelecionarAnimalComponent } from './selecionar-animal/selecionar-animal.component';
 import { SelecionarUsuarioComponent } from './selecionar-usuario/selecionar-usuario.component';
+import { AnimalFichaMedicaComponent } from './animal-ficha-medica/animal-ficha-medica.component';
+import { TutorEnderecoComponent } from './tutor-endereco/tutor-endereco.component';
 
 @NgModule({
   declarations: [
@@ -86,7 +88,9 @@ import { SelecionarUsuarioComponent } from './selecionar-usuario/selecionar-usua
     UsuariosCadastroComponent,
     UsuariosComponent,
     SelecionarAnimalComponent,
-    SelecionarUsuarioComponent
+    SelecionarUsuarioComponent,
+    AnimalFichaMedicaComponent,
+    TutorEnderecoComponent
   ],
   imports: [
     CommonModule,

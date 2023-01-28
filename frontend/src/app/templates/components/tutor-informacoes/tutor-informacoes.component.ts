@@ -82,29 +82,29 @@ export class TutorInformacoesComponent implements OnInit {
     });
   }
 
-  buildForm(tutor: Tutor | null) {
+  buildForm(tutor: Tutor) {
 
     this.form = this._formBuilder.group({
-      id: [tutor?.id, Validators.nullValidator],
-      nome: [tutor?.nome, Validators.required],
-      cpf: [tutor?.cpf, Validators.required],
-      rg: [tutor?.rg, Validators.nullValidator],
-      telefone: [tutor?.telefone, Validators.required],
-      situacao: [tutor?.situacao, Validators.required],
-
-      endereco: this._formBuilder.group({
-        id: [tutor?.endereco.id, Validators.nullValidator],
-        rua: [tutor?.endereco.rua, Validators.required],
-        numeroResidencia: [tutor?.endereco.numeroResidencia, Validators.required],
-        bairro: [tutor?.endereco.bairro, Validators.required],
-        complemento: [tutor?.endereco.complemento, Validators.nullValidator],
-        cidade: [tutor?.endereco.cidade, Validators.required],
-        estado: [tutor?.endereco.estado, Validators.required],
-        cep: [tutor?.endereco.cep, Validators.required]
-      })
+      id: [tutor.id, Validators.nullValidator],
+      nome: [tutor.nome, Validators.required],
+      cpf: [tutor.cpf, Validators.required],
+      rg: [tutor.rg, Validators.nullValidator],
+      telefone: [tutor.telefone, Validators.required],
+      situacao: [tutor.situacao, Validators.required]
     });
 
     this.form.disable();
+  }
+
+  cancel() {
+
+    this.buildForm(this.tutor);
+
+    if (this.tutor.foto) {
+      this.foto = { id: this.tutor.foto.id, nome: this.tutor.foto.nome, salvo: true};
+    } else {
+      this.foto = null;
+    }
   }
 
   delete() {

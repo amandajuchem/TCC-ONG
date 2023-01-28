@@ -1,7 +1,9 @@
 package io.github.amandajuchem.projetoapi.entities;
 
 import io.github.amandajuchem.projetoapi.enums.Estado;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
@@ -15,7 +17,6 @@ import javax.validation.constraints.NotNull;
  * The type Endereco.
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -49,4 +50,9 @@ public class Endereco extends AbstractEntity {
     @NotEmpty
     @Column(name = "cep", length = 8)
     private String cep;
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
 }

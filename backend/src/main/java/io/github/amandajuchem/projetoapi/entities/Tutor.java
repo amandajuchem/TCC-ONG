@@ -1,8 +1,9 @@
 package io.github.amandajuchem.projetoapi.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.github.amandajuchem.projetoapi.enums.Situacao;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -15,7 +16,6 @@ import javax.validation.constraints.NotNull;
  * The type Tutor.
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -46,11 +46,16 @@ public class Tutor extends AbstractEntity {
     @Column(name = "observacao", columnDefinition = "TEXT")
     private String observacao;
 
-    @OneToOne(mappedBy = "tutor")
-    @JsonManagedReference(value = "jsonReferenceFotoTutor")
+    @Valid
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Imagem foto;
 
     @Valid
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Endereco endereco;
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
 }

@@ -101,10 +101,25 @@ export class AnimalInformacoesComponent implements OnInit {
       localAdocao: [animal.localAdocao, Validators.nullValidator],
       situacao: [animal.situacao, Validators.required],
       tutor: [animal.tutor, Validators.nullValidator],
-      foto: [animal.foto, Validators.nullValidator]
+      foto: [animal.foto, Validators.nullValidator],
+
+      fichaMedica: this._formBuilder.group({
+        comorbidades: [animal.fichaMedica.comorbidades, Validators.required]
+      })
     });
 
     this.form.disable();
+  }
+
+  cancel() {
+    
+    this.buildForm(this.animal);
+
+    if (this.animal.foto) {
+      this.foto = { id: this.animal.foto.id, nome: this.animal.foto.nome, salvo: true};
+    } else {
+      this.foto = null;
+    }
   }
 
   delete() {

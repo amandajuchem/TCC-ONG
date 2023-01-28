@@ -1,6 +1,8 @@
 package io.github.amandajuchem.projetoapi.entities;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
@@ -13,7 +15,6 @@ import java.time.LocalDateTime;
  * The type Castracao.
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,4 +30,9 @@ public class Castracao extends AbstractEntity {
 
     @OneToOne
     private Usuario usuario;
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
 }

@@ -1,8 +1,9 @@
 package io.github.amandajuchem.projetoapi.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.github.amandajuchem.projetoapi.enums.Setor;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -14,7 +15,6 @@ import javax.validation.constraints.NotNull;
  * The type User.
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -42,7 +42,11 @@ public class Usuario extends AbstractEntity {
     @Column(name = "setor")
     private Setor setor;
 
-    @OneToOne(mappedBy = "usuario")
-    @JsonManagedReference(value = "jsonReferenceFotoUsuario")
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Imagem foto;
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
 }

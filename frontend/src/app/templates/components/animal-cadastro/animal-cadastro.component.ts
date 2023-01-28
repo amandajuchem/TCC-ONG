@@ -30,7 +30,6 @@ export class AnimalCadastroComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    
     this.apiURL = environment.apiURL;
     this.buildForm();
   }
@@ -76,12 +75,15 @@ export class AnimalCadastroComponent implements OnInit {
       localAdocao: [null, Validators.nullValidator],
       situacao: [null, Validators.required],
       tutor: [null, Validators.nullValidator],
-      foto: [null, Validators.nullValidator]
+      foto: [null, Validators.nullValidator],
+
+      fichaMedica: this._formBuilder.group({
+        comorbidades: [null, Validators.required]
+      })
     });
   }
 
   removeFoto() {
-
     this.foto = null;
     this.form.get('foto')?.patchValue(null);
   }
@@ -94,7 +96,7 @@ export class AnimalCadastroComponent implements OnInit {
     .afterClosed().subscribe({
       
       next: (result) => {
-          
+
         if (result && result.status) {
           this.form.get('tutor')?.patchValue(result.tutor);
         }
@@ -110,7 +112,7 @@ export class AnimalCadastroComponent implements OnInit {
 
       complete: () => {
         this._facade.notificationShowNotification(MessageUtils.ANIMAL_SAVE_SUCCESS, NotificationType.SUCCESS);
-        this._dialogRef.close({status: true});
+        this._dialogRef.close({ status: true });
       },
 
       error: (error) => {

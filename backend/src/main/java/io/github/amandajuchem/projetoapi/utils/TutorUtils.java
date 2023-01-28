@@ -31,11 +31,11 @@ public class TutorUtils {
 
         var tutor = facade.tutorFindById(id);
 
-        if (tutor.getFoto() != null) {
-            facade.imagemDelete(tutor.getFoto().getId());
-        }
-
         facade.tutorDelete(tutor.getId());
+
+        if (tutor.getFoto() != null) {
+            FileUtils.delete(tutor.getFoto().getNome(), FileUtils.IMAGES_DIRECTORY);
+        }
     }
 
     /**
@@ -58,10 +58,8 @@ public class TutorUtils {
 
                 var imagem = Imagem.builder()
                         .nome(file.getName())
-                        .tutor(tutor)
                         .build();
 
-                imagem = facade.imagemSave(imagem);
                 tutor.setFoto(imagem);
             }
 

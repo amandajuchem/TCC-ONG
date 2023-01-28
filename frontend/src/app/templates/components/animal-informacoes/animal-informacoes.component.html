@@ -9,7 +9,7 @@
                 <button mat-icon-button (click)="submit()" *ngIf="form.enabled">
                     <mat-icon>save</mat-icon>
                 </button>
-                <button mat-icon-button (click)="form.disable()" *ngIf="form.enabled">
+                <button mat-icon-button (click)="cancel()" *ngIf="form.enabled">
                     <mat-icon>close</mat-icon>
                 </button>
                 <button mat-icon-button (click)="delete()" *ngIf="form.disabled">

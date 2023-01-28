@@ -66,10 +66,8 @@ public class UsuarioUtils {
 
                 var imagem = Imagem.builder()
                         .nome(file.getName())
-                        .usuario(usuario)
                         .build();
 
-                imagem = facade.imagemSave(imagem);
                 usuario.setFoto(imagem);
             }
 
