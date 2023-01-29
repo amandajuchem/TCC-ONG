@@ -32,8 +32,7 @@ public class UserDetailsService implements org.springframework.security.core.use
                     .authorities(List.of(new SimpleGrantedAuthority("ROLE_" + usuario.getSetor().toString())))
                     .build();
         } catch (Exception ex) {
+            throw new UsernameNotFoundException("Usuário e/ou senha inválidos!");
         }
-
-        throw new UsernameNotFoundException("Usuário e/ou senha inválidos!");
     }
 }

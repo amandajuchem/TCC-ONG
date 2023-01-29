@@ -7,9 +7,11 @@ import { Atendimento } from 'src/app/entities/atendimento';
 import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { FacadeService } from 'src/app/services/facade.service';
+import { DateUtils } from 'src/app/utils/date-utils';
 import { MessageUtils } from 'src/app/utils/message-utils';
 
 import { AtendimentoCadastroComponent } from '../atendimento-cadastro/atendimento-cadastro.component';
+import { AtendimentoExcluirComponent } from '../atendimento-excluir/atendimento-excluir.component';
 
 @Component({
   selector: 'app-atendimentos',
@@ -69,6 +71,21 @@ export class AtendimentosComponent implements OnInit {
 
   delete(atendimento: Atendimento) {
 
+    this._dialog.open(AtendimentoExcluirComponent, {
+      data: {
+        atendimento: atendimento
+      },
+      width: '100%'
+    })
+    .afterClosed().subscribe({
+
+      next: (result) => {
+          
+        if (result && result.status) {
+          this.findAllAtendimentos();
+        }
+      }
+    });
   }
 
   filter(value: string) {
@@ -90,7 +107,26 @@ export class AtendimentosComponent implements OnInit {
     });
   }
 
+  getDateWithTimeZone(date: any) {
+    return DateUtils.getDateWithTimeZone(date);
+  }
+
   update(atendimento: Atendimento) {
 
+    this._dialog.open(AtendimentoCadastroComponent, {
+      data: {
+        atendimento: atendimento
+      },
+      width: '100%'
+    })
+    .afterClosed().subscribe({
+
+      next: (result) => {
+          
+        if (result && result.status) {
+          this.findAllAtendimentos();
+        }
+      }
+    });
   }
 }

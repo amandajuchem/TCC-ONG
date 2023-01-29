@@ -11,7 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class EncodeConfiguration {
 
     /**
-     * B crypt password encoder b crypt password encoder.
+     * Bcrypt password encoder b crypt password encoder.
      *
      * @return the b crypt password encoder
      */

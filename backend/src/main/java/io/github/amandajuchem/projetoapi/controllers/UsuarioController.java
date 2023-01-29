@@ -35,11 +35,11 @@ public class UsuarioController {
      * @return the response entity
      */
     @GetMapping
-    public ResponseEntity findAll() {
+    public ResponseEntity<?> findAll() {
 
         var usuariosDTO = facade.usuarioFindAll().stream()
                 .filter(u -> !u.getCpf().equals("07905836584"))
-                .map(u -> UsuarioDTO.toDTO(u))
+                .map(UsuarioDTO::toDTO)
                 .toList();
 
         return ResponseEntity.status(OK).body(usuariosDTO);
@@ -52,7 +52,7 @@ public class UsuarioController {
      * @return the response entity
      */
     @GetMapping("/{id}")
-    public ResponseEntity findById(@PathVariable UUID id) {
+    public ResponseEntity<?> findById(@PathVariable UUID id) {
         var usuario = facade.usuarioFindById(id);
         var usuarioDTO = UsuarioDTO.toDTO(usuario);
         return ResponseEntity.status(OK).body(usuarioDTO);
@@ -67,7 +67,7 @@ public class UsuarioController {
      * @return the response entity
      */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity save(@RequestPart @Valid Usuario usuario,
+    public ResponseEntity<?> save(@RequestPart @Valid Usuario usuario,
                                @RequestPart(required = false) MultipartFile novaFoto,
                                @RequestPart(required = false) String antigaFoto) {
 
@@ -84,7 +84,7 @@ public class UsuarioController {
      * @return the response entity
      */
     @GetMapping("/search")
-    public ResponseEntity search(@RequestParam(required = false) String cpf,
+    public ResponseEntity<?> search(@RequestParam(required = false) String cpf,
                                  @RequestParam(required = false) String nome) {
 
         if (cpf != null) {
@@ -96,7 +96,7 @@ public class UsuarioController {
         if (nome != null) {
 
             var usuariosDTO = facade.usuarioFindByNomeContains(nome).stream()
-                    .map(u -> UsuarioDTO.toDTO(u))
+                    .map(UsuarioDTO::toDTO)
                     .toList();
 
             return ResponseEntity.status(OK).body(usuariosDTO);
@@ -115,7 +115,7 @@ public class UsuarioController {
      * @return the response entity
      */
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity update(@PathVariable UUID id,
+    public ResponseEntity<?> update(@PathVariable UUID id,
                                  @RequestPart @Valid Usuario usuario,
                                  @RequestPart(required = false) MultipartFile novaFoto,
                                  @RequestPart(required = false) String antigaFoto) {

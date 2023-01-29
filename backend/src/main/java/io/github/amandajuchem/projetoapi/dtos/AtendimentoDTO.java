@@ -52,7 +52,7 @@ public record AtendimentoDTO(
                 atendimento.getExames(),
                 atendimento.getProcedimentos(),
                 atendimento.getPosologia(),
-                atendimento.getDocumentos() != null ? atendimento.getDocumentos().stream().map(d -> ImagemDTO.toDTO(d)).collect(Collectors.toSet()) : null,
+                atendimento.getDocumentos() != null ? atendimento.getDocumentos().stream().map(ImagemDTO::toDTO).collect(Collectors.toSet()) : null,
                 atendimento.getAnimal() != null ? AnimalDTO.toDTO(atendimento.getAnimal()) : null,
                 atendimento.getVeterinario() != null ? UsuarioDTO.toDTO(atendimento.getVeterinario()) : null
         );

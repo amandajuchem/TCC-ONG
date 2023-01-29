@@ -70,6 +70,6 @@ export class AtendimentoService {
       documentosToDelete.forEach(id => formData.append('documentosToDelete', new Blob([id], {type: 'text/plain'})));
     }
 
-    return this._http.post<Atendimento>(this.baseURL, formData);
+    return this._http.put<Atendimento>(this.baseURL + '/' + atendimento.id, formData);
   }
 }

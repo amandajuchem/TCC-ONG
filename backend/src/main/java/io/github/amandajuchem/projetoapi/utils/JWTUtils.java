@@ -90,10 +90,7 @@ public class JWTUtils {
             if (username != null) {
 
                 if (expiration != null) {
-
-                    if (now.before(expiration)) {
-                        return true;
-                    }
+                    return now.before(expiration);
                 }
             }
         }

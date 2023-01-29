@@ -36,7 +36,7 @@ public class TutorController {
      * @return the response entity
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable UUID id) {
+    public ResponseEntity<?> delete(@PathVariable UUID id) {
         tutorUtils.delete(id);
         return ResponseEntity.status(OK).body(null);
     }
@@ -47,10 +47,10 @@ public class TutorController {
      * @return the response entity
      */
     @GetMapping
-    public ResponseEntity findAll() {
+    public ResponseEntity<?> findAll() {
 
         var tutoresDTO = facade.tutorFindAll().stream()
-                .map(t -> TutorDTO.toDTO(t))
+                .map(TutorDTO::toDTO)
                 .toList();
 
         return ResponseEntity.status(OK).body(tutoresDTO);
@@ -63,7 +63,7 @@ public class TutorController {
      * @return the response entity
      */
     @GetMapping("/{id}")
-    public ResponseEntity findById(@PathVariable UUID id) {
+    public ResponseEntity<?> findById(@PathVariable UUID id) {
         var tutor = facade.tutorFindById(id);
         var tutorDTO = TutorDTO.toDTO(tutor);
         return ResponseEntity.status(OK).body(tutorDTO);
@@ -78,7 +78,7 @@ public class TutorController {
      * @return the response entity
      */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity save(@RequestPart @Valid Tutor tutor,
+    public ResponseEntity<?> save(@RequestPart @Valid Tutor tutor,
                                @RequestPart(required = false) MultipartFile novaFoto,
                                @RequestPart(required = false) String antigaFoto) {
 
@@ -95,12 +95,12 @@ public class TutorController {
      * @return the response entity
      */
     @GetMapping("/search")
-    public ResponseEntity search(@RequestParam(required = false) String nome) {
+    public ResponseEntity<?> search(@RequestParam(required = false) String nome) {
 
         if (nome != null) {
 
             var tutoresDTO = facade.tutorFindByNomeContains(nome).stream()
-                    .map(t -> TutorDTO.toDTO(t))
+                    .map(TutorDTO::toDTO)
                     .toList();
 
             return ResponseEntity.status(OK).body(tutoresDTO);
@@ -119,7 +119,7 @@ public class TutorController {
      * @return the response entity
      */
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity update(@PathVariable UUID id,
+    public ResponseEntity<?> update(@PathVariable UUID id,
                                  @RequestPart @Valid Tutor tutor,
                                  @RequestPart(required = false) MultipartFile novaFoto,
                                  @RequestPart(required = false) String antigaFoto) {

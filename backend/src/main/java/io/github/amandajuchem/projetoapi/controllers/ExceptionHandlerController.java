@@ -4,8 +4,6 @@ import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
 import io.github.amandajuchem.projetoapi.exceptions.OperationFailureException;
 import io.github.amandajuchem.projetoapi.exceptions.StandardError;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -24,18 +22,6 @@ import java.util.List;
 @ControllerAdvice
 public class ExceptionHandlerController {
 
-    private final MessageSource messageSource;
-
-    /**
-     * Instantiates a new Controller advice.
-     *
-     * @param messageSource the message source
-     */
-    @Autowired
-    public ExceptionHandlerController(MessageSource messageSource) {
-        this.messageSource = messageSource;
-    }
-
     /**
      * Method argument not valid exception response entity.
      *
@@ -44,7 +30,7 @@ public class ExceptionHandlerController {
      * @return the response entity
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity methodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request) {
+    public ResponseEntity<?> methodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request) {
 
         var errors = ex.getBindingResult().getFieldErrors().stream().map(error ->
                 StandardError.builder()
@@ -67,7 +53,7 @@ public class ExceptionHandlerController {
      * @return the response entity
      */
     @ExceptionHandler(ObjectNotFoundException.class)
-    public ResponseEntity objectNotFound(ObjectNotFoundException ex, HttpServletRequest request) {
+    public ResponseEntity<?> objectNotFound(ObjectNotFoundException ex, HttpServletRequest request) {
 
         var error = StandardError.builder()
                 .timestamp(System.currentTimeMillis())
@@ -81,7 +67,7 @@ public class ExceptionHandlerController {
     }
 
     @ExceptionHandler(OperationFailureException.class)
-    public ResponseEntity operationFailureException(OperationFailureException ex, HttpServletRequest request) {
+    public ResponseEntity<?> operationFailureException(OperationFailureException ex, HttpServletRequest request) {
 
         var error = StandardError.builder()
                 .timestamp(System.currentTimeMillis())
@@ -102,7 +88,7 @@ public class ExceptionHandlerController {
      * @return the response entity
      */
     @ExceptionHandler(ValidationException.class)
-    public ResponseEntity validationException(ValidationException ex, HttpServletRequest request) {
+    public ResponseEntity<?> validationException(ValidationException ex, HttpServletRequest request) {
 
         var error = StandardError.builder()
                 .timestamp(System.currentTimeMillis())

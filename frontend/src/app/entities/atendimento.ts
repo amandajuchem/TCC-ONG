@@ -6,7 +6,6 @@ export interface Atendimento extends AbstractEntity {
     dataHora: Date;
     dataHoraRetorno: Date;
     motivo: string;
-    comorbidades: string;
     diagnostico: string;
     exames: string;
     procedimentos: string;

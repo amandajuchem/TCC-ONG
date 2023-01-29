@@ -41,7 +41,7 @@ public record AdocaoDTO(
                 adocao.getDataHora(),
                 adocao.getValeCastracao(),
                 adocao.getAnimal() != null ? AnimalDTO.toDTO(adocao.getAnimal()) : null,
-                adocao.getTermoResponsabilidade() != null ? adocao.getTermoResponsabilidade().stream().map(t -> ImagemDTO.toDTO(t)).collect(Collectors.toSet()) : null
+                adocao.getTermoResponsabilidade() != null ? adocao.getTermoResponsabilidade().stream().map(ImagemDTO::toDTO).collect(Collectors.toSet()) : null
         );
     }
 }

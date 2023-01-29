@@ -21,8 +21,7 @@ public class MediaTypeUtils {
         var mineType = servletContext.getMimeType(fileName);
 
         try {
-            var mediaType = MediaType.parseMediaType(mineType);
-            return mediaType;
+            return MediaType.parseMediaType(mineType);
         } catch (Exception e) {
             return MediaType.APPLICATION_OCTET_STREAM;
         }

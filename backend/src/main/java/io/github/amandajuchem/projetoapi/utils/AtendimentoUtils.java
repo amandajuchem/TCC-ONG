@@ -82,7 +82,7 @@ public class AtendimentoUtils {
             }
 
             if (documentosToDelete != null && documentosToDelete.size() > 0) {
-                documentosToDelete.forEach(d -> facade.imagemDelete(d));
+                documentosToDelete.forEach(facade::imagemDelete);
             }
 
             return facade.atendimentoSave(atendimento);

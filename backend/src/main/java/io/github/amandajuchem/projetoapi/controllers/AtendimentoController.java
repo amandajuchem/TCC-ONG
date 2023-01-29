@@ -38,7 +38,7 @@ public class AtendimentoController {
      * @return the response entity
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable UUID id) {
+    public ResponseEntity<?> delete(@PathVariable UUID id) {
         atendimentoUtils.delete(id);
         return ResponseEntity.status(OK).body(null);
     }
@@ -49,10 +49,10 @@ public class AtendimentoController {
      * @return the response entity
      */
     @GetMapping
-    public ResponseEntity findAll() {
+    public ResponseEntity<?> findAll() {
 
         var atendimentosDTO = facade.atendimentoFindAll().stream()
-                .map(a -> AtendimentoDTO.toDTO(a))
+                .map(AtendimentoDTO::toDTO)
                 .toList();
 
         return ResponseEntity.status(OK).body(atendimentosDTO);
@@ -67,9 +67,9 @@ public class AtendimentoController {
      * @return the response entity
      */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity save(@RequestPart @Valid Atendimento atendimento,
-                               @RequestPart List<MultipartFile> documentosToSave,
-                               @RequestPart List<UUID> documentosToDelete) {
+    public ResponseEntity<?> save(@RequestPart @Valid Atendimento atendimento,
+                               @RequestPart(required = false) List<MultipartFile> documentosToSave,
+                               @RequestPart(required = false) List<UUID> documentosToDelete) {
 
         var atendimentoSaved = atendimentoUtils.save(atendimento, documentosToSave, documentosToDelete);
         var atendimentoDTO = AtendimentoDTO.toDTO(atendimentoSaved);
@@ -87,10 +87,10 @@ public class AtendimentoController {
      * @return the response entity
      */
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity update(@PathVariable UUID id,
+    public ResponseEntity<?> update(@PathVariable UUID id,
                                  @RequestPart @Valid Atendimento atendimento,
-                                 @RequestPart List<MultipartFile> documentosToSave,
-                                 @RequestPart List<UUID> documentosToDelete) {
+                                 @RequestPart(required = false) List<MultipartFile> documentosToSave,
+                                 @RequestPart(required = false) List<UUID> documentosToDelete) {
 
         if (atendimento.getId().equals(id)) {
 

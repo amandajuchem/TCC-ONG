@@ -36,7 +36,7 @@ public class AnimalController {
      * @return the response entity
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable UUID id) {
+    public ResponseEntity<?> delete(@PathVariable UUID id) {
         animalUtils.delete(id);
         return ResponseEntity.status(OK).body(null);
     }
@@ -47,10 +47,10 @@ public class AnimalController {
      * @return the response entity
      */
     @GetMapping
-    public ResponseEntity findAll() {
+    public ResponseEntity<?> findAll() {
 
         var animaisDTO = facade.animalFindAll().stream()
-                .map(animal -> AnimalDTO.toDTO(animal))
+                .map(AnimalDTO::toDTO)
                 .toList();
 
         return ResponseEntity.status(OK).body(animaisDTO);
@@ -63,7 +63,7 @@ public class AnimalController {
      * @return the response entity
      */
     @GetMapping("/{id}")
-    public ResponseEntity findById(@PathVariable UUID id) {
+    public ResponseEntity<?> findById(@PathVariable UUID id) {
         var animal = facade.animalFindById(id);
         var animalDTO = AnimalDTO.toDTO(animal);
         return ResponseEntity.status(OK).body(animalDTO);
@@ -78,7 +78,7 @@ public class AnimalController {
      * @return the response entity
      */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity save(@RequestPart @Valid Animal animal,
+    public ResponseEntity<?> save(@RequestPart @Valid Animal animal,
                                @RequestPart(required = false) MultipartFile novaFoto,
                                @RequestPart(required = false) String antigaFoto) {
 
@@ -89,12 +89,12 @@ public class AnimalController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity search(@RequestParam(required = false) String nome) {
+    public ResponseEntity<?> search(@RequestParam(required = false) String nome) {
 
         if (nome != null) {
 
             var animaisDTO = facade.animalFindByNomeContains(nome).stream()
-                    .map(a -> AnimalDTO.toDTO(a))
+                    .map(AnimalDTO::toDTO)
                     .toList();
 
             return ResponseEntity.status(OK).body(animaisDTO);
@@ -113,7 +113,7 @@ public class AnimalController {
      * @return the response entity
      */
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity update(@PathVariable UUID id,
+    public ResponseEntity<?> update(@PathVariable UUID id,
                                  @RequestPart @Valid Animal animal,
                                  @RequestPart(required = false) MultipartFile novaFoto,
                                  @RequestPart(required = false) String antigaFoto) {

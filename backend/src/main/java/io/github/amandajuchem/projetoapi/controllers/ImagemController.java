@@ -2,7 +2,6 @@ package io.github.amandajuchem.projetoapi.controllers;
 
 import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
 import io.github.amandajuchem.projetoapi.exceptions.OperationFailureException;
-import io.github.amandajuchem.projetoapi.services.FacadeService;
 import io.github.amandajuchem.projetoapi.utils.FileUtils;
 import io.github.amandajuchem.projetoapi.utils.MediaTypeUtils;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
@@ -26,11 +25,10 @@ import static org.springframework.http.HttpStatus.OK;
 @RequiredArgsConstructor(onConstructor_= {@Autowired})
 public class ImagemController {
 
-    private final FacadeService facade;
     private final ServletContext servletContext;
 
     @GetMapping("/search")
-    public ResponseEntity search(@RequestParam(required = false) String nome) {
+    public ResponseEntity<?> search(@RequestParam(required = false) String nome) {
 
         if (nome != null) {
 

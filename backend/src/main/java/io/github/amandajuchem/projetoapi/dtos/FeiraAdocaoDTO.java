@@ -41,8 +41,8 @@ public record FeiraAdocaoDTO(
                 feiraAdocao.getModifiedByUser(),
                 feiraAdocao.getNome(),
                 feiraAdocao.getDataHora(),
-                feiraAdocao.getAnimais() != null ? feiraAdocao.getAnimais().stream().map(a -> AnimalDTO.toDTO(a)).collect(Collectors.toSet()) : null,
-                feiraAdocao.getUsuarios() != null ? feiraAdocao.getUsuarios().stream().map(u -> UsuarioDTO.toDTO(u)).collect(Collectors.toSet()) : null
+                feiraAdocao.getAnimais() != null ? feiraAdocao.getAnimais().stream().map(AnimalDTO::toDTO).collect(Collectors.toSet()) : null,
+                feiraAdocao.getUsuarios() != null ? feiraAdocao.getUsuarios().stream().map(UsuarioDTO::toDTO).collect(Collectors.toSet()) : null
         );
     }
 }
