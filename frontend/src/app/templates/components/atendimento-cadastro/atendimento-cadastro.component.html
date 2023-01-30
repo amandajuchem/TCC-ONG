@@ -1,6 +1,6 @@
 <div class="mat-dialog">
     <h2 class="m-0" mat-dialog-title *ngIf="!data.atendimento">Cadastrar Atendimento</h2>
-    <h2 class="m-0" mat-dialog-title *ngIf="data.atendimento">Editar dados do Atendimento</h2>
+    <h2 class="m-0" mat-dialog-title *ngIf="data.atendimento">Editar Dados do Atendimento</h2>
 
     <div mat-dialog-content class="py-3">
 
@@ -111,11 +111,30 @@
                     <h3 class="text-dark">Documentos</h3>
                 </div>
             </div>
+            
+            <div class="row">
+                <div class="col-12 col-md-3 mb-3" *ngFor="let documento of documentosToShow">
+                    <mat-card>
+                        <img mat-card-image [src]="apiURL + '/imagens/search?nome=' + documento.data" *ngIf="documento.salvo">
+                        <img mat-card-image [src]="documento.data" *ngIf="!documento.salvo">
+                        <mat-card-footer class="p-2">
+                            <div class="text-center">
+                                <button mat-icon-button class="me-3" (click)="downloadImagem(documento)" *ngIf="documento.salvo">
+                                    <mat-icon>download</mat-icon>
+                                </button>
+                                <button mat-icon-button class="ms-3" (click)="deleteImagem(documento)">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </div>
+                        </mat-card-footer>
+                    </mat-card>
+                </div>
+            </div>
 
             <div class="row">
                 <div class="col-12">
                     <div class="text-center">
-                        <button mat-button>Adicionar Imagem</button>
+                        <button mat-button (click)="addImagem()">Adicionar Imagem</button>
                     </div>
                 </div>
             </div>

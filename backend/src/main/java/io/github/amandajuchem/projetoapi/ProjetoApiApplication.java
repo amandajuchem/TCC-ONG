@@ -15,53 +15,53 @@ import java.io.File;
  * The type Projeto api application.
  */
 @SpringBootApplication
-@RequiredArgsConstructor(onConstructor_= {@Autowired})
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class ProjetoApiApplication implements CommandLineRunner {
 
-	private final FacadeService facade;
+    private final FacadeService facade;
 
-	/**
-	 * The entry point of application.
-	 *
-	 * @param args the input arguments
-	 */
-	public static void main(String[] args) {
-		SpringApplication.run(ProjetoApiApplication.class, args);
-	}
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     */
+    public static void main(String[] args) {
+        SpringApplication.run(ProjetoApiApplication.class, args);
+    }
 
-	@Override
-	public void run(String... args) {
-		checkDefaultUsuario();
-		createFolders();
-	}
+    @Override
+    public void run(String... args) {
+        checkDefaultUsuario();
+        createFolders();
+    }
 
-	private void createFolders() {
+    private void createFolders() {
 
-		var files = new File("files");
+        var files = new File("files");
 
-		if (!files.exists()) {
-			files.mkdir();
-		}
-	}
+        if (!files.exists()) {
+            files.mkdir();
+        }
+    }
 
-	private void checkDefaultUsuario() {
+    private void checkDefaultUsuario() {
 
-		try {
-			var usuario = facade.usuarioFindByCpf("07905836584");
-			saveDefaultUsuario(usuario);
-		} catch (Exception ex) {
-			saveDefaultUsuario(new Usuario());
-		}
-	}
+        try {
+            var usuario = facade.usuarioFindByCpf("07905836584");
+            saveDefaultUsuario(usuario);
+        } catch (Exception ex) {
+            saveDefaultUsuario(new Usuario());
+        }
+    }
 
-	private void saveDefaultUsuario(Usuario usuario) {
+    private void saveDefaultUsuario(Usuario usuario) {
 
-		usuario.setNome("Edson Isaac");
-		usuario.setCpf("07905836584");
-		usuario.setSenha("$2a$12$xi5jwI8SFzkS.LYJ73OAHOJb3mEhOeFJk2Gj3pzPKcQBM2SGVUr2a");
-		usuario.setSetor(Setor.ADMINISTRACAO);
-		usuario.setStatus(true);
+        usuario.setNome("Edson Isaac");
+        usuario.setCpf("07905836584");
+        usuario.setSenha("$2a$12$xi5jwI8SFzkS.LYJ73OAHOJb3mEhOeFJk2Gj3pzPKcQBM2SGVUr2a");
+        usuario.setSetor(Setor.ADMINISTRACAO);
+        usuario.setStatus(true);
 
-		facade.usuarioSave(usuario);
-	}
+        facade.usuarioSave(usuario);
+    }
 }

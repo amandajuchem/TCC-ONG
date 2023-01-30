@@ -50,7 +50,7 @@ public class FileUtils {
      * @param path the path
      * @return the boolean
      */
-    public static boolean exists (String path) {
+    public static boolean exists(String path) {
         return new File(System.getProperty("user.dir") + path + "/" + path).exists();
     }
 

@@ -16,7 +16,7 @@ public class EncodeConfiguration {
      * @return the b crypt password encoder
      */
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder () {
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }

@@ -23,7 +23,7 @@ import static org.springframework.http.HttpStatus.*;
  */
 @RestController
 @RequestMapping("/usuarios")
-@RequiredArgsConstructor(onConstructor_= {@Autowired})
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class UsuarioController {
 
     private final FacadeService facade;
@@ -68,8 +68,8 @@ public class UsuarioController {
      */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> save(@RequestPart @Valid Usuario usuario,
-                               @RequestPart(required = false) MultipartFile novaFoto,
-                               @RequestPart(required = false) String antigaFoto) {
+                                  @RequestPart(required = false) MultipartFile novaFoto,
+                                  @RequestPart(required = false) String antigaFoto) {
 
         var usuarioSaved = usuarioUtils.save(usuario, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
         var usuarioDTO = UsuarioDTO.toDTO(usuarioSaved);
@@ -85,7 +85,7 @@ public class UsuarioController {
      */
     @GetMapping("/search")
     public ResponseEntity<?> search(@RequestParam(required = false) String cpf,
-                                 @RequestParam(required = false) String nome) {
+                                    @RequestParam(required = false) String nome) {
 
         if (cpf != null) {
             var usuario = facade.usuarioFindByCpf(cpf);
@@ -116,9 +116,9 @@ public class UsuarioController {
      */
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> update(@PathVariable UUID id,
-                                 @RequestPart @Valid Usuario usuario,
-                                 @RequestPart(required = false) MultipartFile novaFoto,
-                                 @RequestPart(required = false) String antigaFoto) {
+                                    @RequestPart @Valid Usuario usuario,
+                                    @RequestPart(required = false) MultipartFile novaFoto,
+                                    @RequestPart(required = false) String antigaFoto) {
 
         if (usuario.getId().equals(id)) {
 

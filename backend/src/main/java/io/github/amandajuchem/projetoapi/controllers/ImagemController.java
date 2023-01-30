@@ -22,7 +22,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/imagens")
-@RequiredArgsConstructor(onConstructor_= {@Autowired})
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class ImagemController {
 
     private final ServletContext servletContext;

@@ -10,6 +10,8 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 
 import { SelecionarAnimalComponent } from '../selecionar-animal/selecionar-animal.component';
 import { SelecionarUsuarioComponent } from '../selecionar-usuario/selecionar-usuario.component';
+import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-imagem.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-atendimento-cadastro',
@@ -18,9 +20,10 @@ import { SelecionarUsuarioComponent } from '../selecionar-usuario/selecionar-usu
 })
 export class AtendimentoCadastroComponent implements OnInit {
 
+  apiURL!: string;
   form!: FormGroup;
   documentosToDelete!: Array<string>;
-  documentosToSave!: Array<File>;
+  documentosToSave!: Array<any>;
   documentosToShow!: Array<any>;
 
   constructor(
@@ -33,11 +36,50 @@ export class AtendimentoCadastroComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.apiURL = environment.apiURL;
+    this.documentosToDelete = [];
+    this.documentosToSave = [];
+    this.documentosToShow = [];
+
     if (this.data.atendimento) {
       this.buildForm(this.data.atendimento);
+
+      if (this.data.atendimento.documentos) {
+
+        this.data.atendimento.documentos.forEach((d: any) => {
+          this.documentosToShow.push({ id: d.id, data: d.nome, salvo: true });
+        });
+      }
     } else {
       this.buildForm(null);
     }
+  }
+
+  addImagem() {
+
+    this._dialog.open(SelecionarImagemComponent, {
+      data: {
+        multiple: true
+      },
+      width: '100%'
+    })
+      .afterClosed().subscribe({
+
+        next: (result) => {
+
+          if (result && result.status) {
+
+            result.images.forEach((image: any) => {
+
+              this._facade.imagemToBase64(image)?.then((data: any) => {
+                data = { id: new Date().getTime(), data: data, salvo: false };
+                this.documentosToShow.push(data);
+                this.documentosToSave.push(image);
+              })
+            });
+          }
+        }
+      });
   }
 
   buildForm(atendimento: Atendimento | null) {
@@ -56,6 +98,26 @@ export class AtendimentoCadastroComponent implements OnInit {
       animal: [atendimento?.animal, Validators.required],
       veterinario: [atendimento?.veterinario, Validators.required]
     });
+  }
+
+  deleteImagem(imagem: any) {
+
+    if (imagem.salvo) {
+      this.documentosToDelete.push(imagem.id);
+    }
+
+    this.documentosToSave = this.documentosToSave.filter((d: any) => d.id !== imagem.id);
+    this.documentosToShow = this.documentosToShow.filter((d: any) => d.id !== imagem.id);
+  }
+
+  downloadImagem(imagem: any) {
+
+    const link = document.createElement('a');
+
+    link.href = this.apiURL + '/imagens/search?nome=' + imagem.data;
+    link.download = imagem.data;
+    link.click();
+    link.remove();
   }
 
   getDateWithTimeZone(date: any) {
@@ -87,15 +149,15 @@ export class AtendimentoCadastroComponent implements OnInit {
       },
       width: '100%'
     })
-    .afterClosed().subscribe({
-      
-      next: (result) => {
+      .afterClosed().subscribe({
 
-        if (result && result.status) {
-          this.form.get('veterinario')?.patchValue(result.usuario);
+        next: (result) => {
+
+          if (result && result.status) {
+            this.form.get('veterinario')?.patchValue(result.usuario);
+          }
         }
-      }
-    });
+      });
   }
 
   submit() {
@@ -113,7 +175,7 @@ export class AtendimentoCadastroComponent implements OnInit {
 
         error: (error) => {
           console.error(error);
-          this._facade.notificationShowNotification(MessageUtils.ATENDIMENTO_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);   
+          this._facade.notificationShowNotification(MessageUtils.ATENDIMENTO_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
         }
       });
     }
@@ -129,7 +191,7 @@ export class AtendimentoCadastroComponent implements OnInit {
 
         error: (error) => {
           console.error(error);
-          this._facade.notificationShowNotification(MessageUtils.ATENDIMENTO_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);   
+          this._facade.notificationShowNotification(MessageUtils.ATENDIMENTO_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
         }
       });
     }

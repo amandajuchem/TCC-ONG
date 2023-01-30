@@ -17,7 +17,7 @@ import java.util.UUID;
  * The type Tutor utils.
  */
 @Component
-@RequiredArgsConstructor(onConstructor_= {@Autowired})
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class TutorUtils {
 
     private final FacadeService facade;

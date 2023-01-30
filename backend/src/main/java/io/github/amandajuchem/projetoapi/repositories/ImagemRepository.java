@@ -10,4 +10,5 @@ import java.util.UUID;
  * The interface Imagem repository.
  */
 @Repository
-public interface ImagemRepository extends JpaRepository<Imagem, UUID> { }
+public interface ImagemRepository extends JpaRepository<Imagem, UUID> {
+}

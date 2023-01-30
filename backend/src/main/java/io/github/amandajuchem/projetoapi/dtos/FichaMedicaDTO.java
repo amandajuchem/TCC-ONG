@@ -16,15 +16,15 @@ public record FichaMedicaDTO(
         @NotEmpty String comorbidades
 ) implements Serializable {
 
-    public static FichaMedicaDTO toDTO (FichaMedica fichaMedica) {
+    public static FichaMedicaDTO toDTO(FichaMedica fichaMedica) {
 
         return new FichaMedicaDTO(
-            fichaMedica.getId(),
-            fichaMedica.getCreatedDate(),
-            fichaMedica.getLastModifiedDate(),
-            fichaMedica.getCreatedByUser(),
-            fichaMedica.getModifiedByUser(),
-            fichaMedica.getComorbidades()
+                fichaMedica.getId(),
+                fichaMedica.getCreatedDate(),
+                fichaMedica.getLastModifiedDate(),
+                fichaMedica.getCreatedByUser(),
+                fichaMedica.getModifiedByUser(),
+                fichaMedica.getComorbidades()
         );
     }
 }

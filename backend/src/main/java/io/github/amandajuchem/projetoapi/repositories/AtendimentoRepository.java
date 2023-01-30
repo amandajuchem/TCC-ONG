@@ -10,4 +10,5 @@ import java.util.UUID;
  * The interface Atendimento repository.
  */
 @Repository
-public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID> { }
+public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID> {
+}

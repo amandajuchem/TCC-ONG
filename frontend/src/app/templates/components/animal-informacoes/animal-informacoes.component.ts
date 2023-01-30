@@ -102,10 +102,7 @@ export class AnimalInformacoesComponent implements OnInit {
       situacao: [animal.situacao, Validators.required],
       tutor: [animal.tutor, Validators.nullValidator],
       foto: [animal.foto, Validators.nullValidator],
-
-      fichaMedica: this._formBuilder.group({
-        comorbidades: [animal.fichaMedica.comorbidades, Validators.required]
-      })
+      fichaMedica: [animal.fichaMedica, Validators.nullValidator]
     });
 
     this.form.disable();

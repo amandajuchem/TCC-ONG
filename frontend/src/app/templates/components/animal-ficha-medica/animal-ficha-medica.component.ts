@@ -38,6 +38,7 @@ export class AnimalFichaMedicaComponent implements OnInit {
   buildForm(animal: Animal) {
 
     this.form = this._formBuilder.group({
+      id: [animal.fichaMedica.id, Validators.nullValidator],
       comorbidades: [animal.fichaMedica.comorbidades, Validators.required]
     });
 

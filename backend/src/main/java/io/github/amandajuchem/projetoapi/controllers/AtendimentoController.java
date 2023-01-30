@@ -68,8 +68,8 @@ public class AtendimentoController {
      */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> save(@RequestPart @Valid Atendimento atendimento,
-                               @RequestPart(required = false) List<MultipartFile> documentosToSave,
-                               @RequestPart(required = false) List<UUID> documentosToDelete) {
+                                  @RequestPart(required = false) List<MultipartFile> documentosToSave,
+                                  @RequestPart(required = false) List<UUID> documentosToDelete) {
 
         var atendimentoSaved = atendimentoUtils.save(atendimento, documentosToSave, documentosToDelete);
         var atendimentoDTO = AtendimentoDTO.toDTO(atendimentoSaved);
@@ -88,9 +88,9 @@ public class AtendimentoController {
      */
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> update(@PathVariable UUID id,
-                                 @RequestPart @Valid Atendimento atendimento,
-                                 @RequestPart(required = false) List<MultipartFile> documentosToSave,
-                                 @RequestPart(required = false) List<UUID> documentosToDelete) {
+                                    @RequestPart @Valid Atendimento atendimento,
+                                    @RequestPart(required = false) List<MultipartFile> documentosToSave,
+                                    @RequestPart(required = false) List<UUID> documentosToDelete) {
 
         if (atendimento.getId().equals(id)) {
 

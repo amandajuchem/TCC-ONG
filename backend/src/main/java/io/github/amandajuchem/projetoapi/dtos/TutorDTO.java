@@ -49,7 +49,7 @@ public record TutorDTO(
                 tutor.getSituacao(),
                 tutor.getObservacao(),
                 tutor.getFoto() != null ? ImagemDTO.toDTO(tutor.getFoto()) : null,
-                EnderecoDTO.toDTO(tutor.getEndereco())
+                tutor.getEndereco() != null ? EnderecoDTO.toDTO(tutor.getEndereco()) : null
         );
     }
 }

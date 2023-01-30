@@ -79,8 +79,8 @@ public class TutorController {
      */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> save(@RequestPart @Valid Tutor tutor,
-                               @RequestPart(required = false) MultipartFile novaFoto,
-                               @RequestPart(required = false) String antigaFoto) {
+                                  @RequestPart(required = false) MultipartFile novaFoto,
+                                  @RequestPart(required = false) String antigaFoto) {
 
         var tutorSaved = tutorUtils.save(tutor, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
         var tutorDTO = TutorDTO.toDTO(tutorSaved);
@@ -120,9 +120,9 @@ public class TutorController {
      */
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> update(@PathVariable UUID id,
-                                 @RequestPart @Valid Tutor tutor,
-                                 @RequestPart(required = false) MultipartFile novaFoto,
-                                 @RequestPart(required = false) String antigaFoto) {
+                                    @RequestPart @Valid Tutor tutor,
+                                    @RequestPart(required = false) MultipartFile novaFoto,
+                                    @RequestPart(required = false) String antigaFoto) {
 
         if (tutor.getId().equals(id)) {
 

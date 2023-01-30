@@ -12,7 +12,7 @@ export class AtendimentoService {
   private baseURL = environment.apiURL + '/atendimentos';
 
   constructor(private _http: HttpClient) { }
-  
+
   /**
    * 
    * @param id 
@@ -57,7 +57,7 @@ export class AtendimentoService {
    * @returns 
    */
   update(atendimento: Atendimento, documentosToSave: Array<File> | null, documentosToDelete: Array<string> | null) {
-    
+
     let formData: FormData = new FormData();
 
     formData.append('atendimento', new Blob([JSON.stringify(atendimento)], { type: 'application/json' }));
@@ -67,7 +67,7 @@ export class AtendimentoService {
     }
 
     if (documentosToDelete) {
-      documentosToDelete.forEach(id => formData.append('documentosToDelete', new Blob([id], {type: 'text/plain'})));
+      formData.append('documentosToDelete', new Blob([JSON.stringify(documentosToDelete)], { type: 'application/json' }));
     }
 
     return this._http.put<Atendimento>(this.baseURL + '/' + atendimento.id, formData);

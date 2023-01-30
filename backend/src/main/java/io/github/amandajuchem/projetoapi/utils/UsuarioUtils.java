@@ -18,7 +18,7 @@ import java.util.UUID;
  * The type Usuario utils.
  */
 @Component
-@RequiredArgsConstructor(onConstructor_= {@Autowired})
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class UsuarioUtils {
 
     private final BCryptPasswordEncoder encoder;

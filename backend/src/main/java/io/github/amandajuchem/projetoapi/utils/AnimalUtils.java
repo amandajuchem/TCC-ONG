@@ -17,7 +17,7 @@ import java.util.UUID;
  * The type Animal utils.
  */
 @Component
-@RequiredArgsConstructor(onConstructor_= {@Autowired})
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class AnimalUtils {
 
     private final FacadeService facade;

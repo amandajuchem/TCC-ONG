@@ -55,37 +55,29 @@ public class AtendimentoUtils {
 
             if (documentosToSave != null && documentosToSave.size() > 0) {
 
-                var atendimentoDocumentosToSave = atendimento;
+                for (MultipartFile d : documentosToSave) {
 
-                var documentosSaved = documentosToSave.stream()
+                    try {
 
-                        .map(d -> {
+                        var file = FileUtils.save(d, FileUtils.IMAGES_DIRECTORY);
 
-                            try {
+                        var imagem = Imagem.builder()
+                                .nome(file.getName())
+                                .atendimento(atendimento)
+                                .build();
 
-                                var file = FileUtils.save(d, FileUtils.IMAGES_DIRECTORY);
-
-                                var imagem = Imagem.builder()
-                                        .nome(file.getName())
-                                        .atendimento(atendimentoDocumentosToSave)
-                                        .build();
-
-                                imagem = facade.imagemSave(imagem);
-                                return imagem;
-                            } catch (IOException ex) {
-                                throw new OperationFailureException(MessageUtils.OPERATION_FAILURE);
-                            }
-                        })
-                        .toList();
-
-                atendimento.getDocumentos().addAll(documentosSaved);
+                        facade.imagemSave(imagem);
+                    } catch (IOException ex) {
+                        throw new OperationFailureException(MessageUtils.OPERATION_FAILURE);
+                    }
+                }
             }
 
             if (documentosToDelete != null && documentosToDelete.size() > 0) {
                 documentosToDelete.forEach(facade::imagemDelete);
             }
 
-            return facade.atendimentoSave(atendimento);
+            return atendimento;
         } catch (ValidationException ex) {
             throw new ValidationException(ex.getMessage());
         }

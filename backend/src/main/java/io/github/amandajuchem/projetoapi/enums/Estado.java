@@ -111,5 +111,5 @@ public enum Estado {
     /**
      * Tocantins estado.
      */
-    TOCANTINS;
+    TOCANTINS
 }

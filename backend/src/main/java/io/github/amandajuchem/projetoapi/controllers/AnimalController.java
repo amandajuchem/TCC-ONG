@@ -79,8 +79,8 @@ public class AnimalController {
      */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> save(@RequestPart @Valid Animal animal,
-                               @RequestPart(required = false) MultipartFile novaFoto,
-                               @RequestPart(required = false) String antigaFoto) {
+                                  @RequestPart(required = false) MultipartFile novaFoto,
+                                  @RequestPart(required = false) String antigaFoto) {
 
         var animalSaved = animalUtils.save(animal, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
         var animalDTO = AnimalDTO.toDTO(animalSaved);
@@ -114,9 +114,9 @@ public class AnimalController {
      */
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> update(@PathVariable UUID id,
-                                 @RequestPart @Valid Animal animal,
-                                 @RequestPart(required = false) MultipartFile novaFoto,
-                                 @RequestPart(required = false) String antigaFoto) {
+                                    @RequestPart @Valid Animal animal,
+                                    @RequestPart(required = false) MultipartFile novaFoto,
+                                    @RequestPart(required = false) String antigaFoto) {
 
         if (animal.getId().equals(id)) {
 

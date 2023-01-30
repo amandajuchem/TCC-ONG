@@ -28,16 +28,16 @@ public class JWTUtils {
      * @param username the username
      * @return the string
      */
-    public String generateToken (String username) {
+    public String generateToken(String username) {
 
-        var key =  Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        var key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
 
         return Jwts.builder()
-            .setSubject(username)
-            .setExpiration(new Date(System.currentTimeMillis() + expiration))
-            .signWith(key, SignatureAlgorithm.HS512)
-            .compact()
-        ;
+                .setSubject(username)
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(key, SignatureAlgorithm.HS512)
+                .compact()
+                ;
     }
 
     /**
@@ -48,7 +48,7 @@ public class JWTUtils {
      */
     private Claims getClaims(String token) {
 
-        var key =  Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        var key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
 
         try {
             return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();

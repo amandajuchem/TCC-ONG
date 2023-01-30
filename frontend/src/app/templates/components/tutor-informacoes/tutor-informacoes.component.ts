@@ -90,7 +90,9 @@ export class TutorInformacoesComponent implements OnInit {
       cpf: [tutor.cpf, Validators.required],
       rg: [tutor.rg, Validators.nullValidator],
       telefone: [tutor.telefone, Validators.required],
-      situacao: [tutor.situacao, Validators.required]
+      situacao: [tutor.situacao, Validators.required],
+      foto: [tutor.foto, Validators.nullValidator],
+      endereco: [tutor.endereco, Validators.nullValidator]
     });
 
     this.form.disable();

@@ -18,16 +18,15 @@ import org.springframework.web.cors.CorsConfigurationSource;
  */
 @EnableWebSecurity
 @EnableMethodSecurity
-@RequiredArgsConstructor(onConstructor_= {@Autowired})
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class SecurityConfiguration {
 
+    private static final String[] PUBLIC_MATCHERS_GET = {
+            "/imagens/*"
+    };
     private final CorsConfigurationSource corsConfigurationSource;
     private final JWTUtils jwtUtils;
     private final UserDetailsService userDetailsService;
-
-    private static final String[] PUBLIC_MATCHERS_GET = {
-        "/imagens/*"
-    };
 
     /**
      * Filter chain security filter chain.
@@ -40,8 +39,8 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.authorizeRequests()
-            .antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
-            .anyRequest().authenticated()
+                .antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
+                .anyRequest().authenticated()
         ;
 
         http.apply(new HttpConfigurer(jwtUtils, userDetailsService));
