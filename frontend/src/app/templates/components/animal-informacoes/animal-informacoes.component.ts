@@ -171,6 +171,8 @@ export class AnimalInformacoesComponent implements OnInit {
     this._facade.animalUpdate(animal, this.fotoToSave, this.fotoToDelete?.id).subscribe({
 
       next: (animal) => {
+        this.fotoToSave = null;
+        this.fotoToDelete = null;
         this._facade.notificationShowNotification(MessageUtils.ANIMAL_UPDATE_SUCCESS, NotificationType.SUCCESS);
         this._facade.animalSet(animal);
       },

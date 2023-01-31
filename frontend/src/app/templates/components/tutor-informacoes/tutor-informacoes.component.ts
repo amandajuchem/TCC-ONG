@@ -145,6 +145,8 @@ export class TutorInformacoesComponent implements OnInit {
     this._facade.tutorUpdate(tutor, this.fotoToSave, this.fotoToDelete?.id).subscribe({
 
       next: (tutor) => {
+        this.fotoToSave = null;
+        this.fotoToDelete = null;
         this._facade.notificationShowNotification(MessageUtils.TUTOR_UPDATE_SUCCESS, NotificationType.SUCCESS);
         this._facade.tutorSet(tutor);
       },

@@ -17,6 +17,8 @@ public class FacadeService {
 
     private final AnimalService animalService;
     private final AtendimentoService atendimentoService;
+    private final EnderecoService enderecoService;
+    private final FichaMedicaService fichaMedicaService;
     private final ImagemService imagemService;
     private final TutorService tutorService;
     private final UsuarioService usuarioService;
@@ -109,6 +111,48 @@ public class FacadeService {
      */
     public Atendimento atendimentoSave(Atendimento atendimento) {
         return atendimentoService.save(atendimento);
+    }
+
+    //////////////////////////////////////////////// ENDEREÇO ////////////////////////////////////////////////
+
+    /**
+     * Endereco delete.
+     *
+     * @param id the id
+     */
+    public void enderecoDelete(UUID id) {
+        enderecoService.delete(id);
+    }
+
+    /**
+     * Endereco save endereco.
+     *
+     * @param endereco the endereco
+     * @return the endereco
+     */
+    public Endereco enderecoSave(Endereco endereco) {
+        return enderecoService.save(endereco);
+    }
+
+    //////////////////////////////////////////////// FICHA MÉDICA ////////////////////////////////////////////////
+
+    /**
+     * Ficha medica delete.
+     *
+     * @param id the id
+     */
+    public void fichaMedicaDelete(UUID id) {
+        fichaMedicaService.delete(id);
+    }
+
+    /**
+     * Ficha medica save ficha medica.
+     *
+     * @param fichaMedica the ficha medica
+     * @return the ficha medica
+     */
+    public FichaMedica fichaMedicaSave(FichaMedica fichaMedica) {
+        return fichaMedicaService.save(fichaMedica);
     }
 
     //////////////////////////////////////////////// IMAGEM ////////////////////////////////////////////////

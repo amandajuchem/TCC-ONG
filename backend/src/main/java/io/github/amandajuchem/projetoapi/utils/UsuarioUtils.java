@@ -66,8 +66,10 @@ public class UsuarioUtils {
 
                 var imagem = Imagem.builder()
                         .nome(file.getName())
+                        .usuario(usuario)
                         .build();
 
+                imagem = facade.imagemSave(imagem);
                 usuario.setFoto(imagem);
             }
 
@@ -75,7 +77,7 @@ public class UsuarioUtils {
                 facade.imagemDelete(antigaFoto);
             }
 
-            return facade.usuarioSave(usuario);
+            return usuario;
         } catch (ValidationException ex) {
             throw new ValidationException(ex.getMessage());
         } catch (IOException ex) {

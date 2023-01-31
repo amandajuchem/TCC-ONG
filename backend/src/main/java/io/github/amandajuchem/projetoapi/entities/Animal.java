@@ -1,5 +1,6 @@
 package io.github.amandajuchem.projetoapi.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.github.amandajuchem.projetoapi.enums.Porte;
 import io.github.amandajuchem.projetoapi.enums.Sexo;
 import io.github.amandajuchem.projetoapi.enums.Situacao;
@@ -80,11 +81,13 @@ public class Animal extends AbstractEntity {
     private Tutor tutor;
 
     @Valid
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "animal")
+    @JsonManagedReference(value = "jsonReferenceFotoAnimal")
     private Imagem foto;
 
     @Valid
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "animal")
+    @JsonManagedReference(value = "jsonReferenceFichaMedicaAnimal")
     private FichaMedica fichaMedica;
 
     @Override

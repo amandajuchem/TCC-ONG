@@ -26,6 +26,26 @@ public class MessageUtils {
     public static final String ATENDIMENTO_NULL = "Atendimento nulo!";
 
     /**
+     * The constant ENDERECO_NOT_FOUND.
+     */
+    public static final String ENDERECO_NOT_FOUND = "Endereço não encontrado!";
+
+    /**
+     * The constant ENDERECO_NULL.
+     */
+    public static final String ENDERECO_NULL = "Endereço nulo!";
+
+    /**
+     * The constant FICHA_MEDICA_NOT_FOUND.
+     */
+    public static final String FICHA_MEDICA_NOT_FOUND = "Ficha médica não encontrada!";
+
+    /**
+     * The constant FICHA_MEDICA_NULL.
+     */
+    public static final String FICHA_MEDICA_NULL = "Ficha médica nula!";
+
+    /**
      * The constant IMAGEM_NOT_FOUND.
      */
     public static final String IMAGEM_NOT_FOUND = "Imagem não encontrada!";

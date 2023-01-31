@@ -1,5 +1,6 @@
 package io.github.amandajuchem.projetoapi.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.github.amandajuchem.projetoapi.enums.Setor;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -42,7 +44,9 @@ public class Usuario extends AbstractEntity {
     @Column(name = "setor")
     private Setor setor;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Valid
+    @OneToOne(mappedBy = "usuario")
+    @JsonManagedReference(value = "jsonReferenceFotoUsuario")
     private Imagem foto;
 
     @Override

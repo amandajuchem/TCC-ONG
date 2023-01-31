@@ -31,11 +31,15 @@ public class TutorUtils {
 
         var tutor = facade.tutorFindById(id);
 
-        facade.tutorDelete(tutor.getId());
-
         if (tutor.getFoto() != null) {
-            FileUtils.delete(tutor.getFoto().getNome(), FileUtils.IMAGES_DIRECTORY);
+            facade.imagemDelete(tutor.getFoto().getId());
         }
+
+        if (tutor.getEndereco() != null) {
+            facade.enderecoDelete(tutor.getEndereco().getId());
+        }
+
+        facade.tutorDelete(tutor.getId());
     }
 
     /**
@@ -50,7 +54,25 @@ public class TutorUtils {
 
         try {
 
-            tutor = facade.tutorSave(tutor);
+            if (tutor.getId() == null) {
+
+                var endereco = tutor.getEndereco();
+
+                tutor.setEndereco(null);
+                tutor = facade.tutorSave(tutor);
+                endereco.setTutor(tutor);
+                endereco = facade.enderecoSave(endereco);
+                tutor.setEndereco(endereco);
+            }
+
+            else {
+
+                var endereco = tutor.getEndereco();
+
+                endereco = facade.enderecoSave(endereco);
+                tutor = facade.tutorSave(tutor);
+                tutor.setEndereco(endereco);
+            }
 
             if (novaFoto != null) {
 
@@ -58,8 +80,10 @@ public class TutorUtils {
 
                 var imagem = Imagem.builder()
                         .nome(file.getName())
+                        .tutor(tutor)
                         .build();
 
+                imagem = facade.imagemSave(imagem);
                 tutor.setFoto(imagem);
             }
 
@@ -67,7 +91,7 @@ public class TutorUtils {
                 facade.imagemDelete(antigaFoto);
             }
 
-            return facade.tutorSave(tutor);
+            return tutor;
         } catch (ValidationException ex) {
             throw new ValidationException(ex.getMessage());
         } catch (IOException ex) {

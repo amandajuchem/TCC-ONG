@@ -109,6 +109,8 @@ export class UsuarioInformacoesComponent implements OnInit {
     this._facade.usuarioUpdate(usuario, this.fotoToSave, this.fotoToDelete?.id).subscribe({
 
       next: (usuario) => {
+        this.fotoToSave = null;
+        this.fotoToDelete = null;
         this._facade.notificationShowNotification(MessageUtils.USUARIO_UPDATE_SUCCESS, NotificationType.SUCCESS);
         this._facade.usuarioSet(usuario);
       },

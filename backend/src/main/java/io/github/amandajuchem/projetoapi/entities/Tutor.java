@@ -1,5 +1,6 @@
 package io.github.amandajuchem.projetoapi.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.github.amandajuchem.projetoapi.enums.Situacao;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -47,11 +48,13 @@ public class Tutor extends AbstractEntity {
     private String observacao;
 
     @Valid
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "tutor")
+    @JsonManagedReference(value = "jsonReferenceFotoTutor")
     private Imagem foto;
 
     @Valid
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "tutor")
+    @JsonManagedReference(value = "jsonReferenceEnderecoTutor")
     private Endereco endereco;
 
     @Override

@@ -32,8 +32,6 @@ CREATE TABLE tb_animais
     castrado           BOOLEAN      NOT NULL,
     situacao           VARCHAR(255) NOT NULL,
     tutor_id           UUID,
-    foto_id            UUID,
-    ficha_medica_id    UUID,
     CONSTRAINT pk_tb_animais PRIMARY KEY (id)
 );
 
@@ -83,6 +81,7 @@ CREATE TABLE tb_enderecos
     estado             VARCHAR(255) NOT NULL,
     complemento        VARCHAR(255),
     cep                VARCHAR(8),
+    tutor_id           UUID,
     CONSTRAINT pk_tb_enderecos PRIMARY KEY (id)
 );
 
@@ -120,6 +119,7 @@ CREATE TABLE tb_fichas_medicas
     created_by_user    VARCHAR(255),
     modified_by_user   VARCHAR(255),
     comorbidades       TEXT,
+    animal_id          UUID,
     CONSTRAINT pk_tb_fichas_medicas PRIMARY KEY (id)
 );
 
@@ -132,7 +132,10 @@ CREATE TABLE tb_imagens
     modified_by_user   VARCHAR(255),
     nome               VARCHAR(255),
     adocao_id          UUID,
+    animal_id          UUID,
     atendimento_id     UUID,
+    tutor_id           UUID,
+    usuario_id         UUID,
     CONSTRAINT pk_tb_imagens PRIMARY KEY (id)
 );
 
@@ -149,8 +152,6 @@ CREATE TABLE tb_tutores
     telefone           VARCHAR(11),
     situacao           VARCHAR(255) NOT NULL,
     observacao         TEXT,
-    foto_id            UUID,
-    endereco_id        UUID,
     CONSTRAINT pk_tb_tutores PRIMARY KEY (id)
 );
 
@@ -180,12 +181,6 @@ ALTER TABLE tb_adocoes
     ADD CONSTRAINT FK_TB_ADOCOES_ON_ANIMAL FOREIGN KEY (animal_id) REFERENCES tb_animais (id);
 
 ALTER TABLE tb_animais
-    ADD CONSTRAINT FK_TB_ANIMAIS_ON_FICHAMEDICA FOREIGN KEY (ficha_medica_id) REFERENCES tb_fichas_medicas (id);
-
-ALTER TABLE tb_animais
-    ADD CONSTRAINT FK_TB_ANIMAIS_ON_FOTO FOREIGN KEY (foto_id) REFERENCES tb_imagens (id);
-
-ALTER TABLE tb_animais
     ADD CONSTRAINT FK_TB_ANIMAIS_ON_TUTOR FOREIGN KEY (tutor_id) REFERENCES tb_tutores (id);
 
 ALTER TABLE tb_atendimentos
@@ -200,17 +195,26 @@ ALTER TABLE tb_castracoes
 ALTER TABLE tb_castracoes
     ADD CONSTRAINT FK_TB_CASTRACOES_ON_USUARIO FOREIGN KEY (usuario_id) REFERENCES tb_usuarios (id);
 
+ALTER TABLE tb_enderecos
+    ADD CONSTRAINT FK_TB_ENDERECOS_ON_TUTOR FOREIGN KEY (tutor_id) REFERENCES tb_tutores (id);
+
+ALTER TABLE tb_fichas_medicas
+    ADD CONSTRAINT FK_TB_FICHAS_MEDICAS_ON_ANIMAL FOREIGN KEY (animal_id) REFERENCES tb_animais (id);
+
 ALTER TABLE tb_imagens
     ADD CONSTRAINT FK_TB_IMAGENS_ON_ADOCAO FOREIGN KEY (adocao_id) REFERENCES tb_adocoes (id);
 
 ALTER TABLE tb_imagens
+    ADD CONSTRAINT FK_TB_IMAGENS_ON_ANIMAL FOREIGN KEY (animal_id) REFERENCES tb_animais (id);
+
+ALTER TABLE tb_imagens
     ADD CONSTRAINT FK_TB_IMAGENS_ON_ATENDIMENTO FOREIGN KEY (atendimento_id) REFERENCES tb_atendimentos (id);
 
-ALTER TABLE tb_tutores
-    ADD CONSTRAINT FK_TB_TUTORES_ON_ENDERECO FOREIGN KEY (endereco_id) REFERENCES tb_enderecos (id);
+ALTER TABLE tb_imagens
+    ADD CONSTRAINT FK_TB_IMAGENS_ON_TUTOR FOREIGN KEY (tutor_id) REFERENCES tb_tutores (id);
 
-ALTER TABLE tb_tutores
-    ADD CONSTRAINT FK_TB_TUTORES_ON_FOTO FOREIGN KEY (foto_id) REFERENCES tb_imagens (id);
+ALTER TABLE tb_imagens
+    ADD CONSTRAINT FK_TB_IMAGENS_ON_USUARIO FOREIGN KEY (usuario_id) REFERENCES tb_usuarios (id);
 
 ALTER TABLE tb_usuarios
     ADD CONSTRAINT FK_TB_USUARIOS_ON_FOTO FOREIGN KEY (foto_id) REFERENCES tb_imagens (id);

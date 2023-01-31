@@ -125,7 +125,7 @@ public class UsuarioController {
             var usuarioSaved = usuarioUtils.save(usuario, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
             var usuarioDTO = UsuarioDTO.toDTO(usuarioSaved);
 
-            return ResponseEntity.status(CREATED).body(usuarioDTO);
+            return ResponseEntity.status(OK).body(usuarioDTO);
         }
 
         throw new ObjectNotFoundException(MessageUtils.USUARIO_NOT_FOUND);
