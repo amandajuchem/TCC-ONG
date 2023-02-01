@@ -1,6 +1,6 @@
 package io.github.amandajuchem.projetoapi.dtos;
 
-import io.github.amandajuchem.projetoapi.entities.Castracao;
+import io.github.amandajuchem.projetoapi.entities.Agendamento;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -24,20 +24,20 @@ public record CastracaoDTO(
     /**
      * To dto castracao dto.
      *
-     * @param castracao the castracao
+     * @param agendamento the castracao
      * @return the castracao dto
      */
-    public static CastracaoDTO toDTO(Castracao castracao) {
+    public static CastracaoDTO toDTO(Agendamento agendamento) {
 
         return new CastracaoDTO(
-                castracao.getId(),
-                castracao.getCreatedDate(),
-                castracao.getLastModifiedDate(),
-                castracao.getCreatedByUser(),
-                castracao.getModifiedByUser(),
-                castracao.getDataHora(),
-                castracao.getAnimal() != null ? AnimalDTO.toDTO(castracao.getAnimal()) : null,
-                castracao.getUsuario() != null ? UsuarioDTO.toDTO(castracao.getUsuario()) : null
+                agendamento.getId(),
+                agendamento.getCreatedDate(),
+                agendamento.getLastModifiedDate(),
+                agendamento.getCreatedByUser(),
+                agendamento.getModifiedByUser(),
+                agendamento.getDataHora(),
+                agendamento.getAnimal() != null ? AnimalDTO.toDTO(agendamento.getAnimal()) : null,
+                agendamento.getUsuario() != null ? UsuarioDTO.toDTO(agendamento.getUsuario()) : null
         );
     }
 }

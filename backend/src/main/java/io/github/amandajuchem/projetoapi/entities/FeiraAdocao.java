@@ -24,7 +24,7 @@ import java.util.Set;
 public class FeiraAdocao extends AbstractEntity {
 
     @NotEmpty
-    @Column(name = "nome")
+    @Column(name = "nome", length = 100)
     private String nome;
 
     @NotNull

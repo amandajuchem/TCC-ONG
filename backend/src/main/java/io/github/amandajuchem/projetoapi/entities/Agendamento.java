@@ -18,8 +18,8 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "tb_castracoes")
-public class Castracao extends AbstractEntity {
+@Entity(name = "tb_agendamentos")
+public class Agendamento extends AbstractEntity {
 
     @NotNull
     @Column(name = "data_hora")

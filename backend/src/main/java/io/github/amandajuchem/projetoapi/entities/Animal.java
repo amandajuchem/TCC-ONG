@@ -1,6 +1,7 @@
 package io.github.amandajuchem.projetoapi.entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import io.github.amandajuchem.projetoapi.enums.Especie;
 import io.github.amandajuchem.projetoapi.enums.Porte;
 import io.github.amandajuchem.projetoapi.enums.Sexo;
 import io.github.amandajuchem.projetoapi.enums.Situacao;
@@ -13,7 +14,7 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
+import java.util.Set;
 
 /**
  * The type Animal.
@@ -26,7 +27,7 @@ import java.time.LocalDate;
 public class Animal extends AbstractEntity {
 
     @NotEmpty
-    @Column(name = "nome")
+    @Column(name = "nome", length = 50)
     private String nome;
 
     @NotNull
@@ -34,51 +35,32 @@ public class Animal extends AbstractEntity {
     private Integer idade;
 
     @NotEmpty
-    @Column(name = "especie")
-    private String especie;
-
-    @Column(name = "local")
-    private String local;
-
-    @Column(name = "local_adocao")
-    private String localAdocao;
+    @Column(name = "especie", length = 10)
+    @Enumerated(EnumType.STRING)
+    private Especie especie;
 
     @NotNull
+    @Column(name = "sexo", length = 5)
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "sexo")
     private Sexo sexo;
 
     @NotEmpty
-    @Column(name = "raca")
+    @Column(name = "raca", length = 50)
     private String raca;
 
-    @Column(name = "data_adocao")
-    private LocalDate dataAdocao;
-
-    @Column(name = "data_resgate")
-    private LocalDate dataResgate;
-
     @NotEmpty
-    @Column(name = "cor")
+    @Column(name = "cor", length = 50)
     private String cor;
 
     @NotNull
+    @Column(name = "porte", length = 10)
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "porte")
     private Porte porte;
 
     @NotNull
-    @Column(name = "castrado")
-    private Boolean castrado;
-
-    @NotNull
+    @Column(name = "situacao", length = 10)
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "situacao")
     private Situacao situacao;
-
-    @ManyToOne
-    @JoinColumn(name = "tutor_id")
-    private Tutor tutor;
 
     @Valid
     @OneToOne(mappedBy = "animal")
@@ -89,6 +71,11 @@ public class Animal extends AbstractEntity {
     @OneToOne(mappedBy = "animal")
     @JsonManagedReference(value = "jsonReferenceFichaMedicaAnimal")
     private FichaMedica fichaMedica;
+
+    @Valid
+    @OneToMany(mappedBy = "animal")
+    @JsonManagedReference(value = "jsonReferenceAdocoesAnimal")
+    private Set<Adocao> adocoes;
 
     @Override
     public boolean equals(Object o) {

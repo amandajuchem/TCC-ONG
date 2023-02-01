@@ -68,17 +68,12 @@ export class AnimalCadastroComponent implements OnInit {
       raca: [null, Validators.required],
       especie: [null, Validators.required],
       porte: [null, Validators.required],
-      castrado: [null, Validators.required],
-      dataAdocao: [null, Validators.nullValidator],
-      dataResgate: [null, Validators.nullValidator],
-      local: [null, Validators.nullValidator],
-      localAdocao: [null, Validators.nullValidator],
       situacao: [null, Validators.required],
-      tutor: [null, Validators.nullValidator],
       foto: [null, Validators.nullValidator],
-
+      
       fichaMedica: this._formBuilder.group({
-        comorbidades: [null, Validators.required]
+        comorbidades: [null, Validators.required],
+        castrado: [null, Validators.required]
       })
     });
   }

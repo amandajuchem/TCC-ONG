@@ -20,7 +20,6 @@ public enum Situacao {
      * Falecido situacao.
      */
     FALECIDO,
-
     /**
      * Adotou situacao.
      */

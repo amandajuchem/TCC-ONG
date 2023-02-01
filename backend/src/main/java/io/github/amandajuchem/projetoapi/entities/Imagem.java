@@ -20,11 +20,12 @@ import javax.validation.constraints.NotEmpty;
 public class Imagem extends AbstractEntity {
 
     @NotEmpty
-    @Column(name = "nome")
+    @Column(name = "nome", length = 25)
     private String nome;
 
     @ManyToOne
     @JoinColumn(name = "adocao_id")
+    @JsonBackReference(value = "jsonReferenceTermoResponsabilidadeAdocao")
     private Adocao adocao;
 
     @OneToOne
@@ -34,6 +35,7 @@ public class Imagem extends AbstractEntity {
 
     @ManyToOne
     @JoinColumn(name = "atendimento_id")
+    @JsonBackReference(value = "jsonReferenceDocumentosAtendimento")
     private Atendimento atendimento;
 
     @OneToOne

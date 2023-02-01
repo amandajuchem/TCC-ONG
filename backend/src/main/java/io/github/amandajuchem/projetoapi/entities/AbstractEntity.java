@@ -41,10 +41,10 @@ public abstract class AbstractEntity {
     private LocalDateTime lastModifiedDate;
 
     @CreatedBy
-    @Column(name = "created_by_user", updatable = false)
+    @Column(name = "created_by_user", length = 11, updatable = false)
     private String createdByUser;
 
     @LastModifiedBy
-    @Column(name = "modified_by_user")
+    @Column(name = "modified_by_user", length = 11)
     private String modifiedByUser;
 }

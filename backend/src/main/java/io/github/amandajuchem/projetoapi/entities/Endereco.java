@@ -22,27 +22,27 @@ import javax.validation.constraints.NotNull;
 public class Endereco extends AbstractEntity {
 
     @NotEmpty
-    @Column(name = "rua")
+    @Column(name = "rua", length = 100)
     private String rua;
 
     @NotNull
-    @Column(name = "numero_residencia")
+    @Column(name = "numero_residencia", length = 10)
     private String numeroResidencia;
 
     @NotEmpty
-    @Column(name = "bairro")
+    @Column(name = "bairro", length = 50)
     private String bairro;
 
     @NotEmpty
-    @Column(name = "cidade")
+    @Column(name = "cidade", length = 100)
     private String cidade;
 
     @NotNull
+    @Column(name = "estado", length = 25)
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "estado")
     private Estado estado;
 
-    @Column(name = "complemento")
+    @Column(name = "complemento", length = 100)
     private String complemento;
 
     @NotEmpty

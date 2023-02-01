@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Data
 @SuperBuilder
@@ -22,6 +23,10 @@ public class FichaMedica extends AbstractEntity {
     @NotEmpty
     @Column(name = "comorbidades", columnDefinition = "TEXT")
     private String comorbidades;
+
+    @NotNull
+    @Column(name = "castrado")
+    private Boolean castrado;
 
     @OneToOne
     @JoinColumn(name = "animal_id")

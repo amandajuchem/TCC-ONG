@@ -1,14 +1,15 @@
 package io.github.amandajuchem.projetoapi.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import io.github.amandajuchem.projetoapi.enums.Local;
+import io.github.amandajuchem.projetoapi.enums.LocalAdocao;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -27,14 +28,29 @@ public class Adocao extends AbstractEntity {
     @Column(name = "data_hora")
     private LocalDateTime dataHora;
 
+    @Column(name = "local", length = 10)
+    @Enumerated(EnumType.STRING)
+    private Local local;
+
+    @Column(name = "local_adocao", length = 10)
+    @Enumerated(EnumType.STRING)
+    private LocalAdocao localAdocao;
+
     @NotNull
     @Column(name = "vale_castracao")
     private Boolean valeCastracao;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "animal_id")
     private Animal animal;
 
+    @ManyToOne
+    @JoinColumn(name = "tutor_id")
+    private Tutor tutor;
+
+    @Valid
     @OneToMany(mappedBy = "adocao")
+    @JsonManagedReference(value = "jsonReferenceTermoResponsabilidadeAdocao")
     private Set<Imagem> termoResponsabilidade;
 
     @Override

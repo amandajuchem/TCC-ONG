@@ -1,6 +1,8 @@
 package io.github.amandajuchem.projetoapi.dtos;
 
 import io.github.amandajuchem.projetoapi.entities.Adocao;
+import io.github.amandajuchem.projetoapi.enums.Local;
+import io.github.amandajuchem.projetoapi.enums.LocalAdocao;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -19,8 +21,11 @@ public record AdocaoDTO(
         String createdByUser,
         String modifiedByUser,
         @NotNull LocalDateTime dataHora,
+        @NotNull Local local,
+        @NotNull LocalAdocao localAdocao,
         @NotNull Boolean valeCastracao,
         @NotNull AnimalDTO animal,
+        @NotNull TutorDTO tutor,
         @NotNull Set<ImagemDTO> termoResponsabilidade
 ) implements Serializable {
 
@@ -39,8 +44,11 @@ public record AdocaoDTO(
                 adocao.getCreatedByUser(),
                 adocao.getModifiedByUser(),
                 adocao.getDataHora(),
+                adocao.getLocal(),
+                adocao.getLocalAdocao(),
                 adocao.getValeCastracao(),
                 adocao.getAnimal() != null ? AnimalDTO.toDTO(adocao.getAnimal()) : null,
+                adocao.getTutor() != null ? TutorDTO.toDTO(adocao.getTutor()) : null,
                 adocao.getTermoResponsabilidade() != null ? adocao.getTermoResponsabilidade().stream().map(ImagemDTO::toDTO).collect(Collectors.toSet()) : null
         );
     }

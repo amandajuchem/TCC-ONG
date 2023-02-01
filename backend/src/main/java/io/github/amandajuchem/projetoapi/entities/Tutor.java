@@ -12,6 +12,7 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 /**
  * The type Tutor.
@@ -24,7 +25,7 @@ import javax.validation.constraints.NotNull;
 public class Tutor extends AbstractEntity {
 
     @NotEmpty
-    @Column(name = "nome")
+    @Column(name = "nome", length = 100)
     private String nome;
 
     @NotEmpty
@@ -35,17 +36,10 @@ public class Tutor extends AbstractEntity {
     @Column(name = "rg", length = 13)
     private String rg;
 
-    @NotEmpty
-    @Column(name = "telefone", length = 11)
-    private String telefone;
-
     @NotNull
-    @Column(name = "situacao")
+    @Column(name = "situacao", length = 10)
     @Enumerated(value = EnumType.STRING)
     private Situacao situacao;
-
-    @Column(name = "observacao", columnDefinition = "TEXT")
-    private String observacao;
 
     @Valid
     @OneToOne(mappedBy = "tutor")
@@ -53,9 +47,19 @@ public class Tutor extends AbstractEntity {
     private Imagem foto;
 
     @Valid
+    @OneToMany(mappedBy = "tutor")
+    @JsonManagedReference(value = "jsonReferenceTelefonesTutor")
+    private Set<Telefone> telefones;
+
+    @Valid
     @OneToOne(mappedBy = "tutor")
     @JsonManagedReference(value = "jsonReferenceEnderecoTutor")
     private Endereco endereco;
+
+    @Valid
+    @OneToMany(mappedBy = "tutor")
+    @JsonManagedReference(value = "jsonReferenceObservacoesTutor")
+    private Set<Observacao> observacoes;
 
     @Override
     public boolean equals(Object o) {

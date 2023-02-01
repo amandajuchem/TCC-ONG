@@ -24,7 +24,7 @@ import javax.validation.constraints.NotNull;
 public class Usuario extends AbstractEntity {
 
     @NotEmpty
-    @Column(name = "nome")
+    @Column(name = "nome", length = 100)
     private String nome;
 
     @CPF
@@ -40,8 +40,8 @@ public class Usuario extends AbstractEntity {
     private Boolean status;
 
     @NotNull
+    @Column(name = "setor", length = 20)
     @Enumerated(EnumType.STRING)
-    @Column(name = "setor")
     private Setor setor;
 
     @Valid

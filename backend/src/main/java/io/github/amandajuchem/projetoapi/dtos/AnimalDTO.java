@@ -1,6 +1,7 @@
 package io.github.amandajuchem.projetoapi.dtos;
 
 import io.github.amandajuchem.projetoapi.entities.Animal;
+import io.github.amandajuchem.projetoapi.enums.Especie;
 import io.github.amandajuchem.projetoapi.enums.Porte;
 import io.github.amandajuchem.projetoapi.enums.Sexo;
 import io.github.amandajuchem.projetoapi.enums.Situacao;
@@ -10,7 +11,9 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 /**
@@ -24,20 +27,15 @@ public record AnimalDTO(
         String modifiedByUser,
         @NotEmpty String nome,
         @NotNull Integer idade,
-        @NotEmpty String especie,
-        String local,
-        String localAdocao,
+        @NotEmpty Especie especie,
         @NotNull Sexo sexo,
         @NotEmpty String raca,
-        LocalDate dataAdocao,
-        LocalDate dataResgate,
         @NotEmpty String cor,
         @NotNull Porte porte,
-        @NotNull Boolean castrado,
         @NotNull Situacao situacao,
-        TutorDTO tutor,
         ImagemDTO foto,
-        FichaMedicaDTO fichaMedica
+        FichaMedicaDTO fichaMedica,
+        Set<AdocaoDTO> adocoes
 ) implements Serializable {
 
     /**
@@ -57,19 +55,14 @@ public record AnimalDTO(
                 animal.getNome(),
                 animal.getIdade(),
                 animal.getEspecie(),
-                animal.getLocal(),
-                animal.getLocalAdocao(),
                 animal.getSexo(),
                 animal.getRaca(),
-                animal.getDataAdocao(),
-                animal.getDataResgate(),
                 animal.getCor(),
                 animal.getPorte(),
-                animal.getCastrado(),
                 animal.getSituacao(),
-                animal.getTutor() != null ? TutorDTO.toDTO(animal.getTutor()) : null,
                 animal.getFoto() != null ? ImagemDTO.toDTO(animal.getFoto()) : null,
-                animal.getFichaMedica() != null ? FichaMedicaDTO.toDTO(animal.getFichaMedica()) : null
+                animal.getFichaMedica() != null ? FichaMedicaDTO.toDTO(animal.getFichaMedica()) : null,
+                animal.getAdocoes() != null ? animal.getAdocoes().stream().map(a -> AdocaoDTO.toDTO(a)).collect(Collectors.toSet()) : null
         );
     }
 }

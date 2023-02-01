@@ -1,14 +1,14 @@
 package io.github.amandajuchem.projetoapi.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import io.github.amandajuchem.projetoapi.enums.Motivo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -28,30 +28,27 @@ public class Atendimento extends AbstractEntity {
     @Column(name = "data_hora")
     private LocalDateTime dataHora;
 
-    @Column(name = "data_hora_retorno")
-    private LocalDateTime dataHoraRetorno;
-
-    @NotEmpty
-    @Column(name = "motivo")
-    private String motivo;
+    @NotNull
+    @Column(name = "motivo", length = 25)
+    @Enumerated(EnumType.STRING)
+    private Motivo motivo;
 
     @NotEmpty
     @Column(name = "diagnostico", columnDefinition = "TEXT")
     private String diagnostico;
 
     @NotEmpty
-    @Column(name = "exames")
-    private String exames;
-
-    @NotEmpty
-    @Column(name = "procedimentos")
-    private String procedimentos;
-
-    @NotEmpty
-    @Column(name = "posologia")
+    @Column(name = "posologia", columnDefinition = "TEXT")
     private String posologia;
 
+    @Valid
     @OneToMany(mappedBy = "atendimento")
+    @JsonManagedReference(value = "jsonReferenceExamesAtendimento")
+    private Set<Exame> exames;
+
+    @Valid
+    @OneToMany(mappedBy = "atendimento")
+    @JsonManagedReference(value = "jsonReferenceDocumentosAtendimento")
     private Set<Imagem> documentos;
 
     @OneToOne
