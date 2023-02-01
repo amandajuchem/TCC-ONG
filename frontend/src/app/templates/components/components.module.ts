@@ -22,10 +22,11 @@ import { RouterModule } from '@angular/router';
 import { NgxMaskModule } from 'ngx-mask';
 import { getDutchPaginatorIntl } from 'src/app/configurations/internacionalization';
 
-import { AdocaoCadastroComponent } from './adocao-cadastro/adocao-cadastro.component';
-import { AdocaoExcluirComponent } from './adocao-excluir/adocao-excluir.component';
-import { AdocoesComponent } from './adocoes/adocoes.component';
+import { AgendamentosComponent } from './agendamentos/agendamentos.component';
 import { AnimaisComponent } from './animais/animais.component';
+import { AnimalAdocoesCadastroComponent } from './animal-adocoes-cadastro/animal-adocoes-cadastro.component';
+import { AnimalAdocoesExcluirComponent } from './animal-adocoes-excluir/animal-adocoes-excluir.component';
+import { AnimalAdocoesComponent } from './animal-adocoes/animal-adocoes.component';
 import { AnimalCadastroComponent } from './animal-cadastro/animal-cadastro.component';
 import { AnimalExcluirComponent } from './animal-excluir/animal-excluir.component';
 import { AnimalFichaMedicaComponent } from './animal-ficha-medica/animal-ficha-medica.component';
@@ -58,10 +59,11 @@ import { UsuariosComponent } from './usuarios/usuarios.component';
 
 @NgModule({
   declarations: [
-    AdocaoCadastroComponent,
-    AdocaoExcluirComponent,
-    AdocoesComponent,
+    AgendamentosComponent,
     AnimaisComponent,
+    AnimalAdocoesComponent,
+    AnimalAdocoesCadastroComponent,
+    AnimalAdocoesExcluirComponent,
     AnimalCadastroComponent,
     AnimalExcluirComponent,
     AnimalFichaMedicaComponent,
@@ -90,7 +92,7 @@ import { UsuariosComponent } from './usuarios/usuarios.component';
     UsuarioInformacoesComponent,
     UsuarioComponent,
     UsuariosCadastroComponent,
-    UsuariosComponent
+    UsuariosComponent,
   ],
   imports: [
     CommonModule,

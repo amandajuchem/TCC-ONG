@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from 'src/app/guards/auth.guard';
 
-import { AdocoesComponent } from '../../components/adocoes/adocoes.component';
+import { AgendamentosComponent } from '../../components/agendamentos/agendamentos.component';
 import { AnimaisComponent } from '../../components/animais/animais.component';
 import { AnimalComponent } from '../../components/animal/animal.component';
 import { AtendimentosComponent } from '../../components/atendimentos/atendimentos.component';
@@ -16,7 +16,7 @@ import { UsuariosComponent } from '../../components/usuarios/usuarios.component'
 const routes: Routes = [
   {
     path: '', component: LayoutComponent, children: [
-      { path: 'adocoes', component: AdocoesComponent, canActivate: [AuthGuard] },
+      { path: 'agendamentos', component: AgendamentosComponent, canActivate: [AuthGuard] },
       { path: 'animais', component: AnimaisComponent, canActivate: [AuthGuard] },
       { path: 'animais/:id', component: AnimalComponent, canActivate: [AuthGuard] },
       { path: 'atendimentos', component: AtendimentosComponent, canActivate: [AuthGuard] },

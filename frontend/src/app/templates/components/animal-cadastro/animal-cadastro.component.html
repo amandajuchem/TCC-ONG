@@ -50,7 +50,7 @@
             <div class="row">
                 <div class="col-12 col-md-3">
                     <mat-form-field appearance="outline" class="w-100">
-                        <mat-label>idade</mat-label>
+                        <mat-label>Idade</mat-label>
                         <input matInput formControlName="idade" mask="990">
                     </mat-form-field>
                 </div>
@@ -96,6 +96,18 @@
                             <mat-option value="PEQUENO">Pequeno</mat-option>
                             <mat-option value="MEDIO">Medio</mat-option>
                             <mat-option value="GRANDE">Grande</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-3">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Situação</mat-label>
+                        <mat-select formControlName="situacao">
+                            <mat-option value="ADOTADO">Adotado</mat-option>
+                            <mat-option value="DEVOLVIDO">Devolvido</mat-option>
+                            <mat-option value="ESPERANDO">Esperando</mat-option>
+                            <mat-option value="FALECIDO">Falecido</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
@@ -146,20 +158,6 @@
                     </mat-form-field>
                 </div>
             </div> -->
-
-            <div class="row">
-                <div class="col-12 col-md-3">
-                    <mat-form-field appearance="outline" class="w-100">
-                        <mat-label>Situação</mat-label>
-                        <mat-select formControlName="situacao">
-                            <mat-option value="ADOTADO">Adotado</mat-option>
-                            <mat-option value="DEVOLVIDO">Devolvido</mat-option>
-                            <mat-option value="ESPERANDO">Esperando</mat-option>
-                            <mat-option value="FALECIDO">Falecido</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-            </div>
 
             <div class="row">
                 <div class="col-12">

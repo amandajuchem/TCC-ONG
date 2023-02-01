@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { User } from 'src/app/entities/user';
 import { FacadeService } from 'src/app/services/facade.service';
 
 @Component({
-  selector: 'app-adocoes',
-  templateUrl: './adocoes.component.html',
-  styleUrls: ['./adocoes.component.sass']
+  selector: 'app-agendamentos',
+  templateUrl: './agendamentos.component.html',
+  styleUrls: ['./agendamentos.component.sass']
 })
-export class AdocoesComponent implements OnInit {
+export class AgendamentosComponent {
 
   user!: User;
 
