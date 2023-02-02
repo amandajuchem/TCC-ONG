@@ -8,6 +8,8 @@ import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -25,6 +27,7 @@ public class EnderecoService {
      *
      * @param id the id
      */
+    @Transactional(propagation = Propagation.REQUIRED)
     public void delete(UUID id) {
 
         if (id != null) {
@@ -44,6 +47,7 @@ public class EnderecoService {
      * @param endereco the endereco
      * @return the endereco
      */
+    @Transactional(propagation = Propagation.REQUIRED)
     public Endereco save(Endereco endereco) {
 
         if (endereco == null) {

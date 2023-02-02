@@ -58,6 +58,11 @@ public class Tutor extends AbstractEntity {
 
     @Valid
     @OneToMany(mappedBy = "tutor")
+    @JsonManagedReference(value = "jsonReferenceAdocoesTutor")
+    private Set<Adocao> adocoes;
+
+    @Valid
+    @OneToMany(mappedBy = "tutor")
     @JsonManagedReference(value = "jsonReferenceObservacoesTutor")
     private Set<Observacao> observacoes;
 

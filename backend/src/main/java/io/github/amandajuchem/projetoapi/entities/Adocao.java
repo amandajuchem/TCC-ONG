@@ -1,5 +1,6 @@
 package io.github.amandajuchem.projetoapi.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.github.amandajuchem.projetoapi.enums.Local;
 import io.github.amandajuchem.projetoapi.enums.LocalAdocao;
@@ -42,10 +43,12 @@ public class Adocao extends AbstractEntity {
 
     @ManyToOne
     @JoinColumn(name = "animal_id")
+    @JsonBackReference(value = "jsonReferenceAdocoesAnimal")
     private Animal animal;
 
     @ManyToOne
     @JoinColumn(name = "tutor_id")
+    @JsonBackReference(value = "jsonReferenceAdocoesTutor")
     private Tutor tutor;
 
     @Valid

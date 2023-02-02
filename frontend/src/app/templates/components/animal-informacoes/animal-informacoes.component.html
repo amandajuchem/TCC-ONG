@@ -103,7 +103,11 @@
         <div class="col-12 col-md-3">
             <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Espécie</mat-label>
-                <input matInput formControlName="especie">
+                <mat-select formControlName="especie">
+                    <mat-option value="CAO">Cão</mat-option>
+                    <mat-option value="GATO">Gato</mat-option>
+                    <mat-option value="OUTRO">Outro</mat-option>
+                </mat-select>
             </mat-form-field>
         </div>
 
@@ -121,52 +125,6 @@
 
         <div class="col-12 col-md-3">
             <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Castrado</mat-label>
-                <mat-select formControlName="castrado">
-                    <mat-option [value]="true">Sim</mat-option>
-                    <mat-option [value]="false">Não</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-
-        <div class="col-12 col-md-3">
-            <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Data de Adoção</mat-label>
-                <input matInput [matDatepicker]="pickerDataAdocao" formControlName="dataAdocao" readonly>
-                <mat-datepicker-toggle matIconSuffix [for]="pickerDataAdocao"></mat-datepicker-toggle>
-                <mat-datepicker #pickerDataAdocao></mat-datepicker>
-            </mat-form-field>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-12 col-md-3">
-            <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Data de Resgate</mat-label>
-                <input matInput [matDatepicker]="pickerDataResgate" formControlName="dataResgate" readonly>
-                <mat-datepicker-toggle matIconSuffix [for]="pickerDataResgate"></mat-datepicker-toggle>
-                <mat-datepicker #pickerDataResgate></mat-datepicker>
-            </mat-form-field>
-        </div>
-
-        <div class="col-12 col-md-3">
-            <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Local</mat-label>
-                <input matInput formControlName="local">
-            </mat-form-field>
-        </div>
-
-        <div class="col-12 col-md-6">
-            <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Local da Adoção</mat-label>
-                <input matInput formControlName="localAdocao">
-            </mat-form-field>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-12 col-md-3">
-            <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Situação</mat-label>
                 <mat-select formControlName="situacao">
                     <mat-option value="ADOTADO">Adotado</mat-option>
@@ -174,16 +132,6 @@
                     <mat-option value="ESPERANDO">Esperando</mat-option>
                     <mat-option value="FALECIDO">Falecido</mat-option>
                 </mat-select>
-            </mat-form-field>
-        </div>
-
-        <div class="col-12 col-md-9">
-            <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Tutor</mat-label>
-                <input matInput [value]="form.get('tutor')?.value?.nome" [disabled]="form.disabled" readonly>
-                <button matSuffix mat-icon-button (click)="selectTutor()" [disabled]="form.disabled">
-                    <mat-icon>search</mat-icon>
-                </button>
             </mat-form-field>
         </div>
     </div>

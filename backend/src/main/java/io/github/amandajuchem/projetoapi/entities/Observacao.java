@@ -27,4 +27,9 @@ public class Observacao extends AbstractEntity {
     @JoinColumn(name = "tutor_id")
     @JsonBackReference(value = "jsonReferenceObservacoesTutor")
     private Tutor tutor;
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
 }

@@ -39,7 +39,8 @@ export class AnimalFichaMedicaComponent implements OnInit {
 
     this.form = this._formBuilder.group({
       id: [animal.fichaMedica.id, Validators.nullValidator],
-      comorbidades: [animal.fichaMedica.comorbidades, Validators.required]
+      comorbidades: [animal.fichaMedica.comorbidades, Validators.required],
+      castrado: [animal.fichaMedica.castrado, Validators.required]
     });
 
     this.form.disable();

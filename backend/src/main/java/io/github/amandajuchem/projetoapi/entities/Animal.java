@@ -34,7 +34,7 @@ public class Animal extends AbstractEntity {
     @Column(name = "idade")
     private Integer idade;
 
-    @NotEmpty
+    @NotNull
     @Column(name = "especie", length = 10)
     @Enumerated(EnumType.STRING)
     private Especie especie;

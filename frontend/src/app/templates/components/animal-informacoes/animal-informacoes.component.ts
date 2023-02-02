@@ -94,15 +94,10 @@ export class AnimalInformacoesComponent implements OnInit {
       raca: [animal.raca, Validators.required],
       especie: [animal.especie, Validators.required],
       porte: [animal.porte, Validators.required],
-      castrado: [animal.castrado, Validators.required],
-      dataAdocao: [animal.dataAdocao, Validators.nullValidator],
-      dataResgate: [animal.dataResgate, Validators.nullValidator],
-      local: [animal.local, Validators.nullValidator],
-      localAdocao: [animal.localAdocao, Validators.nullValidator],
       situacao: [animal.situacao, Validators.required],
-      tutor: [animal.tutor, Validators.nullValidator],
       foto: [animal.foto, Validators.nullValidator],
-      fichaMedica: [animal.fichaMedica, Validators.nullValidator]
+      fichaMedica: [animal.fichaMedica, Validators.nullValidator],
+      adocoes: [animal.adocoes, Validators.nullValidator]
     });
 
     this.form.disable();

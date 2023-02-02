@@ -1,5 +1,6 @@
 package io.github.amandajuchem.projetoapi.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,5 +29,11 @@ public class Exame extends AbstractEntity {
 
     @ManyToOne
     @JoinColumn(name = "atendimento_id")
+    @JsonBackReference(value = "jsonReferenceExamesAtendimento")
     private Atendimento atendimento;
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
 }

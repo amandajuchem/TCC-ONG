@@ -61,6 +61,16 @@ public class MessageUtils {
     public static final String OPERATION_FAILURE = "Não foi possível concluir a operação! Por favor, entre em contato com o suporte técnico!";
 
     /**
+     * The constant TELEFONE_NOT_FOUND.
+     */
+    public static final String TELEFONE_NOT_FOUND = "Telefone não encontrado!";
+
+    /**
+     * The constant TELEFONE_NULL.
+     */
+    public static final String TELEFONE_NULL = "Telefone nulo!";
+
+    /**
      * The constant TUTOR_NOT_FOUND.
      */
     public static final String TUTOR_NOT_FOUND = "Tutor não encontrado!";

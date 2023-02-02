@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Tutor } from 'src/app/entities/tutor';
@@ -82,6 +82,14 @@ export class TutorInformacoesComponent implements OnInit {
     });
   }
 
+  addTelefone() {
+
+    this.telefones.push(this._formBuilder.group({
+      id: [null, Validators.nullValidator],
+      numero: [null, Validators.nullValidator]
+    }));
+  }
+
   buildForm(tutor: Tutor) {
 
     this.form = this._formBuilder.group({
@@ -89,9 +97,17 @@ export class TutorInformacoesComponent implements OnInit {
       nome: [tutor.nome, Validators.required],
       cpf: [tutor.cpf, Validators.required],
       rg: [tutor.rg, Validators.nullValidator],
-      telefone: [tutor.telefone, Validators.required],
       situacao: [tutor.situacao, Validators.required],
       foto: [tutor.foto, Validators.nullValidator],
+
+      telefones: this._formBuilder.array(
+        
+        tutor.telefones ? tutor.telefones.map(telefone => this._formBuilder.group({
+          id: [telefone.id, Validators.nullValidator],
+          numero: [telefone.numero, Validators.required]
+        })) : []
+      ),
+
       endereco: [tutor.endereco, Validators.nullValidator]
     });
 
@@ -128,6 +144,10 @@ export class TutorInformacoesComponent implements OnInit {
     });
   }
 
+  get telefones() {
+    return this.form.controls['telefones'] as FormArray;
+  }
+
   removeFoto() {
 
     if (this.foto && this.foto.salvo) {
@@ -136,6 +156,10 @@ export class TutorInformacoesComponent implements OnInit {
 
     this.foto = null;
     this.form.get('foto')?.patchValue(null);
+  }
+
+  removeTelefone(index: number) {
+    this.telefones.removeAt(index);
   }
 
   submit() {

@@ -20,13 +20,14 @@ public class FacadeService {
     private final EnderecoService enderecoService;
     private final FichaMedicaService fichaMedicaService;
     private final ImagemService imagemService;
+    private final TelefoneService telefoneService;
     private final TutorService tutorService;
     private final UsuarioService usuarioService;
 
     //////////////////////////////////////////////// ANIMAL ////////////////////////////////////////////////
 
     /**
-     * Animal delete.
+     * Delete animal.
      *
      * @param id the id
      */
@@ -35,7 +36,7 @@ public class FacadeService {
     }
 
     /**
-     * Animal find all list.
+     * Find all animais.
      *
      * @return the list
      */
@@ -44,7 +45,7 @@ public class FacadeService {
     }
 
     /**
-     * Animal find by id animal.
+     * Find animal by id.
      *
      * @param id the id
      * @return the animal
@@ -54,7 +55,7 @@ public class FacadeService {
     }
 
     /**
-     * Animal find by nome contains list.
+     * Find animal by nome contains.
      *
      * @param nome the nome
      * @return the list
@@ -64,7 +65,7 @@ public class FacadeService {
     }
 
     /**
-     * Animal save animal.
+     * Save animal.
      *
      * @param animal the animal
      * @return the animal
@@ -76,7 +77,7 @@ public class FacadeService {
     //////////////////////////////////////////////// ATENDIMENTO ////////////////////////////////////////////////
 
     /**
-     * Atendimento delete.
+     * Delete atendimento.
      *
      * @param id the id
      */
@@ -85,7 +86,7 @@ public class FacadeService {
     }
 
     /**
-     * Atendimento find all list.
+     * Find all atendimentos.
      *
      * @return the list
      */
@@ -94,7 +95,7 @@ public class FacadeService {
     }
 
     /**
-     * Atendimento find by id atendimento.
+     * Find atendimento by id.
      *
      * @param id the id
      * @return the atendimento
@@ -104,7 +105,7 @@ public class FacadeService {
     }
 
     /**
-     * Atendimento save atendimento.
+     * Save atendimento.
      *
      * @param atendimento the atendimento
      * @return the atendimento
@@ -116,7 +117,7 @@ public class FacadeService {
     //////////////////////////////////////////////// ENDEREÇO ////////////////////////////////////////////////
 
     /**
-     * Endereco delete.
+     * Delete endereco.
      *
      * @param id the id
      */
@@ -125,7 +126,7 @@ public class FacadeService {
     }
 
     /**
-     * Endereco save endereco.
+     * Save endereco.
      *
      * @param endereco the endereco
      * @return the endereco
@@ -137,7 +138,7 @@ public class FacadeService {
     //////////////////////////////////////////////// FICHA MÉDICA ////////////////////////////////////////////////
 
     /**
-     * Ficha medica delete.
+     * Delete ficha medica.
      *
      * @param id the id
      */
@@ -146,7 +147,7 @@ public class FacadeService {
     }
 
     /**
-     * Ficha medica save ficha medica.
+     * Save ficha medica.
      *
      * @param fichaMedica the ficha medica
      * @return the ficha medica
@@ -158,7 +159,7 @@ public class FacadeService {
     //////////////////////////////////////////////// IMAGEM ////////////////////////////////////////////////
 
     /**
-     * Imagem delete.
+     * Delete imagem.
      *
      * @param id the id
      */
@@ -167,7 +168,7 @@ public class FacadeService {
     }
 
     /**
-     * Imagem save imagem.
+     * Save imagem.
      *
      * @param imagem the imagem
      * @return the imagem
@@ -176,10 +177,31 @@ public class FacadeService {
         return imagemService.save(imagem);
     }
 
+    //////////////////////////////////////////////// TELEFONE ////////////////////////////////////////////////
+
+    /**
+     * Delete telefone.
+     *
+     * @param id the id
+     */
+    public void telefoneDelete(UUID id) {
+        telefoneService.delete(id);
+    }
+
+    /**
+     * Save telefone.
+     *
+     * @param telefone the telefone
+     * @return the telefone
+     */
+    public Telefone telefoneSave(Telefone telefone) {
+        return telefoneService.save(telefone);
+    }
+
     //////////////////////////////////////////////// TUTOR ////////////////////////////////////////////////
 
     /**
-     * Tutor delete.
+     * Delete tutor.
      *
      * @param id the id
      */
@@ -188,7 +210,7 @@ public class FacadeService {
     }
 
     /**
-     * Tutor find all list.
+     * Find all tutores.
      *
      * @return the list
      */
@@ -197,7 +219,7 @@ public class FacadeService {
     }
 
     /**
-     * Tutor find by id tutor.
+     * Find tutor by id.
      *
      * @param id the id
      * @return the tutor
@@ -208,7 +230,7 @@ public class FacadeService {
 
 
     /**
-     * Tutor find by nome contains list.
+     * Find tutor by nome contains.
      *
      * @param nome the nome
      * @return the list
@@ -218,7 +240,7 @@ public class FacadeService {
     }
 
     /**
-     * Tutor save tutor.
+     * Save tutor.
      *
      * @param tutor the tutor
      * @return the tutor
@@ -230,7 +252,7 @@ public class FacadeService {
     //////////////////////////////////////////////// USUÁRIO ////////////////////////////////////////////////
 
     /**
-     * Usuario find all list.
+     * Find all usuarios.
      *
      * @return the list
      */
@@ -239,7 +261,7 @@ public class FacadeService {
     }
 
     /**
-     * Usuario find by cpf usuario.
+     * Find usuario by cpf.
      *
      * @param cpf the cpf
      * @return the usuario
@@ -249,7 +271,7 @@ public class FacadeService {
     }
 
     /**
-     * Usuario find by id usuario.
+     * Find usuario by id.
      *
      * @param id the id
      * @return the usuario
@@ -259,7 +281,7 @@ public class FacadeService {
     }
 
     /**
-     * Usuario find by nome contains list.
+     * Find usuario by nome contains.
      *
      * @param nome the nome
      * @return the list
@@ -269,7 +291,7 @@ public class FacadeService {
     }
 
     /**
-     * Usuario save usuario.
+     * Save usuario.
      *
      * @param usuario the usuario
      * @return the usuario

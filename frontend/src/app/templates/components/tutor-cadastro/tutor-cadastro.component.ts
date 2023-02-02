@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Tutor } from 'src/app/entities/tutor';
 import { NotificationType } from 'src/app/enums/notification-type';
@@ -57,6 +57,14 @@ export class TutorCadastroComponent implements OnInit {
     });
   }
 
+  addTelefone() {
+
+    this.telefones.push(this._formBuilder.group({
+      id: [null, Validators.nullValidator],
+      numero: [null, Validators.nullValidator]
+    }));
+  }
+
   buildForm() {
 
     this.form = this._formBuilder.group({
@@ -64,8 +72,9 @@ export class TutorCadastroComponent implements OnInit {
       nome: [null, Validators.required],
       cpf: [null, Validators.required],
       rg: [null, Validators.nullValidator],
-      telefone: [null, Validators.required],
       situacao: [null, Validators.required],
+
+      telefones: this._formBuilder.array([]),
 
       endereco: this._formBuilder.group({
         id: [null, Validators.nullValidator],
@@ -80,10 +89,18 @@ export class TutorCadastroComponent implements OnInit {
     });
   }
 
+  get telefones() {
+    return this.form.controls['telefones'] as FormArray;
+  }
+
   removeFoto() {
 
     this.foto = null;
     this.form.get('foto')?.patchValue(null);
+  }
+
+  removeTelefone(index: number) {
+    this.telefones.removeAt(index);
   }
 
   submit() {

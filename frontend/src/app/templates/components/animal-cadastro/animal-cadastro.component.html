@@ -84,7 +84,11 @@
                 <div class="col-12 col-md-3">
                     <mat-form-field appearance="outline" class="w-100">
                         <mat-label>Espécie</mat-label>
-                        <input matInput formControlName="especie">
+                        <mat-select formControlName="especie">
+                            <mat-option value="CAO">Cão</mat-option>
+                            <mat-option value="GATO">Gato</mat-option>
+                            <mat-option value="OUTRO">Outro</mat-option>
+                        </mat-select>
                     </mat-form-field>
                 </div>
 
@@ -192,6 +196,7 @@
 
     <div mat-dialog-actions layout="row" class="d-flex justify-content-end" *ngIf="form">
         <button mat-button mat-dialog-close>Cancelar</button>
-        <button mat-button [ngClass]="form.valid ? 'bg-success text-white' : ''" (click)="submit()" [disabled]="!form.valid">OK</button>
+        <button mat-button [ngClass]="form.valid ? 'bg-success text-white' : ''" (click)="submit()"
+            [disabled]="!form.valid">OK</button>
     </div>
 </div>

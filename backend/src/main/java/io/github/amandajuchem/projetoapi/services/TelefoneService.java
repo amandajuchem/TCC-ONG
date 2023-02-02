@@ -1,9 +1,9 @@
 package io.github.amandajuchem.projetoapi.services;
 
-import io.github.amandajuchem.projetoapi.entities.FichaMedica;
+import io.github.amandajuchem.projetoapi.entities.Telefone;
 import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
-import io.github.amandajuchem.projetoapi.repositories.FichaMedicaRepository;
+import io.github.amandajuchem.projetoapi.repositories.TelefoneRepository;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 /**
- * The type Ficha medica service.
+ * The type Telefone service.
  */
 @Service
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-public class FichaMedicaService {
+public class TelefoneService {
 
-    private final FichaMedicaRepository repository;
+    private final TelefoneRepository repository;
 
     /**
      * Delete.
@@ -38,36 +38,36 @@ public class FichaMedicaService {
             }
         }
 
-        throw new ObjectNotFoundException(MessageUtils.FICHA_MEDICA_NOT_FOUND);
+        throw new ObjectNotFoundException(MessageUtils.TELEFONE_NOT_FOUND);
     }
 
     /**
-     * Save ficha medica.
+     * Save telefone.
      *
-     * @param fichaMedica the ficha medica
-     * @return the ficha medica
+     * @param telefone the telefone
+     * @return the telefone
      */
     @Transactional(propagation = Propagation.REQUIRED)
-    public FichaMedica save(FichaMedica fichaMedica) {
+    public Telefone save(Telefone telefone) {
 
-        if (fichaMedica == null) {
-            throw new ValidationException(MessageUtils.FICHA_MEDICA_NULL);
+        if (telefone ==  null) {
+            throw new ValidationException(MessageUtils.TELEFONE_NULL);
         }
 
-        if (validateFichaMedica(fichaMedica)) {
-            fichaMedica = repository.save(fichaMedica);
+        if (validateTelefone(telefone)) {
+            telefone = repository.save(telefone);
         }
 
-        return fichaMedica;
+        return telefone;
     }
 
     /**
-     * Validate ficha medica.
+     * Validate telefone.
      *
-     * @param fichaMedica the ficha medica
+     * @param telefone the telefone
      * @return the boolean
      */
-    private boolean validateFichaMedica(FichaMedica fichaMedica) {
+    private boolean validateTelefone(Telefone telefone) {
 
         return true;
     }
