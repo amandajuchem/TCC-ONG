@@ -28,7 +28,7 @@ public interface TutorRepository extends JpaRepository<Tutor, UUID> {
      * @param nome the nome
      * @return the optional
      */
-    Optional<Tutor> findByNome(String nome);
+    Optional<Tutor> findByNomeIgnoreCase(String nome);
 
     /**
      * Find by nome or cpf list.

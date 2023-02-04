@@ -11,7 +11,7 @@
                     <mat-form-field appearance="outline" class="w-100">
                         <mat-label>Animal</mat-label>
                         <input matInput [value]="form.get('animal')?.value?.nome" readonly required>
-                        <button matSuffix mat-icon-button (click)="selectAnimal()">
+                        <button type="button" matSuffix mat-icon-button (click)="selectAnimal()">
                             <mat-icon>search</mat-icon>
                         </button>
                     </mat-form-field>
@@ -21,7 +21,7 @@
                     <mat-form-field appearance="outline" class="w-100">
                         <mat-label>Veterinário</mat-label>
                         <input matInput [value]="form.get('veterinario')?.value?.nome" readonly required>
-                        <button matSuffix mat-icon-button (click)="selectVeterinario()">
+                        <button type="button" matSuffix mat-icon-button (click)="selectVeterinario()">
                             <mat-icon>search</mat-icon>
                         </button>
                     </mat-form-field>

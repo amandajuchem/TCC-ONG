@@ -1,0 +1,30 @@
+<div class="mat-dialog">
+    <h2 class="m-0" mat-dialog-title *ngIf="!data.exame">Cadastrar Exame</h2>
+    <h2 class="m-0" mat-dialog-title *ngIf="data.exame">Editar Dados do Exame</h2>
+
+    <div mat-dialog-content class="py-3">
+        <form [formGroup]="form" *ngIf="form">
+            
+            <div class="row">
+                <div class="col-12 col-md-9">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Nome</mat-label>
+                        <input matInput formControlName="nome">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-3">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Categoria</mat-label>
+                        <input matInput formControlName="categoria">
+                    </mat-form-field>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div mat-dialog-actions layout="row" class="d-flex justify-content-end" *ngIf="form">
+        <button mat-button mat-dialog-close>Cancelar</button>
+        <button mat-button [ngClass]="form.valid ? 'bg-success text-white' : ''" (click)="submit()"  [disabled]="!form.valid">OK</button>
+    </div>
+</div>

@@ -41,9 +41,7 @@ public class Atendimento extends AbstractEntity {
     @Column(name = "posologia", columnDefinition = "TEXT")
     private String posologia;
 
-    @Valid
-    @OneToMany(mappedBy = "atendimento")
-    @JsonManagedReference(value = "jsonReferenceExamesAtendimento")
+    @OneToMany
     private Set<Exame> exames;
 
     @Valid

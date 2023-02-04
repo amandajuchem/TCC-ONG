@@ -6,6 +6,7 @@ import { AgendamentosComponent } from '../../components/agendamentos/agendamento
 import { AnimaisComponent } from '../../components/animais/animais.component';
 import { AnimalComponent } from '../../components/animal/animal.component';
 import { AtendimentosComponent } from '../../components/atendimentos/atendimentos.component';
+import { ExamesComponent } from '../../components/exames/exames.component';
 import { LayoutComponent } from '../../components/layout/layout.component';
 import { PainelComponent } from '../../components/painel/painel.component';
 import { TutorComponent } from '../../components/tutor/tutor.component';
@@ -20,6 +21,7 @@ const routes: Routes = [
       { path: 'animais', component: AnimaisComponent, canActivate: [AuthGuard] },
       { path: 'animais/:id', component: AnimalComponent, canActivate: [AuthGuard] },
       { path: 'atendimentos', component: AtendimentosComponent, canActivate: [AuthGuard] },
+      { path: 'exames', component: ExamesComponent, canActivate: [AuthGuard] },
       { path: 'painel', component: PainelComponent, canActivate: [AuthGuard] },
       { path: 'tutores', component: TutoresComponent, canActivate: [AuthGuard] },
       { path: 'tutores/:id', component: TutorComponent, canActivate: [AuthGuard] },

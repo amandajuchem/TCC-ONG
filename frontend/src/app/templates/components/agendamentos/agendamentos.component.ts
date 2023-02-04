@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/entities/user';
 import { FacadeService } from 'src/app/services/facade.service';
 
@@ -7,7 +7,7 @@ import { FacadeService } from 'src/app/services/facade.service';
   templateUrl: './agendamentos.component.html',
   styleUrls: ['./agendamentos.component.sass']
 })
-export class AgendamentosComponent {
+export class AgendamentosComponent implements OnInit {
 
   user!: User;
 

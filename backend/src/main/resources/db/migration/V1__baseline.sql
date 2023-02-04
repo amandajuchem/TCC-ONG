@@ -36,7 +36,7 @@ CREATE TABLE tb_animais
     modified_by_user   VARCHAR(11),
     nome               VARCHAR(50),
     idade              INTEGER     NOT NULL,
-    especie            VARCHAR(10),
+    especie            VARCHAR(10) NOT NULL,
     sexo               VARCHAR(5)  NOT NULL,
     raca               VARCHAR(50),
     cor                VARCHAR(50),
@@ -59,6 +59,13 @@ CREATE TABLE tb_atendimentos
     animal_id          UUID,
     veterinario_id     UUID,
     CONSTRAINT pk_tb_atendimentos PRIMARY KEY (id)
+);
+
+CREATE TABLE tb_atendimentos_exames
+(
+    exames_id          UUID NOT NULL,
+    tb_atendimentos_id UUID NOT NULL,
+    CONSTRAINT pk_tb_atendimentos_exames PRIMARY KEY (exames_id, tb_atendimentos_id)
 );
 
 CREATE TABLE tb_enderecos
@@ -88,7 +95,6 @@ CREATE TABLE tb_exames
     modified_by_user   VARCHAR(11),
     nome               VARCHAR(100),
     categoria          VARCHAR(25),
-    atendimento_id     UUID,
     CONSTRAINT pk_tb_exames PRIMARY KEY (id)
 );
 
@@ -200,6 +206,9 @@ CREATE TABLE tb_usuarios
     CONSTRAINT pk_tb_usuarios PRIMARY KEY (id)
 );
 
+ALTER TABLE tb_atendimentos_exames
+    ADD CONSTRAINT uc_tb_atendimentos_exames_exames UNIQUE (exames_id);
+
 ALTER TABLE tb_feiras_adocao_animais
     ADD CONSTRAINT uc_tb_feiras_adocao_animais_animais UNIQUE (animais_id);
 
@@ -227,9 +236,6 @@ ALTER TABLE tb_atendimentos
 ALTER TABLE tb_enderecos
     ADD CONSTRAINT FK_TB_ENDERECOS_ON_TUTOR FOREIGN KEY (tutor_id) REFERENCES tb_tutores (id);
 
-ALTER TABLE tb_exames
-    ADD CONSTRAINT FK_TB_EXAMES_ON_ATENDIMENTO FOREIGN KEY (atendimento_id) REFERENCES tb_atendimentos (id);
-
 ALTER TABLE tb_fichas_medicas
     ADD CONSTRAINT FK_TB_FICHAS_MEDICAS_ON_ANIMAL FOREIGN KEY (animal_id) REFERENCES tb_animais (id);
 
@@ -253,6 +259,12 @@ ALTER TABLE tb_observacoes
 
 ALTER TABLE tb_telefones
     ADD CONSTRAINT FK_TB_TELEFONES_ON_TUTOR FOREIGN KEY (tutor_id) REFERENCES tb_tutores (id);
+
+ALTER TABLE tb_atendimentos_exames
+    ADD CONSTRAINT fk_tbateexa_on_atendimento FOREIGN KEY (tb_atendimentos_id) REFERENCES tb_atendimentos (id);
+
+ALTER TABLE tb_atendimentos_exames
+    ADD CONSTRAINT fk_tbateexa_on_exame FOREIGN KEY (exames_id) REFERENCES tb_exames (id);
 
 ALTER TABLE tb_feiras_adocao_animais
     ADD CONSTRAINT fk_tbfeiadoani_on_animal FOREIGN KEY (animais_id) REFERENCES tb_animais (id);

@@ -36,6 +36,16 @@ public class MessageUtils {
     public static final String ENDERECO_NULL = "Endereço nulo!";
 
     /**
+     * The constant EXAME_NOT_FOUND.
+     */
+    public static final String EXAME_NOT_FOUND = "Exame não encontrado!";
+
+    /**
+     * The constant EXAME_NULL.
+     */
+    public static final String EXAME_NULL = "Exame nulo!";
+
+    /**
      * The constant FICHA_MEDICA_NOT_FOUND.
      */
     public static final String FICHA_MEDICA_NOT_FOUND = "Ficha médica não encontrada!";

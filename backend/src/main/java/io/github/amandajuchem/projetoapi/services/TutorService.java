@@ -106,7 +106,7 @@ public class TutorService {
      */
     private boolean validateTutor(Tutor tutor) {
 
-        var tutor_findByNome = repository.findByNome(tutor.getNome()).orElse(null);
+        var tutor_findByNome = repository.findByNomeIgnoreCase(tutor.getNome()).orElse(null);
 
         if (tutor_findByNome != null && !tutor_findByNome.equals(tutor)) {
             throw new ValidationException("Tutor já cadastrado");

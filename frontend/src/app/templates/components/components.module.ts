@@ -35,6 +35,9 @@ import { AnimalComponent } from './animal/animal.component';
 import { AtendimentoCadastroComponent } from './atendimento-cadastro/atendimento-cadastro.component';
 import { AtendimentoExcluirComponent } from './atendimento-excluir/atendimento-excluir.component';
 import { AtendimentosComponent } from './atendimentos/atendimentos.component';
+import { ExameCadastroComponent } from './exame-cadastro/exame-cadastro.component';
+import { ExameExcluirComponent } from './exame-excluir/exame-excluir.component';
+import { ExamesComponent } from './exames/exames.component';
 import { FooterComponent } from './footer/footer.component';
 import { LayoutComponent } from './layout/layout.component';
 import { LoginComponent } from './login/login.component';
@@ -72,6 +75,9 @@ import { UsuariosComponent } from './usuarios/usuarios.component';
     AtendimentoExcluirComponent,
     AtendimentosComponent,
     AnimalComponent,
+    ExameCadastroComponent,
+    ExameExcluirComponent,
+    ExamesComponent,
     FooterComponent,
     LayoutComponent,
     LoginComponent,

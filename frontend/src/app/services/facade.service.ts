@@ -12,6 +12,8 @@ import { ImagemService } from './imagem.service';
 import { NotificationService } from './notification.service';
 import { TutorService } from './tutor.service';
 import { UsuarioService } from './usuario.service';
+import { ExameService } from './exame.service';
+import { Exame } from '../entities/exame';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +24,7 @@ export class FacadeService {
     private _animalService: AnimalService,
     private _atendimentoService: AtendimentoService,
     private _authService: AuthService,
+    private _exameService: ExameService,
     private _imagemService: ImagemService,
     private _notificationService: NotificationService,
     private _tutorService: TutorService,
@@ -184,6 +187,43 @@ export class FacadeService {
    */
   authSetCurrentUser(currentUser: any) {
     return this._authService.setCurrentUser(currentUser);
+  }
+
+  ////////////////////////////////////////////////// EXAME //////////////////////////////////////////////////
+
+  /**
+   * 
+   * @param id 
+   * @returns 
+   */
+  exameDelete(id: string) {
+    return this._exameService.delete(id);
+  }
+
+  /**
+   * 
+   * @returns 
+   */
+  exameFindAll() {
+    return this._exameService.findAll();    
+  }
+
+  /**
+   * 
+   * @param exame 
+   * @returns 
+   */
+  exameSave(exame: Exame) {
+    return this._exameService.save(exame);
+  }
+
+  /**
+   * 
+   * @param exame 
+   * @returns 
+   */
+  exameUpdate(exame: Exame) {
+    return this._exameService.update(exame);
   }
 
   ////////////////////////////////////////////////// IMAGEM //////////////////////////////////////////////////

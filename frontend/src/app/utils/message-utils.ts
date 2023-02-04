@@ -17,6 +17,14 @@ export class MessageUtils {
     static ATENDIMENTO_UPDATE_FAIL = 'Não foi possível atualizar os dados do atendimento! ';
     static ATENDIMENTO_UPDATE_SUCCESS = 'Dados do atendimento atualizados com sucesso!';
 
+    static EXAMES_GET_FAIL = 'Não foi possível obter a lista de exames! Por favor, contate o suporte técnico!';
+    static EXAME_DELETE_FAIL = 'Não foi possível excluir o exame! ';
+    static EXAME_DELETE_SUCCESS = 'Exame excluído com sucesso!';
+    static EXAME_SAVE_FAIL = 'Não foi possível cadastrar o exame! ';
+    static EXAME_SAVE_SUCCESS = 'Exame cadastrado com sucesso!';
+    static EXAME_UPDATE_FAIL = 'Não foi possível atualizar os dados do exame! ';
+    static EXAME_UPDATE_SUCCESS = 'Dados do exame atualizados com sucesso!';
+
     static TUTORES_GET_FAIL = 'Não foi possível obter a lista de tutores! Por favor, contate o suporte técnico!';
     static TUTOR_DELETE_FAIL = 'Não foi possível excluir o tutor! ';
     static TUTOR_DELETE_SUCCESS = 'Tutor excluído com sucesso!';
