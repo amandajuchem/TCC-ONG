@@ -1,5 +1,13 @@
 export class MessageUtils {
 
+    static AGENDAMENTOS_GET_FAIL = 'Não foi possível obter a lista de agendamentos! Por favor, contate o suporte técnico!';
+    static AGENDAMENTO_DELETE_FAIL = 'Não foi possível excluir o agendamento! ';
+    static AGENDAMENTO_DELETE_SUCCESS = 'Agendamento excluído com sucesso!';
+    static AGENDAMENTO_SAVE_FAIL = 'Não foi possível cadastrar o agendamento! ';
+    static AGENDAMENTO_SAVE_SUCCESS = 'Agendamento cadastrado com sucesso!';
+    static AGENDAMENTO_UPDATE_FAIL = 'Não foi possível atualizar os dados do agendamento! ';
+    static AGENDAMENTO_UPDATE_SUCCESS = 'Dados do agendamento atualizados com sucesso!';
+
     static ANIMAIS_GET_FAIL = 'Não foi possível obter a lista de animais! Por favor, contate o suporte técnico!';
     static ANIMAL_DELETE_FAIL = 'Não foi possível excluir o animal! ';
     static ANIMAL_DELETE_SUCCESS = 'Animal excluído com sucesso!';

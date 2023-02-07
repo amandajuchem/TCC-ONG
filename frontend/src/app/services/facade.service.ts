@@ -2,18 +2,20 @@ import { Injectable } from '@angular/core';
 
 import { Animal } from '../entities/animal';
 import { Atendimento } from '../entities/atendimento';
+import { Exame } from '../entities/exame';
 import { Tutor } from '../entities/tutor';
 import { Usuario } from '../entities/usuario';
 import { NotificationType } from '../enums/notification-type';
+import { AgendamentoService } from './agendamento.service';
 import { AnimalService } from './animal.service';
 import { AtendimentoService } from './atendimento.service';
 import { AuthService } from './auth.service';
+import { ExameService } from './exame.service';
 import { ImagemService } from './imagem.service';
 import { NotificationService } from './notification.service';
 import { TutorService } from './tutor.service';
 import { UsuarioService } from './usuario.service';
-import { ExameService } from './exame.service';
-import { Exame } from '../entities/exame';
+import { Agendamento } from '../entities/agendamento';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +23,7 @@ import { Exame } from '../entities/exame';
 export class FacadeService {
 
   constructor(
+    private _agendamentoService: AgendamentoService,
     private _animalService: AnimalService,
     private _atendimentoService: AtendimentoService,
     private _authService: AuthService,
@@ -30,6 +33,43 @@ export class FacadeService {
     private _tutorService: TutorService,
     private _usuarioService: UsuarioService
   ) { }
+
+  ////////////////////////////////////////////////// ANIMAL //////////////////////////////////////////////////
+
+  /**
+   * 
+   * @param id 
+   * @returns 
+   */
+  agendamentoDelete(id: string) {
+    return this._agendamentoService.delete(id);
+  }
+
+  /**
+   * 
+   * @returns 
+   */
+  agendamentoFindAll() {
+    return this._agendamentoService.findAll();
+  }
+  
+  /**
+   * 
+   * @param agendamento 
+   * @returns 
+   */
+  agendamentoSave(agendamento: Agendamento) {
+    return this._agendamentoService.save(agendamento);
+  }
+
+  /**
+   * 
+   * @param agendamento 
+   * @returns 
+   */
+  agendamentoUpdate(agendamento: Agendamento) {
+    return this._agendamentoService.update(agendamento);
+  }
 
   ////////////////////////////////////////////////// ANIMAL //////////////////////////////////////////////////
 
@@ -205,7 +245,7 @@ export class FacadeService {
    * @returns 
    */
   exameFindAll() {
-    return this._exameService.findAll();    
+    return this._exameService.findAll();
   }
 
   /**
@@ -321,7 +361,7 @@ export class FacadeService {
   tutorUpdate(tutor: Tutor, novaFoto: any, antigaFoto: any) {
     return this._tutorService.update(tutor, novaFoto, antigaFoto);
   }
- 
+
   ////////////////////////////////////////////////// USUÁRIO //////////////////////////////////////////////////
 
   /**

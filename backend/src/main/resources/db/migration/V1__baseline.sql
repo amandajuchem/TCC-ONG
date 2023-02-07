@@ -22,8 +22,9 @@ CREATE TABLE tb_agendamentos
     created_by_user    VARCHAR(11),
     modified_by_user   VARCHAR(11),
     data_hora          TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    descricao          TEXT,
     animal_id          UUID,
-    usuario_id         UUID,
+    veterinario_id     UUID,
     CONSTRAINT pk_tb_agendamentos PRIMARY KEY (id)
 );
 
@@ -225,7 +226,7 @@ ALTER TABLE tb_agendamentos
     ADD CONSTRAINT FK_TB_AGENDAMENTOS_ON_ANIMAL FOREIGN KEY (animal_id) REFERENCES tb_animais (id);
 
 ALTER TABLE tb_agendamentos
-    ADD CONSTRAINT FK_TB_AGENDAMENTOS_ON_USUARIO FOREIGN KEY (usuario_id) REFERENCES tb_usuarios (id);
+    ADD CONSTRAINT FK_TB_AGENDAMENTOS_ON_VETERINARIO FOREIGN KEY (veterinario_id) REFERENCES tb_usuarios (id);
 
 ALTER TABLE tb_atendimentos
     ADD CONSTRAINT FK_TB_ATENDIMENTOS_ON_ANIMAL FOREIGN KEY (animal_id) REFERENCES tb_animais (id);

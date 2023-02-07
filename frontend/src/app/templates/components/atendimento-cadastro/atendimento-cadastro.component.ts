@@ -129,16 +129,16 @@ export class AtendimentoCadastroComponent implements OnInit {
     this._dialog.open(SelecionarAnimalComponent, {
       width: '100%'
     })
-      .afterClosed().subscribe({
+    .afterClosed().subscribe({
 
-        next: (result) => {
+      next: (result) => {
 
-          if (result && result.status) {
-            this.form.get('animal')?.patchValue(result.animal);
-            this.form.get('comorbidades')?.patchValue(result.animal.fichaMedica.comorbidades);
-          }
-        },
-      });
+        if (result && result.status) {
+          this.form.get('animal')?.patchValue(result.animal);
+          this.form.get('comorbidades')?.patchValue(result.animal.fichaMedica.comorbidades);
+        }
+      },
+    });
   }
 
   selectVeterinario() {
@@ -149,15 +149,15 @@ export class AtendimentoCadastroComponent implements OnInit {
       },
       width: '100%'
     })
-      .afterClosed().subscribe({
+    .afterClosed().subscribe({
 
-        next: (result) => {
+      next: (result) => {
 
-          if (result && result.status) {
-            this.form.get('veterinario')?.patchValue(result.usuario);
-          }
+        if (result && result.status) {
+          this.form.get('veterinario')?.patchValue(result.usuario);
         }
-      });
+      }
+    });
   }
 
   submit() {

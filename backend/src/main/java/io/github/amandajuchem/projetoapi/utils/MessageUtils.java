@@ -6,6 +6,16 @@ package io.github.amandajuchem.projetoapi.utils;
 public class MessageUtils {
 
     /**
+     * The constant AGENDAMENTO_NOT_FOUND.
+     */
+    public static final String AGENDAMENTO_NOT_FOUND = "Agendamento não encontrado!";
+
+    /**
+     * The constant AGENDAMENTO_NULL.
+     */
+    public static final String AGENDAMENTO_NULL = "Agendamento nulo!";
+
+    /**
      * The constant ANIMAL_NOT_FOUND.
      */
     public static final String ANIMAL_NOT_FOUND = "Animal não encontrado!";

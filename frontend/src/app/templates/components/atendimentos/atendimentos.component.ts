@@ -37,6 +37,14 @@ export class AtendimentosComponent implements OnInit {
     this.dataSource = new MatTableDataSource();
     this.user = this._facade.authGetCurrentUser();
 
+    this.dataSource.filterPredicate = (data: Atendimento, filter: string) => {
+      
+      return new Date(data.dataHora).toLocaleString().includes(filter) || 
+        data.animal.nome.toUpperCase().includes(filter) || 
+        data.veterinario.nome.toUpperCase().includes(filter)
+      ;
+    }
+
     this.dataSource.sortingDataAccessor = (item: any, property: any) => {
       
       switch (property) {

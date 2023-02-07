@@ -8,6 +8,7 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -25,11 +26,15 @@ public class Agendamento extends AbstractEntity {
     @Column(name = "data_hora")
     private LocalDateTime dataHora;
 
+    @NotEmpty
+    @Column(name = "descricao", columnDefinition = "TEXT")
+    private String descricao;
+
     @OneToOne
     private Animal animal;
 
     @OneToOne
-    private Usuario usuario;
+    private Usuario veterinario;
 
     @Override
     public boolean equals(Object o) {

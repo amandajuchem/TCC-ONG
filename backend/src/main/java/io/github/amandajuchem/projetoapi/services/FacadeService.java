@@ -15,6 +15,7 @@ import java.util.UUID;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class FacadeService {
 
+    private final AgendamentoService agendamentoService;
     private final AnimalService animalService;
     private final AtendimentoService atendimentoService;
     private final EnderecoService enderecoService;
@@ -24,6 +25,36 @@ public class FacadeService {
     private final TelefoneService telefoneService;
     private final TutorService tutorService;
     private final UsuarioService usuarioService;
+
+    //////////////////////////////////////////////// AGENDAMENTO ////////////////////////////////////////////////
+
+    /**
+     * Delete agendamento.
+     *
+     * @param id the id
+     */
+    public void agendamentoDelete(UUID id) {
+        agendamentoService.delete(id);
+    }
+
+    /**
+     * Find all agendamentos.
+     *
+     * @return the list
+     */
+    public List<Agendamento> agendamentoFindAll() {
+        return agendamentoService.findAll();
+    }
+
+    /**
+     * Save agendamento.
+     *
+     * @param agendamento the agendamento
+     * @return the agendamento
+     */
+    public Agendamento agendamentoSave(Agendamento agendamento) {
+        return agendamentoService.save(agendamento);
+    }
 
     //////////////////////////////////////////////// ANIMAL ////////////////////////////////////////////////
 

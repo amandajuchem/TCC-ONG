@@ -31,7 +31,6 @@ export class ExamesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
     this.columns = ['index', 'nome', 'categoria', 'acao'];
     this.dataSource = new MatTableDataSource();
     this.user = this._facade.authGetCurrentUser();
@@ -77,7 +76,7 @@ export class ExamesComponent implements OnInit {
   }
 
   filter(value: string) {
-    this.dataSource.filter = value.trim().toLowerCase();
+    this.dataSource.filter = value.trim().toUpperCase();
   }
 
   findAllExames() {

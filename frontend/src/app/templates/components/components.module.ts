@@ -59,6 +59,8 @@ import { UsuarioInformacoesComponent } from './usuario-informacoes/usuario-infor
 import { UsuarioComponent } from './usuario/usuario.component';
 import { UsuariosCadastroComponent } from './usuarios-cadastro/usuarios-cadastro.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
+import { AgendamentoCadastroComponent } from './agendamento-cadastro/agendamento-cadastro.component';
+import { AgendamentoExcluirComponent } from './agendamento-excluir/agendamento-excluir.component';
 
 @NgModule({
   declarations: [
@@ -99,6 +101,8 @@ import { UsuariosComponent } from './usuarios/usuarios.component';
     UsuarioComponent,
     UsuariosCadastroComponent,
     UsuariosComponent,
+    AgendamentoCadastroComponent,
+    AgendamentoExcluirComponent,
   ],
   imports: [
     CommonModule,
