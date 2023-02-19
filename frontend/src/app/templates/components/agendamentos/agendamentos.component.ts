@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -9,6 +10,7 @@ import { NotificationType } from 'src/app/enums/notification-type';
 import { FacadeService } from 'src/app/services/facade.service';
 import { DateUtils } from 'src/app/utils/date-utils';
 import { MessageUtils } from 'src/app/utils/message-utils';
+import { OperatorUtils } from 'src/app/utils/operator-utils';
 
 import { AgendamentoCadastroComponent } from '../agendamento-cadastro/agendamento-cadastro.component';
 import { AgendamentoExcluirComponent } from '../agendamento-excluir/agendamento-excluir.component';
@@ -18,43 +20,31 @@ import { AgendamentoExcluirComponent } from '../agendamento-excluir/agendamento-
   templateUrl: './agendamentos.component.html',
   styleUrls: ['./agendamentos.component.sass']
 })
-export class AgendamentosComponent implements OnInit {
+export class AgendamentosComponent implements AfterViewInit {
 
   columns!: Array<string>;
   dataSource!: MatTableDataSource<Agendamento>;
+  filterDate!: Date | null;
+  filterString!: string;
   user!: User;
 
-  @ViewChild(MatSort, { static: false }) set sort(value: MatSort) { if (this.dataSource) this.dataSource.sort = value }
-  @ViewChild(MatPaginator, { static: false }) set paginator(value: MatPaginator) { if (this.dataSource) this.dataSource.paginator = value }
+  resultsLength = 0;
+  isLoadingResults = true;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
+    private _datePipe: DatePipe,
     private _dialog: MatDialog,
     private _facade: FacadeService
-  ) { }
-
-  ngOnInit(): void {
-    this.columns = ['index', 'data-hora', 'animal', 'veterinario', 'acao'];
+  ) {
+    this.columns = ['index', 'dataHora', 'animal', 'veterinario', 'acao'];
     this.dataSource = new MatTableDataSource();
     this.user = this._facade.authGetCurrentUser();
+  }
 
-    this.dataSource.filterPredicate = (data: Agendamento, filter: string) => {
-      
-      return new Date(data.dataHora).toLocaleString().includes(filter) || 
-        data.animal.nome.toUpperCase().includes(filter) || 
-        data.veterinario.nome.toUpperCase().includes(filter)
-      ;
-    }
-
-    this.dataSource.sortingDataAccessor = (item: any, property: any) => {
-      
-      switch (property) {
-        case 'data-hora': return new Date(item.dataHora);
-        case 'animal': return item.animal.nome;
-        case 'veterinario': return item.veterinario;
-        default: return item[property];
-      }
-    };
-    
+  ngAfterViewInit() {
     this.findAllAgendamentos();
   }
 
@@ -96,27 +86,99 @@ export class AgendamentosComponent implements OnInit {
     });
   }
 
+  async filter(by: string) {
+
+
+    let value: any = null;
+
+    if (by === 'date') {
+      value = this._datePipe.transform(this.filterDate, 'yyyy-MM-dd');
+    }
+
+    if (by === 'string') {
+      value = this.filterString ? this.filterString : '';
+    }
+
+    const page = this.paginator.pageIndex;
+    const size = this.paginator.pageSize;
+    const sort = this.sort.active;
+    const direction = this.sort.direction;
+
+    this.isLoadingResults = true;
+
+    await OperatorUtils.delay(1000);
+
+    this._facade.agendamentoSearch(value, page, size, sort, direction).subscribe({
+
+      complete: () => {
+        this.isLoadingResults = false;
+      },
+
+      next: (agendamentos) => {
+        this.dataSource.data = agendamentos.content;
+        this.resultsLength = agendamentos.totalElements;
+      },
+
+      error: (err) => {
+        this.isLoadingResults = false;
+        console.error(err);
+        this._facade.notificationShowNotification(MessageUtils.AGENDAMENTOS_GET_FAIL, NotificationType.FAIL);    
+      }
+    });
+  }
+
+  async findAllAgendamentos() {
+
+    const page = this.paginator.pageIndex;
+    const size = this.paginator.pageSize;
+    const sort = this.sort.active;
+    const direction = this.sort.direction;
+
+    this.isLoadingResults = true;
+
+    await OperatorUtils.delay(1000);
+
+    this._facade.agendamentoFindAll(page, size, sort, direction).subscribe({
+
+      complete: () => {
+        this.isLoadingResults = false;
+      },
+
+      next: (agendamentos) => {
+        this.dataSource.data = agendamentos.content;
+        this.resultsLength = agendamentos.totalElements;
+      },
+
+      error: (err) => {
+        this.isLoadingResults = false;
+        console.error(err);
+        this._facade.notificationShowNotification(MessageUtils.AGENDAMENTOS_GET_FAIL, NotificationType.FAIL);    
+      }
+    });
+  }
+
   getDateWithTimeZone(date: any) {
     return DateUtils.getDateWithTimeZone(date);
   }
 
-  filter(value: string) {
-    this.dataSource.filter = value.trim().toUpperCase();
+  sortChange() {
+    this.paginator.pageIndex = 0;
+    this.findAllAgendamentos();
   }
 
-  findAllAgendamentos() {
+  pageChange() {
+    
+    if (this.filterDate) {
+      this.filter('date');
+      return;
+    }
 
-    this._facade.agendamentoFindAll().subscribe({
+    if (this.filterString) {
+      this.filter('string');
+      return;
+    }
 
-      next: (agendamentos) => {
-        this.dataSource.data = agendamentos;
-      },
-
-      error: (error) => {
-        console.error(error);
-        this._facade.notificationShowNotification(MessageUtils.AGENDAMENTOS_GET_FAIL, NotificationType.FAIL); 
-      }
-    });
+    this.findAllAgendamentos();
   }
 
   update(agendamento: Agendamento) {

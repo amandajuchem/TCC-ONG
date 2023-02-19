@@ -6,19 +6,20 @@ import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.repositories.AgendamentoRepository;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
  * The type Agendamento service.
  */
 @Service
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@Transactional
+@RequiredArgsConstructor
 public class AgendamentoService {
 
     private final AgendamentoRepository repository;
@@ -28,7 +29,6 @@ public class AgendamentoService {
      *
      * @param id the id
      */
-    @Transactional(propagation = Propagation.REQUIRED)
     public void delete(UUID id) {
 
         if (id != null) {
@@ -47,8 +47,22 @@ public class AgendamentoService {
      *
      * @return the list
      */
-    public List<Agendamento> findAll() {
-        return repository.findAll();
+    public Page<Agendamento> findAll(Integer page, Integer size, String sort, String direction) {
+        return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
+    }
+
+    /**
+     * Find agendamentos by data hora or animal or veterinario.
+     *
+     * @param value     the value
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
+     * @return the list of agendamentos
+     */
+    public Page<Agendamento> findByDataHoraOrAnimalOrVeterinario(String value, Integer page, Integer size, String sort, String direction) {
+        return repository.findByDataHoraOrAnimalOrVeterinario(value, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
     }
 
     /**
@@ -77,6 +91,12 @@ public class AgendamentoService {
      * @return the boolean
      */
     private boolean validateAgendamento(Agendamento agendamento) {
+
+        var agendamento_findByDataHoraAndVeterinario = repository.findByDataHoraAndVeterinario(agendamento.getDataHora(), agendamento.getVeterinario()).orElse(null);
+
+        if (agendamento_findByDataHoraAndVeterinario != null && !agendamento_findByDataHoraAndVeterinario.equals(agendamento)) {
+            throw new ValidationException("O veterinário já possui um agendamento marcado para esta data e hora!");
+        }
 
         return true;
     }

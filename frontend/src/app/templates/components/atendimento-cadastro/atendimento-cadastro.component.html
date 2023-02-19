@@ -38,7 +38,16 @@
             </div>
 
             <div class="row">
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-md-3">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Data do atendimento</mat-label>
+                        <input matInput [ngxMatDatetimePicker]="pickerDataHoraAtendimento" formControlName="dataHora" readonly>
+                        <mat-datepicker-toggle matIconSuffix [for]="$any(pickerDataHoraAtendimento)"></mat-datepicker-toggle>
+                        <ngx-mat-datetime-picker #pickerDataHoraAtendimento (closed)="dateChange()"></ngx-mat-datetime-picker>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-9">
                     <mat-form-field appearance="outline" class="w-100">
                         <mat-label>Motivo</mat-label>
                         <mat-select formControlName="motivo">
@@ -48,24 +57,6 @@
                             <mat-option value="OUTROS">Outros</mat-option>
                             <mat-option value="VALE CASTRAÇÃO">Vale Castração</mat-option>
                         </mat-select>
-                    </mat-form-field>
-                </div>
-
-                <div class="col-12 col-md-3">
-                    <mat-form-field appearance="outline" class="w-100">
-                        <mat-label>Data do atendimento</mat-label>
-                        <input matInput [ngxMatDatetimePicker]="pickerDataHoraAtendimento" formControlName="dataHora" readonly>
-                        <mat-datepicker-toggle matIconSuffix [for]="$any(pickerDataHoraAtendimento)"></mat-datepicker-toggle>
-                        <ngx-mat-datetime-picker #pickerDataHoraAtendimento [showSeconds]="true"></ngx-mat-datetime-picker>
-                    </mat-form-field>
-                </div>
-
-                <div class="col-12 col-md-3">
-                    <mat-form-field appearance="outline" class="w-100">
-                        <mat-label>Data do retorno</mat-label>
-                        <input matInput [ngxMatDatetimePicker]="pickerDataHoraRetorno" formControlName="dataHoraRetorno" readonly>
-                        <mat-datepicker-toggle matIconSuffix [for]="$any(pickerDataHoraRetorno)"></mat-datepicker-toggle>
-                        <ngx-mat-datetime-picker #pickerDataHoraRetorno [showSeconds]="true"></ngx-mat-datetime-picker>
                     </mat-form-field>
                 </div>
             </div>
@@ -82,27 +73,23 @@
             <div class="row">
                 <div class="col-12">
                     <mat-form-field appearance="outline" class="w-100">
-                        <mat-label>Exames</mat-label>
-                        <input matInput formControlName="exames">
-                    </mat-form-field>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-12">
-                    <mat-form-field appearance="outline" class="w-100">
-                        <mat-label>Procedimentos</mat-label>
-                        <textarea matInput formControlName="procedimentos"></textarea>
-                    </mat-form-field>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-12">
-                    <mat-form-field appearance="outline" class="w-100">
                         <mat-label>Posologia</mat-label>
                         <textarea matInput formControlName="posologia"></textarea>
                     </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <h3 class="text-dark">Exames</h3>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="text-center">
+                        <button type="button" mat-button class="bg-secondary text-white">Adicionar Exame</button>
+                    </div>
                 </div>
             </div>
 
@@ -119,10 +106,10 @@
                         <img mat-card-image [src]="documento.data" *ngIf="!documento.salvo">
                         <mat-card-footer class="p-2">
                             <div class="text-center">
-                                <button mat-icon-button class="me-3" (click)="downloadImagem(documento)" *ngIf="documento.salvo">
+                                <button type="button" mat-icon-button class="me-3" (click)="downloadImagem(documento)" *ngIf="documento.salvo">
                                     <mat-icon>download</mat-icon>
                                 </button>
-                                <button mat-icon-button class="ms-3" (click)="deleteImagem(documento)">
+                                <button type="button" mat-icon-button class="ms-3" (click)="deleteImagem(documento)">
                                     <mat-icon>delete</mat-icon>
                                 </button>
                             </div>
@@ -134,7 +121,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="text-center">
-                        <button mat-button (click)="addImagem()">Adicionar Imagem</button>
+                        <button type="button" mat-button class="bg-secondary text-white" (click)="addImagem()">Adicionar Imagem</button>
                     </div>
                 </div>
             </div>

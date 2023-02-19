@@ -1,5 +1,5 @@
 import { NgxMatDatetimePickerModule, NgxMatNativeDateModule } from '@angular-material-components/datetime-picker';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSortModule } from '@angular/material/sort';
@@ -22,6 +23,8 @@ import { RouterModule } from '@angular/router';
 import { NgxMaskModule } from 'ngx-mask';
 import { getDutchPaginatorIntl } from 'src/app/configurations/internacionalization';
 
+import { AgendamentoCadastroComponent } from './agendamento-cadastro/agendamento-cadastro.component';
+import { AgendamentoExcluirComponent } from './agendamento-excluir/agendamento-excluir.component';
 import { AgendamentosComponent } from './agendamentos/agendamentos.component';
 import { AnimaisComponent } from './animais/animais.component';
 import { AnimalAdocoesCadastroComponent } from './animal-adocoes-cadastro/animal-adocoes-cadastro.component';
@@ -59,11 +62,11 @@ import { UsuarioInformacoesComponent } from './usuario-informacoes/usuario-infor
 import { UsuarioComponent } from './usuario/usuario.component';
 import { UsuariosCadastroComponent } from './usuarios-cadastro/usuarios-cadastro.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
-import { AgendamentoCadastroComponent } from './agendamento-cadastro/agendamento-cadastro.component';
-import { AgendamentoExcluirComponent } from './agendamento-excluir/agendamento-excluir.component';
 
 @NgModule({
   declarations: [
+    AgendamentoCadastroComponent,
+    AgendamentoExcluirComponent,
     AgendamentosComponent,
     AnimaisComponent,
     AnimalAdocoesComponent,
@@ -100,9 +103,7 @@ import { AgendamentoExcluirComponent } from './agendamento-excluir/agendamento-e
     UsuarioInformacoesComponent,
     UsuarioComponent,
     UsuariosCadastroComponent,
-    UsuariosComponent,
-    AgendamentoCadastroComponent,
-    AgendamentoExcluirComponent,
+    UsuariosComponent
   ],
   imports: [
     CommonModule,
@@ -117,6 +118,7 @@ import { AgendamentoExcluirComponent } from './agendamento-excluir/agendamento-e
     MatMenuModule,
     MatNativeDateModule,
     MatPaginatorModule,
+    MatProgressBarModule,
     MatSelectModule,
     MatSnackBarModule,
     MatSortModule,
@@ -130,6 +132,7 @@ import { AgendamentoExcluirComponent } from './agendamento-excluir/agendamento-e
     RouterModule,
   ],
   providers: [
+    { provide: DatePipe },
     { provide: MatPaginatorIntl, useValue: getDutchPaginatorIntl() },
     { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }
   ]

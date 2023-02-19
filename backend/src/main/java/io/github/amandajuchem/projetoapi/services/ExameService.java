@@ -6,9 +6,7 @@ import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.repositories.ExameRepository;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -18,7 +16,8 @@ import java.util.UUID;
  * The type Exame service.
  */
 @Service
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@Transactional
+@RequiredArgsConstructor
 public class ExameService {
 
     private final ExameRepository repository;
@@ -28,7 +27,6 @@ public class ExameService {
      *
      * @param id the id
      */
-    @Transactional(propagation = Propagation.REQUIRED)
     public void delete(UUID id) {
 
         if (id != null) {
@@ -47,7 +45,6 @@ public class ExameService {
      *
      * @return the list
      */
-    @Transactional(propagation = Propagation.SUPPORTS)
     public List<Exame> findAll() {
         return repository.findAll();
     }
@@ -58,7 +55,6 @@ public class ExameService {
      * @param exame the exame
      * @return the exame
      */
-    @Transactional(propagation = Propagation.REQUIRED)
     public Exame save(Exame exame) {
 
         if (exame == null) {

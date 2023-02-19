@@ -6,9 +6,7 @@ import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.repositories.AtendimentoRepository;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -18,7 +16,8 @@ import java.util.UUID;
  * The type Atendimento service.
  */
 @Service
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@Transactional
+@RequiredArgsConstructor
 public class AtendimentoService {
 
     private final AtendimentoRepository repository;
@@ -28,7 +27,6 @@ public class AtendimentoService {
      *
      * @param id the id
      */
-    @Transactional(propagation = Propagation.REQUIRED)
     public void delete(UUID id) {
 
         if (id != null) {
@@ -47,7 +45,6 @@ public class AtendimentoService {
      *
      * @return the list
      */
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<Atendimento> findAll() {
         return repository.findAll();
     }
@@ -58,7 +55,6 @@ public class AtendimentoService {
      * @param id the id
      * @return the atendimento
      */
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Atendimento findById(UUID id) {
 
         return repository.findById(id).orElseThrow(() -> {
@@ -72,7 +68,6 @@ public class AtendimentoService {
      * @param atendimento the atendimento
      * @return the atendimento
      */
-    @Transactional(propagation = Propagation.REQUIRED)
     public Atendimento save(Atendimento atendimento) {
 
         if (atendimento == null) {
@@ -94,6 +89,11 @@ public class AtendimentoService {
      */
     private boolean validateAtendimento(Atendimento atendimento) {
 
+        var atendimento_findByDataHoraAndVeterinario = repository.findByDataHoraAndVeterinario(atendimento.getDataHora(), atendimento.getVeterinario()).orElse(null);
+
+        if (atendimento_findByDataHoraAndVeterinario != null && !atendimento_findByDataHoraAndVeterinario.equals(atendimento)) {
+            throw new ValidationException("O veterinário já possui um atendimento realizado para esta data e hora!");
+        }
 
         return true;
     }

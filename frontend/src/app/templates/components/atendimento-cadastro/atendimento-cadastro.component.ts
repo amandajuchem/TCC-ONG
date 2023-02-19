@@ -86,18 +86,25 @@ export class AtendimentoCadastroComponent implements OnInit {
 
     this.form = this._formBuilder.group({
       id: [atendimento?.id, Validators.nullValidator],
-      dataHora: [atendimento?.dataHora ? this.getDateWithTimeZone(atendimento.dataHora) : null, Validators.required],
-      dataHoraRetorno: [atendimento?.dataHoraRetorno, Validators.nullValidator],
-      motivo: [atendimento?.motivo, Validators.required],
-      comorbidades: [atendimento?.animal.fichaMedica.comorbidades, Validators.nullValidator],
-      diagnostico: [atendimento?.diagnostico, Validators.required],
-      exames: [atendimento?.exames, Validators.required],
-      procedimentos: [atendimento?.procedimentos, Validators.required],
-      posologia: [atendimento?.posologia, Validators.required],
-      documentos: [atendimento?.documentos, Validators.nullValidator],
       animal: [atendimento?.animal, Validators.required],
-      veterinario: [atendimento?.veterinario, Validators.required]
+      veterinario: [atendimento?.veterinario, Validators.required],
+      comorbidades: [atendimento?.animal.fichaMedica.comorbidades, Validators.nullValidator],
+      dataHora: [atendimento?.dataHora ? this.getDateWithTimeZone(atendimento.dataHora) : null, Validators.required],
+      motivo: [atendimento?.motivo, Validators.required],
+      diagnostico: [atendimento?.diagnostico, Validators.required],
+      posologia: [atendimento?.posologia, Validators.required],
+      exames: [atendimento?.exames, Validators.required],
+      documentos: [atendimento?.documentos, Validators.nullValidator]
     });
+  }
+
+  dateChange() {
+
+    if (this.form.get('dataHora')?.value) {
+      
+      this.form.get('dataHora')?.patchValue(
+        DateUtils.getDateTimeWithoutSecondsAndMilliseconds(this.form.get('dataHora')?.value));
+    }
   }
 
   deleteImagem(imagem: any) {

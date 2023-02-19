@@ -6,9 +6,7 @@ import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.repositories.FichaMedicaRepository;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
@@ -17,7 +15,8 @@ import java.util.UUID;
  * The type Ficha medica service.
  */
 @Service
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@Transactional
+@RequiredArgsConstructor
 public class FichaMedicaService {
 
     private final FichaMedicaRepository repository;
@@ -27,7 +26,6 @@ public class FichaMedicaService {
      *
      * @param id the id
      */
-    @Transactional(propagation = Propagation.REQUIRED)
     public void delete(UUID id) {
 
         if (id != null) {
@@ -47,7 +45,6 @@ public class FichaMedicaService {
      * @param fichaMedica the ficha medica
      * @return the ficha medica
      */
-    @Transactional(propagation = Propagation.REQUIRED)
     public FichaMedica save(FichaMedica fichaMedica) {
 
         if (fichaMedica == null) {

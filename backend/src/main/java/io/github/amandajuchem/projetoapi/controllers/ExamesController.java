@@ -6,7 +6,6 @@ import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
 import io.github.amandajuchem.projetoapi.services.FacadeService;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +20,7 @@ import static org.springframework.http.HttpStatus.OK;
  */
 @RestController
 @RequestMapping("/exames")
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor
 public class ExamesController {
 
     private final FacadeService facade;

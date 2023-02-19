@@ -49,8 +49,8 @@ export class FacadeService {
    * 
    * @returns 
    */
-  agendamentoFindAll() {
-    return this._agendamentoService.findAll();
+  agendamentoFindAll(page: number, size: number, sort: string, direction: string) {
+    return this._agendamentoService.findAll(page, size, sort, direction);
   }
   
   /**
@@ -60,6 +60,19 @@ export class FacadeService {
    */
   agendamentoSave(agendamento: Agendamento) {
     return this._agendamentoService.save(agendamento);
+  }
+
+  /**
+   * 
+   * @param value 
+   * @param page 
+   * @param size 
+   * @param sort 
+   * @param direction 
+   * @returns 
+   */
+  agendamentoSearch(value: string, page: number, size: number, sort: string, direction: string) {
+    return this._agendamentoService.search(value, page, size, sort, direction);
   }
 
   /**

@@ -7,7 +7,6 @@ import io.github.amandajuchem.projetoapi.exceptions.OperationFailureException;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.FacadeService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,7 +18,7 @@ import java.util.stream.Collectors;
  * The type Tutor utils.
  */
 @Component
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor
 public class TutorUtils {
 
     private final FacadeService facade;

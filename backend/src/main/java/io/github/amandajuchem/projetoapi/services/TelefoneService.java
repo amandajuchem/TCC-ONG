@@ -6,9 +6,7 @@ import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.repositories.TelefoneRepository;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
@@ -17,7 +15,8 @@ import java.util.UUID;
  * The type Telefone service.
  */
 @Service
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@Transactional
+@RequiredArgsConstructor
 public class TelefoneService {
 
     private final TelefoneRepository repository;
@@ -27,7 +26,6 @@ public class TelefoneService {
      *
      * @param id the id
      */
-    @Transactional(propagation = Propagation.REQUIRED)
     public void delete(UUID id) {
 
         if (id != null) {
@@ -47,7 +45,6 @@ public class TelefoneService {
      * @param telefone the telefone
      * @return the telefone
      */
-    @Transactional(propagation = Propagation.REQUIRED)
     public Telefone save(Telefone telefone) {
 
         if (telefone ==  null) {

@@ -6,22 +6,20 @@ import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
 import io.github.amandajuchem.projetoapi.services.FacadeService;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.UUID;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 /**
  * The type Agendamento controller.
  */
 @RestController
 @RequestMapping("/agendamentos")
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor
 public class AgendamentoController {
 
     private final FacadeService facade;
@@ -44,13 +42,15 @@ public class AgendamentoController {
      * @return the response entity
      */
     @GetMapping
-    public ResponseEntity<?> findAll() {
+    public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") Integer page,
+                                     @RequestParam(required = false, defaultValue = "10") Integer size,
+                                     @RequestParam(required = false, defaultValue = "dataHora") String sort,
+                                     @RequestParam(required = false, defaultValue = "asc") String direction) {
 
-        var agendamentosDTO = facade.agendamentoFindAll().stream()
-                .map(AgendamentoDTO::toDTO)
-                .toList();
+        var agendamentos = facade.agendamentoFindAll(page, size, sort, direction)
+                .map(AgendamentoDTO::toDTO);
 
-        return ResponseEntity.status(OK).body(agendamentosDTO);
+        return ResponseEntity.status(OK).body(agendamentos);
     }
 
     /**
@@ -66,6 +66,24 @@ public class AgendamentoController {
         var agendamentoDTO = AgendamentoDTO.toDTO(agendamentoSaved);
 
         return ResponseEntity.status(CREATED).body(agendamentoDTO);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> search(@RequestParam(required = false) String value,
+                                    @RequestParam(required = false, defaultValue = "0") Integer page,
+                                    @RequestParam(required = false, defaultValue = "10") Integer size,
+                                    @RequestParam(required = false, defaultValue = "dataHora") String sort,
+                                    @RequestParam(required = false, defaultValue = "asc") String direction) {
+
+        if (value != null) {
+
+            var agendamentos = facade.agendamentoFindByDataHoraOrAnimalOrVeterinario(value, page, size, sort, direction)
+                    .map(AgendamentoDTO::toDTO);
+
+            return ResponseEntity.status(OK).body(agendamentos);
+        }
+
+        return ResponseEntity.status(NOT_FOUND).body(null);
     }
 
     /**

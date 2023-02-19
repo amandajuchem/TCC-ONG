@@ -11,7 +11,7 @@
                         <mat-label>Data</mat-label>
                         <input matInput [ngxMatDatetimePicker]="pickerDataHoraAgendamento" formControlName="dataHora" readonly>
                         <mat-datepicker-toggle matIconSuffix [for]="$any(pickerDataHoraAgendamento)"></mat-datepicker-toggle>
-                        <ngx-mat-datetime-picker #pickerDataHoraAgendamento [showSeconds]="true"></ngx-mat-datetime-picker>
+                        <ngx-mat-datetime-picker #pickerDataHoraAgendamento (closed)="dateChange()"></ngx-mat-datetime-picker>
                     </mat-form-field>
                 </div>
 

@@ -6,9 +6,7 @@ import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.repositories.TutorRepository;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -18,7 +16,8 @@ import java.util.UUID;
  * The type Tutor service.
  */
 @Service
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@Transactional
+@RequiredArgsConstructor
 public class TutorService {
 
     private final TutorRepository repository;
@@ -28,7 +27,6 @@ public class TutorService {
      *
      * @param id the id
      */
-    @Transactional(propagation = Propagation.REQUIRED)
     public void delete(UUID id) {
 
         if (id != null) {
@@ -47,7 +45,6 @@ public class TutorService {
      *
      * @return the list
      */
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<Tutor> findAll() {
         return repository.findAll();
     }
@@ -58,7 +55,6 @@ public class TutorService {
      * @param id the id
      * @return the tutor
      */
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Tutor findById(UUID id) {
 
         return repository.findById(id).orElseThrow(() -> {
@@ -73,7 +69,6 @@ public class TutorService {
      * @param nome the nome
      * @return the list
      */
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<Tutor> findByNomeContains(String nome) {
         return repository.findByNomeContainsIgnoreCase(nome);
     }
@@ -84,7 +79,6 @@ public class TutorService {
      * @param tutor the tutor
      * @return the tutor
      */
-    @Transactional(propagation = Propagation.REQUIRED)
     public Tutor save(Tutor tutor) {
 
         if (tutor == null) {

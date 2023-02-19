@@ -2,7 +2,6 @@ package io.github.amandajuchem.projetoapi.configurations;
 
 import io.github.amandajuchem.projetoapi.utils.JWTUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -18,7 +17,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
  */
 @EnableWebSecurity
 @EnableMethodSecurity
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor
 public class SecurityConfiguration {
 
     private static final String[] PUBLIC_MATCHERS_GET = {

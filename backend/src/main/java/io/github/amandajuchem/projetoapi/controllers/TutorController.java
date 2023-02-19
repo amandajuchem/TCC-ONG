@@ -7,7 +7,6 @@ import io.github.amandajuchem.projetoapi.services.FacadeService;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import io.github.amandajuchem.projetoapi.utils.TutorUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +22,7 @@ import static org.springframework.http.HttpStatus.*;
  */
 @RestController
 @RequestMapping("/tutores")
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor
 public class TutorController {
 
     private final FacadeService facade;

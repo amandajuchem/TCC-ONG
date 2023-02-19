@@ -2,7 +2,7 @@ package io.github.amandajuchem.projetoapi.services;
 
 import io.github.amandajuchem.projetoapi.entities.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.UUID;
  * The type Facade service.
  */
 @Service
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor
 public class FacadeService {
 
     private final AgendamentoService agendamentoService;
@@ -40,10 +40,28 @@ public class FacadeService {
     /**
      * Find all agendamentos.
      *
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
      * @return the list
      */
-    public List<Agendamento> agendamentoFindAll() {
-        return agendamentoService.findAll();
+    public Page<Agendamento> agendamentoFindAll(Integer page, Integer size, String sort, String direction) {
+        return agendamentoService.findAll(page, size, sort, direction);
+    }
+
+    /**
+     * Find agendamentos by data hora or animal or veterinario.
+     *
+     * @param value     the value
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
+     * @return the list of agendamentos
+     */
+    public Page<Agendamento> agendamentoFindByDataHoraOrAnimalOrVeterinario(String value, Integer page, Integer size, String sort, String direction) {
+        return agendamentoService.findByDataHoraOrAnimalOrVeterinario(value, page, size, sort, direction);
     }
 
     /**

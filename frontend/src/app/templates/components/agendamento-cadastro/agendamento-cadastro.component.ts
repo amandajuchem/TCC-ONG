@@ -29,8 +29,8 @@ export class AgendamentoCadastroComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    
-    if(this.data.agendamento) {
+
+    if (this.data.agendamento) {
       this.buildForm(this.data.agendamento);
     } else {
       this.buildForm(null);
@@ -46,6 +46,15 @@ export class AgendamentoCadastroComponent implements OnInit {
       veterinario: [agendamento?.veterinario, Validators.required],
       descricao: [agendamento?.descricao, Validators.required]
     });
+  }
+
+  dateChange() {
+
+    if (this.form.get('dataHora')?.value) {
+      
+      this.form.get('dataHora')?.patchValue(
+        DateUtils.getDateTimeWithoutSecondsAndMilliseconds(this.form.get('dataHora')?.value));
+    }
   }
 
   getDateWithTimeZone(date: any) {
@@ -94,28 +103,28 @@ export class AgendamentoCadastroComponent implements OnInit {
     if (agendamento.id) {
 
       this._facade.agendamentoUpdate(agendamento).subscribe({
-        
+
         complete: () => {
           this._facade.notificationShowNotification(MessageUtils.AGENDAMENTO_UPDATE_SUCCESS, NotificationType.SUCCESS);
-          this._dialogRef.close({status: true});
+          this._dialogRef.close({ status: true });
         },
-  
+
         error: (error) => {
           console.error(error);
           this._facade.notificationShowNotification(MessageUtils.AGENDAMENTO_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
         }
       });
-    } 
-    
+    }
+
     else {
 
       this._facade.agendamentoSave(agendamento).subscribe({
-        
+
         complete: () => {
           this._facade.notificationShowNotification(MessageUtils.AGENDAMENTO_SAVE_SUCCESS, NotificationType.SUCCESS);
-          this._dialogRef.close({status: true});
+          this._dialogRef.close({ status: true });
         },
-  
+
         error: (error) => {
           console.error(error);
           this._facade.notificationShowNotification(MessageUtils.AGENDAMENTO_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);

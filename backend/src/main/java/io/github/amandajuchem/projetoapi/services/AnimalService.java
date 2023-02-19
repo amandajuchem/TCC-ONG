@@ -6,9 +6,7 @@ import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.repositories.AnimalRepository;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -18,7 +16,8 @@ import java.util.UUID;
  * The type Animal service.
  */
 @Service
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@Transactional
+@RequiredArgsConstructor
 public class AnimalService {
 
     private final AnimalRepository repository;
@@ -28,7 +27,6 @@ public class AnimalService {
      *
      * @param id the id
      */
-    @Transactional(propagation = Propagation.REQUIRED)
     public void delete(UUID id) {
 
         if (id != null) {
@@ -47,7 +45,6 @@ public class AnimalService {
      *
      * @return the list
      */
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<Animal> findAll() {
         return repository.findAll();
     }
@@ -58,7 +55,6 @@ public class AnimalService {
      * @param id the id
      * @return the animal
      */
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Animal findById(UUID id) {
 
         return repository.findById(id).orElseThrow(() -> {
@@ -72,7 +68,6 @@ public class AnimalService {
      * @param nome the nome
      * @return the list
      */
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<Animal> findByNomeContains(String nome) {
         return repository.findByNomeContainsIgnoreCase(nome);
     }
@@ -83,7 +78,6 @@ public class AnimalService {
      * @param animal the animal
      * @return the animal
      */
-    @Transactional(propagation = Propagation.REQUIRED)
     public Animal save(Animal animal) {
 
         if (animal == null) {

@@ -7,7 +7,6 @@ import io.github.amandajuchem.projetoapi.services.FacadeService;
 import io.github.amandajuchem.projetoapi.utils.AnimalUtils;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +22,7 @@ import static org.springframework.http.HttpStatus.*;
  */
 @RestController
 @RequestMapping("/animais")
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor
 public class AnimalController {
 
     private final AnimalUtils animalUtils;
