@@ -47,9 +47,7 @@ public class AgendamentoController {
                                      @RequestParam(required = false, defaultValue = "dataHora") String sort,
                                      @RequestParam(required = false, defaultValue = "asc") String direction) {
 
-        var agendamentos = facade.agendamentoFindAll(page, size, sort, direction)
-                .map(AgendamentoDTO::toDTO);
-
+        var agendamentos = facade.agendamentoFindAll(page, size, sort, direction).map(AgendamentoDTO::toDTO);
         return ResponseEntity.status(OK).body(agendamentos);
     }
 

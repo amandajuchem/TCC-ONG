@@ -32,17 +32,17 @@ export class SelecionarAnimalComponent implements OnInit {
 
   search(nome: string) {
 
-    this._facade.animalFindByNomeContains(nome).subscribe({
+    // this._facade.animalFindByNomeContains(nome).subscribe({
 
-      next: (animais) => {
-        this.dataSource.data = animais;
-      },
+    //   next: (animais) => {
+    //     this.dataSource.data = animais;
+    //   },
 
-      error: (error) => {
-        console.error(error);
-        this._facade.notificationShowNotification(MessageUtils.ANIMAIS_GET_FAIL, NotificationType.FAIL); 
-      }
-    });
+    //   error: (error) => {
+    //     console.error(error);
+    //     this._facade.notificationShowNotification(MessageUtils.ANIMAIS_GET_FAIL, NotificationType.FAIL); 
+    //   }
+    // });
   }
 
   select(animal: Animal) {

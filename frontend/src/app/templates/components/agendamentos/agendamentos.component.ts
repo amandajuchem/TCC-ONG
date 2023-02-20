@@ -26,10 +26,9 @@ export class AgendamentosComponent implements AfterViewInit {
   dataSource!: MatTableDataSource<Agendamento>;
   filterDate!: Date | null;
   filterString!: string;
+  isLoadingResults!: boolean;
+  resultsLength!: number;
   user!: User;
-
-  resultsLength = 0;
-  isLoadingResults = true;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -41,6 +40,8 @@ export class AgendamentosComponent implements AfterViewInit {
   ) {
     this.columns = ['index', 'dataHora', 'animal', 'veterinario', 'acao'];
     this.dataSource = new MatTableDataSource();
+    this.isLoadingResults = true;
+    this.resultsLength = 0;
     this.user = this._facade.authGetCurrentUser();
   }
 
@@ -105,7 +106,6 @@ export class AgendamentosComponent implements AfterViewInit {
     const direction = this.sort.direction;
 
     this.isLoadingResults = true;
-
     await OperatorUtils.delay(1000);
 
     this._facade.agendamentoSearch(value, page, size, sort, direction).subscribe({
@@ -135,7 +135,6 @@ export class AgendamentosComponent implements AfterViewInit {
     const direction = this.sort.direction;
 
     this.isLoadingResults = true;
-
     await OperatorUtils.delay(1000);
 
     this._facade.agendamentoFindAll(page, size, sort, direction).subscribe({

@@ -46,13 +46,13 @@ public class AnimalController {
      * @return the response entity
      */
     @GetMapping
-    public ResponseEntity<?> findAll() {
+    public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") Integer page,
+                                     @RequestParam(required = false, defaultValue = "10") Integer size,
+                                     @RequestParam(required = false, defaultValue = "nome") String sort,
+                                     @RequestParam(required = false, defaultValue = "asc") String direction) {
 
-        var animaisDTO = facade.animalFindAll().stream()
-                .map(AnimalDTO::toDTO)
-                .toList();
-
-        return ResponseEntity.status(OK).body(animaisDTO);
+        var animais = facade.animalFindAll(page, size, sort, direction).map(AnimalDTO::toDTO);
+        return ResponseEntity.status(OK).body(animais);
     }
 
     /**
@@ -87,16 +87,26 @@ public class AnimalController {
         return ResponseEntity.status(CREATED).body(animalDTO);
     }
 
+    /**
+     * Search response entity.
+     *
+     * @param nome      the nome
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
+     * @return the response entity
+     */
     @GetMapping("/search")
-    public ResponseEntity<?> search(@RequestParam(required = false) String nome) {
+    public ResponseEntity<?> search(@RequestParam(required = false) String nome,
+                                    @RequestParam(required = false, defaultValue = "0") Integer page,
+                                    @RequestParam(required = false, defaultValue = "10") Integer size,
+                                    @RequestParam(required = false, defaultValue = "nome") String sort,
+                                    @RequestParam(required = false, defaultValue = "asc") String direction) {
 
         if (nome != null) {
-
-            var animaisDTO = facade.animalFindByNomeContains(nome).stream()
-                    .map(AnimalDTO::toDTO)
-                    .toList();
-
-            return ResponseEntity.status(OK).body(animaisDTO);
+            var animais = facade.animalFindByNomeContains(nome, page, size, sort, direction).map(AnimalDTO::toDTO);
+            return ResponseEntity.status(OK).body(animais);
         }
 
         return ResponseEntity.status(NOT_FOUND).body(null);

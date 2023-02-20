@@ -6,10 +6,12 @@ import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.repositories.AnimalRepository;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -45,8 +47,8 @@ public class AnimalService {
      *
      * @return the list
      */
-    public List<Animal> findAll() {
-        return repository.findAll();
+    public Page<Animal> findAll(Integer page, Integer size, String sort, String direction) {
+        return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
     }
 
     /**
@@ -65,11 +67,15 @@ public class AnimalService {
     /**
      * Find by nome contains list.
      *
-     * @param nome the nome
+     * @param nome      the nome
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
      * @return the list
      */
-    public List<Animal> findByNomeContains(String nome) {
-        return repository.findByNomeContainsIgnoreCase(nome);
+    public Page<Animal> findByNomeContains(String nome, Integer page, Integer size, String sort, String direction) {
+        return repository.findByNomeContainsIgnoreCase(nome, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
     }
 
     /**

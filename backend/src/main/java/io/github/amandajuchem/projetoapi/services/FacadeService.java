@@ -90,8 +90,8 @@ public class FacadeService {
      *
      * @return the list
      */
-    public List<Animal> animalFindAll() {
-        return animalService.findAll();
+    public Page<Animal> animalFindAll(Integer page, Integer size, String sort, String direction) {
+        return animalService.findAll(page, size, sort, direction);
     }
 
     /**
@@ -107,11 +107,15 @@ public class FacadeService {
     /**
      * Find animal by nome contains.
      *
-     * @param nome the nome
+     * @param nome      the nome
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
      * @return the list
      */
-    public List<Animal> animalFindByNomeContains(String nome) {
-        return animalService.findByNomeContains(nome);
+    public Page<Animal> animalFindByNomeContains(String nome, Integer page, Integer size, String sort, String direction) {
+        return animalService.findByNomeContains(nome, page, size, sort, direction);
     }
 
     /**

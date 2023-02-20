@@ -97,10 +97,14 @@ export class FacadeService {
 
   /**
    * 
+   * @param page 
+   * @param size 
+   * @param sort 
+   * @param direction 
    * @returns 
    */
-  animalFindAll() {
-    return this._animalService.findAll();
+  animalFindAll(page: number, size: number, sort: string, direction: string) {
+    return this._animalService.findAll(page, size, sort, direction);
   }
 
   /**
@@ -115,10 +119,14 @@ export class FacadeService {
   /**
    * 
    * @param nome 
+   * @param page 
+   * @param size 
+   * @param sort 
+   * @param direction 
    * @returns 
    */
-  animalFindByNomeContains(nome: string) {
-    return this._animalService.findByNomeContains(nome);
+  animalFindByNomeContains(nome: string, page: number, size: number, sort: string, direction: string) {
+    return this._animalService.findByNomeContains(nome, page, size, sort, direction);
   }
 
   /**

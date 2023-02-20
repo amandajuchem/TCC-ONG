@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 import { Animal } from '../entities/animal';
+import { Page } from '../entities/page';
 
 @Injectable({
   providedIn: 'root'
@@ -26,10 +27,22 @@ export class AnimalService {
 
   /**
    * 
+   * @param page 
+   * @param size 
+   * @param sort 
+   * @param direction 
    * @returns 
    */
-  findAll() {
-    return this._http.get<Array<Animal>>(this.baseURL);
+  findAll(page: number, size: number, sort: string, direction: string) {
+    
+    return this._http.get<Page>(this.baseURL, {
+      params: {
+        page: page,
+        size: size,
+        sort: sort,
+        direction: direction
+      }
+    });
   }
 
   /**
@@ -44,13 +57,21 @@ export class AnimalService {
   /**
    * 
    * @param nome 
+   * @param page 
+   * @param size 
+   * @param sort 
+   * @param direction 
    * @returns 
    */
-  findByNomeContains(nome: string) {
+  findByNomeContains(nome: string, page: number, size: number, sort: string, direction: string) {
     
-    return this._http.get<Array<Animal>>(this.baseURL + '/search', {
+    return this._http.get<Page>(this.baseURL + '/search', {
       params: {
-        nome: nome
+        nome: nome,
+        page: page,
+        size: size,
+        sort: sort,
+        direction: direction
       }
     })
   }
