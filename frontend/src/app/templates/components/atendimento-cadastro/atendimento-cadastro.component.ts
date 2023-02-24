@@ -2,16 +2,18 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Atendimento } from 'src/app/entities/atendimento';
+import { Exame } from 'src/app/entities/exame';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { Setor } from 'src/app/enums/setor';
 import { FacadeService } from 'src/app/services/facade.service';
 import { DateUtils } from 'src/app/utils/date-utils';
 import { MessageUtils } from 'src/app/utils/message-utils';
+import { environment } from 'src/environments/environment';
 
 import { SelecionarAnimalComponent } from '../selecionar-animal/selecionar-animal.component';
-import { SelecionarUsuarioComponent } from '../selecionar-usuario/selecionar-usuario.component';
+import { SelecionarExameComponent } from '../selecionar-exame/selecionar-exame.component';
 import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-imagem.component';
-import { environment } from 'src/environments/environment';
+import { SelecionarUsuarioComponent } from '../selecionar-usuario/selecionar-usuario.component';
 
 @Component({
   selector: 'app-atendimento-cadastro',
@@ -82,6 +84,30 @@ export class AtendimentoCadastroComponent implements OnInit {
       });
   }
 
+  addExame() {
+
+    this._dialog.open(SelecionarExameComponent, {
+      width: '100%'
+    })
+    .afterClosed().subscribe({
+
+      next: (result) => {
+
+        if (result && result.status) {
+
+          let exames: Array<Exame> = this.form.get('exames')?.value;
+          
+          if (!exames){
+            exames = [];
+          }
+          
+          exames.push(result.exame);
+          this.form.get('exames')?.patchValue(exames);
+        }
+      }
+    });
+  }
+
   buildForm(atendimento: Atendimento | null) {
 
     this.form = this._formBuilder.group({
@@ -101,7 +127,7 @@ export class AtendimentoCadastroComponent implements OnInit {
   dateChange() {
 
     if (this.form.get('dataHora')?.value) {
-      
+
       this.form.get('dataHora')?.patchValue(
         DateUtils.getDateTimeWithoutSecondsAndMilliseconds(this.form.get('dataHora')?.value));
     }
@@ -131,6 +157,12 @@ export class AtendimentoCadastroComponent implements OnInit {
     return DateUtils.getDateWithTimeZone(date);
   }
 
+  removeExame(exame: Exame) {
+    let exames: Array<Exame> = this.form.get('exames')?.value;
+    exames = exames.filter(e => e.id != exame.id);
+    this.form.get('exames')?.patchValue(exames);
+  }
+
   selectAnimal() {
 
     this._dialog.open(SelecionarAnimalComponent, {
@@ -156,15 +188,15 @@ export class AtendimentoCadastroComponent implements OnInit {
       },
       width: '100%'
     })
-    .afterClosed().subscribe({
+      .afterClosed().subscribe({
 
-      next: (result) => {
+        next: (result) => {
 
-        if (result && result.status) {
-          this.form.get('veterinario')?.patchValue(result.usuario);
+          if (result && result.status) {
+            this.form.get('veterinario')?.patchValue(result.usuario);
+          }
         }
-      }
-    });
+      });
   }
 
   submit() {

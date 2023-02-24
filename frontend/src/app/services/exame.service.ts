@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
 import { Exame } from '../entities/exame';
+import { Page } from '../entities/page';
 
 @Injectable({
   providedIn: 'root'
@@ -24,10 +25,22 @@ export class ExameService {
 
   /**
    * 
+   * @param page 
+   * @param size 
+   * @param sort 
+   * @param direction 
    * @returns 
    */
-  findAll() {
-    return this._http.get<Array<Exame>>(this._baseURL);
+  findAll(page: number, size: number, sort: string, direction: string) {
+
+    return this._http.get<Page>(this._baseURL, {
+      params: {
+        page: page,
+        size: size,
+        sort: sort,
+        direction: direction
+      }
+    });
   }
 
   /**
@@ -37,6 +50,28 @@ export class ExameService {
    */
   save(exame: Exame) {
     return this._http.post<Exame>(this._baseURL, exame);
+  }
+
+  /**
+   * 
+   * @param value 
+   * @param page 
+   * @param size 
+   * @param sort 
+   * @param direction 
+   * @returns 
+   */
+  search(value: string, page: number, size: number, sort: string, direction: string) {
+
+    return this._http.get<Page>(this._baseURL + '/search', {
+      params: {
+        value: value,
+        page: page,
+        size: size,
+        sort: sort,
+        direction: direction
+      }
+    });
   }
 
   /**

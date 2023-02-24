@@ -24,17 +24,17 @@
     
             <mat-card-content>
                 <div class="row mb-3">
-                    <div class="col-10 col-md-11">
+                    <div class="col-12 col-md-11 mb-3 mb-md-0">
                         <mat-form-field appearance="outline" class="w-100" style="margin-bottom: -1.25em;">
                             <mat-label>Buscar</mat-label>
-                            <input type="text" matInput #searchText (keyup)="filter(searchText.value)" placeholder="Nome">
+                            <input type="text" matInput [(ngModel)]="filterString" (keyup.enter)="filter()" placeholder="Nome, CPF ou RG">
                             <button mat-icon-button matSuffix>
                                 <mat-icon>search</mat-icon>
                             </button>
                         </mat-form-field>
                     </div>
     
-                    <div class="col-2 col-md-1">
+                    <div class="col-12 col-md-1">
                         <div class="d-flex align-items-center justify-content-center h-100">
                             <button mat-icon-button class="bg-success text-white" (click)="add()">
                                 <mat-icon>add</mat-icon>
@@ -47,32 +47,72 @@
     </div>
 </div>
 
-<div class="row mb-3" *ngIf="tutoresToShow && tutoresToShow.length > 0">
+<div class="row mb-3" [hidden]="(dataSource && dataSource.data.length == 0) || isLoadingResults">
+    <div class="col-12">
+        <mat-card>
+            <mat-card-content>
+                <div class="table-responsive">
+                    <table mat-table [dataSource]="dataSource" class="w-100 border" matSort matSortActive="nome" matSortDisableClear matSortDirection="asc" (matSortChange)="sortChange()">
 
-    <div class="col-12 col-md-3" *ngFor="let tutor of tutoresToShow">
-        
-        <a [routerLink]="'/' + user.role.toLowerCase() + '/tutores/' + tutor.id">
-            <mat-card>
-                <img mat-card-image [src]="apiURL + '/imagens/search?nome=' + tutor.foto.nome" *ngIf="tutor.foto">
-                <img mat-card-image src="assets/images/tutores.png" *ngIf="!tutor.foto">
-    
-                <mat-card-content class="p-3">
-                    <div class="row">
-                        <div class="col-12">
-                           <div class="text-dark">
-                                <h3 class="fw-bold mb-0">{{tutor.nome}}</h3>
-                                <p class="mb-0">{{tutor.cpf | mask: 'CPF_CNPJ'}}</p>
-                                <p class="mb-0">{{tutor.situacao | titlecase}}</p>
-                           </div>
-                        </div>
-                    </div>
-                </mat-card-content>
-            </mat-card>
-        </a>
+                        <!-- Index Column -->
+                        <ng-container matColumnDef="index">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-index">#</th>
+                            <td mat-cell *matCellDef="let tutor; let i = index">{{i+1}}</td>
+                        </ng-container>
+
+                        <!-- Nome Column -->
+                        <ng-container matColumnDef="nome">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-nome">Nome</th>
+                            <td mat-cell *matCellDef="let tutor" class="text-center">{{tutor.nome}}</td>
+                        </ng-container>
+
+                        <!-- CPF Column -->
+                        <ng-container matColumnDef="cpf">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-cpf">CPF</th>
+                            <td mat-cell *matCellDef="let tutor" class="text-center">{{tutor.cpf | mask: 'CPF_CNPJ'}}</td>
+                        </ng-container>
+
+                        <!-- RG Column -->
+                        <ng-container matColumnDef="rg">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-rg">RG</th>
+                            <td mat-cell *matCellDef="let tutor" class="text-center">{{tutor.rg}}</td>
+                        </ng-container>
+
+                        <!-- Ação Column -->
+                        <ng-container matColumnDef="acao">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-acao">&nbsp;</th>
+                            <td mat-cell *matCellDef="let tutor">
+                                <div class="text-end">
+                                    <button mat-icon-button [routerLink]="'/' + user.role.toLowerCase() + '/tutores/' + tutor.id">
+                                        <mat-icon>arrow_forward</mat-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="columns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+                    </table>
+
+                    <mat-paginator [length]="resultsLength" [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons class="w-100" (page)="pageChange()"></mat-paginator>
+                </div>
+            </mat-card-content>
+        </mat-card>
     </div>
 </div>
 
-<div *ngIf="tutoresToShow && tutoresToShow.length == 0">
+<div class="row mb-3" *ngIf="isLoadingResults">
+    <div class="col-12">
+        <mat-card>
+            <mat-card-content>
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                <p class="text-center pt-3">Obtendo dados</p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
+
+<div [hidden]="(dataSource && dataSource.data.length > 0) || isLoadingResults">
     <mat-card>
         <mat-card-content>
             <div class="row">

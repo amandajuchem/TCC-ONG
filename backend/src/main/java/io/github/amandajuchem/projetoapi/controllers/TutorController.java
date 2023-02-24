@@ -46,13 +46,13 @@ public class TutorController {
      * @return the response entity
      */
     @GetMapping
-    public ResponseEntity<?> findAll() {
+    public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") Integer page,
+                                     @RequestParam(required = false, defaultValue = "10") Integer size,
+                                     @RequestParam(required = false, defaultValue = "nome") String sort,
+                                     @RequestParam(required = false, defaultValue = "asc") String direction) {
 
-        var tutoresDTO = facade.tutorFindAll().stream()
-                .map(TutorDTO::toDTO)
-                .toList();
-
-        return ResponseEntity.status(OK).body(tutoresDTO);
+        var tutores = facade.tutorFindAll(page, size, sort, direction).map(TutorDTO::toDTO);
+        return ResponseEntity.status(OK).body(tutores);
     }
 
     /**
@@ -88,21 +88,25 @@ public class TutorController {
     }
 
     /**
-     * Search response entity.
+     * Search tutores.
      *
-     * @param nome the nome
-     * @return the response entity
+     * @param value     Nome, CPF ou RG
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
+     * @return the list of tutores
      */
     @GetMapping("/search")
-    public ResponseEntity<?> search(@RequestParam(required = false) String nome) {
+    public ResponseEntity<?> search(@RequestParam(required = false) String value,
+                                    @RequestParam(required = false, defaultValue = "0") Integer page,
+                                    @RequestParam(required = false, defaultValue = "10") Integer size,
+                                    @RequestParam(required = false, defaultValue = "nome") String sort,
+                                    @RequestParam(required = false, defaultValue = "asc") String direction) {
 
-        if (nome != null) {
-
-            var tutoresDTO = facade.tutorFindByNomeContains(nome).stream()
-                    .map(TutorDTO::toDTO)
-                    .toList();
-
-            return ResponseEntity.status(OK).body(tutoresDTO);
+        if (value != null) {
+            var tutores = facade.tutorSearch(value, page, size, sort, direction).map(TutorDTO::toDTO);
+            return ResponseEntity.status(OK).body(tutores);
         }
 
         return ResponseEntity.status(NOT_FOUND).body(null);

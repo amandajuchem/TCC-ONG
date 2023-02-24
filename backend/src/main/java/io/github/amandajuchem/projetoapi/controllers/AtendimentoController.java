@@ -16,8 +16,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 /**
  * The type Atendimento controller.
@@ -48,13 +47,13 @@ public class AtendimentoController {
      * @return the response entity
      */
     @GetMapping
-    public ResponseEntity<?> findAll() {
+    public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") Integer page,
+                                     @RequestParam(required = false, defaultValue = "10") Integer size,
+                                     @RequestParam(required = false, defaultValue = "dataHora") String sort,
+                                     @RequestParam(required = false, defaultValue = "asc") String direction) {
 
-        var atendimentosDTO = facade.atendimentoFindAll().stream()
-                .map(AtendimentoDTO::toDTO)
-                .toList();
-
-        return ResponseEntity.status(OK).body(atendimentosDTO);
+        var atendimentos = facade.atendimentoFindAll(page, size, sort, direction).map(AtendimentoDTO::toDTO);
+        return ResponseEntity.status(OK).body(atendimentos);
     }
 
     /**
@@ -74,6 +73,31 @@ public class AtendimentoController {
         var atendimentoDTO = AtendimentoDTO.toDTO(atendimentoSaved);
 
         return ResponseEntity.status(CREATED).body(atendimentoDTO);
+    }
+
+    /**
+     * Search response entity.
+     *
+     * @param value     Data, nome do animal ou nome do veterinário
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
+     * @return the list of atendimentos
+     */
+    @GetMapping("/search")
+    public ResponseEntity<?> search(@RequestParam(required = false) String value,
+                                    @RequestParam(required = false, defaultValue = "0") Integer page,
+                                    @RequestParam(required = false, defaultValue = "10") Integer size,
+                                    @RequestParam(required = false, defaultValue = "dataHora") String sort,
+                                    @RequestParam(required = false, defaultValue = "asc") String direction) {
+
+        if (value != null) {
+            var atendimentos = facade.atendimentoSearch(value, page, size, sort, direction).map(AtendimentoDTO::toDTO);
+            return ResponseEntity.status(OK).body(atendimentos);
+        }
+
+        return ResponseEntity.status(NOT_FOUND).body(null);
     }
 
     /**

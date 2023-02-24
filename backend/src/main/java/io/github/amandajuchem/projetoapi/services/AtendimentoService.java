@@ -6,10 +6,12 @@ import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.repositories.AtendimentoRepository;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -45,8 +47,41 @@ public class AtendimentoService {
      *
      * @return the list
      */
-    public List<Atendimento> findAll() {
-        return repository.findAll();
+    public Page<Atendimento> findAll(Integer page, Integer size, String sort, String direction) {
+
+        if (sort.equalsIgnoreCase("animal")) {
+            sort = "animal.nome";
+        }
+
+        if (sort.equalsIgnoreCase("veterinario")) {
+            sort = "veterinario.nome";
+        }
+
+        return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
+    }
+
+
+    /**
+     * Search atendimentos.
+     *
+     * @param value     Data, nome do animal ou nome do veterinário
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
+     * @return the list of atendimentos
+     */
+    public Page<Atendimento> search(String value, Integer page, Integer size, String sort, String direction) {
+
+        if (sort.equalsIgnoreCase("animal")) {
+            sort = "animal.nome";
+        }
+
+        if (sort.equalsIgnoreCase("veterinario")) {
+            sort = "veterinario.nome";
+        }
+
+        return repository.search(value, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
     }
 
     /**

@@ -4,6 +4,7 @@ import io.github.amandajuchem.projetoapi.entities.Animal;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
@@ -15,11 +16,12 @@ import java.util.UUID;
 public interface AnimalRepository extends JpaRepository<Animal, UUID> {
 
     /**
-     * Find by nome contains ignore case list.
+     * Search animais.
      *
-     * @param nome the nome
-     * @param page the page
-     * @return the list
+     * @param value Nome
+     * @param page  the page
+     * @return the list of animais
      */
-    Page<Animal> findByNomeContainsIgnoreCase(String nome, Pageable page);
+    @Query(value = "SELECT a FROM tb_animais AS a WHERE upper(a.nome) LIKE upper(concat('%', ?1, '%'))")
+    Page<Animal> search(String value, Pageable page);
 }

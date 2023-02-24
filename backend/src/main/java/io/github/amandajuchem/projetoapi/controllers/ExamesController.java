@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.UUID;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 /**
  * The type Exames controller.
@@ -43,13 +42,13 @@ public class ExamesController {
      * @return the response entity
      */
     @GetMapping
-    public ResponseEntity<?> findAll() {
+    public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") Integer page,
+                                     @RequestParam(required = false, defaultValue = "10") Integer size,
+                                     @RequestParam(required = false, defaultValue = "dataHora") String sort,
+                                     @RequestParam(required = false, defaultValue = "asc") String direction) {
 
-        var examesDTO = facade.exameFindAll().stream()
-                .map(ExameDTO::toDTO)
-                .toList();
-
-        return ResponseEntity.status(OK).body(examesDTO);
+        var exames = facade.exameFindAll(page, size, sort, direction).map(ExameDTO::toDTO);
+        return ResponseEntity.status(OK).body(exames);
     }
 
     /**
@@ -65,6 +64,31 @@ public class ExamesController {
         var exameDTO = ExameDTO.toDTO(exameSaved);
 
         return ResponseEntity.status(CREATED).body(exameDTO);
+    }
+
+    /**
+     * Search exames.
+     *
+     * @param value     Nome ou categoria
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
+     * @return the list of exames
+     */
+    @GetMapping("/search")
+    public ResponseEntity<?> search(@RequestParam(required = false) String value,
+                                    @RequestParam(required = false, defaultValue = "0") Integer page,
+                                    @RequestParam(required = false, defaultValue = "10") Integer size,
+                                    @RequestParam(required = false, defaultValue = "nome") String sort,
+                                    @RequestParam(required = false, defaultValue = "asc") String direction) {
+
+        if (value != null) {
+            var exames = facade.exameSearch(value, page, size, sort, direction).map(ExameDTO::toDTO);
+            return ResponseEntity.status(OK).body(exames);
+        }
+
+        return ResponseEntity.status(NOT_FOUND).body(null);
     }
 
     /**

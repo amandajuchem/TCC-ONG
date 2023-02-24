@@ -46,8 +46,8 @@ import { LayoutComponent } from './layout/layout.component';
 import { LoginComponent } from './login/login.component';
 import { NotificationComponent } from './notification/notification.component';
 import { PainelComponent } from './painel/painel.component';
-import { SelecionarAnimaisComponent } from './selecionar-animais/selecionar-animais.component';
 import { SelecionarAnimalComponent } from './selecionar-animal/selecionar-animal.component';
+import { SelecionarExameComponent } from './selecionar-exame/selecionar-exame.component';
 import { SelecionarImagemComponent } from './selecionar-imagem/selecionar-imagem.component';
 import { SelecionarTutorComponent } from './selecionar-tutor/selecionar-tutor.component';
 import { SelecionarUsuarioComponent } from './selecionar-usuario/selecionar-usuario.component';
@@ -58,9 +58,9 @@ import { TutorExcluirComponent } from './tutor-excluir/tutor-excluir.component';
 import { TutorInformacoesComponent } from './tutor-informacoes/tutor-informacoes.component';
 import { TutorComponent } from './tutor/tutor.component';
 import { TutoresComponent } from './tutores/tutores.component';
+import { UsuarioCadastroComponent } from './usuario-cadastro/usuario-cadastro.component';
 import { UsuarioInformacoesComponent } from './usuario-informacoes/usuario-informacoes.component';
 import { UsuarioComponent } from './usuario/usuario.component';
-import { UsuariosCadastroComponent } from './usuarios-cadastro/usuarios-cadastro.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
 
 @NgModule({
@@ -88,8 +88,8 @@ import { UsuariosComponent } from './usuarios/usuarios.component';
     LoginComponent,
     NotificationComponent,
     PainelComponent,
-    SelecionarAnimaisComponent,
     SelecionarAnimalComponent,
+    SelecionarExameComponent,
     SelecionarImagemComponent,
     SelecionarTutorComponent,
     SelecionarUsuarioComponent,
@@ -100,9 +100,9 @@ import { UsuariosComponent } from './usuarios/usuarios.component';
     TutorInformacoesComponent,
     TutorComponent,
     TutoresComponent,
-    UsuarioInformacoesComponent,
     UsuarioComponent,
-    UsuariosCadastroComponent,
+    UsuarioCadastroComponent,
+    UsuarioInformacoesComponent,
     UsuariosComponent
   ],
   imports: [

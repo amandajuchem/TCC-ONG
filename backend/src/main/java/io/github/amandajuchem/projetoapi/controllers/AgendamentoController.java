@@ -66,6 +66,16 @@ public class AgendamentoController {
         return ResponseEntity.status(CREATED).body(agendamentoDTO);
     }
 
+    /**
+     * Search agendamentos.
+     *
+     * @param value     Data, nome do animal ou nome do veterinário
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
+     * @return the list of agendamentos
+     */
     @GetMapping("/search")
     public ResponseEntity<?> search(@RequestParam(required = false) String value,
                                     @RequestParam(required = false, defaultValue = "0") Integer page,
@@ -74,10 +84,7 @@ public class AgendamentoController {
                                     @RequestParam(required = false, defaultValue = "asc") String direction) {
 
         if (value != null) {
-
-            var agendamentos = facade.agendamentoFindByDataHoraOrAnimalOrVeterinario(value, page, size, sort, direction)
-                    .map(AgendamentoDTO::toDTO);
-
+            var agendamentos = facade.agendamentoSearch(value, page, size, sort, direction).map(AgendamentoDTO::toDTO);
             return ResponseEntity.status(OK).body(agendamentos);
         }
 

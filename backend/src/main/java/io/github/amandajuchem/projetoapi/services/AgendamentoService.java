@@ -48,21 +48,39 @@ public class AgendamentoService {
      * @return the list
      */
     public Page<Agendamento> findAll(Integer page, Integer size, String sort, String direction) {
+
+        if (sort.equalsIgnoreCase("animal")) {
+            sort = "animal.nome";
+        }
+
+        if (sort.equalsIgnoreCase("veterinario")) {
+            sort = "veterinario.nome";
+        }
+
         return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
     }
 
     /**
-     * Find agendamentos by data hora or animal or veterinario.
+     * Search agendamentos.
      *
-     * @param value     the value
+     * @param value     Data, nome do animal ou nome do veterinário
      * @param page      the page
      * @param size      the size
      * @param sort      the sort
      * @param direction the direction
      * @return the list of agendamentos
      */
-    public Page<Agendamento> findByDataHoraOrAnimalOrVeterinario(String value, Integer page, Integer size, String sort, String direction) {
-        return repository.findByDataHoraOrAnimalOrVeterinario(value, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
+    public Page<Agendamento> search(String value, Integer page, Integer size, String sort, String direction) {
+
+        if (sort.equalsIgnoreCase("animal")) {
+            sort = "animal.nome";
+        }
+
+        if (sort.equalsIgnoreCase("veterinario")) {
+            sort = "veterinario.nome";
+        }
+
+        return repository.search(value, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
     }
 
     /**

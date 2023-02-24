@@ -10,11 +10,11 @@ import { environment } from 'src/environments/environment';
 import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-imagem.component';
 
 @Component({
-  selector: 'app-usuarios-cadastro',
-  templateUrl: './usuarios-cadastro.component.html',
-  styleUrls: ['./usuarios-cadastro.component.sass']
+  selector: 'app-usuario-cadastro',
+  templateUrl: './usuario-cadastro.component.html',
+  styleUrls: ['./usuario-cadastro.component.sass']
 })
-export class UsuariosCadastroComponent implements OnInit {
+export class UsuarioCadastroComponent implements OnInit {
   
   apiURL!: string;
   user!: any;
@@ -25,7 +25,7 @@ export class UsuariosCadastroComponent implements OnInit {
 
   constructor(
     private _dialog: MatDialog,
-    private _dialogRef: MatDialogRef<UsuariosCadastroComponent>,
+    private _dialogRef: MatDialogRef<UsuarioCadastroComponent>,
     private _facade: FacadeService,
     private _formBuilder: FormBuilder
   ) { }

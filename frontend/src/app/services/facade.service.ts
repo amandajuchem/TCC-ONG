@@ -118,19 +118,6 @@ export class FacadeService {
 
   /**
    * 
-   * @param nome 
-   * @param page 
-   * @param size 
-   * @param sort 
-   * @param direction 
-   * @returns 
-   */
-  animalFindByNomeContains(nome: string, page: number, size: number, sort: string, direction: string) {
-    return this._animalService.findByNomeContains(nome, page, size, sort, direction);
-  }
-
-  /**
-   * 
    * @returns 
    */
   animalGet() {
@@ -145,6 +132,19 @@ export class FacadeService {
    */
   animalSave(animal: Animal, novaFoto: any) {
     return this._animalService.save(animal, novaFoto);
+  }
+
+  /**
+   * 
+   * @param value 
+   * @param page 
+   * @param size 
+   * @param sort 
+   * @param direction 
+   * @returns 
+   */
+  animalSearch(value: string, page: number, size: number, sort: string, direction: string) {
+    return this._animalService.search(value, page, size, sort, direction);
   }
 
   /**
@@ -179,10 +179,14 @@ export class FacadeService {
 
   /**
    * 
+   * @param page 
+   * @param size 
+   * @param sort 
+   * @param direction 
    * @returns 
    */
-  atendimentoFindAll() {
-    return this._atendimentoService.findAll();
+  atendimentoFindAll(page: number, size: number, sort: string, direction: string) {
+    return this._atendimentoService.findAll(page, size, sort, direction);
   }
 
   /**
@@ -193,6 +197,19 @@ export class FacadeService {
    */
   atendimentoSave(atendimento: Atendimento, documentosToSave: Array<File> | null) {
     return this._atendimentoService.save(atendimento, documentosToSave);
+  }
+
+  /**
+   * 
+   * @param value 
+   * @param page 
+   * @param size 
+   * @param sort 
+   * @param direction 
+   * @returns 
+   */
+  atendimentoSearch(value: string, page: number, size: number, sort: string, direction: string) {
+    return this._atendimentoService.search(value, page, size, sort, direction);
   }
 
   /**
@@ -261,12 +278,17 @@ export class FacadeService {
     return this._exameService.delete(id);
   }
 
+  
   /**
    * 
+   * @param page 
+   * @param size 
+   * @param sort 
+   * @param direction 
    * @returns 
    */
-  exameFindAll() {
-    return this._exameService.findAll();
+  exameFindAll(page: number, size: number, sort: string, direction: string) {
+    return this._exameService.findAll(page, size, sort, direction);
   }
 
   /**
@@ -276,6 +298,19 @@ export class FacadeService {
    */
   exameSave(exame: Exame) {
     return this._exameService.save(exame);
+  }
+
+  /**
+   * 
+   * @param value 
+   * @param page 
+   * @param size 
+   * @param sort 
+   * @param direction 
+   * @returns 
+   */
+  exameSearch(value: string, page: number, size: number, sort: string, direction: string) {
+    return this._exameService.search(value, page, size, sort, direction);
   }
 
   /**
@@ -322,10 +357,14 @@ export class FacadeService {
 
   /**
    * 
+   * @param page 
+   * @param size 
+   * @param sort 
+   * @param direction 
    * @returns 
    */
-  tutorFindAll() {
-    return this._tutorService.findAll();
+  tutorFindAll(page: number, size: number, sort: string, direction: string) {
+    return this._tutorService.findAll(page, size, sort, direction);
   }
 
   /**
@@ -335,15 +374,6 @@ export class FacadeService {
    */
   tutorFindById(id: string) {
     return this._tutorService.findById(id);
-  }
-
-  /**
-   * 
-   * @param nome 
-   * @returns 
-   */
-  tutorFindByNomeContains(nome: string) {
-    return this._tutorService.findByNomeContains(nome);
   }
 
   /**
@@ -362,6 +392,19 @@ export class FacadeService {
    */
   tutorSave(tutor: Tutor, novaFoto: any) {
     return this._tutorService.save(tutor, novaFoto);
+  }
+
+  /**
+   * 
+   * @param value 
+   * @param page 
+   * @param size 
+   * @param sort 
+   * @param direction 
+   * @returns 
+   */
+  tutorSearch(value: string, page: number, size: number, sort: string, direction: string) {
+    return this._tutorService.search(value, page, size, sort, direction);
   }
 
   /**
@@ -387,19 +430,14 @@ export class FacadeService {
 
   /**
    * 
+   * @param page 
+   * @param size 
+   * @param sort 
+   * @param direction 
    * @returns 
    */
-  usuarioFindAll() {
-    return this._usuarioService.findAll();
-  }
-
-  /**
-   * 
-   * @param cpf 
-   * @returns 
-   */
-  usuarioFindByCpf(cpf: string) {
-    return this._usuarioService.findByCpf(cpf);
+  usuarioFindAll(page: number, size: number, sort: string, direction: string) {
+    return this._usuarioService.findAll(page, size, sort, direction);
   }
 
   /**
@@ -409,15 +447,6 @@ export class FacadeService {
    */
   usuarioFindById(id: string) {
     return this._usuarioService.findById(id);
-  }
-
-  /**
-   * 
-   * @param nome 
-   * @returns 
-   */
-  usuarioFindByNomeContains(nome: string) {
-    return this._usuarioService.findByNomeContains(nome);
   }
 
   /**
@@ -437,6 +466,19 @@ export class FacadeService {
    */
   usuarioSave(usuario: Usuario, novaFoto: any) {
     return this._usuarioService.save(usuario, novaFoto);
+  }
+
+  /**
+   * 
+   * @param value 
+   * @param page 
+   * @param size 
+   * @param sort 
+   * @param direction 
+   * @returns 
+   */
+  usuarioSearch(value: string, page: number, size: number, sort: string, direction: string) {
+    return this._usuarioService.search(value, page, size, sort, direction);
   }
 
   /**

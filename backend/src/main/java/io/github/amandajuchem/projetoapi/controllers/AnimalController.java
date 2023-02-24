@@ -90,22 +90,22 @@ public class AnimalController {
     /**
      * Search response entity.
      *
-     * @param nome      the nome
+     * @param value     Nome
      * @param page      the page
      * @param size      the size
      * @param sort      the sort
      * @param direction the direction
-     * @return the response entity
+     * @return the list of animais
      */
     @GetMapping("/search")
-    public ResponseEntity<?> search(@RequestParam(required = false) String nome,
+    public ResponseEntity<?> search(@RequestParam(required = false) String value,
                                     @RequestParam(required = false, defaultValue = "0") Integer page,
                                     @RequestParam(required = false, defaultValue = "10") Integer size,
                                     @RequestParam(required = false, defaultValue = "nome") String sort,
                                     @RequestParam(required = false, defaultValue = "asc") String direction) {
 
-        if (nome != null) {
-            var animais = facade.animalFindByNomeContains(nome, page, size, sort, direction).map(AnimalDTO::toDTO);
+        if (value != null) {
+            var animais = facade.animalSearch(value, page, size, sort, direction).map(AnimalDTO::toDTO);
             return ResponseEntity.status(OK).body(animais);
         }
 

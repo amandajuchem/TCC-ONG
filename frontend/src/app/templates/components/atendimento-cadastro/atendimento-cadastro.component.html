@@ -54,7 +54,7 @@
                             <mat-option value="ATROPELAMENTO">Atropelamento</mat-option>
                             <mat-option value="CASTRAÇÃO SOLIDÁRIA">Castração Solidária</mat-option>
                             <mat-option value="MAUS TRATOS">Maus tratos</mat-option>
-                            <mat-option value="OUTROS">Outros</mat-option>
+                            <mat-option value="OUTRO">Outro</mat-option>
                             <mat-option value="VALE CASTRAÇÃO">Vale Castração</mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -86,9 +86,21 @@
             </div>
 
             <div class="row">
+                <div class="col-12 col-md-6" *ngFor="let exame of form.get('exames')?.value">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Exame</mat-label>
+                        <input matInput [value]="exame.nome" readonly>
+                        <button matSuffix mat-icon-button (click)="removeExame(exame)">
+                          <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
                 <div class="col-12">
                     <div class="text-center">
-                        <button type="button" mat-button class="bg-secondary text-white">Adicionar Exame</button>
+                        <button type="button" mat-button class="bg-secondary text-white" (click)="addExame()">Adicionar Exame</button>
                     </div>
                 </div>
             </div>

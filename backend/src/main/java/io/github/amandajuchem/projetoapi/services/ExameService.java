@@ -6,10 +6,12 @@ import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.repositories.ExameRepository;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -45,8 +47,8 @@ public class ExameService {
      *
      * @return the list
      */
-    public List<Exame> findAll() {
-        return repository.findAll();
+    public Page<Exame> findAll(Integer page, Integer size, String sort, String direction) {
+        return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
     }
 
     /**
@@ -66,6 +68,20 @@ public class ExameService {
         }
 
         return exame;
+    }
+
+    /**
+     * Search exames.
+     *
+     * @param value     Nome ou categoria
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
+     * @return the list of exames
+     */
+    public Page<Exame> search(String value, Integer page, Integer size, String sort, String direction) {
+        return repository.search(value, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
     }
 
     /**

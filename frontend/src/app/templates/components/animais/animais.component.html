@@ -25,17 +25,17 @@
 
             <mat-card-content>
                 <div class="row mb-3">
-                    <div class="col-10 col-md-11">
+                    <div class="col-12 col-md-11 mb-3 mb-md-0">
                         <mat-form-field appearance="outline" class="w-100" style="margin-bottom: -1.25em;">
                             <mat-label>Buscar</mat-label>
-                            <input type="text" matInput #searchText (keyup.enter)="filter(searchText.value)" placeholder="Nome">
-                            <button mat-icon-button matSuffix (click)="filter(searchText.value)">
+                            <input type="text" matInput [(ngModel)]="filterString" (keyup.enter)="filter()" placeholder="Nome">
+                            <button mat-icon-button matSuffix (click)="filter()">
                                 <mat-icon>search</mat-icon>
                             </button>
                         </mat-form-field>
                     </div>
 
-                    <div class="col-2 col-md-1">
+                    <div class="col-12 col-md-1">
                         <div class="d-flex align-items-center justify-content-center h-100">
                             <button mat-icon-button class="bg-success text-white" (click)="add()">
                                 <mat-icon>add</mat-icon>
@@ -101,8 +101,7 @@
                         <tr mat-row *matRowDef="let row; columns: columns;"></tr>
                     </table>
 
-                    <mat-paginator [length]="resultsLength" [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons
-                        class="w-100" (page)="pageChange()"></mat-paginator>
+                    <mat-paginator [length]="resultsLength" [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons class="w-100" (page)="pageChange()"></mat-paginator>
                 </div>
             </mat-card-content>
         </mat-card>

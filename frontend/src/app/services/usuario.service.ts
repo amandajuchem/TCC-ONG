@@ -1,8 +1,9 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
+import { Page } from '../entities/page';
 import { Usuario } from '../entities/usuario';
 
 @Injectable({
@@ -17,24 +18,22 @@ export class UsuarioService {
 
   /**
    * 
+   * @param page 
+   * @param size 
+   * @param sort 
+   * @param direction 
    * @returns 
    */
-  findAll() {
-    return this._http.get<Array<Usuario>>(this._baseURL);
-  }
-
-  /**
-   * 
-   * @param cpf 
-   * @returns 
-   */
-  findByCpf(cpf: string) {
-
-    return this._http.get<Usuario>(this._baseURL + '/search', {
+  findAll(page: number, size: number, sort: string, direction: string) {
+    
+    return this._http.get<Page>(this._baseURL, {
       params: {
-        cpf: cpf
+        page: page,
+        size: size,
+        sort: sort,
+        direction: direction
       }
-    })
+    });
   }
 
   /**
@@ -44,20 +43,6 @@ export class UsuarioService {
    */
   findById(id: string) {
     return this._http.get<Usuario>(this._baseURL + '/' + id);
-  }
-
-  /**
-   * 
-   * @param nome
-   * @returns 
-   */
-  findByNomeContains(nome: string) {
-    
-    return this._http.get<Array<Usuario>>(this._baseURL + '/search', {
-      params: {
-        nome: nome
-      }
-    });
   }
 
   /**
@@ -86,6 +71,28 @@ export class UsuarioService {
     return this._http.post<Usuario>(this._baseURL, formData);
   }
 
+  /**
+   * 
+   * @param value 
+   * @param page 
+   * @param size 
+   * @param sort 
+   * @param direction 
+   * @returns 
+   */
+  search(value: string, page: number, size: number, sort: string, direction: string) {
+
+    return this._http.get<Page>(this._baseURL + '/search', {
+      params: {
+        value: value,
+        page: page,
+        size: size,
+        sort: sort,
+        direction: direction
+      }
+    });
+  }
+  
   /**
    * 
    * @param usuario 

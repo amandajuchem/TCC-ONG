@@ -6,10 +6,12 @@ import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.repositories.TutorRepository;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -41,12 +43,12 @@ public class TutorService {
     }
 
     /**
-     * Find all list.
+     * Find all tutores.
      *
      * @return the list
      */
-    public List<Tutor> findAll() {
-        return repository.findAll();
+    public Page<Tutor> findAll(Integer page, Integer size, String sort, String direction) {
+        return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
     }
 
     /**
@@ -60,17 +62,6 @@ public class TutorService {
         return repository.findById(id).orElseThrow(() -> {
             throw new ObjectNotFoundException(MessageUtils.TUTOR_NOT_FOUND);
         });
-    }
-
-
-    /**
-     * Find by nome like list.
-     *
-     * @param nome the nome
-     * @return the list
-     */
-    public List<Tutor> findByNomeContains(String nome) {
-        return repository.findByNomeContainsIgnoreCase(nome);
     }
 
     /**
@@ -90,6 +81,20 @@ public class TutorService {
         }
 
         return tutor;
+    }
+
+    /**
+     * Search tutores.
+     *
+     * @param value     Nome, CPF ou RG
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
+     * @return the list of tutores
+     */
+    public Page<Tutor> search(String value, Integer page, Integer size, String sort, String direction) {
+        return repository.search(value, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
     }
 
     /**

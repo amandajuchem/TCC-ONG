@@ -89,7 +89,6 @@ export class AgendamentosComponent implements AfterViewInit {
 
   async filter(by: string) {
 
-
     let value: any = null;
 
     if (by === 'date') {
@@ -160,13 +159,25 @@ export class AgendamentosComponent implements AfterViewInit {
     return DateUtils.getDateWithTimeZone(date);
   }
 
-  sortChange() {
-    this.paginator.pageIndex = 0;
+  pageChange() {
+    
+    if (this.filterDate) {
+      this.filter('date');
+      return;
+    }
+
+    if (this.filterString) {
+      this.filter('string');
+      return;
+    }
+
     this.findAllAgendamentos();
   }
 
-  pageChange() {
+  sortChange() {
     
+    this.paginator.pageIndex = 0;
+
     if (this.filterDate) {
       this.filter('date');
       return;

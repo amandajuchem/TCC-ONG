@@ -6,20 +6,20 @@
             <div class="col-12">
                 <mat-form-field appearance="outline" class="w-100">
                     <mat-label>Animal</mat-label>
-                    <input matInput #searchAnimal placeholder="Nome" (keyup.enter)="search(searchAnimal.value)">
-                    <button matSuffix mat-icon-button (click)="search(searchAnimal.value)">
+                    <input matInput placeholder="Nome" [(ngModel)]="filterString" (keyup.enter)="filter()">
+                    <button matSuffix mat-icon-button (click)="filter()">
                         <mat-icon>search</mat-icon>
                     </button>
                 </mat-form-field>
             </div>
         </div>
 
-        <div class="row">
+        <div class="row" [hidden]="(dataSource && dataSource.data.length == 0) || isLoadingResults">
             <div class="col-12">
-                <div *ngIf="dataSource.data.length > 0">
-                    <table mat-table [dataSource]="dataSource" matSort matSortActive="nome" matSortDirection="asc" class="w-100 border">
+                <div class="table-responsive">
+                    <table mat-table [dataSource]="dataSource" class="w-100 border" matSort matSortActive="nome" matSortDisableClear matSortDirection="asc" (matSortChange)="sortChange()">
 
-                        <!-- Index column -->
+                        <!-- Index Column -->
                         <ng-container matColumnDef="index">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-index">#</th>
                             <td mat-cell *matCellDef="let animal; let i = index">{{i+1}}</td>
@@ -28,26 +28,63 @@
                         <!-- Nome Column -->
                         <ng-container matColumnDef="nome">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-nome">Nome</th>
-                            <td mat-cell *matCellDef="let animal">{{animal.nome}}</td>
+                            <td mat-cell *matCellDef="let animal" class="text-center">{{animal.nome}}</td>
                         </ng-container>
 
-                        <!-- Sexo Column -->
-                        <ng-container matColumnDef="sexo">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-sexo">Sexo</th>
-                            <td mat-cell *matCellDef="let animal">{{animal.sexo | titlecase}}</td>
+                        <!-- Espécie Column -->
+                        <ng-container matColumnDef="especie">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-especie">Espécie</th>
+                            <td mat-cell *matCellDef="let animal" class="text-center">{{animal.especie | titlecase}}</td>
+                        </ng-container>
+
+                        <!-- Porte Column -->
+                        <ng-container matColumnDef="porte">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-porte">Porte</th>
+                            <td mat-cell *matCellDef="let animal" class="text-center">{{animal.porte | titlecase}}</td>
                         </ng-container>
 
                         <!-- Idade Column -->
                         <ng-container matColumnDef="idade">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-idade">Idade</th>
-                            <td mat-cell *matCellDef="let animal">{{animal.idade + ' Anos'}}</td>
+                            <td mat-cell *matCellDef="let animal" class="text-center">{{animal.idade + ' Anos'}}</td>
                         </ng-container>
 
                         <tr mat-header-row *matHeaderRowDef="columns"></tr>
                         <tr mat-row *matRowDef="let row; columns: columns;" [ngClass]="animal && animal.id === row.id ? 'selected-row' : ''" (click)="select(row)"></tr>
                     </table>
+
+                    <mat-paginator [length]="resultsLength" [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons class="w-100" (page)="pageChange()"></mat-paginator>
                 </div>
             </div>
+        </div>
+
+        <div class="row mb-3" *ngIf="isLoadingResults">
+            <div class="col-12">
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                <p class="text-center pt-3">Obtendo dados</p>
+            </div>
+        </div>
+        
+        <div [hidden]="(dataSource && dataSource.data.length > 0) || isLoadingResults">
+            <mat-card>
+                <mat-card-content>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="text-center">
+                                <img src="/assets/images/nao-encontrado.png" width="100px">
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="text-center">
+                                <h2 class="m-0">Não há dados a serem exibidos!</h2>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
         </div>
     </div>
 

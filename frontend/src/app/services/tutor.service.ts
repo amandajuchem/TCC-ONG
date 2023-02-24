@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
+import { Page } from '../entities/page';
 import { Tutor } from '../entities/tutor';
 
 @Injectable({
@@ -26,10 +27,22 @@ export class TutorService {
 
   /**
    * 
+   * @param page 
+   * @param size 
+   * @param sort 
+   * @param direction 
    * @returns 
    */
-  findAll() {
-    return this._http.get<Array<Tutor>>(this._baseURL);
+  findAll(page: number, size: number, sort: string, direction: string) {
+    
+    return this._http.get<Page>(this._baseURL, {
+      params: {
+        page: page,
+        size: size,
+        sort: sort,
+        direction: direction
+      }
+    });
   }
 
   /**
@@ -39,20 +52,6 @@ export class TutorService {
    */
   findById(id: string) {
     return this._http.get<Tutor>(this._baseURL + '/' + id);
-  }
-
-  /**
-   * 
-   * @param nome 
-   * @returns 
-   */
-  findByNomeContains(nome: string) {
-    
-    return this._http.get<Array<Tutor>>(this._baseURL + '/search', {
-      params: {
-        nome: nome
-      }
-    });
   }
 
   /**
@@ -80,6 +79,28 @@ export class TutorService {
     }
 
     return this._http.post<Tutor>(this._baseURL, formData);
+  }
+
+  /**
+   * 
+   * @param value 
+   * @param page 
+   * @param size 
+   * @param sort 
+   * @param direction 
+   * @returns 
+   */
+  search(value: string, page: number, size: number, sort: string, direction: string) {
+
+    return this._http.get<Page>(this._baseURL + '/search', {
+      params: {
+        value: value,
+        page: page,
+        size: size,
+        sort: sort,
+        direction: direction
+      }
+    });
   }
 
   /**

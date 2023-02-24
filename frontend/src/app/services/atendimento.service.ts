@@ -3,13 +3,14 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
 import { Atendimento } from '../entities/atendimento';
+import { Page } from '../entities/page';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AtendimentoService {
 
-  private baseURL = environment.apiURL + '/atendimentos';
+  private _baseURL = environment.apiURL + '/atendimentos';
 
   constructor(private _http: HttpClient) { }
 
@@ -19,15 +20,27 @@ export class AtendimentoService {
    * @returns 
    */
   delete(id: string) {
-    return this._http.delete(this.baseURL + '/' + id);
+    return this._http.delete(this._baseURL + '/' + id);
   }
 
   /**
    * 
+   * @param page 
+   * @param size 
+   * @param sort 
+   * @param direction 
    * @returns 
    */
-  findAll() {
-    return this._http.get<Array<Atendimento>>(this.baseURL);
+  findAll(page: number, size: number, sort: string, direction: string) {
+
+    return this._http.get<Page>(this._baseURL, {
+      params: {
+        page: page,
+        size: size, 
+        sort: sort,
+        direction: direction
+      }
+    });
   }
 
   /**
@@ -46,7 +59,29 @@ export class AtendimentoService {
       documentosToSave.forEach((imagem: any, index: number) => formData.append('documentosToSave', new Blob([imagem], { type: 'multipart/form-data' }), 'imagem' + index + '.png'));
     }
 
-    return this._http.post<Atendimento>(this.baseURL, formData);
+    return this._http.post<Atendimento>(this._baseURL, formData);
+  }
+
+  /**
+   * 
+   * @param value 
+   * @param page 
+   * @param size 
+   * @param sort 
+   * @param direction 
+   * @returns 
+   */
+  search(value: string, page: number, size: number, sort: string, direction: string) {
+
+    return this._http.get<Page>(this._baseURL + '/search', {
+      params: {
+        value: value,
+        page: page,
+        size: size, 
+        sort: sort,
+        direction: direction
+      }
+    });
   }
 
   /**
@@ -70,6 +105,6 @@ export class AtendimentoService {
       formData.append('documentosToDelete', new Blob([JSON.stringify(documentosToDelete)], { type: 'application/json' }));
     }
 
-    return this._http.put<Atendimento>(this.baseURL + '/' + atendimento.id, formData);
+    return this._http.put<Atendimento>(this._baseURL + '/' + atendimento.id, formData);
   }
 }

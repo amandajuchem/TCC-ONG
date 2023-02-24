@@ -1,10 +1,14 @@
-.mat-column-index 
+.mat-column-index
     flex: 0 0 5% !important
     width: 5% !important
 
-.mat-column-nome 
-    flex: 0 0 75% !important
-    width: 75% !important
+.mat-column-nome
+    flex: 0 0 55% !important
+    width: 55% !important
+
+.mat-column-cpf
+    flex: 0 0 20% !important
+    width: 20% !important
 
 .mat-column-setor
     flex: 0 0 20% !important
@@ -12,3 +16,8 @@
 
 .selected-row
     background-color: rgba(0, 0, 0, 0.1)
+
+::ng-deep .col-index .mat-sort-header-container, ::ng-deep .col-nome .mat-sort-header-container,
+::ng-deep .col-cpf .mat-sort-header-container, ::ng-deep .col-setor .mat-sort-header-container
+    display: flex
+    justify-content: center

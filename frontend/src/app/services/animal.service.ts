@@ -56,28 +56,6 @@ export class AnimalService {
 
   /**
    * 
-   * @param nome 
-   * @param page 
-   * @param size 
-   * @param sort 
-   * @param direction 
-   * @returns 
-   */
-  findByNomeContains(nome: string, page: number, size: number, sort: string, direction: string) {
-    
-    return this._http.get<Page>(this.baseURL + '/search', {
-      params: {
-        nome: nome,
-        page: page,
-        size: size,
-        sort: sort,
-        direction: direction
-      }
-    })
-  }
-
-  /**
-   * 
    * @returns 
    */
   get() {
@@ -101,6 +79,28 @@ export class AnimalService {
     }
 
     return this._http.post<Animal>(this.baseURL, formData);
+  }
+
+  /**
+   * 
+   * @param value 
+   * @param page 
+   * @param size 
+   * @param sort 
+   * @param direction 
+   * @returns 
+   */
+  search(value: string, page: number, size: number, sort: string, direction: string) {
+    
+    return this._http.get<Page>(this.baseURL + '/search', {
+      params: {
+        value: value,
+        page: page,
+        size: size,
+        sort: sort,
+        direction: direction
+      }
+    })
   }
 
   /**

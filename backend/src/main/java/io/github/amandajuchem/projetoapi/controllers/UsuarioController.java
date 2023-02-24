@@ -29,19 +29,18 @@ public class UsuarioController {
     private final UsuarioUtils usuarioUtils;
 
     /**
-     * Find all response entity.
+     * Find all usuários.
      *
-     * @return the response entity
+     * @return the list of usuários
      */
     @GetMapping
-    public ResponseEntity<?> findAll() {
+    public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") Integer page,
+                                     @RequestParam(required = false, defaultValue = "10") Integer size,
+                                     @RequestParam(required = false, defaultValue = "nome") String sort,
+                                     @RequestParam(required = false, defaultValue = "asc") String direction) {
 
-        var usuariosDTO = facade.usuarioFindAll().stream()
-                .filter(u -> !u.getCpf().equals("07905836584"))
-                .map(UsuarioDTO::toDTO)
-                .toList();
-
-        return ResponseEntity.status(OK).body(usuariosDTO);
+        var usuarios = facade.usuarioFindAll(page, size, sort, direction).map(UsuarioDTO::toDTO);
+        return ResponseEntity.status(OK).body(usuarios);
     }
 
     /**
@@ -77,28 +76,25 @@ public class UsuarioController {
     }
 
     /**
-     * Search response entity.
+     * Search usuários.
      *
-     * @param cpf the cpf
-     * @return the response entity
+     * @param value     Nome ou CPF
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
+     * @return the list of usuários
      */
     @GetMapping("/search")
-    public ResponseEntity<?> search(@RequestParam(required = false) String cpf,
-                                    @RequestParam(required = false) String nome) {
+    public ResponseEntity<?> search(@RequestParam(required = false) String value,
+                                    @RequestParam(required = false, defaultValue = "0") Integer page,
+                                    @RequestParam(required = false, defaultValue = "10") Integer size,
+                                    @RequestParam(required = false, defaultValue = "nome") String sort,
+                                    @RequestParam(required = false, defaultValue = "asc") String direction) {
 
-        if (cpf != null) {
-            var usuario = facade.usuarioFindByCpf(cpf);
-            var usuarioDTO = UsuarioDTO.toDTO(usuario);
-            return ResponseEntity.status(OK).body(usuarioDTO);
-        }
-
-        if (nome != null) {
-
-            var usuariosDTO = facade.usuarioFindByNomeContains(nome).stream()
-                    .map(UsuarioDTO::toDTO)
-                    .toList();
-
-            return ResponseEntity.status(OK).body(usuariosDTO);
+        if (value != null) {
+            var usuarios = facade.usuarioSearch(value, page, size, sort, direction).map(UsuarioDTO::toDTO);
+            return ResponseEntity.status(OK).body(usuarios);
         }
 
         return ResponseEntity.status(NOT_FOUND).body(null);

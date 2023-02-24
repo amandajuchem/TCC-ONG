@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -51,20 +50,6 @@ public class FacadeService {
     }
 
     /**
-     * Find agendamentos by data hora or animal or veterinario.
-     *
-     * @param value     the value
-     * @param page      the page
-     * @param size      the size
-     * @param sort      the sort
-     * @param direction the direction
-     * @return the list of agendamentos
-     */
-    public Page<Agendamento> agendamentoFindByDataHoraOrAnimalOrVeterinario(String value, Integer page, Integer size, String sort, String direction) {
-        return agendamentoService.findByDataHoraOrAnimalOrVeterinario(value, page, size, sort, direction);
-    }
-
-    /**
      * Save agendamento.
      *
      * @param agendamento the agendamento
@@ -72,6 +57,20 @@ public class FacadeService {
      */
     public Agendamento agendamentoSave(Agendamento agendamento) {
         return agendamentoService.save(agendamento);
+    }
+
+    /**
+     * Search agendamentos.
+     *
+     * @param value     Data, nome do animal ou nome do veterinário
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
+     * @return the list of agendamentos
+     */
+    public Page<Agendamento> agendamentoSearch(String value, Integer page, Integer size, String sort, String direction) {
+        return agendamentoService.search(value, page, size, sort, direction);
     }
 
     //////////////////////////////////////////////// ANIMAL ////////////////////////////////////////////////
@@ -105,20 +104,6 @@ public class FacadeService {
     }
 
     /**
-     * Find animal by nome contains.
-     *
-     * @param nome      the nome
-     * @param page      the page
-     * @param size      the size
-     * @param sort      the sort
-     * @param direction the direction
-     * @return the list
-     */
-    public Page<Animal> animalFindByNomeContains(String nome, Integer page, Integer size, String sort, String direction) {
-        return animalService.findByNomeContains(nome, page, size, sort, direction);
-    }
-
-    /**
      * Save animal.
      *
      * @param animal the animal
@@ -126,6 +111,20 @@ public class FacadeService {
      */
     public Animal animalSave(Animal animal) {
         return animalService.save(animal);
+    }
+
+    /**
+     * Search animais.
+     *
+     * @param value     Nome
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
+     * @return the list of animais
+     */
+    public Page<Animal> animalSearch(String value, Integer page, Integer size, String sort, String direction) {
+        return animalService.search(value, page, size, sort, direction);
     }
 
     //////////////////////////////////////////////// ATENDIMENTO ////////////////////////////////////////////////
@@ -144,8 +143,8 @@ public class FacadeService {
      *
      * @return the list
      */
-    public List<Atendimento> atendimentoFindAll() {
-        return atendimentoService.findAll();
+    public Page<Atendimento> atendimentoFindAll(Integer page, Integer size, String sort, String direction) {
+        return atendimentoService.findAll(page, size, sort, direction);
     }
 
     /**
@@ -166,6 +165,21 @@ public class FacadeService {
      */
     public Atendimento atendimentoSave(Atendimento atendimento) {
         return atendimentoService.save(atendimento);
+    }
+
+
+    /**
+     * Search atendimentos.
+     *
+     * @param value     Data, nome do animal ou nome do veterinário
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
+     * @return the list of atendimentos
+     */
+    public Page<Atendimento> atendimentoSearch(String value, Integer page, Integer size, String sort, String direction) {
+        return atendimentoService.search(value, page, size, sort, direction);
     }
 
     //////////////////////////////////////////////// ENDEREÇO ////////////////////////////////////////////////
@@ -205,8 +219,8 @@ public class FacadeService {
      *
      * @return the list
      */
-    public List<Exame> exameFindAll() {
-        return exameService.findAll();
+    public Page<Exame> exameFindAll(Integer page, Integer size, String sort, String direction) {
+        return exameService.findAll(page, size, sort, direction);
     }
 
     /**
@@ -217,6 +231,20 @@ public class FacadeService {
      */
     public Exame exameSave(Exame exame) {
         return exameService.save(exame);
+    }
+
+    /**
+     * Search exames.
+     *
+     * @param value     Nome ou categoria
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
+     * @return the page
+     */
+    public Page<Exame> exameSearch(String value, Integer page, Integer size, String sort, String direction) {
+        return exameService.search(value, page, size, sort, direction);
     }
 
     //////////////////////////////////////////////// FICHA MÉDICA ////////////////////////////////////////////////
@@ -296,10 +324,10 @@ public class FacadeService {
     /**
      * Find all tutores.
      *
-     * @return the list
+     * @return the list of tutores
      */
-    public List<Tutor> tutorFindAll() {
-        return tutorService.findAll();
+    public Page<Tutor> tutorFindAll(Integer page, Integer size, String sort, String direction) {
+        return tutorService.findAll(page, size, sort, direction);
     }
 
     /**
@@ -312,17 +340,6 @@ public class FacadeService {
         return tutorService.findById(id);
     }
 
-
-    /**
-     * Find tutor by nome contains.
-     *
-     * @param nome the nome
-     * @return the list
-     */
-    public List<Tutor> tutorFindByNomeContains(String nome) {
-        return tutorService.findByNomeContains(nome);
-    }
-
     /**
      * Save tutor.
      *
@@ -333,15 +350,29 @@ public class FacadeService {
         return tutorService.save(tutor);
     }
 
+    /**
+     * Search tutores.
+     *
+     * @param value     Nome, CPF ou RG
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
+     * @return the list of tutores.
+     */
+    public Page<Tutor> tutorSearch(String value, Integer page, Integer size, String sort, String direction) {
+        return tutorService.search(value, page, size, sort, direction);
+    }
+
     //////////////////////////////////////////////// USUÁRIO ////////////////////////////////////////////////
 
     /**
      * Find all usuarios.
      *
-     * @return the list
+     * @return the list of usuários
      */
-    public List<Usuario> usuarioFindAll() {
-        return usuarioService.findAll();
+    public Page<Usuario> usuarioFindAll(Integer page, Integer size, String sort, String direction) {
+        return usuarioService.findAll(page, size, sort, direction);
     }
 
     /**
@@ -365,16 +396,6 @@ public class FacadeService {
     }
 
     /**
-     * Find usuario by nome contains.
-     *
-     * @param nome the nome
-     * @return the list
-     */
-    public List<Usuario> usuarioFindByNomeContains(String nome) {
-        return usuarioService.findByNomeContains(nome);
-    }
-
-    /**
      * Save usuario.
      *
      * @param usuario the usuario
@@ -382,5 +403,20 @@ public class FacadeService {
      */
     public Usuario usuarioSave(Usuario usuario) {
         return usuarioService.save(usuario);
+    }
+
+
+    /**
+     * Search usuários.
+     *
+     * @param value     Nome ou CPF
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
+     * @return the list of usuários
+     */
+    public Page<Usuario> usuarioSearch(String value, Integer page, Integer size, String sort, String direction) {
+        return usuarioService.search(value, page, size, sort, direction);
     }
 }

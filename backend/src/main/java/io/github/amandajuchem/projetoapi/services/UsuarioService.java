@@ -6,10 +6,12 @@ import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.repositories.UsuarioRepository;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -23,16 +25,16 @@ public class UsuarioService {
     private final UsuarioRepository repository;
 
     /**
-     * Find all list.
+     * Find all usuários.
      *
-     * @return the list
+     * @return the list of usuários
      */
-    public List<Usuario> findAll() {
-        return repository.findAll();
+    public Page<Usuario> findAll(Integer page, Integer size, String sort, String direction) {
+        return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
     }
 
     /**
-     * Find by cpf usuario.
+     * Find usuário by CPF.
      *
      * @param cpf the cpf
      * @return the usuario
@@ -45,7 +47,7 @@ public class UsuarioService {
     }
 
     /**
-     * Find by id usuario.
+     * Find usuário by ID.
      *
      * @param id the id
      * @return the usuario
@@ -55,16 +57,6 @@ public class UsuarioService {
         return repository.findById(id).orElseThrow(() -> {
             throw new ObjectNotFoundException(MessageUtils.USUARIO_NOT_FOUND);
         });
-    }
-
-    /**
-     * Find by nome contains list.
-     *
-     * @param nome the nome
-     * @return the list
-     */
-    public List<Usuario> findByNomeContains(String nome) {
-        return repository.findByNomeContainsIgnoreCase(nome);
     }
 
     /**
@@ -84,6 +76,20 @@ public class UsuarioService {
         }
 
         return usuario;
+    }
+
+    /**
+     * Search usuários.
+     *
+     * @param value     Nome ou CPF
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
+     * @return the list of usuários
+     */
+    public Page<Usuario> search(String value, Integer page, Integer size, String sort, String direction) {
+        return repository.search(value, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
     }
 
     /**

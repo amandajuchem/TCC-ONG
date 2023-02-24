@@ -65,20 +65,6 @@ public class AnimalService {
     }
 
     /**
-     * Find by nome contains list.
-     *
-     * @param nome      the nome
-     * @param page      the page
-     * @param size      the size
-     * @param sort      the sort
-     * @param direction the direction
-     * @return the list
-     */
-    public Page<Animal> findByNomeContains(String nome, Integer page, Integer size, String sort, String direction) {
-        return repository.findByNomeContainsIgnoreCase(nome, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
-    }
-
-    /**
      * Save animal.
      *
      * @param animal the animal
@@ -95,6 +81,20 @@ public class AnimalService {
         }
 
         return animal;
+    }
+
+    /**
+     * Search animais.
+     *
+     * @param value     Nome
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
+     * @return the page
+     */
+    public Page<Animal> search(String value, Integer page, Integer size, String sort, String direction) {
+        return repository.search(value, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
     }
 
     /**

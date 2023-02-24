@@ -19,9 +19,9 @@ import java.util.UUID;
 public interface AgendamentoRepository extends JpaRepository<Agendamento, UUID> {
 
     /**
-     * Find agendamentos by data hora or animal or veterinario
+     * Search agendamentos.
      *
-     * @param value    the value
+     * @param value    Data, nome do animal ou nome do veterinário
      * @param pageable the pageable
      * @return the list of agendamentos
      */
@@ -29,7 +29,7 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, UUID> 
             "ON cast(a.dataHora as string) LIKE concat('%', ?1, '%') " +
             "OR upper(an.nome) LIKE upper(concat('%', ?1, '%')) " +
             "OR upper(v.nome) LIKE upper(concat('%', ?1, '%'))")
-    Page<Agendamento> findByDataHoraOrAnimalOrVeterinario(String value, Pageable pageable);
+    Page<Agendamento> search(String value, Pageable pageable);
 
     /**
      * Find agendamento by data hora and veterinario.
