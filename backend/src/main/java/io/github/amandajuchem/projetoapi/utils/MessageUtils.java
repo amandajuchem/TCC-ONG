@@ -6,6 +6,16 @@ package io.github.amandajuchem.projetoapi.utils;
 public class MessageUtils {
 
     /**
+     * The constant ADOCAO_NOT_FOUND.
+     */
+    public static final String ADOCAO_NOT_FOUND = "Adoção não encontrada!";
+
+    /**
+     * The constant ADOCAO_NULL.
+     */
+    public static final String ADOCAO_NULL = "Adoção nula!";
+
+    /**
      * The constant AGENDAMENTO_NOT_FOUND.
      */
     public static final String AGENDAMENTO_NOT_FOUND = "Agendamento não encontrado!";
@@ -24,6 +34,11 @@ public class MessageUtils {
      * The constant ANIMAL_NULL.
      */
     public static final String ANIMAL_NULL = "Animal nulo!";
+
+    /**
+     * The constant ARGUMENT_NOT_VALID.
+     */
+    public static final String ARGUMENT_NOT_VALID = "Parâmetros inválidos!";
 
     /**
      * The constant ATENDIMENTO_NOT_FOUND.

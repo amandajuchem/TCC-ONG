@@ -2,7 +2,7 @@ package io.github.amandajuchem.projetoapi.controllers;
 
 import io.github.amandajuchem.projetoapi.dtos.AtendimentoDTO;
 import io.github.amandajuchem.projetoapi.entities.Atendimento;
-import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
+import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.FacadeService;
 import io.github.amandajuchem.projetoapi.utils.AtendimentoUtils;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
@@ -50,7 +50,7 @@ public class AtendimentoController {
     public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") Integer page,
                                      @RequestParam(required = false, defaultValue = "10") Integer size,
                                      @RequestParam(required = false, defaultValue = "dataHora") String sort,
-                                     @RequestParam(required = false, defaultValue = "asc") String direction) {
+                                     @RequestParam(required = false, defaultValue = "desc") String direction) {
 
         var atendimentos = facade.atendimentoFindAll(page, size, sort, direction).map(AtendimentoDTO::toDTO);
         return ResponseEntity.status(OK).body(atendimentos);
@@ -69,10 +69,8 @@ public class AtendimentoController {
                                   @RequestPart(required = false) List<MultipartFile> documentosToSave,
                                   @RequestPart(required = false) List<UUID> documentosToDelete) {
 
-        var atendimentoSaved = atendimentoUtils.save(atendimento, documentosToSave, documentosToDelete);
-        var atendimentoDTO = AtendimentoDTO.toDTO(atendimentoSaved);
-
-        return ResponseEntity.status(CREATED).body(atendimentoDTO);
+        atendimento = atendimentoUtils.save(atendimento, documentosToSave, documentosToDelete);
+        return ResponseEntity.status(CREATED).body(AtendimentoDTO.toDTO(atendimento));
     }
 
     /**
@@ -90,7 +88,7 @@ public class AtendimentoController {
                                     @RequestParam(required = false, defaultValue = "0") Integer page,
                                     @RequestParam(required = false, defaultValue = "10") Integer size,
                                     @RequestParam(required = false, defaultValue = "dataHora") String sort,
-                                    @RequestParam(required = false, defaultValue = "asc") String direction) {
+                                    @RequestParam(required = false, defaultValue = "desc") String direction) {
 
         if (value != null) {
             var atendimentos = facade.atendimentoSearch(value, page, size, sort, direction).map(AtendimentoDTO::toDTO);
@@ -116,13 +114,10 @@ public class AtendimentoController {
                                     @RequestPart(required = false) List<UUID> documentosToDelete) {
 
         if (atendimento.getId().equals(id)) {
-
-            var atendimentoSaved = atendimentoUtils.save(atendimento, documentosToSave, documentosToDelete);
-            var atendimentoDTO = AtendimentoDTO.toDTO(atendimentoSaved);
-
-            return ResponseEntity.status(OK).body(atendimentoDTO);
+            atendimento = atendimentoUtils.save(atendimento, documentosToSave, documentosToDelete);
+            return ResponseEntity.status(OK).body(AtendimentoDTO.toDTO(atendimento));
         }
 
-        throw new ObjectNotFoundException(MessageUtils.ATENDIMENTO_NOT_FOUND);
+        throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);
     }
 }

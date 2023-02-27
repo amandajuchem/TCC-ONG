@@ -2,7 +2,7 @@ package io.github.amandajuchem.projetoapi.controllers;
 
 import io.github.amandajuchem.projetoapi.dtos.ExameDTO;
 import io.github.amandajuchem.projetoapi.entities.Exame;
-import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
+import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.FacadeService;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
@@ -59,11 +59,8 @@ public class ExamesController {
      */
     @PostMapping
     public ResponseEntity<?> save(@RequestBody @Valid Exame exame) {
-
-        var exameSaved = facade.exameSave(exame);
-        var exameDTO = ExameDTO.toDTO(exameSaved);
-
-        return ResponseEntity.status(CREATED).body(exameDTO);
+        exame = facade.exameSave(exame);
+        return ResponseEntity.status(CREATED).body(ExameDTO.toDTO(exame));
     }
 
     /**
@@ -102,13 +99,10 @@ public class ExamesController {
     public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody @Valid Exame exame) {
 
         if (exame.getId().equals(id)) {
-
-            var exameSaved = facade.exameSave(exame);
-            var exameDTO = ExameDTO.toDTO(exameSaved);
-
-            return ResponseEntity.status(OK).body(exameDTO);
+            exame = facade.exameSave(exame);
+            return ResponseEntity.status(OK).body(ExameDTO.toDTO(exame));
         }
 
-        throw new ObjectNotFoundException(MessageUtils.EXAME_NOT_FOUND);
+        throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);
     }
 }

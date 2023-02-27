@@ -2,7 +2,7 @@ package io.github.amandajuchem.projetoapi.controllers;
 
 import io.github.amandajuchem.projetoapi.dtos.TutorDTO;
 import io.github.amandajuchem.projetoapi.entities.Tutor;
-import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
+import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.FacadeService;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import io.github.amandajuchem.projetoapi.utils.TutorUtils;
@@ -64,8 +64,7 @@ public class TutorController {
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable UUID id) {
         var tutor = facade.tutorFindById(id);
-        var tutorDTO = TutorDTO.toDTO(tutor);
-        return ResponseEntity.status(OK).body(tutorDTO);
+        return ResponseEntity.status(OK).body(TutorDTO.toDTO(tutor));
     }
 
     /**
@@ -81,10 +80,8 @@ public class TutorController {
                                   @RequestPart(required = false) MultipartFile novaFoto,
                                   @RequestPart(required = false) String antigaFoto) {
 
-        var tutorSaved = tutorUtils.save(tutor, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
-        var tutorDTO = TutorDTO.toDTO(tutorSaved);
-
-        return ResponseEntity.status(CREATED).body(tutorDTO);
+        tutor = tutorUtils.save(tutor, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
+        return ResponseEntity.status(CREATED).body(TutorDTO.toDTO(tutor));
     }
 
     /**
@@ -128,13 +125,10 @@ public class TutorController {
                                     @RequestPart(required = false) String antigaFoto) {
 
         if (tutor.getId().equals(id)) {
-
-            var tutorSaved = tutorUtils.save(tutor, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
-            var tutorDTO = TutorDTO.toDTO(tutorSaved);
-
-            return ResponseEntity.status(OK).body(tutorDTO);
+            tutor = tutorUtils.save(tutor, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
+            return ResponseEntity.status(OK).body(TutorDTO.toDTO(tutor));
         }
 
-        throw new ObjectNotFoundException(MessageUtils.TUTOR_NOT_FOUND);
+        throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);
     }
 }

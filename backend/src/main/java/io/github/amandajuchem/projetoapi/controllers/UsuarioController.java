@@ -2,7 +2,7 @@ package io.github.amandajuchem.projetoapi.controllers;
 
 import io.github.amandajuchem.projetoapi.dtos.UsuarioDTO;
 import io.github.amandajuchem.projetoapi.entities.Usuario;
-import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
+import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.FacadeService;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import io.github.amandajuchem.projetoapi.utils.UsuarioUtils;
@@ -52,8 +52,7 @@ public class UsuarioController {
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable UUID id) {
         var usuario = facade.usuarioFindById(id);
-        var usuarioDTO = UsuarioDTO.toDTO(usuario);
-        return ResponseEntity.status(OK).body(usuarioDTO);
+        return ResponseEntity.status(OK).body(UsuarioDTO.toDTO(usuario));
     }
 
     /**
@@ -69,10 +68,8 @@ public class UsuarioController {
                                   @RequestPart(required = false) MultipartFile novaFoto,
                                   @RequestPart(required = false) String antigaFoto) {
 
-        var usuarioSaved = usuarioUtils.save(usuario, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
-        var usuarioDTO = UsuarioDTO.toDTO(usuarioSaved);
-
-        return ResponseEntity.status(CREATED).body(usuarioDTO);
+        usuario = usuarioUtils.save(usuario, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
+        return ResponseEntity.status(CREATED).body(UsuarioDTO.toDTO(usuario));
     }
 
     /**
@@ -116,13 +113,10 @@ public class UsuarioController {
                                     @RequestPart(required = false) String antigaFoto) {
 
         if (usuario.getId().equals(id)) {
-
-            var usuarioSaved = usuarioUtils.save(usuario, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
-            var usuarioDTO = UsuarioDTO.toDTO(usuarioSaved);
-
-            return ResponseEntity.status(OK).body(usuarioDTO);
+            usuario = usuarioUtils.save(usuario, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
+            return ResponseEntity.status(OK).body(UsuarioDTO.toDTO(usuario));
         }
 
-        throw new ObjectNotFoundException(MessageUtils.USUARIO_NOT_FOUND);
+        throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);
     }
 }

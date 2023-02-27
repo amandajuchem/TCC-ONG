@@ -2,7 +2,7 @@ package io.github.amandajuchem.projetoapi.controllers;
 
 import io.github.amandajuchem.projetoapi.dtos.AgendamentoDTO;
 import io.github.amandajuchem.projetoapi.entities.Agendamento;
-import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
+import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.FacadeService;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +45,7 @@ public class AgendamentoController {
     public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") Integer page,
                                      @RequestParam(required = false, defaultValue = "10") Integer size,
                                      @RequestParam(required = false, defaultValue = "dataHora") String sort,
-                                     @RequestParam(required = false, defaultValue = "asc") String direction) {
+                                     @RequestParam(required = false, defaultValue = "desc") String direction) {
 
         var agendamentos = facade.agendamentoFindAll(page, size, sort, direction).map(AgendamentoDTO::toDTO);
         return ResponseEntity.status(OK).body(agendamentos);
@@ -59,11 +59,8 @@ public class AgendamentoController {
      */
     @PostMapping
     public ResponseEntity<?> save(@RequestBody @Valid Agendamento agendamento) {
-
-        var agendamentoSaved = facade.agendamentoSave(agendamento);
-        var agendamentoDTO = AgendamentoDTO.toDTO(agendamentoSaved);
-
-        return ResponseEntity.status(CREATED).body(agendamentoDTO);
+        agendamento = facade.agendamentoSave(agendamento);
+        return ResponseEntity.status(CREATED).body(AgendamentoDTO.toDTO(agendamento));
     }
 
     /**
@@ -81,7 +78,7 @@ public class AgendamentoController {
                                     @RequestParam(required = false, defaultValue = "0") Integer page,
                                     @RequestParam(required = false, defaultValue = "10") Integer size,
                                     @RequestParam(required = false, defaultValue = "dataHora") String sort,
-                                    @RequestParam(required = false, defaultValue = "asc") String direction) {
+                                    @RequestParam(required = false, defaultValue = "desc") String direction) {
 
         if (value != null) {
             var agendamentos = facade.agendamentoSearch(value, page, size, sort, direction).map(AgendamentoDTO::toDTO);
@@ -102,13 +99,10 @@ public class AgendamentoController {
     public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody @Valid Agendamento agendamento) {
 
         if (agendamento.getId().equals(id)) {
-
-            var agendamentoSaved = facade.agendamentoSave(agendamento);
-            var agendamentoDTO = AgendamentoDTO.toDTO(agendamentoSaved);
-
-            return ResponseEntity.status(OK).body(agendamentoDTO);
+            agendamento = facade.agendamentoSave(agendamento);
+            return ResponseEntity.status(OK).body(AgendamentoDTO.toDTO(agendamento));
         }
 
-        throw new ObjectNotFoundException(MessageUtils.AGENDAMENTO_NOT_FOUND);
+        throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);
     }
 }

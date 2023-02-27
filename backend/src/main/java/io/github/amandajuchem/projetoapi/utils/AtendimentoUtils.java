@@ -32,7 +32,7 @@ public class AtendimentoUtils {
         var atendimento = facade.atendimentoFindById(id);
 
         if (atendimento.getDocumentos() != null && atendimento.getDocumentos().size() > 0) {
-            atendimento.getDocumentos().forEach(d -> facade.imagemDelete(d.getId()));
+            atendimento.getDocumentos().forEach(documento -> facade.imagemDelete(documento.getId()));
         }
 
         facade.atendimentoDelete(atendimento.getId());

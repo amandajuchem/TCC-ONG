@@ -19,6 +19,9 @@ import java.io.FileInputStream;
 
 import static org.springframework.http.HttpStatus.OK;
 
+/**
+ * The type Imagem controller.
+ */
 @RestController
 @RequestMapping("/imagens")
 @RequiredArgsConstructor
@@ -26,6 +29,12 @@ public class ImagemController {
 
     private final ServletContext servletContext;
 
+    /**
+     * Search response entity.
+     *
+     * @param nome the nome
+     * @return the response entity
+     */
     @GetMapping("/search")
     public ResponseEntity<?> search(@RequestParam(required = false) String nome) {
 
@@ -42,8 +51,7 @@ public class ImagemController {
                         .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName())
                         .contentType(mediaType)
                         .contentLength(file.length())
-                        .body(resource)
-                        ;
+                        .body(resource);
             } catch (Exception ex) {
                 ex.printStackTrace();
                 throw new OperationFailureException(MessageUtils.OPERATION_FAILURE);

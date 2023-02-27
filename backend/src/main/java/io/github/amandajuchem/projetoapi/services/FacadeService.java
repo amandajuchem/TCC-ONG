@@ -14,6 +14,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class FacadeService {
 
+    private final AdocaoService adocaoService;
     private final AgendamentoService agendamentoService;
     private final AnimalService animalService;
     private final AtendimentoService atendimentoService;
@@ -24,6 +25,50 @@ public class FacadeService {
     private final TelefoneService telefoneService;
     private final TutorService tutorService;
     private final UsuarioService usuarioService;
+
+    //////////////////////////////////////////////// ADOÇÃO ////////////////////////////////////////////////
+
+    /**
+     * Delete adoção.
+     *
+     * @param id the id
+     */
+    public void adocaoDelete(UUID id) {
+        adocaoService.delete(id);
+    }
+
+    /**
+     * Find all adoções.
+     *
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
+     * @return the list of adoção
+     */
+    public Page<Adocao> adocaoFindAll(Integer page, Integer size, String sort, String direction) {
+        return adocaoService.findAll(page, size, sort, direction);
+    }
+
+    /**
+     * Find adoção by id.
+     *
+     * @param id the id
+     * @return the adoção
+     */
+    public Adocao adocaoFindById(UUID id) {
+        return adocaoService.findById(id);
+    }
+
+    /**
+     * Save adoção.
+     *
+     * @param adocao the adocao
+     * @return the adoção
+     */
+    public Adocao adocaoSave(Adocao adocao) {
+        return adocaoService.save(adocao);
+    }
 
     //////////////////////////////////////////////// AGENDAMENTO ////////////////////////////////////////////////
 
@@ -87,6 +132,10 @@ public class FacadeService {
     /**
      * Find all animais.
      *
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
      * @return the list
      */
     public Page<Animal> animalFindAll(Integer page, Integer size, String sort, String direction) {
@@ -141,6 +190,10 @@ public class FacadeService {
     /**
      * Find all atendimentos.
      *
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
      * @return the list
      */
     public Page<Atendimento> atendimentoFindAll(Integer page, Integer size, String sort, String direction) {
@@ -217,6 +270,10 @@ public class FacadeService {
     /**
      * Find all exames.
      *
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
      * @return the list
      */
     public Page<Exame> exameFindAll(Integer page, Integer size, String sort, String direction) {
@@ -324,6 +381,10 @@ public class FacadeService {
     /**
      * Find all tutores.
      *
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
      * @return the list of tutores
      */
     public Page<Tutor> tutorFindAll(Integer page, Integer size, String sort, String direction) {
@@ -369,6 +430,10 @@ public class FacadeService {
     /**
      * Find all usuarios.
      *
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
      * @return the list of usuários
      */
     public Page<Usuario> usuarioFindAll(Integer page, Integer size, String sort, String direction) {

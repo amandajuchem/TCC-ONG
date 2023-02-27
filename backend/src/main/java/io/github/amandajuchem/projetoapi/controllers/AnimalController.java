@@ -1,9 +1,12 @@
 package io.github.amandajuchem.projetoapi.controllers;
 
+import io.github.amandajuchem.projetoapi.dtos.AdocaoDTO;
 import io.github.amandajuchem.projetoapi.dtos.AnimalDTO;
+import io.github.amandajuchem.projetoapi.entities.Adocao;
 import io.github.amandajuchem.projetoapi.entities.Animal;
-import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
+import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.FacadeService;
+import io.github.amandajuchem.projetoapi.utils.AdocaoUtils;
 import io.github.amandajuchem.projetoapi.utils.AnimalUtils;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.*;
@@ -25,6 +29,7 @@ import static org.springframework.http.HttpStatus.*;
 @RequiredArgsConstructor
 public class AnimalController {
 
+    private final AdocaoUtils adocaoUtils;
     private final AnimalUtils animalUtils;
     private final FacadeService facade;
 
@@ -64,8 +69,7 @@ public class AnimalController {
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable UUID id) {
         var animal = facade.animalFindById(id);
-        var animalDTO = AnimalDTO.toDTO(animal);
-        return ResponseEntity.status(OK).body(animalDTO);
+        return ResponseEntity.status(OK).body(AnimalDTO.toDTO(animal));
     }
 
     /**
@@ -81,10 +85,8 @@ public class AnimalController {
                                   @RequestPart(required = false) MultipartFile novaFoto,
                                   @RequestPart(required = false) String antigaFoto) {
 
-        var animalSaved = animalUtils.save(animal, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
-        var animalDTO = AnimalDTO.toDTO(animalSaved);
-
-        return ResponseEntity.status(CREATED).body(animalDTO);
+        animal = animalUtils.save(animal, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
+        return ResponseEntity.status(CREATED).body(AnimalDTO.toDTO(animal));
     }
 
     /**
@@ -128,13 +130,83 @@ public class AnimalController {
                                     @RequestPart(required = false) String antigaFoto) {
 
         if (animal.getId().equals(id)) {
-
-            var animalSaved = animalUtils.save(animal, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
-            var animalDTO = AnimalDTO.toDTO(animalSaved);
-
-            return ResponseEntity.status(OK).body(animalDTO);
+            animal = animalUtils.save(animal, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
+            return ResponseEntity.status(OK).body(AnimalDTO.toDTO(animal));
         }
 
-        throw new ObjectNotFoundException(MessageUtils.ANIMAL_NOT_FOUND);
+        throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);
+    }
+
+    //////////////////////////////////////////////// ADOÇÃO ////////////////////////////////////////////////
+
+    /**
+     * Delete adoção.
+     *
+     * @param idAdocao the id adocao
+     * @return the response entity
+     */
+    @DeleteMapping("/{id}/adocoes/{idAdocao}")
+    public ResponseEntity<?> adocaoDelete(@PathVariable UUID idAdocao) {
+        adocaoUtils.delete(idAdocao);
+        return ResponseEntity.status(OK).body(null);
+    }
+
+    @GetMapping("/{id}/adocoes")
+    public ResponseEntity<?> adocaoFindAll(@RequestParam(required = false, defaultValue = "0") Integer page,
+                                           @RequestParam(required = false, defaultValue = "10") Integer size,
+                                           @RequestParam(required = false, defaultValue = "dataHora") String sort,
+                                           @RequestParam(required = false, defaultValue = "desc") String direction) {
+
+        var adocoes = facade.adocaoFindAll(page, size, sort, direction).map(AdocaoDTO::toDTO);
+        return ResponseEntity.status(OK).body(adocoes);
+    }
+
+    /**
+     * Save adoção.
+     *
+     * @param id               the id
+     * @param adocao           the adocao
+     * @param documentosToSave the documentos to save
+     * @return the response entity
+     */
+    @PostMapping("/{id}/adocoes")
+    public ResponseEntity<?> adocaoSave(@PathVariable UUID id,
+                                        @RequestPart @Valid Adocao adocao,
+                                        @RequestPart(required = false) List<MultipartFile> documentosToSave) {
+
+        if (adocao.getAnimal().getId().equals(id)) {
+            adocao = adocaoUtils.save(adocao, documentosToSave, null);
+            return ResponseEntity.status(CREATED).body(AdocaoDTO.toDTO(adocao));
+        }
+
+        throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);
+    }
+
+    /**
+     * Update adoção.
+     *
+     * @param id                 the id
+     * @param idAdocao           the id adocao
+     * @param adocao             the adocao
+     * @param documentosToSave   the documentos to save
+     * @param documentosToDelete the documentos to delete
+     * @return the response entity
+     */
+    @PutMapping("/{id}/adocoes/{idAdocao}")
+    public ResponseEntity<?> adocaoUpdate(@PathVariable UUID id,
+                                          @PathVariable UUID idAdocao,
+                                          @RequestPart @Valid Adocao adocao,
+                                          @RequestPart(required = false) List<MultipartFile> documentosToSave,
+                                          @RequestPart(required = false) List<UUID> documentosToDelete) {
+
+        if (adocao.getAnimal().getId().equals(id)) {
+
+            if (adocao.getId().equals(idAdocao)) {
+                adocao = adocaoUtils.save(adocao, documentosToSave, documentosToDelete);
+                return ResponseEntity.status(CREATED).body(AdocaoDTO.toDTO(adocao));
+            }
+        }
+
+        throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);
     }
 }
