@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
@@ -18,9 +19,8 @@ import java.util.UUID;
  * The type Exame service.
  */
 @Service
-@Transactional
 @RequiredArgsConstructor
-public class ExameService {
+public class ExameService implements AbstractService<Exame> {
 
     private final ExameRepository repository;
 
@@ -29,6 +29,8 @@ public class ExameService {
      *
      * @param id the id
      */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public void delete(UUID id) {
 
         if (id != null) {
@@ -43,12 +45,29 @@ public class ExameService {
     }
 
     /**
-     * Find all exames.
+     * Find all exame.
      *
-     * @return the list
+     * @return the exame list
      */
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<Exame> findAll(Integer page, Integer size, String sort, String direction) {
         return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
+    }
+
+    /**
+     * Find exame by id.
+     *
+     * @param id the id
+     * @return the exame
+     */
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public Exame findById(UUID id) {
+
+        return repository.findById(id).orElseThrow(() -> {
+            throw new ObjectNotFoundException(MessageUtils.EXAME_NOT_FOUND);
+        });
     }
 
     /**
@@ -57,13 +76,15 @@ public class ExameService {
      * @param exame the exame
      * @return the exame
      */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public Exame save(Exame exame) {
 
         if (exame == null) {
             throw new ValidationException(MessageUtils.EXAME_NULL);
         }
 
-        if (validateExame(exame)) {
+        if (validate(exame)) {
             exame = repository.save(exame);
         }
 
@@ -71,15 +92,16 @@ public class ExameService {
     }
 
     /**
-     * Search exames.
+     * Search exame.
      *
-     * @param value     Nome ou categoria
+     * @param value     nome ou categoria
      * @param page      the page
      * @param size      the size
      * @param sort      the sort
      * @param direction the direction
-     * @return the list of exames
+     * @return the exame list
      */
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<Exame> search(String value, Integer page, Integer size, String sort, String direction) {
         return repository.search(value, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
     }
@@ -90,7 +112,9 @@ public class ExameService {
      * @param exame the exame
      * @return the boolean
      */
-    private boolean validateExame(Exame exame) {
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public boolean validate(Exame exame) {
 
         var exame_findByNome = repository.findByNomeIgnoreCase(exame.getNome()).orElse(null);
 

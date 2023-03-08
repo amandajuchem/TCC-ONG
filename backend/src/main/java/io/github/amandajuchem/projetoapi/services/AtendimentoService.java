@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
@@ -18,17 +19,18 @@ import java.util.UUID;
  * The type Atendimento service.
  */
 @Service
-@Transactional
 @RequiredArgsConstructor
-public class AtendimentoService {
+public class AtendimentoService implements AbstractService<Atendimento> {
 
     private final AtendimentoRepository repository;
 
     /**
-     * Delete.
+     * Delete atendimento.
      *
      * @param id the id
      */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public void delete(UUID id) {
 
         if (id != null) {
@@ -43,10 +45,12 @@ public class AtendimentoService {
     }
 
     /**
-     * Find all list.
+     * Find all atendimento.
      *
-     * @return the list
+     * @return the atendimento list
      */
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<Atendimento> findAll(Integer page, Integer size, String sort, String direction) {
 
         if (sort.equalsIgnoreCase("animal")) {
@@ -60,17 +64,53 @@ public class AtendimentoService {
         return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
     }
 
+    /**
+     * Find atendimento by id.
+     *
+     * @param id the id
+     * @return the atendimento
+     */
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public Atendimento findById(UUID id) {
+
+        return repository.findById(id).orElseThrow(() -> {
+            throw new ObjectNotFoundException(MessageUtils.ATENDIMENTO_NOT_FOUND);
+        });
+    }
 
     /**
-     * Search atendimentos.
+     * Save atendimento.
      *
-     * @param value     Data, nome do animal ou nome do veterinário
+     * @param atendimento the atendimento
+     * @return the atendimento
+     */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public Atendimento save(Atendimento atendimento) {
+
+        if (atendimento == null) {
+            throw new ValidationException(MessageUtils.ATENDIMENTO_NULL);
+        }
+
+        if (validate(atendimento)) {
+            atendimento = repository.save(atendimento);
+        }
+
+        return atendimento;
+    }
+
+    /**
+     * Search atendimento.
+     *
+     * @param value     data, nome do animal ou nome do veterinário
      * @param page      the page
      * @param size      the size
      * @param sort      the sort
      * @param direction the direction
-     * @return the list of atendimentos
+     * @return the atendimento list
      */
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<Atendimento> search(String value, Integer page, Integer size, String sort, String direction) {
 
         if (sort.equalsIgnoreCase("animal")) {
@@ -85,44 +125,14 @@ public class AtendimentoService {
     }
 
     /**
-     * Find by id atendimento.
-     *
-     * @param id the id
-     * @return the atendimento
-     */
-    public Atendimento findById(UUID id) {
-
-        return repository.findById(id).orElseThrow(() -> {
-            throw new ObjectNotFoundException(MessageUtils.ATENDIMENTO_NOT_FOUND);
-        });
-    }
-
-    /**
-     * Save atendimento.
-     *
-     * @param atendimento the atendimento
-     * @return the atendimento
-     */
-    public Atendimento save(Atendimento atendimento) {
-
-        if (atendimento == null) {
-            throw new ValidationException(MessageUtils.ATENDIMENTO_NULL);
-        }
-
-        if (validateAtendimento(atendimento)) {
-            atendimento = repository.save(atendimento);
-        }
-
-        return atendimento;
-    }
-
-    /**
      * Validate atendimento.
      *
      * @param atendimento the atendimento
      * @return the boolean
      */
-    private boolean validateAtendimento(Atendimento atendimento) {
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public boolean validate(Atendimento atendimento) {
 
         var atendimento_findByDataHoraAndVeterinario = repository.findByDataHoraAndVeterinario(atendimento.getDataHora(), atendimento.getVeterinario()).orElse(null);
 

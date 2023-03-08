@@ -2,7 +2,7 @@ package io.github.amandajuchem.projetoapi;
 
 import io.github.amandajuchem.projetoapi.entities.Usuario;
 import io.github.amandajuchem.projetoapi.enums.Setor;
-import io.github.amandajuchem.projetoapi.services.FacadeService;
+import io.github.amandajuchem.projetoapi.services.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -17,7 +17,7 @@ import java.io.File;
 @RequiredArgsConstructor
 public class ProjetoApiApplication implements CommandLineRunner {
 
-    private final FacadeService facade;
+    private final UsuarioService service;
 
     /**
      * The entry point of application.
@@ -46,7 +46,7 @@ public class ProjetoApiApplication implements CommandLineRunner {
     private void checkDefaultUsuario() {
 
         try {
-            var usuario = facade.usuarioFindByCpf("07905836584");
+            var usuario = service.findByCpf("07905836584");
             saveDefaultUsuario(usuario);
         } catch (Exception ex) {
             saveDefaultUsuario(new Usuario());
@@ -55,12 +55,12 @@ public class ProjetoApiApplication implements CommandLineRunner {
 
     private void saveDefaultUsuario(Usuario usuario) {
 
-        usuario.setNome("Edson Isaac");
+        usuario.setNome("Amanda Juchem");
         usuario.setCpf("07905836584");
         usuario.setSenha("$2a$12$xi5jwI8SFzkS.LYJ73OAHOJb3mEhOeFJk2Gj3pzPKcQBM2SGVUr2a");
         usuario.setSetor(Setor.ADMINISTRACAO);
         usuario.setStatus(true);
 
-        facade.usuarioSave(usuario);
+        service.save(usuario);
     }
 }

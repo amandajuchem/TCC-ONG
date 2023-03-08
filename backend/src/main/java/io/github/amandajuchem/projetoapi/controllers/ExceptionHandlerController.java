@@ -66,6 +66,13 @@ public class ExceptionHandlerController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(List.of(error));
     }
 
+    /**
+     * Operation failure exception response entity.
+     *
+     * @param ex      the ex
+     * @param request the request
+     * @return the response entity
+     */
     @ExceptionHandler(OperationFailureException.class)
     public ResponseEntity<?> operationFailureException(OperationFailureException ex, HttpServletRequest request) {
 

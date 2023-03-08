@@ -3,7 +3,7 @@ package io.github.amandajuchem.projetoapi.controllers;
 import io.github.amandajuchem.projetoapi.dtos.AgendamentoDTO;
 import io.github.amandajuchem.projetoapi.entities.Agendamento;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
-import io.github.amandajuchem.projetoapi.services.FacadeService;
+import io.github.amandajuchem.projetoapi.services.AgendamentoService;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ import static org.springframework.http.HttpStatus.*;
 @RequiredArgsConstructor
 public class AgendamentoController {
 
-    private final FacadeService facade;
+    private final AgendamentoService service;
 
     /**
      * Delete agendamento.
@@ -32,7 +32,7 @@ public class AgendamentoController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id) {
-        facade.agendamentoDelete(id);
+        service.delete(id);
         return ResponseEntity.status(OK).body(null);
     }
 
@@ -47,7 +47,7 @@ public class AgendamentoController {
                                      @RequestParam(required = false, defaultValue = "dataHora") String sort,
                                      @RequestParam(required = false, defaultValue = "desc") String direction) {
 
-        var agendamentos = facade.agendamentoFindAll(page, size, sort, direction).map(AgendamentoDTO::toDTO);
+        var agendamentos = service.findAll(page, size, sort, direction).map(AgendamentoDTO::toDTO);
         return ResponseEntity.status(OK).body(agendamentos);
     }
 
@@ -59,7 +59,7 @@ public class AgendamentoController {
      */
     @PostMapping
     public ResponseEntity<?> save(@RequestBody @Valid Agendamento agendamento) {
-        agendamento = facade.agendamentoSave(agendamento);
+        agendamento = service.save(agendamento);
         return ResponseEntity.status(CREATED).body(AgendamentoDTO.toDTO(agendamento));
     }
 
@@ -81,7 +81,7 @@ public class AgendamentoController {
                                     @RequestParam(required = false, defaultValue = "desc") String direction) {
 
         if (value != null) {
-            var agendamentos = facade.agendamentoSearch(value, page, size, sort, direction).map(AgendamentoDTO::toDTO);
+            var agendamentos = service.search(value, page, size, sort, direction).map(AgendamentoDTO::toDTO);
             return ResponseEntity.status(OK).body(agendamentos);
         }
 
@@ -99,7 +99,7 @@ public class AgendamentoController {
     public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody @Valid Agendamento agendamento) {
 
         if (agendamento.getId().equals(id)) {
-            agendamento = facade.agendamentoSave(agendamento);
+            agendamento = service.save(agendamento);
             return ResponseEntity.status(OK).body(AgendamentoDTO.toDTO(agendamento));
         }
 

@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 
 import { Animal } from '../entities/animal';
 import { Page } from '../entities/page';
+import {Adocao} from "../entities/adocao";
 
 @Injectable({
   providedIn: 'root'
@@ -17,24 +18,24 @@ export class AnimalService {
   constructor(private _http: HttpClient) { }
 
   /**
-   * 
-   * @param id 
-   * @returns 
+   *
+   * @param id
+   * @returns
    */
   delete(id: string) {
     return this._http.delete(this.baseURL + '/' + id);
   }
 
   /**
-   * 
-   * @param page 
-   * @param size 
-   * @param sort 
-   * @param direction 
-   * @returns 
+   *
+   * @param page
+   * @param size
+   * @param sort
+   * @param direction
+   * @returns
    */
   findAll(page: number, size: number, sort: string, direction: string) {
-    
+
     return this._http.get<Page>(this.baseURL, {
       params: {
         page: page,
@@ -46,30 +47,30 @@ export class AnimalService {
   }
 
   /**
-   * 
-   * @param id 
-   * @returns 
+   *
+   * @param id
+   * @returns
    */
   findById(id: string) {
     return this._http.get<Animal>(this.baseURL + '/' + id);
   }
 
   /**
-   * 
-   * @returns 
+   *
+   * @returns
    */
   get() {
     return this.subject.asObservable();
   }
 
   /**
-   * 
-   * @param animal 
-   * @param novaFoto 
-   * @returns 
+   *
+   * @param animal
+   * @param novaFoto
+   * @returns
    */
   save(animal: Animal, novaFoto: any) {
-    
+
     let formData = new FormData();
 
     formData.append('animal', new Blob([JSON.stringify(animal)], { type: 'application/json' }));
@@ -82,16 +83,16 @@ export class AnimalService {
   }
 
   /**
-   * 
-   * @param value 
-   * @param page 
-   * @param size 
-   * @param sort 
-   * @param direction 
-   * @returns 
+   *
+   * @param value
+   * @param page
+   * @param size
+   * @param sort
+   * @param direction
+   * @returns
    */
   search(value: string, page: number, size: number, sort: string, direction: string) {
-    
+
     return this._http.get<Page>(this.baseURL + '/search', {
       params: {
         value: value,
@@ -104,22 +105,22 @@ export class AnimalService {
   }
 
   /**
-   * 
-   * @param animal 
+   *
+   * @param animal
    */
   set(animal: Animal) {
     this.subject.next(animal);
   }
 
   /**
-   * 
-   * @param animal 
-   * @param novaFoto 
-   * @param antigaFoto 
-   * @returns 
+   *
+   * @param animal
+   * @param novaFoto
+   * @param antigaFoto
+   * @returns
    */
   update(animal: Animal, novaFoto: any, antigaFoto: any) {
-    
+
     let formData = new FormData();
 
     formData.append('animal', new Blob([JSON.stringify(animal)], { type: 'application/json' }));
@@ -133,5 +134,32 @@ export class AnimalService {
     }
 
     return this._http.put<Animal>(this.baseURL + '/' + animal.id, formData);
+  }
+
+  ////////////////////////////////////////////////// ADOÇÃO //////////////////////////////////////////////////
+
+  adocaoDelete(id: string, idAdocao: string) {
+    return this._http.delete(this.baseURL + '/' + id + '/adocoes/' + idAdocao);
+  }
+
+  adocaoFindAll(id: string, page: number, size: number, sort: string, direction: string) {
+
+    return this._http.get<Page>(this.baseURL + '/' + id + '/adocoes', {
+      params: {
+        id: id,
+        page: page,
+        size: size,
+        sort: sort,
+        direction: direction
+      }
+    });
+  }
+
+  adocaoSave(animal: Animal, adocao: Adocao) {
+    return this._http.post<Adocao>(this.baseURL + '/' + animal.id + '/adocoes', adocao);
+  }
+
+  adocaoUpdate(animal: Animal, adocao: Adocao) {
+    return this._http.put<Adocao>(this.baseURL + '/' + animal.id + '/adocoe/' + adocao.id, adocao);
   }
 }

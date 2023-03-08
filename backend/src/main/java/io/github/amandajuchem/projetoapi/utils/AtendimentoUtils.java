@@ -4,9 +4,12 @@ import io.github.amandajuchem.projetoapi.entities.Atendimento;
 import io.github.amandajuchem.projetoapi.entities.Imagem;
 import io.github.amandajuchem.projetoapi.exceptions.OperationFailureException;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
-import io.github.amandajuchem.projetoapi.services.FacadeService;
+import io.github.amandajuchem.projetoapi.services.AtendimentoService;
+import io.github.amandajuchem.projetoapi.services.ImagemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -20,22 +23,24 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AtendimentoUtils {
 
-    private final FacadeService facade;
+    private final AtendimentoService atendimentoService;
+    private final ImagemService imagemService;
 
     /**
      * Delete.
      *
      * @param id the id
      */
+    @Transactional(propagation = Propagation.REQUIRED)
     public void delete(UUID id) {
 
-        var atendimento = facade.atendimentoFindById(id);
+        var atendimento = atendimentoService.findById(id);
 
         if (atendimento.getDocumentos() != null && atendimento.getDocumentos().size() > 0) {
-            atendimento.getDocumentos().forEach(documento -> facade.imagemDelete(documento.getId()));
+            atendimento.getDocumentos().forEach(documento -> imagemService.delete(documento.getId()));
         }
 
-        facade.atendimentoDelete(atendimento.getId());
+        atendimentoService.delete(atendimento.getId());
     }
 
     /**
@@ -46,11 +51,12 @@ public class AtendimentoUtils {
      * @param documentosToDelete the documentos to delete
      * @return the atendimento
      */
+    @Transactional(propagation = Propagation.REQUIRED)
     public Atendimento save(Atendimento atendimento, List<MultipartFile> documentosToSave, List<UUID> documentosToDelete) {
 
         try {
 
-            atendimento = facade.atendimentoSave(atendimento);
+            atendimento = atendimentoService.save(atendimento);
 
             if (documentosToSave != null && documentosToSave.size() > 0) {
 
@@ -65,7 +71,7 @@ public class AtendimentoUtils {
                                 .atendimento(atendimento)
                                 .build();
 
-                        facade.imagemSave(imagem);
+                        imagemService.save(imagem);
                     } catch (IOException ex) {
                         throw new OperationFailureException(MessageUtils.OPERATION_FAILURE);
                     }
@@ -73,7 +79,7 @@ public class AtendimentoUtils {
             }
 
             if (documentosToDelete != null && documentosToDelete.size() > 0) {
-                documentosToDelete.forEach(facade::imagemDelete);
+                documentosToDelete.forEach(imagemService::delete);
             }
 
             return atendimento;

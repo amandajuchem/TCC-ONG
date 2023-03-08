@@ -4,10 +4,12 @@ import io.github.amandajuchem.projetoapi.entities.Imagem;
 import io.github.amandajuchem.projetoapi.entities.Usuario;
 import io.github.amandajuchem.projetoapi.exceptions.OperationFailureException;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
-import io.github.amandajuchem.projetoapi.services.FacadeService;
+import io.github.amandajuchem.projetoapi.services.ImagemService;
+import io.github.amandajuchem.projetoapi.services.UsuarioService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -20,30 +22,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UsuarioUtils {
 
-    private final BCryptPasswordEncoder encoder;
-    private final FacadeService facade;
-
-    /**
-     * Encode password usuario.
-     *
-     * @param usuario the usuario
-     * @return the usuario
-     */
-    public Usuario encodePassword(Usuario usuario) {
-
-        if (usuario.getId() != null) {
-
-            var usuario_findByCpf = facade.usuarioFindByCpf(usuario.getCpf());
-
-            if (!usuario.getSenha().equals(usuario_findByCpf.getSenha())) {
-                usuario.setSenha(encoder.encode(usuario.getSenha()));
-            }
-        } else {
-            usuario.setSenha(encoder.encode(usuario.getSenha()));
-        }
-
-        return usuario;
-    }
+    private final ImagemService imagemService;
+    private final UsuarioService usuarioService;
 
     /**
      * Save usuario.
@@ -53,11 +33,12 @@ public class UsuarioUtils {
      * @param antigaFoto the antiga foto
      * @return the usuario
      */
+    @Transactional(propagation = Propagation.REQUIRED)
     public Usuario save(Usuario usuario, MultipartFile novaFoto, UUID antigaFoto) {
 
         try {
 
-            usuario = facade.usuarioSave(encodePassword(usuario));
+            usuario = usuarioService.save(usuario);
 
             if (novaFoto != null) {
 
@@ -68,12 +49,12 @@ public class UsuarioUtils {
                         .usuario(usuario)
                         .build();
 
-                imagem = facade.imagemSave(imagem);
+                imagem = imagemService.save(imagem);
                 usuario.setFoto(imagem);
             }
 
             if (antigaFoto != null) {
-                facade.imagemDelete(antigaFoto);
+                imagemService.delete(antigaFoto);
             }
 
             return usuario;

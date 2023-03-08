@@ -5,7 +5,8 @@ import io.github.amandajuchem.projetoapi.dtos.AnimalDTO;
 import io.github.amandajuchem.projetoapi.entities.Adocao;
 import io.github.amandajuchem.projetoapi.entities.Animal;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
-import io.github.amandajuchem.projetoapi.services.FacadeService;
+import io.github.amandajuchem.projetoapi.services.AdocaoService;
+import io.github.amandajuchem.projetoapi.services.AnimalService;
 import io.github.amandajuchem.projetoapi.utils.AdocaoUtils;
 import io.github.amandajuchem.projetoapi.utils.AnimalUtils;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
@@ -29,9 +30,10 @@ import static org.springframework.http.HttpStatus.*;
 @RequiredArgsConstructor
 public class AnimalController {
 
+    private final AdocaoService adocaoService;
     private final AdocaoUtils adocaoUtils;
+    private final AnimalService animalService;
     private final AnimalUtils animalUtils;
-    private final FacadeService facade;
 
     /**
      * Delete response entity.
@@ -56,7 +58,7 @@ public class AnimalController {
                                      @RequestParam(required = false, defaultValue = "nome") String sort,
                                      @RequestParam(required = false, defaultValue = "asc") String direction) {
 
-        var animais = facade.animalFindAll(page, size, sort, direction).map(AnimalDTO::toDTO);
+        var animais = animalService.findAll(page, size, sort, direction).map(AnimalDTO::toDTO);
         return ResponseEntity.status(OK).body(animais);
     }
 
@@ -68,7 +70,7 @@ public class AnimalController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable UUID id) {
-        var animal = facade.animalFindById(id);
+        var animal = animalService.findById(id);
         return ResponseEntity.status(OK).body(AnimalDTO.toDTO(animal));
     }
 
@@ -107,7 +109,7 @@ public class AnimalController {
                                     @RequestParam(required = false, defaultValue = "asc") String direction) {
 
         if (value != null) {
-            var animais = facade.animalSearch(value, page, size, sort, direction).map(AnimalDTO::toDTO);
+            var animais = animalService.search(value, page, size, sort, direction).map(AnimalDTO::toDTO);
             return ResponseEntity.status(OK).body(animais);
         }
 
@@ -157,7 +159,7 @@ public class AnimalController {
                                            @RequestParam(required = false, defaultValue = "dataHora") String sort,
                                            @RequestParam(required = false, defaultValue = "desc") String direction) {
 
-        var adocoes = facade.adocaoFindAll(page, size, sort, direction).map(AdocaoDTO::toDTO);
+        var adocoes = adocaoService.findAll(page, size, sort, direction).map(AdocaoDTO::toDTO);
         return ResponseEntity.status(OK).body(adocoes);
     }
 

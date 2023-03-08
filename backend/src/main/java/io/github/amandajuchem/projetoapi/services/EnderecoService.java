@@ -6,7 +6,11 @@ import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.repositories.EnderecoRepository;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
@@ -15,17 +19,18 @@ import java.util.UUID;
  * The type Endereco service.
  */
 @Service
-@Transactional
 @RequiredArgsConstructor
-public class EnderecoService {
+public class EnderecoService implements AbstractService<Endereco> {
 
     private final EnderecoRepository repository;
 
     /**
-     * Delete.
+     * Delete endereco.
      *
      * @param id the id
      */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public void delete(UUID id) {
 
         if (id != null) {
@@ -40,18 +45,50 @@ public class EnderecoService {
     }
 
     /**
+     * Find all endereco.
+     *
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
+     * @return the endereco list
+     */
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public Page<Endereco> findAll(Integer page, Integer size, String sort, String direction) {
+        return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
+    }
+
+    /**
+     * Find endereco by id.
+     *
+     * @param id the id
+     * @return the endereco
+     */
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public Endereco findById(UUID id) {
+
+        return repository.findById(id).orElseThrow(() -> {
+            throw new ObjectNotFoundException(MessageUtils.ENDERECO_NOT_FOUND);
+        });
+    }
+
+    /**
      * Save endereco.
      *
      * @param endereco the endereco
      * @return the endereco
      */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public Endereco save(Endereco endereco) {
 
         if (endereco == null) {
             throw new ValidationException(MessageUtils.ENDERECO_NULL);
         }
 
-        if (validateEndereco(endereco)) {
+        if (validate(endereco)) {
             endereco = repository.save(endereco);
         }
 
@@ -64,7 +101,9 @@ public class EnderecoService {
      * @param endereco the endereco
      * @return the boolean
      */
-    private boolean validateEndereco(Endereco endereco) {
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public boolean validate(Endereco endereco) {
 
         return true;
     }

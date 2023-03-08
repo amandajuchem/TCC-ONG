@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
@@ -18,27 +20,73 @@ import java.util.UUID;
  * The type Usuario service.
  */
 @Service
-@Transactional
 @RequiredArgsConstructor
-public class UsuarioService {
+public class UsuarioService implements AbstractService<Usuario> {
 
+    private final PasswordEncoder encoder;
     private final UsuarioRepository repository;
 
     /**
-     * Find all usuários.
+     * Delete usuario.
      *
-     * @return the list of usuários
+     * @param id the id
      */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void delete(UUID id) {
+
+        if (id != null) {
+
+            if (repository.existsById(id)) {
+                repository.deleteById(id);
+                return;
+            }
+        }
+
+        throw new ObjectNotFoundException(MessageUtils.USUARIO_NOT_FOUND);
+    }
+
+    /**
+     * Encode usuario password.
+     *
+     * @param usuario the usuario
+     * @return the usuario
+     */
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public Usuario encodePassword(Usuario usuario) {
+
+        if (usuario.getId() != null) {
+
+            var usuario_findByCpf = repository.findByCpf(usuario.getCpf()).get();
+
+            if (!usuario.getSenha().equals(usuario_findByCpf.getSenha())) {
+                usuario.setSenha(encoder.encode(usuario.getSenha()));
+            }
+        } else {
+            usuario.setSenha(encoder.encode(usuario.getSenha()));
+        }
+
+        return usuario;
+    }
+
+    /**
+     * Find all usuario.
+     *
+     * @return the usuario list
+     */
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<Usuario> findAll(Integer page, Integer size, String sort, String direction) {
         return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
     }
 
     /**
-     * Find usuário by CPF.
+     * Find usuario by CPF.
      *
      * @param cpf the cpf
      * @return the usuario
      */
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Usuario findByCpf(String cpf) {
 
         return repository.findByCpf(cpf).orElseThrow(() -> {
@@ -47,11 +95,13 @@ public class UsuarioService {
     }
 
     /**
-     * Find usuário by ID.
+     * Find usuario by id.
      *
      * @param id the id
      * @return the usuario
      */
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Usuario findById(UUID id) {
 
         return repository.findById(id).orElseThrow(() -> {
@@ -65,13 +115,16 @@ public class UsuarioService {
      * @param usuario the usuario
      * @return the usuario
      */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public Usuario save(Usuario usuario) {
 
         if (usuario == null) {
             throw new ValidationException(MessageUtils.USUARIO_NULL);
         }
 
-        if (validateUsuario(usuario)) {
+        if (validate(usuario)) {
+            usuario = encodePassword(usuario);
             usuario = repository.save(usuario);
         }
 
@@ -79,15 +132,16 @@ public class UsuarioService {
     }
 
     /**
-     * Search usuários.
+     * Search usuario.
      *
      * @param value     Nome ou CPF
      * @param page      the page
      * @param size      the size
      * @param sort      the sort
      * @param direction the direction
-     * @return the list of usuários
+     * @return the usuario list
      */
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<Usuario> search(String value, Integer page, Integer size, String sort, String direction) {
         return repository.search(value, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
     }
@@ -98,7 +152,9 @@ public class UsuarioService {
      * @param usuario the usuario
      * @return the boolean
      */
-    private boolean validateUsuario(Usuario usuario) {
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public boolean validate(Usuario usuario) {
 
         var usuario_findByCPF = repository.findByCpf(usuario.getCpf()).orElse(null);
 

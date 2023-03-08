@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
@@ -18,17 +19,18 @@ import java.util.UUID;
  * The type Tutor service.
  */
 @Service
-@Transactional
 @RequiredArgsConstructor
-public class TutorService {
+public class TutorService implements AbstractService<Tutor> {
 
     private final TutorRepository repository;
 
     /**
-     * Delete.
+     * Delete tutor.
      *
      * @param id the id
      */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public void delete(UUID id) {
 
         if (id != null) {
@@ -43,20 +45,24 @@ public class TutorService {
     }
 
     /**
-     * Find all tutores.
+     * Find all tutor.
      *
-     * @return the list
+     * @return the tutor list
      */
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<Tutor> findAll(Integer page, Integer size, String sort, String direction) {
         return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
     }
 
     /**
-     * Find by id tutor.
+     * Find tutor by id.
      *
      * @param id the id
      * @return the tutor
      */
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Tutor findById(UUID id) {
 
         return repository.findById(id).orElseThrow(() -> {
@@ -70,13 +76,15 @@ public class TutorService {
      * @param tutor the tutor
      * @return the tutor
      */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public Tutor save(Tutor tutor) {
 
         if (tutor == null) {
             throw new ValidationException(MessageUtils.TUTOR_NULL);
         }
 
-        if (validateTutor(tutor)) {
+        if (validate(tutor)) {
             tutor = repository.save(tutor);
         }
 
@@ -84,15 +92,16 @@ public class TutorService {
     }
 
     /**
-     * Search tutores.
+     * Search tutor.
      *
-     * @param value     Nome, CPF ou RG
+     * @param value     nome, CPF ou RG
      * @param page      the page
      * @param size      the size
      * @param sort      the sort
      * @param direction the direction
-     * @return the list of tutores
+     * @return the tutor list.
      */
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<Tutor> search(String value, Integer page, Integer size, String sort, String direction) {
         return repository.search(value, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
     }
@@ -103,7 +112,9 @@ public class TutorService {
      * @param tutor the tutor
      * @return the boolean
      */
-    private boolean validateTutor(Tutor tutor) {
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public boolean validate(Tutor tutor) {
 
         var tutor_findByNome = repository.findByNomeIgnoreCase(tutor.getNome()).orElse(null);
 

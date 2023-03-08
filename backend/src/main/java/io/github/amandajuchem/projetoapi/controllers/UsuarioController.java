@@ -3,7 +3,7 @@ package io.github.amandajuchem.projetoapi.controllers;
 import io.github.amandajuchem.projetoapi.dtos.UsuarioDTO;
 import io.github.amandajuchem.projetoapi.entities.Usuario;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
-import io.github.amandajuchem.projetoapi.services.FacadeService;
+import io.github.amandajuchem.projetoapi.services.UsuarioService;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import io.github.amandajuchem.projetoapi.utils.UsuarioUtils;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +25,8 @@ import static org.springframework.http.HttpStatus.*;
 @RequiredArgsConstructor
 public class UsuarioController {
 
-    private final FacadeService facade;
-    private final UsuarioUtils usuarioUtils;
+    private final UsuarioService service;
+    private final UsuarioUtils utils;
 
     /**
      * Find all usuários.
@@ -39,7 +39,7 @@ public class UsuarioController {
                                      @RequestParam(required = false, defaultValue = "nome") String sort,
                                      @RequestParam(required = false, defaultValue = "asc") String direction) {
 
-        var usuarios = facade.usuarioFindAll(page, size, sort, direction).map(UsuarioDTO::toDTO);
+        var usuarios = service.findAll(page, size, sort, direction).map(UsuarioDTO::toDTO);
         return ResponseEntity.status(OK).body(usuarios);
     }
 
@@ -51,7 +51,7 @@ public class UsuarioController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable UUID id) {
-        var usuario = facade.usuarioFindById(id);
+        var usuario = service.findById(id);
         return ResponseEntity.status(OK).body(UsuarioDTO.toDTO(usuario));
     }
 
@@ -68,7 +68,7 @@ public class UsuarioController {
                                   @RequestPart(required = false) MultipartFile novaFoto,
                                   @RequestPart(required = false) String antigaFoto) {
 
-        usuario = usuarioUtils.save(usuario, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
+        usuario = utils.save(usuario, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
         return ResponseEntity.status(CREATED).body(UsuarioDTO.toDTO(usuario));
     }
 
@@ -90,7 +90,7 @@ public class UsuarioController {
                                     @RequestParam(required = false, defaultValue = "asc") String direction) {
 
         if (value != null) {
-            var usuarios = facade.usuarioSearch(value, page, size, sort, direction).map(UsuarioDTO::toDTO);
+            var usuarios = service.search(value, page, size, sort, direction).map(UsuarioDTO::toDTO);
             return ResponseEntity.status(OK).body(usuarios);
         }
 
@@ -113,7 +113,7 @@ public class UsuarioController {
                                     @RequestPart(required = false) String antigaFoto) {
 
         if (usuario.getId().equals(id)) {
-            usuario = usuarioUtils.save(usuario, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
+            usuario = utils.save(usuario, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
             return ResponseEntity.status(OK).body(UsuarioDTO.toDTO(usuario));
         }
 

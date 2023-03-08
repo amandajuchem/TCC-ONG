@@ -4,9 +4,13 @@ import io.github.amandajuchem.projetoapi.entities.Animal;
 import io.github.amandajuchem.projetoapi.entities.Imagem;
 import io.github.amandajuchem.projetoapi.exceptions.OperationFailureException;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
-import io.github.amandajuchem.projetoapi.services.FacadeService;
+import io.github.amandajuchem.projetoapi.services.AnimalService;
+import io.github.amandajuchem.projetoapi.services.FichaMedicaService;
+import io.github.amandajuchem.projetoapi.services.ImagemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -19,26 +23,29 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AnimalUtils {
 
-    private final FacadeService facade;
+    private final AnimalService animalService;
+    private final FichaMedicaService fichaMedicaService;
+    private final ImagemService imagemService;
 
     /**
      * Delete animal.
      *
      * @param id the id
      */
+    @Transactional(propagation = Propagation.REQUIRED)
     public void delete(UUID id) {
 
-        var animal = facade.animalFindById(id);
+        var animal = animalService.findById(id);
 
         if (animal.getFoto() != null) {
-            facade.imagemDelete(animal.getFoto().getId());
+            imagemService.delete(animal.getFoto().getId());
         }
 
         if (animal.getFichaMedica() != null) {
-            facade.fichaMedicaDelete(animal.getFichaMedica().getId());
+            fichaMedicaService.delete(animal.getFichaMedica().getId());
         }
 
-        facade.animalDelete(animal.getId());
+        animalService.delete(animal.getId());
     }
 
     /**
@@ -49,6 +56,7 @@ public class AnimalUtils {
      * @param antigaFoto the antiga foto
      * @return the animal
      */
+    @Transactional(propagation = Propagation.REQUIRED)
     public Animal save(Animal animal, MultipartFile novaFoto, UUID antigaFoto) {
 
         try {
@@ -58,9 +66,9 @@ public class AnimalUtils {
                 var fichaMedica = animal.getFichaMedica();
 
                 animal.setFichaMedica(null);
-                animal = facade.animalSave(animal);
+                animal = animalService.save(animal);
                 fichaMedica.setAnimal(animal);
-                fichaMedica = facade.fichaMedicaSave(fichaMedica);
+                fichaMedica = fichaMedicaService.save(fichaMedica);
                 animal.setFichaMedica(fichaMedica);
             }
 
@@ -68,8 +76,8 @@ public class AnimalUtils {
 
                 var fichaMedica = animal.getFichaMedica();
 
-                fichaMedica = facade.fichaMedicaSave(fichaMedica);
-                animal = facade.animalSave(animal);
+                fichaMedica = fichaMedicaService.save(fichaMedica);
+                animal = animalService.save(animal);
                 animal.setFichaMedica(fichaMedica);
             }
 
@@ -82,12 +90,12 @@ public class AnimalUtils {
                         .animal(animal)
                         .build();
 
-                imagem = facade.imagemSave(imagem);
+                imagem = imagemService.save(imagem);
                 animal.setFoto(imagem);
             }
 
             if (antigaFoto != null) {
-                facade.imagemDelete(antigaFoto);
+                imagemService.delete(antigaFoto);
             }
 
             return animal;

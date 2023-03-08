@@ -3,9 +3,12 @@ package io.github.amandajuchem.projetoapi.utils;
 import io.github.amandajuchem.projetoapi.entities.Adocao;
 import io.github.amandajuchem.projetoapi.entities.Imagem;
 import io.github.amandajuchem.projetoapi.exceptions.OperationFailureException;
-import io.github.amandajuchem.projetoapi.services.FacadeService;
+import io.github.amandajuchem.projetoapi.services.AdocaoService;
+import io.github.amandajuchem.projetoapi.services.ImagemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -19,35 +22,38 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AdocaoUtils {
 
-    private final FacadeService facade;
+    private final AdocaoService adocaoService;
+    private final ImagemService imagemService;
 
     /**
      * Delete adoção.
      *
      * @param id the id
      */
+    @Transactional(propagation = Propagation.REQUIRED)
     public void delete(UUID id) {
 
-        var adocao = facade.adocaoFindById(id);
+        var adocao = adocaoService.findById(id);
 
         if (adocao.getTermoResponsabilidade() != null && adocao.getTermoResponsabilidade().size() > 0) {
-            adocao.getTermoResponsabilidade().forEach(termo -> facade.imagemDelete(termo.getId()));
+            adocao.getTermoResponsabilidade().forEach(termo -> imagemService.delete(termo.getId()));
         }
 
-        facade.adocaoDelete(adocao.getId());
+        adocaoService.delete(adocao.getId());
     }
 
     /**
-     * Save adoção.
+     * Save adocao.
      *
      * @param adocao             the adocao
      * @param documentosToSave   the documentos to save
      * @param documentosToDelete the documentos to delete
      * @return the adocao
      */
+    @Transactional(propagation = Propagation.REQUIRED)
     public Adocao save(Adocao adocao, List<MultipartFile> documentosToSave, List<UUID> documentosToDelete) {
 
-        adocao = facade.adocaoSave(adocao);
+        adocao = adocaoService.save(adocao);
 
         if (documentosToSave != null && documentosToSave.size() > 0) {
 
@@ -62,7 +68,7 @@ public class AdocaoUtils {
                             .adocao(adocao)
                             .build();
 
-                    facade.imagemSave(imagem);
+                    imagemService.save(imagem);
                 } catch (IOException ex) {
                     ex.printStackTrace();
                     throw new OperationFailureException(MessageUtils.OPERATION_FAILURE);
@@ -71,7 +77,7 @@ public class AdocaoUtils {
         }
 
         if (documentosToDelete != null && documentosToDelete.size() > 0) {
-            documentosToDelete.forEach(facade::imagemDelete);
+            documentosToDelete.forEach(imagemService::delete);
         }
 
         return adocao;

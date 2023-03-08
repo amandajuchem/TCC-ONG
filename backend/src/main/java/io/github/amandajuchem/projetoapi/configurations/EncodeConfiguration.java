@@ -3,6 +3,7 @@ package io.github.amandajuchem.projetoapi.configurations;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * The type Encode configuration.
@@ -16,7 +17,7 @@ public class EncodeConfiguration {
      * @return the b crypt password encoder
      */
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+    public PasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }

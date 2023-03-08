@@ -3,7 +3,7 @@ package io.github.amandajuchem.projetoapi.controllers;
 import io.github.amandajuchem.projetoapi.dtos.ExameDTO;
 import io.github.amandajuchem.projetoapi.entities.Exame;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
-import io.github.amandajuchem.projetoapi.services.FacadeService;
+import io.github.amandajuchem.projetoapi.services.ExameService;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ import static org.springframework.http.HttpStatus.*;
 @RequiredArgsConstructor
 public class ExamesController {
 
-    private final FacadeService facade;
+    private final ExameService service;
 
     /**
      * Delete response entity.
@@ -32,7 +32,7 @@ public class ExamesController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id) {
-        facade.exameDelete(id);
+        service.delete(id);
         return ResponseEntity.status(OK).body(null);
     }
 
@@ -47,7 +47,7 @@ public class ExamesController {
                                      @RequestParam(required = false, defaultValue = "dataHora") String sort,
                                      @RequestParam(required = false, defaultValue = "asc") String direction) {
 
-        var exames = facade.exameFindAll(page, size, sort, direction).map(ExameDTO::toDTO);
+        var exames = service.findAll(page, size, sort, direction).map(ExameDTO::toDTO);
         return ResponseEntity.status(OK).body(exames);
     }
 
@@ -59,7 +59,7 @@ public class ExamesController {
      */
     @PostMapping
     public ResponseEntity<?> save(@RequestBody @Valid Exame exame) {
-        exame = facade.exameSave(exame);
+        exame = service.save(exame);
         return ResponseEntity.status(CREATED).body(ExameDTO.toDTO(exame));
     }
 
@@ -81,7 +81,7 @@ public class ExamesController {
                                     @RequestParam(required = false, defaultValue = "asc") String direction) {
 
         if (value != null) {
-            var exames = facade.exameSearch(value, page, size, sort, direction).map(ExameDTO::toDTO);
+            var exames = service.search(value, page, size, sort, direction).map(ExameDTO::toDTO);
             return ResponseEntity.status(OK).body(exames);
         }
 
@@ -99,7 +99,7 @@ public class ExamesController {
     public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody @Valid Exame exame) {
 
         if (exame.getId().equals(id)) {
-            exame = facade.exameSave(exame);
+            exame = service.save(exame);
             return ResponseEntity.status(OK).body(ExameDTO.toDTO(exame));
         }
 

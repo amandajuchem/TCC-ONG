@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
@@ -18,9 +19,8 @@ import java.util.UUID;
  * The type Agendamento service.
  */
 @Service
-@Transactional
 @RequiredArgsConstructor
-public class AgendamentoService {
+public class AgendamentoService implements AbstractService<Agendamento> {
 
     private final AgendamentoRepository repository;
 
@@ -29,6 +29,8 @@ public class AgendamentoService {
      *
      * @param id the id
      */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public void delete(UUID id) {
 
         if (id != null) {
@@ -43,10 +45,12 @@ public class AgendamentoService {
     }
 
     /**
-     * Find all agendamentos.
+     * Find all agendamento.
      *
-     * @return the list
+     * @return the agendamento list
      */
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<Agendamento> findAll(Integer page, Integer size, String sort, String direction) {
 
         if (sort.equalsIgnoreCase("animal")) {
@@ -61,15 +65,52 @@ public class AgendamentoService {
     }
 
     /**
-     * Search agendamentos.
+     * Find agendamento by id.
+     *
+     * @param id the id
+     * @return the agendamento
+     */
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public Agendamento findById(UUID id) {
+
+        return repository.findById(id).orElseThrow(() -> {
+            throw new ObjectNotFoundException(MessageUtils.AGENDAMENTO_NOT_FOUND);
+        });
+    }
+
+    /**
+     * Save agendamento.
+     *
+     * @param agendamento the agendamento
+     * @return the agendamento
+     */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public Agendamento save(Agendamento agendamento) {
+
+        if (agendamento == null) {
+            throw new ValidationException(MessageUtils.AGENDAMENTO_NULL);
+        }
+
+        if (validate(agendamento)) {
+            agendamento = repository.save(agendamento);
+        }
+
+        return agendamento;
+    }
+
+    /**
+     * Search agendamento.
      *
      * @param value     Data, nome do animal ou nome do veterinário
      * @param page      the page
      * @param size      the size
      * @param sort      the sort
      * @param direction the direction
-     * @return the list of agendamentos
+     * @return the agendamento list
      */
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<Agendamento> search(String value, Integer page, Integer size, String sort, String direction) {
 
         if (sort.equalsIgnoreCase("animal")) {
@@ -84,31 +125,14 @@ public class AgendamentoService {
     }
 
     /**
-     * Save agendamento.
-     *
-     * @param agendamento the agendamento
-     * @return the agendamento
-     */
-    public Agendamento save(Agendamento agendamento) {
-
-        if (agendamento == null) {
-            throw new ValidationException(MessageUtils.AGENDAMENTO_NULL);
-        }
-
-        if (validateAgendamento(agendamento)) {
-            agendamento = repository.save(agendamento);
-        }
-
-        return agendamento;
-    }
-
-    /**
      * Validate agendamento.
      *
      * @param agendamento the agendamento
      * @return the boolean
      */
-    private boolean validateAgendamento(Agendamento agendamento) {
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public boolean validate(Agendamento agendamento) {
 
         var agendamento_findByDataHoraAndVeterinario = repository.findByDataHoraAndVeterinario(agendamento.getDataHora(), agendamento.getVeterinario()).orElse(null);
 

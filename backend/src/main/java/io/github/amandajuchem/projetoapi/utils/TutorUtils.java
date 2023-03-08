@@ -5,9 +5,14 @@ import io.github.amandajuchem.projetoapi.entities.Telefone;
 import io.github.amandajuchem.projetoapi.entities.Tutor;
 import io.github.amandajuchem.projetoapi.exceptions.OperationFailureException;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
-import io.github.amandajuchem.projetoapi.services.FacadeService;
+import io.github.amandajuchem.projetoapi.services.EnderecoService;
+import io.github.amandajuchem.projetoapi.services.ImagemService;
+import io.github.amandajuchem.projetoapi.services.TelefoneService;
+import io.github.amandajuchem.projetoapi.services.TutorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -21,30 +26,34 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TutorUtils {
 
-    private final FacadeService facade;
+    private final EnderecoService enderecoService;
+    private final ImagemService imagemService;
+    private final TelefoneService telefoneService;
+    private final TutorService tutorService;
 
     /**
      * Delete tutor.
      *
      * @param id the id
      */
+    @Transactional(propagation = Propagation.REQUIRED)
     public void delete(UUID id) {
 
-        var tutor = facade.tutorFindById(id);
+        var tutor = tutorService.findById(id);
 
         if (tutor.getFoto() != null) {
-            facade.imagemDelete(tutor.getFoto().getId());
+            imagemService.delete(tutor.getFoto().getId());
         }
 
         if (tutor.getTelefones() != null) {
-            tutor.getTelefones().forEach(t -> facade.telefoneDelete(t.getId()));
+            tutor.getTelefones().forEach(t -> telefoneService.delete(t.getId()));
         }
 
         if (tutor.getEndereco() != null) {
-            facade.enderecoDelete(tutor.getEndereco().getId());
+            enderecoService.delete(tutor.getEndereco().getId());
         }
 
-        facade.tutorDelete(tutor.getId());
+        tutorService.delete(tutor.getId());
     }
 
     /**
@@ -55,6 +64,7 @@ public class TutorUtils {
      * @param antigaFoto the antiga foto
      * @return the tutor
      */
+    @Transactional(propagation = Propagation.REQUIRED)
     public Tutor save(Tutor tutor, MultipartFile novaFoto, UUID antigaFoto) {
 
         try {
@@ -67,7 +77,7 @@ public class TutorUtils {
                 tutor.setTelefones(null);
                 tutor.setEndereco(null);
 
-                tutor = facade.tutorSave(tutor);
+                tutor = tutorService.save(tutor);
 
                 for (Telefone telefone : telefones) {
                     telefone.setTutor(tutor);
@@ -75,8 +85,8 @@ public class TutorUtils {
 
                 endereco.setTutor(tutor);
 
-                telefones = telefones.stream().map(t -> facade.telefoneSave(t)).collect(Collectors.toSet());
-                endereco = facade.enderecoSave(endereco);
+                telefones = telefones.stream().map(t -> telefoneService.save(t)).collect(Collectors.toSet());
+                endereco = enderecoService.save(endereco);
 
                 tutor.setTelefones(telefones);
                 tutor.setEndereco(endereco);
@@ -84,7 +94,7 @@ public class TutorUtils {
 
             else {
 
-                var tutor_old = facade.tutorFindById(tutor.getId());
+                var tutor_old = tutorService.findById(tutor.getId());
                 var telefones = tutor.getTelefones();
                 var endereco = tutor.getEndereco();
 
@@ -92,15 +102,14 @@ public class TutorUtils {
                 for (Telefone telefone : tutor_old.getTelefones()) {
 
                     if (!telefones.contains(telefone)) {
-                        facade.telefoneDelete(telefone.getId());
-                        tutor.getTelefones().remove(telefone);
+                        telefoneService.delete(telefone.getId());
                     }
                 }
 
-                telefones = telefones.stream().map(t -> facade.telefoneSave(t)).collect(Collectors.toSet());
-                endereco = facade.enderecoSave(endereco);
+                telefones = telefones.stream().map(t -> telefoneService.save(t)).collect(Collectors.toSet());
+                endereco = enderecoService.save(endereco);
 
-                tutor = facade.tutorSave(tutor);
+                tutor = tutorService.save(tutor);
 
                 tutor.setTelefones(telefones);
                 tutor.setEndereco(endereco);
@@ -115,12 +124,12 @@ public class TutorUtils {
                         .tutor(tutor)
                         .build();
 
-                imagem = facade.imagemSave(imagem);
+                imagem = imagemService.save(imagem);
                 tutor.setFoto(imagem);
             }
 
             if (antigaFoto != null) {
-                facade.imagemDelete(antigaFoto);
+                imagemService.delete(antigaFoto);
             }
 
             return tutor;

@@ -16,13 +16,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
 
-    private final FacadeService facade;
+    private final UsuarioService service;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         try {
-            var usuario = facade.usuarioFindByCpf(username);
+
+            var usuario = service.findByCpf(username);
 
             return User.builder()
                     .username(usuario.getCpf())

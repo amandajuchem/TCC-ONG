@@ -3,7 +3,7 @@ package io.github.amandajuchem.projetoapi.controllers;
 import io.github.amandajuchem.projetoapi.dtos.TutorDTO;
 import io.github.amandajuchem.projetoapi.entities.Tutor;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
-import io.github.amandajuchem.projetoapi.services.FacadeService;
+import io.github.amandajuchem.projetoapi.services.TutorService;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import io.github.amandajuchem.projetoapi.utils.TutorUtils;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +25,8 @@ import static org.springframework.http.HttpStatus.*;
 @RequiredArgsConstructor
 public class TutorController {
 
-    private final FacadeService facade;
-    private final TutorUtils tutorUtils;
+    private final TutorService service;
+    private final TutorUtils utils;
 
     /**
      * Delete response entity.
@@ -36,7 +36,7 @@ public class TutorController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id) {
-        tutorUtils.delete(id);
+        utils.delete(id);
         return ResponseEntity.status(OK).body(null);
     }
 
@@ -51,7 +51,7 @@ public class TutorController {
                                      @RequestParam(required = false, defaultValue = "nome") String sort,
                                      @RequestParam(required = false, defaultValue = "asc") String direction) {
 
-        var tutores = facade.tutorFindAll(page, size, sort, direction).map(TutorDTO::toDTO);
+        var tutores = service.findAll(page, size, sort, direction).map(TutorDTO::toDTO);
         return ResponseEntity.status(OK).body(tutores);
     }
 
@@ -63,7 +63,7 @@ public class TutorController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable UUID id) {
-        var tutor = facade.tutorFindById(id);
+        var tutor = service.findById(id);
         return ResponseEntity.status(OK).body(TutorDTO.toDTO(tutor));
     }
 
@@ -80,7 +80,7 @@ public class TutorController {
                                   @RequestPart(required = false) MultipartFile novaFoto,
                                   @RequestPart(required = false) String antigaFoto) {
 
-        tutor = tutorUtils.save(tutor, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
+        tutor = utils.save(tutor, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
         return ResponseEntity.status(CREATED).body(TutorDTO.toDTO(tutor));
     }
 
@@ -102,7 +102,7 @@ public class TutorController {
                                     @RequestParam(required = false, defaultValue = "asc") String direction) {
 
         if (value != null) {
-            var tutores = facade.tutorSearch(value, page, size, sort, direction).map(TutorDTO::toDTO);
+            var tutores = service.search(value, page, size, sort, direction).map(TutorDTO::toDTO);
             return ResponseEntity.status(OK).body(tutores);
         }
 
@@ -125,7 +125,7 @@ public class TutorController {
                                     @RequestPart(required = false) String antigaFoto) {
 
         if (tutor.getId().equals(id)) {
-            tutor = tutorUtils.save(tutor, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
+            tutor = utils.save(tutor, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
             return ResponseEntity.status(OK).body(TutorDTO.toDTO(tutor));
         }
 
