@@ -5,13 +5,15 @@ import { Router } from '@angular/router';
 import { Animal } from 'src/app/entities/animal';
 import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
-import { FacadeService } from 'src/app/services/facade.service';
+import { AnimalService } from 'src/app/services/animal.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { ImagemService } from 'src/app/services/imagem.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
 import { environment } from 'src/environments/environment';
 
 import { AnimalExcluirComponent } from '../animal-excluir/animal-excluir.component';
 import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-imagem.component';
-import { SelecionarTutorComponent } from '../selecionar-tutor/selecionar-tutor.component';
 
 @Component({
   selector: 'app-animal-informacoes',
@@ -25,22 +27,24 @@ export class AnimalInformacoesComponent implements OnInit {
   form!: FormGroup;
   foto!: any;
   fotoToSave!: any;
-  fotoToDelete!: any;
   user!: User;
 
   constructor(
+    private _animalService: AnimalService,
+    private _authService: AuthService,
     private _dialog: MatDialog,
-    private _facade: FacadeService,
     private _formBuilder: FormBuilder,
-    private _router: Router
+    private _imagemService: ImagemService,
+    private _router: Router,
+    private _notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
     
     this.apiURL = environment.apiURL;
-    this.user = this._facade.authGetCurrentUser();
+    this.user = this._authService.getCurrentUser();
 
-    this._facade.animalGet().subscribe({
+    this._animalService.get().subscribe({
 
       next: (animal) => {
           
@@ -68,11 +72,7 @@ export class AnimalInformacoesComponent implements OnInit {
 
       if (result && result.status) {
 
-        this._facade.imagemToBase64(result.images[0])?.then(data => {
-
-          if (this.foto && this.foto.salvo) {
-            this.fotoToDelete = this.foto;
-          }
+        this._imagemService.toBase64(result.images[0])?.then(data => {
 
           let imagem = { id: new Date().getTime(), data: data, nome: null, salvo: false };
 
@@ -134,47 +134,25 @@ export class AnimalInformacoesComponent implements OnInit {
   }
 
   removeFoto() {
-
-    if (this.foto && this.foto.salvo) {
-      this.fotoToDelete = this.foto;
-    }
-
     this.foto = null;
     this.form.get('foto')?.patchValue(null);
-  }
-
-  selectTutor() {
-
-    this._dialog.open(SelecionarTutorComponent, {
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-      
-      next: (result) => {
-          
-        if (result) {
-          this.form.get('tutor')?.patchValue(result.tutor);
-        }
-      },
-    });
   }
 
   submit() {
 
     let animal: Animal = Object.assign({}, this.form.getRawValue());
 
-    this._facade.animalUpdate(animal, this.fotoToSave, this.fotoToDelete?.id).subscribe({
+    this._animalService.update(animal, this.fotoToSave).subscribe({
 
       next: (animal) => {
         this.fotoToSave = null;
-        this.fotoToDelete = null;
-        this._facade.notificationShowNotification(MessageUtils.ANIMAL_UPDATE_SUCCESS, NotificationType.SUCCESS);
-        this._facade.animalSet(animal);
+        this._notificationService.show(MessageUtils.ANIMAL_UPDATE_SUCCESS, NotificationType.SUCCESS);
+        this._animalService.set(animal);
       },
 
       error: (error) => {
         console.error(error);
-        this._facade.notificationShowNotification(MessageUtils.ANIMAL_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.ANIMAL_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
       }
     });
   }

@@ -17,19 +17,19 @@ import java.util.UUID;
 public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
 
     /**
-     * Find by cpf optional.
+     * Find usuário by cpf.
      *
      * @param cpf the cpf
-     * @return the optional
+     * @return the usuário optional
      */
     Optional<Usuario> findByCpf(String cpf);
 
     /**
-     * Search usuários.
+     * Search usuário.
      *
-     * @param value Nome ou CPF
+     * @param value the nome ou CPF
      * @param page  the page
-     * @return the list of usuários
+     * @return the usuário list
      */
     @Query(value = "SELECT u FROM tb_usuarios AS u " +
             "WHERE upper(u.nome) LIKE upper(concat('%', ?1, '%')) " +

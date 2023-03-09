@@ -4,7 +4,6 @@ import io.github.amandajuchem.projetoapi.dtos.AtendimentoDTO;
 import io.github.amandajuchem.projetoapi.entities.Atendimento;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.AtendimentoService;
-import io.github.amandajuchem.projetoapi.utils.AtendimentoUtils;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -27,7 +26,6 @@ import static org.springframework.http.HttpStatus.*;
 public class AtendimentoController {
 
     private final AtendimentoService service;
-    private final AtendimentoUtils utils;
 
     /**
      * Delete response entity.
@@ -37,7 +35,7 @@ public class AtendimentoController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id) {
-        utils.delete(id);
+//        utils.delete(id);
         return ResponseEntity.status(OK).body(null);
     }
 
@@ -69,7 +67,7 @@ public class AtendimentoController {
                                   @RequestPart(required = false) List<MultipartFile> documentosToSave,
                                   @RequestPart(required = false) List<UUID> documentosToDelete) {
 
-        atendimento = utils.save(atendimento, documentosToSave, documentosToDelete);
+//        atendimento = utils.save(atendimento, documentosToSave, documentosToDelete);
         return ResponseEntity.status(CREATED).body(AtendimentoDTO.toDTO(atendimento));
     }
 
@@ -113,10 +111,10 @@ public class AtendimentoController {
                                     @RequestPart(required = false) List<MultipartFile> documentosToSave,
                                     @RequestPart(required = false) List<UUID> documentosToDelete) {
 
-        if (atendimento.getId().equals(id)) {
-            atendimento = utils.save(atendimento, documentosToSave, documentosToDelete);
-            return ResponseEntity.status(OK).body(AtendimentoDTO.toDTO(atendimento));
-        }
+//        if (atendimento.getId().equals(id)) {
+//            atendimento = utils.save(atendimento, documentosToSave, documentosToDelete);
+//            return ResponseEntity.status(OK).body(AtendimentoDTO.toDTO(atendimento));
+//        }
 
         throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);
     }

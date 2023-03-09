@@ -94,7 +94,7 @@ public class TutorService implements AbstractService<Tutor> {
     /**
      * Search tutor.
      *
-     * @param value     nome, CPF ou RG
+     * @param value     the nome, CPF ou RG
      * @param page      the page
      * @param size      the size
      * @param sort      the sort

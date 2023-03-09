@@ -94,7 +94,7 @@ public class AnimalService implements AbstractService<Animal> {
     /**
      * Search animal.
      *
-     * @param value     nome
+     * @param value     the nome
      * @param page      the page
      * @param size      the size
      * @param sort      the sort

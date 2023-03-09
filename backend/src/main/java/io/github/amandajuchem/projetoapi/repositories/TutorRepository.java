@@ -17,35 +17,35 @@ import java.util.UUID;
 public interface TutorRepository extends JpaRepository<Tutor, UUID> {
 
     /**
-     * Find by cpf optional.
+     * Find tutor by cpf.
      *
      * @param cpf the cpf
-     * @return the optional
+     * @return the tutor optional
      */
     Optional<Tutor> findByCpf(String cpf);
 
     /**
-     * Find by nome optional.
+     * Find tutor by nome.
      *
      * @param nome the nome
-     * @return the optional
+     * @return the tutor optional
      */
     Optional<Tutor> findByNomeIgnoreCase(String nome);
 
     /**
-     * Find by rg optional.
+     * Find tutor by rg.
      *
      * @param rg the rg
-     * @return the optional
+     * @return the tutor optional
      */
     Optional<Tutor> findByRg(String rg);
 
     /**
-     * Search tutores.
+     * Search tutor.
      *
-     * @param value Nome, CPF ou RG
+     * @param value the nome, CPF ou RG
      * @param page  the page
-     * @return the list of tutores
+     * @return the tutor list
      */
     @Query(value = "SELECT t FROM tb_tutores AS t " +
             "WHERE upper(t.nome) LIKE upper(concat('%', ?1, '%')) " +

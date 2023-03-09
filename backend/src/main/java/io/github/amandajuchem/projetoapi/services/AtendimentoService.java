@@ -103,7 +103,7 @@ public class AtendimentoService implements AbstractService<Atendimento> {
     /**
      * Search atendimento.
      *
-     * @param value     data, nome do animal ou nome do veterinário
+     * @param value     the data, nome do animal ou nome do veterinário
      * @param page      the page
      * @param size      the size
      * @param sort      the sort

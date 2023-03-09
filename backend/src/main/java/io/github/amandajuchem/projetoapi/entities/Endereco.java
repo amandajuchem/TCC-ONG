@@ -1,13 +1,15 @@
 package io.github.amandajuchem.projetoapi.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.github.amandajuchem.projetoapi.enums.Estado;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -48,11 +50,6 @@ public class Endereco extends AbstractEntity {
     @NotEmpty
     @Column(name = "cep", length = 8)
     private String cep;
-
-    @OneToOne
-    @JoinColumn(name = "tutor_id")
-    @JsonBackReference(value = "jsonReferenceEnderecoTutor")
-    private Tutor tutor;
 
     @Override
     public boolean equals(Object o) {

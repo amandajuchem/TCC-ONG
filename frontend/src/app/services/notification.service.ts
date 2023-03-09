@@ -12,7 +12,7 @@ export class NotificationService {
     private _snackBar: MatSnackBar
   ) { }
 
-  showNotification(message: string, type: NotificationType) {
+  show(message: string, type: NotificationType) {
     
     this._snackBar.openFromComponent(NotificationComponent, {
       data: {

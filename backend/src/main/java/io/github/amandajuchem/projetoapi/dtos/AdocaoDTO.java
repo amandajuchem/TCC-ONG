@@ -24,7 +24,6 @@ public record AdocaoDTO(
         @NotNull Local local,
         @NotNull LocalAdocao localAdocao,
         @NotNull Boolean valeCastracao,
-        @NotNull AnimalDTO animal,
         @NotNull TutorDTO tutor,
         @NotNull Set<ImagemDTO> termoResponsabilidade
 ) implements Serializable {
@@ -47,7 +46,6 @@ public record AdocaoDTO(
                 adocao.getLocal(),
                 adocao.getLocalAdocao(),
                 adocao.getValeCastracao(),
-                adocao.getAnimal() != null ? AnimalDTO.toDTO(adocao.getAnimal()) : null,
                 adocao.getTutor() != null ? TutorDTO.toDTO(adocao.getTutor()) : null,
                 adocao.getTermoResponsabilidade() != null ? adocao.getTermoResponsabilidade().stream().map(ImagemDTO::toDTO).collect(Collectors.toSet()) : null
         );

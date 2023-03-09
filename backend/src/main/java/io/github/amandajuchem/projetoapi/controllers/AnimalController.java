@@ -1,14 +1,12 @@
 package io.github.amandajuchem.projetoapi.controllers;
 
-import io.github.amandajuchem.projetoapi.dtos.AdocaoDTO;
 import io.github.amandajuchem.projetoapi.dtos.AnimalDTO;
 import io.github.amandajuchem.projetoapi.entities.Adocao;
 import io.github.amandajuchem.projetoapi.entities.Animal;
+import io.github.amandajuchem.projetoapi.entities.Imagem;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
-import io.github.amandajuchem.projetoapi.services.AdocaoService;
 import io.github.amandajuchem.projetoapi.services.AnimalService;
-import io.github.amandajuchem.projetoapi.utils.AdocaoUtils;
-import io.github.amandajuchem.projetoapi.utils.AnimalUtils;
+import io.github.amandajuchem.projetoapi.utils.FileUtils;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -17,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,10 +29,7 @@ import static org.springframework.http.HttpStatus.*;
 @RequiredArgsConstructor
 public class AnimalController {
 
-    private final AdocaoService adocaoService;
-    private final AdocaoUtils adocaoUtils;
     private final AnimalService animalService;
-    private final AnimalUtils animalUtils;
 
     /**
      * Delete response entity.
@@ -43,7 +39,7 @@ public class AnimalController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id) {
-        animalUtils.delete(id);
+        animalService.delete(id);
         return ResponseEntity.status(OK).body(null);
     }
 
@@ -77,17 +73,24 @@ public class AnimalController {
     /**
      * Save response entity.
      *
-     * @param animal     the animal
-     * @param novaFoto   the nova foto
-     * @param antigaFoto the antiga foto
+     * @param animal the animal
+     * @param foto   the foto
      * @return the response entity
      */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> save(@RequestPart @Valid Animal animal,
-                                  @RequestPart(required = false) MultipartFile novaFoto,
-                                  @RequestPart(required = false) String antigaFoto) {
+                                  @RequestPart(required = false) MultipartFile foto) throws IOException {
 
-        animal = animalUtils.save(animal, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
+        if (foto != null) {
+
+            animal.setFoto(Imagem.builder()
+                    .nome(System.currentTimeMillis() + "." + FileUtils.getExtension(foto))
+                    .build());
+
+            FileUtils.FILE = foto;
+        }
+
+        animal = animalService.save(animal);
         return ResponseEntity.status(CREATED).body(AnimalDTO.toDTO(animal));
     }
 
@@ -119,20 +122,28 @@ public class AnimalController {
     /**
      * Update response entity.
      *
-     * @param id         the id
-     * @param animal     the animal
-     * @param novaFoto   the nova foto
-     * @param antigaFoto the antiga foto
+     * @param id     the id
+     * @param animal the animal
+     * @param foto   the foto
      * @return the response entity
      */
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> update(@PathVariable UUID id,
                                     @RequestPart @Valid Animal animal,
-                                    @RequestPart(required = false) MultipartFile novaFoto,
-                                    @RequestPart(required = false) String antigaFoto) {
+                                    @RequestPart(required = false) MultipartFile foto) throws IOException {
 
         if (animal.getId().equals(id)) {
-            animal = animalUtils.save(animal, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
+
+            if (foto != null) {
+
+                animal.setFoto(Imagem.builder()
+                        .nome(System.currentTimeMillis() + "." + FileUtils.getExtension(foto))
+                        .build());
+
+                FileUtils.FILE = foto;
+            }
+
+            animal = animalService.save(animal);
             return ResponseEntity.status(OK).body(AnimalDTO.toDTO(animal));
         }
 
@@ -148,19 +159,13 @@ public class AnimalController {
      * @return the response entity
      */
     @DeleteMapping("/{id}/adocoes/{idAdocao}")
-    public ResponseEntity<?> adocaoDelete(@PathVariable UUID idAdocao) {
-        adocaoUtils.delete(idAdocao);
-        return ResponseEntity.status(OK).body(null);
-    }
+    public ResponseEntity<?> adocaoDelete(@PathVariable UUID id, @PathVariable UUID idAdocao) {
 
-    @GetMapping("/{id}/adocoes")
-    public ResponseEntity<?> adocaoFindAll(@RequestParam(required = false, defaultValue = "0") Integer page,
-                                           @RequestParam(required = false, defaultValue = "10") Integer size,
-                                           @RequestParam(required = false, defaultValue = "dataHora") String sort,
-                                           @RequestParam(required = false, defaultValue = "desc") String direction) {
+        var animal = animalService.findById(id);
+        animal.getAdocoes().removeIf(adocao -> adocao.getId().equals(idAdocao));
+        animalService.save(animal);
 
-        var adocoes = adocaoService.findAll(page, size, sort, direction).map(AdocaoDTO::toDTO);
-        return ResponseEntity.status(OK).body(adocoes);
+        return ResponseEntity.status(OK).body(animal);
     }
 
     /**
@@ -176,10 +181,7 @@ public class AnimalController {
                                         @RequestPart @Valid Adocao adocao,
                                         @RequestPart(required = false) List<MultipartFile> documentosToSave) {
 
-        if (adocao.getAnimal().getId().equals(id)) {
-            adocao = adocaoUtils.save(adocao, documentosToSave, null);
-            return ResponseEntity.status(CREATED).body(AdocaoDTO.toDTO(adocao));
-        }
+
 
         throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);
     }
@@ -191,23 +193,15 @@ public class AnimalController {
      * @param idAdocao           the id adocao
      * @param adocao             the adocao
      * @param documentosToSave   the documentos to save
-     * @param documentosToDelete the documentos to delete
      * @return the response entity
      */
     @PutMapping("/{id}/adocoes/{idAdocao}")
     public ResponseEntity<?> adocaoUpdate(@PathVariable UUID id,
                                           @PathVariable UUID idAdocao,
                                           @RequestPart @Valid Adocao adocao,
-                                          @RequestPart(required = false) List<MultipartFile> documentosToSave,
-                                          @RequestPart(required = false) List<UUID> documentosToDelete) {
+                                          @RequestPart(required = false) List<MultipartFile> documentosToSave) {
 
-        if (adocao.getAnimal().getId().equals(id)) {
 
-            if (adocao.getId().equals(idAdocao)) {
-                adocao = adocaoUtils.save(adocao, documentosToSave, documentosToDelete);
-                return ResponseEntity.status(CREATED).body(AdocaoDTO.toDTO(adocao));
-            }
-        }
 
         throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);
     }

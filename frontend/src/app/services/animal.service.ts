@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
+import { Adocao } from '../entities/adocao';
 import { Animal } from '../entities/animal';
 import { Page } from '../entities/page';
-import {Adocao} from "../entities/adocao";
 
 @Injectable({
   providedIn: 'root'
@@ -66,17 +66,17 @@ export class AnimalService {
   /**
    *
    * @param animal
-   * @param novaFoto
+   * @param foto
    * @returns
    */
-  save(animal: Animal, novaFoto: any) {
+  save(animal: Animal, foto: any) {
 
     let formData = new FormData();
 
     formData.append('animal', new Blob([JSON.stringify(animal)], { type: 'application/json' }));
 
-    if (novaFoto) {
-      formData.append('novaFoto', new Blob([novaFoto], { type: 'multipart/form-data' }), 'novaFoto.png');
+    if (foto) {
+      formData.append('foto', new Blob([foto], { type: 'multipart/form-data' }), 'foto.png');
     }
 
     return this._http.post<Animal>(this.baseURL, formData);
@@ -115,22 +115,17 @@ export class AnimalService {
   /**
    *
    * @param animal
-   * @param novaFoto
-   * @param antigaFoto
+   * @param foto
    * @returns
    */
-  update(animal: Animal, novaFoto: any, antigaFoto: any) {
+  update(animal: Animal, foto: any) {
 
     let formData = new FormData();
 
     formData.append('animal', new Blob([JSON.stringify(animal)], { type: 'application/json' }));
 
-    if (novaFoto) {
-      formData.append('novaFoto', new Blob([novaFoto], { type: 'multipart/form-data' }), 'novaFoto.png');
-    }
-
-    if (antigaFoto) {
-      formData.append('antigaFoto', new Blob([antigaFoto], { type: 'text/plain' }));
+    if (foto) {
+      formData.append('foto', new Blob([foto], { type: 'multipart/form-data' }), 'foto.png');
     }
 
     return this._http.put<Animal>(this.baseURL + '/' + animal.id, formData);
@@ -142,24 +137,11 @@ export class AnimalService {
     return this._http.delete(this.baseURL + '/' + id + '/adocoes/' + idAdocao);
   }
 
-  adocaoFindAll(id: string, page: number, size: number, sort: string, direction: string) {
-
-    return this._http.get<Page>(this.baseURL + '/' + id + '/adocoes', {
-      params: {
-        id: id,
-        page: page,
-        size: size,
-        sort: sort,
-        direction: direction
-      }
-    });
-  }
-
   adocaoSave(animal: Animal, adocao: Adocao) {
     return this._http.post<Adocao>(this.baseURL + '/' + animal.id + '/adocoes', adocao);
   }
 
   adocaoUpdate(animal: Animal, adocao: Adocao) {
-    return this._http.put<Adocao>(this.baseURL + '/' + animal.id + '/adocoe/' + adocao.id, adocao);
+    return this._http.put<Adocao>(this.baseURL + '/' + animal.id + '/adocoes/' + adocao.id, adocao);
   }
 }

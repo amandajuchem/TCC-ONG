@@ -17,11 +17,11 @@ import java.util.UUID;
 public interface ExameRepository extends JpaRepository<Exame, UUID> {
 
     /**
-     * Find by nome contains ignore case or categoria contains ignore case page.
+     * Find exame by nome or categoria.
      *
-     * @param value Nome ou categoria
+     * @param value the nome ou categoria
      * @param page  the page
-     * @return the list of exames
+     * @return the exame list
      */
     @Query(value = "SELECT e FROM tb_exames AS e " +
             "WHERE upper(e.nome) LIKE upper(concat('%', ?1, '%')) " +
@@ -32,7 +32,7 @@ public interface ExameRepository extends JpaRepository<Exame, UUID> {
      * Find exame by nome.
      *
      * @param nome the nome
-     * @return the optional
+     * @return the exame optional
      */
     Optional<Exame> findByNomeIgnoreCase(String nome);
 }

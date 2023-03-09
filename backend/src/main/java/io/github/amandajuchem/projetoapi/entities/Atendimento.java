@@ -1,6 +1,5 @@
 package io.github.amandajuchem.projetoapi.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.github.amandajuchem.projetoapi.enums.Motivo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -45,8 +44,7 @@ public class Atendimento extends AbstractEntity {
     private Set<Exame> exames;
 
     @Valid
-    @OneToMany(mappedBy = "atendimento")
-    @JsonManagedReference(value = "jsonReferenceDocumentosAtendimento")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Imagem> documentos;
 
     @OneToOne

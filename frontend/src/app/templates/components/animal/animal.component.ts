@@ -3,7 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Animal } from 'src/app/entities/animal';
 import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
-import { FacadeService } from 'src/app/services/facade.service';
+import { AnimalService } from 'src/app/services/animal.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
 
 @Component({
@@ -18,12 +20,14 @@ export class AnimalComponent implements OnInit {
 
   constructor(
     private _activatedRoute: ActivatedRoute,
-    private _facade: FacadeService
+    private _animalService: AnimalService,
+    private _authService: AuthService,
+    private _notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
 
-    this.user = this._facade.authGetCurrentUser();
+    this.user = this._authService.getCurrentUser();
 
     this._activatedRoute.params.subscribe({
 
@@ -31,22 +35,22 @@ export class AnimalComponent implements OnInit {
           
         if (x && x.id) {
           
-          this._facade.animalFindById(x.id).subscribe({
+          this._animalService.findById(x.id).subscribe({
             
             next: (animal) => {
-              this._facade.animalSet(animal);
+              this._animalService.set(animal);
             },
 
             error: (error) => {
               console.error(error);
-              this._facade.notificationShowNotification(MessageUtils.ANIMAL_GET_FAIL, NotificationType.FAIL); 
+              this._notificationService.show(MessageUtils.ANIMAL_GET_FAIL, NotificationType.FAIL); 
             }
           });
         }
       },
     });
 
-    this._facade.animalGet().subscribe({
+    this._animalService.get().subscribe({
 
       next: (animal) => {
         

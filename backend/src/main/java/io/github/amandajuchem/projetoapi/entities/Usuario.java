@@ -1,6 +1,5 @@
 package io.github.amandajuchem.projetoapi.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.github.amandajuchem.projetoapi.enums.Setor;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -45,8 +44,7 @@ public class Usuario extends AbstractEntity {
     private Setor setor;
 
     @Valid
-    @OneToOne(mappedBy = "usuario")
-    @JsonManagedReference(value = "jsonReferenceFotoUsuario")
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Imagem foto;
 
     @Override

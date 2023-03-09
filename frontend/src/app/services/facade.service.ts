@@ -147,8 +147,8 @@ export class FacadeService {
    * @param novaFoto
    * @returns
    */
-  animalSave(animal: Animal, novaFoto: any) {
-    return this._animalService.save(animal, novaFoto);
+  animalSave(animal: Animal, foto: any) {
+    return this._animalService.save(animal, foto);
   }
 
   /**
@@ -179,8 +179,8 @@ export class FacadeService {
    * @param antigaFoto
    * @returns
    */
-  animalUpdate(animal: Animal, novaFoto: any, antigaFoto: any) {
-    return this._animalService.update(animal, novaFoto, antigaFoto);
+  animalUpdate(animal: Animal, novaFoto: any) {
+    return this._animalService.update(animal, novaFoto);
   }
 
   ////////////////////////////////////////////////// ATENDIMENTO //////////////////////////////////////////////////
@@ -358,7 +358,7 @@ export class FacadeService {
    * @param type
    */
   notificationShowNotification(message: string, type: NotificationType) {
-    this._notificationService.showNotification(message, type);
+    this._notificationService.show(message, type);
   }
 
   ////////////////////////////////////////////////// TUTOR //////////////////////////////////////////////////

@@ -94,7 +94,7 @@ public class ExameService implements AbstractService<Exame> {
     /**
      * Search exame.
      *
-     * @param value     nome ou categoria
+     * @param value     the nome ou categoria
      * @param page      the page
      * @param size      the size
      * @param sort      the sort

@@ -103,7 +103,7 @@ public class AgendamentoService implements AbstractService<Agendamento> {
     /**
      * Search agendamento.
      *
-     * @param value     Data, nome do animal ou nome do veterinário
+     * @param value     the data, nome do animal ou nome do veterinário
      * @param page      the page
      * @param size      the size
      * @param sort      the sort

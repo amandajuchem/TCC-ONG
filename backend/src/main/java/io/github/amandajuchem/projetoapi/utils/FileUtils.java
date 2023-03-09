@@ -21,6 +21,11 @@ public class FileUtils {
     public static final String DOCUMENTS_DIRECTORY = File.separator + "files" + File.separator + "documents";
 
     /**
+     * The constant FILE.
+     */
+    public static MultipartFile FILE;
+
+    /**
      * The constant IMAGES_DIRECTORY.
      */
     public static final String IMAGES_DIRECTORY = File.separator + "files" + File.separator + "images";
@@ -80,6 +85,28 @@ public class FileUtils {
     }
 
     /**
+     * Save file.
+     *
+     * @param filename the filename
+     * @param file     the file
+     * @param path     the path
+     * @return the file
+     * @throws IOException the io exception
+     */
+    public static File save(String filename, MultipartFile file, String path) throws IOException {
+
+
+        if (checkPathDestination(path)) {
+            Path filePath = Paths.get(System.getProperty("user.dir") + path, filename);
+            Files.write(filePath, file.getBytes());
+
+            return find(filename, path);
+        }
+
+        throw new OperationFailureException("Diretório não encontrado!");
+    }
+
+    /**
      * Delete boolean.
      *
      * @param filename the filename
@@ -99,17 +126,31 @@ public class FileUtils {
     /**
      * Gets extension.
      *
-     * @param file the file
+     * @param object the object
      * @return the extension
      * @throws FileNotFoundException the file not found exception
      */
-    public static String getExtension(File file) throws FileNotFoundException {
+    public static String getExtension(Object object) throws FileNotFoundException {
 
-        if (!file.exists()) {
-            throw new FileNotFoundException("Arquivo não encontrado!");
+        if (object instanceof File) {
+
+            var file = ((File) object);
+
+            if (!file.exists()) {
+                throw new FileNotFoundException("Arquivo não encontrado!");
+            }
+
+            return file.getName().replace(".", " ").split(" ")[1];
         }
 
-        return "." + file.getName().replace(".", " ").split(" ")[1];
+        if (object instanceof MultipartFile) {
+
+            var file = ((MultipartFile) object);
+
+            return file.getOriginalFilename().replace(".", " ").split(" ")[1];
+        }
+
+        throw new OperationFailureException(MessageUtils.OPERATION_FAILURE);
     }
 
     /**

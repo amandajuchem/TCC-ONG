@@ -1,6 +1,6 @@
 package io.github.amandajuchem.projetoapi.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import io.github.amandajuchem.projetoapi.utils.FileUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,6 +8,7 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.io.IOException;
 
 /**
  * The type Imagem.
@@ -23,33 +24,20 @@ public class Imagem extends AbstractEntity {
     @Column(name = "nome", length = 25)
     private String nome;
 
-    @ManyToOne
-    @JoinColumn(name = "adocao_id")
-    @JsonBackReference(value = "jsonReferenceTermoResponsabilidadeAdocao")
-    private Adocao adocao;
-
-    @OneToOne
-    @JoinColumn(name = "animal_id")
-    @JsonBackReference(value = "jsonReferenceFotoAnimal")
-    private Animal animal;
-
-    @ManyToOne
-    @JoinColumn(name = "atendimento_id")
-    @JsonBackReference(value = "jsonReferenceDocumentosAtendimento")
-    private Atendimento atendimento;
-
-    @OneToOne
-    @JoinColumn(name = "tutor_id")
-    @JsonBackReference(value = "jsonReferenceFotoTutor")
-    private Tutor tutor;
-
-    @OneToOne
-    @JoinColumn(name = "usuario_id")
-    @JsonBackReference(value = "jsonReferenceFotoUsuario")
-    private Usuario usuario;
-
     @Override
     public boolean equals(Object o) {
         return super.equals(o);
+    }
+
+    @PostPersist
+    @PostUpdate
+    private void postSave() throws IOException {
+        FileUtils.save(nome, FileUtils.FILE, FileUtils.IMAGES_DIRECTORY);
+        FileUtils.FILE = null;
+    }
+
+    @PostRemove
+    private void postDelete() {
+        FileUtils.delete(nome, FileUtils.IMAGES_DIRECTORY);
     }
 }

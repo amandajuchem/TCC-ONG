@@ -5,7 +5,6 @@ import io.github.amandajuchem.projetoapi.entities.Usuario;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.UsuarioService;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
-import io.github.amandajuchem.projetoapi.utils.UsuarioUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +25,6 @@ import static org.springframework.http.HttpStatus.*;
 public class UsuarioController {
 
     private final UsuarioService service;
-    private final UsuarioUtils utils;
 
     /**
      * Find all usuários.
@@ -68,7 +66,7 @@ public class UsuarioController {
                                   @RequestPart(required = false) MultipartFile novaFoto,
                                   @RequestPart(required = false) String antigaFoto) {
 
-        usuario = utils.save(usuario, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
+//        usuario = utils.save(usuario, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
         return ResponseEntity.status(CREATED).body(UsuarioDTO.toDTO(usuario));
     }
 
@@ -112,10 +110,10 @@ public class UsuarioController {
                                     @RequestPart(required = false) MultipartFile novaFoto,
                                     @RequestPart(required = false) String antigaFoto) {
 
-        if (usuario.getId().equals(id)) {
-            usuario = utils.save(usuario, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
-            return ResponseEntity.status(OK).body(UsuarioDTO.toDTO(usuario));
-        }
+//        if (usuario.getId().equals(id)) {
+//            usuario = utils.save(usuario, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
+//            return ResponseEntity.status(OK).body(UsuarioDTO.toDTO(usuario));
+//        }
 
         throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);
     }

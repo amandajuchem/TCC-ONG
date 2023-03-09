@@ -27,7 +27,7 @@ public class UsuarioService implements AbstractService<Usuario> {
     private final UsuarioRepository repository;
 
     /**
-     * Delete usuario.
+     * Delete usuário.
      *
      * @param id the id
      */
@@ -47,10 +47,10 @@ public class UsuarioService implements AbstractService<Usuario> {
     }
 
     /**
-     * Encode usuario password.
+     * Encode usuário password.
      *
-     * @param usuario the usuario
-     * @return the usuario
+     * @param usuario the usuário
+     * @return the usuário
      */
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Usuario encodePassword(Usuario usuario) {
@@ -70,9 +70,9 @@ public class UsuarioService implements AbstractService<Usuario> {
     }
 
     /**
-     * Find all usuario.
+     * Find all usuário.
      *
-     * @return the usuario list
+     * @return the usuário list
      */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -81,10 +81,10 @@ public class UsuarioService implements AbstractService<Usuario> {
     }
 
     /**
-     * Find usuario by CPF.
+     * Find usuário by CPF.
      *
      * @param cpf the cpf
-     * @return the usuario
+     * @return the usuário
      */
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Usuario findByCpf(String cpf) {
@@ -95,10 +95,10 @@ public class UsuarioService implements AbstractService<Usuario> {
     }
 
     /**
-     * Find usuario by id.
+     * Find usuário by id.
      *
      * @param id the id
-     * @return the usuario
+     * @return the usuário
      */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -110,10 +110,10 @@ public class UsuarioService implements AbstractService<Usuario> {
     }
 
     /**
-     * Save usuario.
+     * Save usuário.
      *
-     * @param usuario the usuario
-     * @return the usuario
+     * @param usuario the usuário
+     * @return the usuário
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
@@ -132,9 +132,9 @@ public class UsuarioService implements AbstractService<Usuario> {
     }
 
     /**
-     * Search usuario.
+     * Search usuário.
      *
-     * @param value     Nome ou CPF
+     * @param value     the nome ou CPF
      * @param page      the page
      * @param size      the size
      * @param sort      the sort
@@ -147,9 +147,9 @@ public class UsuarioService implements AbstractService<Usuario> {
     }
 
     /**
-     * Validate usuario.
+     * Validate usuário.
      *
-     * @param usuario the usuario
+     * @param usuario the usuário
      * @return the boolean
      */
     @Override

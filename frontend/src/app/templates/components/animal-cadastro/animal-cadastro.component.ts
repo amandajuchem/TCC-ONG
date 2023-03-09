@@ -3,9 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Animal } from 'src/app/entities/animal';
 import { NotificationType } from 'src/app/enums/notification-type';
-import { FacadeService } from 'src/app/services/facade.service';
+import { AnimalService } from 'src/app/services/animal.service';
+import { ImagemService } from 'src/app/services/imagem.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
-import { environment } from 'src/environments/environment';
 
 import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-imagem.component';
 import { SelecionarTutorComponent } from '../selecionar-tutor/selecionar-tutor.component';
@@ -17,20 +18,20 @@ import { SelecionarTutorComponent } from '../selecionar-tutor/selecionar-tutor.c
 })
 export class AnimalCadastroComponent implements OnInit {
   
-  apiURL!: string;
   form!: FormGroup;
   foto!: any;
   fotoToSave!: any;
 
   constructor(
+    private _animalService: AnimalService,
     private _dialog: MatDialog,
     private _dialogRef: MatDialogRef<AnimalCadastroComponent>,
-    private _facade: FacadeService,
-    private _formBuilder: FormBuilder
+    private _formBuilder: FormBuilder,
+    private _imagemService: ImagemService,
+    private _notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
-    this.apiURL = environment.apiURL;
     this.buildForm();
   }
 
@@ -46,7 +47,7 @@ export class AnimalCadastroComponent implements OnInit {
 
       if (result && result.status) {
 
-        this._facade.imagemToBase64(result.images[0])?.then(data => {
+        this._imagemService.toBase64(result.images[0])?.then(data => {
 
           let imagem = { id: new Date().getTime(), data: data };
 
@@ -103,16 +104,16 @@ export class AnimalCadastroComponent implements OnInit {
 
     let animal: Animal = Object.assign({}, this.form.getRawValue());
 
-    this._facade.animalSave(animal, this.fotoToSave).subscribe({
+    this._animalService.save(animal, this.fotoToSave).subscribe({
 
       complete: () => {
-        this._facade.notificationShowNotification(MessageUtils.ANIMAL_SAVE_SUCCESS, NotificationType.SUCCESS);
+        this._notificationService.show(MessageUtils.ANIMAL_SAVE_SUCCESS, NotificationType.SUCCESS);
         this._dialogRef.close({ status: true });
       },
 
       error: (error) => {
         console.error(error);
-        this._facade.notificationShowNotification(MessageUtils.ANIMAL_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.ANIMAL_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
       }
     });
   }

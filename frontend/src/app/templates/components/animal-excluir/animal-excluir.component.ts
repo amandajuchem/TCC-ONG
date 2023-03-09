@@ -1,7 +1,8 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { NotificationType } from 'src/app/enums/notification-type';
-import { FacadeService } from 'src/app/services/facade.service';
+import { AnimalService } from 'src/app/services/animal.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
 
 @Component({
@@ -13,22 +14,23 @@ export class AnimalExcluirComponent {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
+    private _animalService: AnimalService,
     private _dialogRef: MatDialogRef<AnimalExcluirComponent>,
-    private _facade: FacadeService
+    private _notificationService: NotificationService
   ) { }
 
   submit() {
 
-    this._facade.animalDelete(this.data.animal.id).subscribe({
+    this._animalService.delete(this.data.animal.id).subscribe({
 
       complete: () => {
-        this._facade.notificationShowNotification(MessageUtils.ANIMAL_DELETE_SUCCESS, NotificationType.SUCCESS);
+        this._notificationService.show(MessageUtils.ANIMAL_DELETE_SUCCESS, NotificationType.SUCCESS);
         this._dialogRef.close({status: true});
       },
 
       error: (error) => {
         console.log(error);
-        this._facade.notificationShowNotification(MessageUtils.ANIMAL_DELETE_FAIL, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.ANIMAL_DELETE_FAIL, NotificationType.FAIL);
       }
     });
   }

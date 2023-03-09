@@ -57,7 +57,7 @@ public class ProjetoApiApplication implements CommandLineRunner {
 
         usuario.setNome("Amanda Juchem");
         usuario.setCpf("07905836584");
-        usuario.setSenha("$2a$12$xi5jwI8SFzkS.LYJ73OAHOJb3mEhOeFJk2Gj3pzPKcQBM2SGVUr2a");
+        usuario.setSenha("admin");
         usuario.setSetor(Setor.ADMINISTRACAO);
         usuario.setStatus(true);
 

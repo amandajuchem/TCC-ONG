@@ -55,7 +55,7 @@ export class AnimalFichaMedicaComponent implements OnInit {
     let fichaMedica: FichaMedica = Object.assign({}, this.form.getRawValue());
     this.animal.fichaMedica = fichaMedica;
 
-    this._facade.animalUpdate(this.animal, null, null).subscribe({
+    this._facade.animalUpdate(this.animal, null).subscribe({
 
       next: (animal) => {
         this._facade.notificationShowNotification(MessageUtils.ANIMAL_UPDATE_SUCCESS, NotificationType.SUCCESS);

@@ -6,7 +6,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Animal } from 'src/app/entities/animal';
 import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
-import { FacadeService } from 'src/app/services/facade.service';
+import { AnimalService } from 'src/app/services/animal.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
 import { OperatorUtils } from 'src/app/utils/operator-utils';
 
@@ -30,14 +32,16 @@ export class AnimaisComponent implements AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
+    private _animalService: AnimalService,
+    private _authService: AuthService,
     private _dialog: MatDialog,
-    private _facade: FacadeService
+    private _notificationService: NotificationService
   ) {
     this.columns = ['index', 'nome', 'especie', 'porte', 'idade', 'acao'];
     this.dataSource = new MatTableDataSource();
     this.isLoadingResults = true;
     this.resultsLength = 0;
-    this.user = this._facade.authGetCurrentUser();
+    this.user = this._authService.getCurrentUser();
   }
 
   ngAfterViewInit(): void {
@@ -74,7 +78,7 @@ export class AnimaisComponent implements AfterViewInit {
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
 
-    this._facade.animalSearch(this.filterString, page, size, sort, direction).subscribe({
+    this._animalService.search(this.filterString, page, size, sort, direction).subscribe({
 
       complete: () => {
         this.isLoadingResults = false;
@@ -88,7 +92,7 @@ export class AnimaisComponent implements AfterViewInit {
       error: (err) => {
         this.isLoadingResults = false;
         console.error(err);
-        this._facade.notificationShowNotification(MessageUtils.ANIMAIS_GET_FAIL, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.ANIMAIS_GET_FAIL, NotificationType.FAIL);
       }
     });
   }
@@ -103,7 +107,7 @@ export class AnimaisComponent implements AfterViewInit {
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
 
-    this._facade.animalFindAll(page, size, sort, direction).subscribe({
+    this._animalService.findAll(page, size, sort, direction).subscribe({
 
       complete: () => {
         this.isLoadingResults = false;
@@ -117,7 +121,7 @@ export class AnimaisComponent implements AfterViewInit {
       error: (error) => {
         this.isLoadingResults = false;
         console.error(error);
-        this._facade.notificationShowNotification(MessageUtils.ANIMAIS_GET_FAIL, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.ANIMAIS_GET_FAIL, NotificationType.FAIL);
       }
     });
   }

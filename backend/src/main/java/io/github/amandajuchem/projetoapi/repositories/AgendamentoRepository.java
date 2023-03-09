@@ -19,11 +19,11 @@ import java.util.UUID;
 public interface AgendamentoRepository extends JpaRepository<Agendamento, UUID> {
 
     /**
-     * Search agendamentos.
+     * Search agendamento.
      *
-     * @param value    Data, nome do animal ou nome do veterinário
+     * @param value    the data, nome do animal ou nome do veterinário
      * @param pageable the pageable
-     * @return the list of agendamentos
+     * @return the agendamento list
      */
     @Query(value = "SELECT a FROM tb_agendamentos AS a INNER JOIN a.animal AS an INNER JOIN a.veterinario AS v " +
             "ON cast(a.dataHora as string) LIKE concat('%', ?1, '%') " +
@@ -32,11 +32,11 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, UUID> 
     Page<Agendamento> search(String value, Pageable pageable);
 
     /**
-     * Find agendamento by data hora and veterinario.
+     * Find agendamento by data hora and veterinário.
      *
      * @param dataHora    the data hora
      * @param veterinario the veterinario
-     * @return the optional of agendamento
+     * @return the agendamento optional
      */
     Optional<Agendamento> findByDataHoraAndVeterinario(LocalDateTime dataHora, Usuario veterinario);
 }

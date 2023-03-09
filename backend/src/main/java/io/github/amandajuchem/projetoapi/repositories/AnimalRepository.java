@@ -16,11 +16,11 @@ import java.util.UUID;
 public interface AnimalRepository extends JpaRepository<Animal, UUID> {
 
     /**
-     * Search animais.
+     * Search animal.
      *
-     * @param value Nome
+     * @param value the nome
      * @param page  the page
-     * @return the list of animais
+     * @return the animal list
      */
     @Query(value = "SELECT a FROM tb_animais AS a WHERE upper(a.nome) LIKE upper(concat('%', ?1, '%'))")
     Page<Animal> search(String value, Pageable page);

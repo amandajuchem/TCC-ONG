@@ -5,7 +5,6 @@ import io.github.amandajuchem.projetoapi.entities.Tutor;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.TutorService;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
-import io.github.amandajuchem.projetoapi.utils.TutorUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +25,6 @@ import static org.springframework.http.HttpStatus.*;
 public class TutorController {
 
     private final TutorService service;
-    private final TutorUtils utils;
 
     /**
      * Delete response entity.
@@ -36,7 +34,7 @@ public class TutorController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id) {
-        utils.delete(id);
+//        utils.delete(id);
         return ResponseEntity.status(OK).body(null);
     }
 
@@ -80,7 +78,7 @@ public class TutorController {
                                   @RequestPart(required = false) MultipartFile novaFoto,
                                   @RequestPart(required = false) String antigaFoto) {
 
-        tutor = utils.save(tutor, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
+//        tutor = utils.save(tutor, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
         return ResponseEntity.status(CREATED).body(TutorDTO.toDTO(tutor));
     }
 
@@ -124,10 +122,10 @@ public class TutorController {
                                     @RequestPart(required = false) MultipartFile novaFoto,
                                     @RequestPart(required = false) String antigaFoto) {
 
-        if (tutor.getId().equals(id)) {
-            tutor = utils.save(tutor, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
-            return ResponseEntity.status(OK).body(TutorDTO.toDTO(tutor));
-        }
+//        if (tutor.getId().equals(id)) {
+//            tutor = utils.save(tutor, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
+//            return ResponseEntity.status(OK).body(TutorDTO.toDTO(tutor));
+//        }
 
         throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);
     }

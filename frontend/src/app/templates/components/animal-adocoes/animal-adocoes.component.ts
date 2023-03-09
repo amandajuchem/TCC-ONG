@@ -4,9 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Adocao } from 'src/app/entities/adocao';
-import { NotificationType } from 'src/app/enums/notification-type';
-import { FacadeService } from 'src/app/services/facade.service';
-import { MessageUtils } from 'src/app/utils/message-utils';
+import { AnimalService } from 'src/app/services/animal.service';
 import { OperatorUtils } from 'src/app/utils/operator-utils';
 
 import { Animal } from '../../../entities/animal';
@@ -24,34 +22,32 @@ export class AnimalAdocoesComponent implements AfterViewInit {
   columns!: Array<string>;
   dataSource!: MatTableDataSource<Adocao>;
   isLoadingResults!: boolean;
-  resultsLength!: number;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
+    private _animalService: AnimalService,
     private _dialog: MatDialog,
-    private _facade: FacadeService
+
   ) {
     this.columns = ['index', 'dataHora', 'localAdocao', 'tutor', 'acao'];
     this.dataSource = new MatTableDataSource();
     this.isLoadingResults = true;
-    this.resultsLength = 0;
   }
 
   ngAfterViewInit(): void {
 
-    this._facade.animalGet().subscribe({
+    this._animalService.get().subscribe({
 
       next: (animal) => {
 
         if (animal) {
           this.animal = animal;
+          this.findAllAdocoes();
         }
       }
     });
-
-    this.findAllAdocoes();
   }
 
   add() {
@@ -62,7 +58,7 @@ export class AnimalAdocoesComponent implements AfterViewInit {
       },
       width: '100%'
     })
-      .afterClosed().subscribe({
+    .afterClosed().subscribe({
 
       next: (result) => {
 
@@ -81,7 +77,7 @@ export class AnimalAdocoesComponent implements AfterViewInit {
       },
       width: '100%'
     })
-      .afterClosed().subscribe({
+    .afterClosed().subscribe({
 
       next: (result) => {
 
@@ -94,40 +90,11 @@ export class AnimalAdocoesComponent implements AfterViewInit {
 
   async findAllAdocoes() {
 
-    const page = this.paginator.pageIndex;
-    const size = this.paginator.pageSize;
-    const sort = this.sort.active;
-    const direction = this.sort.direction;
-
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
 
-    this._facade.animalAdocaoFindAll(this.animal.id, page, size, sort, direction).subscribe({
-
-      complete: () => {
-        this.isLoadingResults = false;
-      },
-
-      next: (adocoes) => {
-        this.dataSource.data = adocoes.content;
-        this.resultsLength = adocoes.totalElements;
-      },
-
-      error: (err) => {
-        this.isLoadingResults = false;
-        console.error(err);
-        this._facade.notificationShowNotification(MessageUtils.ADOCOES_GET_FAIL, NotificationType.FAIL);
-      }
-    });
-  }
-
-  pageChange() {
-    this.findAllAdocoes();
-  }
-
-  sortChange() {
-    this.paginator.pageIndex = 0;
-    this.findAllAdocoes();
+    this.dataSource.data = this.animal.adocoes;
+    this.isLoadingResults = false;
   }
 
   update(adocao: Adocao) {
@@ -138,7 +105,7 @@ export class AnimalAdocoesComponent implements AfterViewInit {
       },
       width: '100%'
     })
-      .afterClosed().subscribe({
+    .afterClosed().subscribe({
 
       next: (result) => {
 
