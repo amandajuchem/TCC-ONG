@@ -11,7 +11,7 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 /**
  * The type Adocao.
@@ -45,7 +45,7 @@ public class Adocao extends AbstractEntity {
 
     @Valid
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Imagem> termoResponsabilidade;
+    private List<Imagem> termoResponsabilidade;
 
     @Override
     public boolean equals(Object o) {

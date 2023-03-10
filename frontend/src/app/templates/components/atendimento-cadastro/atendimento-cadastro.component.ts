@@ -135,11 +135,6 @@ export class AtendimentoCadastroComponent implements OnInit {
     }
   }
 
-  deleteImagem(imagem: any) {
-    this.documentosToSave = this.documentosToSave.filter((d: any) => d.id !== imagem.id);
-    this.documentosToShow = this.documentosToShow.filter((d: any) => d.id !== imagem.id);
-  }
-
   downloadImagem(imagem: any) {
 
     const link = document.createElement('a');
@@ -158,6 +153,12 @@ export class AtendimentoCadastroComponent implements OnInit {
     let exames: Array<Exame> = this.form.get('exames')?.value;
     exames = exames.filter(e => e.id != exame.id);
     this.form.get('exames')?.patchValue(exames);
+  }
+
+  removeImagem(imagem: any) {
+    this.form.get('documentos')?.patchValue(this.form.get('documentos')?.value.filter((d: any) => d.id !== imagem.id));
+    this.documentosToSave = this.documentosToSave.filter((d: any) => d.id !== imagem.id);
+    this.documentosToShow = this.documentosToShow.filter((d: any) => d.id !== imagem.id);
   }
 
   selectAnimal() {

@@ -4,7 +4,6 @@ import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
 import io.github.amandajuchem.projetoapi.exceptions.OperationFailureException;
 import io.github.amandajuchem.projetoapi.exceptions.StandardError;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -12,7 +11,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.FileNotFoundException;
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.*;
 
 /**
  * The type Controller advice.
@@ -21,6 +23,27 @@ import java.util.List;
  */
 @ControllerAdvice
 public class ExceptionHandlerController {
+
+    /**
+     * File not found exception response entity.
+     *
+     * @param ex      the ex
+     * @param request the request
+     * @return the response entity
+     */
+    @ExceptionHandler(FileNotFoundException.class)
+    public ResponseEntity<?> fileNotFoundException(FileNotFoundException ex, HttpServletRequest request) {
+
+        var error = StandardError.builder()
+                .timestamp(System.currentTimeMillis())
+                .status(NOT_FOUND.value())
+                .error("Not Found")
+                .message(ex.getMessage())
+                .path(request.getRequestURI())
+                .build();
+
+        return ResponseEntity.status(NOT_FOUND).body(List.of(error));
+    }
 
     /**
      * Method argument not valid exception response entity.
@@ -35,14 +58,14 @@ public class ExceptionHandlerController {
         var errors = ex.getBindingResult().getFieldErrors().stream().map(error ->
                 StandardError.builder()
                         .timestamp(System.currentTimeMillis())
-                        .status(HttpStatus.BAD_REQUEST.value())
+                        .status(BAD_REQUEST.value())
                         .error("Bad Request")
                         .message(StringUtils.capitalize(error.getField()) + " " + error.getDefaultMessage() + "!")
                         .path(request.getRequestURI())
                         .build()
         ).toList();
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+        return ResponseEntity.status(BAD_REQUEST).body(errors);
     }
 
     /**
@@ -57,13 +80,13 @@ public class ExceptionHandlerController {
 
         var error = StandardError.builder()
                 .timestamp(System.currentTimeMillis())
-                .status(HttpStatus.NOT_FOUND.value())
+                .status(NOT_FOUND.value())
                 .error("Not Found")
                 .message(ex.getMessage())
                 .path(request.getRequestURI())
                 .build();
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(List.of(error));
+        return ResponseEntity.status(NOT_FOUND).body(List.of(error));
     }
 
     /**
@@ -78,13 +101,13 @@ public class ExceptionHandlerController {
 
         var error = StandardError.builder()
                 .timestamp(System.currentTimeMillis())
-                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .status(INTERNAL_SERVER_ERROR.value())
                 .error("Internal Server Error")
                 .message(ex.getMessage())
                 .path(request.getRequestURI())
                 .build();
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(List.of(error));
+        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(List.of(error));
     }
 
     /**
@@ -99,12 +122,12 @@ public class ExceptionHandlerController {
 
         var error = StandardError.builder()
                 .timestamp(System.currentTimeMillis())
-                .status(HttpStatus.BAD_REQUEST.value())
+                .status(BAD_REQUEST.value())
                 .error("Bad Request")
                 .message(ex.getMessage())
                 .path(request.getRequestURI())
                 .build();
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(List.of(error));
+        return ResponseEntity.status(BAD_REQUEST).body(List.of(error));
     }
 }

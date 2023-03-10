@@ -86,11 +86,12 @@ public class TutorController {
 
         if (foto != null) {
 
-            tutor.setFoto(Imagem.builder()
+            var imagem = Imagem.builder()
                     .nome(System.currentTimeMillis() + "." + FileUtils.getExtension(foto))
-                    .build());
+                    .build();
 
-            FileUtils.FILE = foto;
+            tutor.setFoto(imagem);
+            FileUtils.FILES.put(imagem.getNome(), foto);
         }
 
         tutor = service.save(tutor);
@@ -140,11 +141,12 @@ public class TutorController {
 
             if (foto != null) {
 
-                tutor.setFoto(Imagem.builder()
+                var imagem = Imagem.builder()
                         .nome(System.currentTimeMillis() + "." + FileUtils.getExtension(foto))
-                        .build());
+                        .build();
 
-                FileUtils.FILE = foto;
+                tutor.setFoto(imagem);
+                FileUtils.FILES.put(imagem.getNome(), foto);
             }
 
             tutor = service.save(tutor);

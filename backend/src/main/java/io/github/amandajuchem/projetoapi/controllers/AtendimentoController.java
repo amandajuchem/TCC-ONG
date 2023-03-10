@@ -2,8 +2,10 @@ package io.github.amandajuchem.projetoapi.controllers;
 
 import io.github.amandajuchem.projetoapi.dtos.AtendimentoDTO;
 import io.github.amandajuchem.projetoapi.entities.Atendimento;
+import io.github.amandajuchem.projetoapi.entities.Imagem;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.AtendimentoService;
+import io.github.amandajuchem.projetoapi.utils.FileUtils;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -64,13 +68,29 @@ public class AtendimentoController {
      * @param atendimento the atendimento
      * @param documentos  the documentos
      * @return the response entity
+     * @throws FileNotFoundException the file not found exception
+     * @throws InterruptedException  the interrupted exception
      */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> save(@RequestPart @Valid Atendimento atendimento,
-                                  @RequestPart(required = false) List<MultipartFile> documentos) {
+                                  @RequestPart(required = false) List<MultipartFile> documentos) throws FileNotFoundException, InterruptedException {
 
         if (documentos != null) {
 
+            for (MultipartFile documento : documentos) {
+
+                var imagem = Imagem.builder()
+                        .nome(System.currentTimeMillis() + "." + FileUtils.getExtension(documento))
+                        .build();
+
+                if (atendimento.getDocumentos() == null) {
+                    atendimento.setDocumentos(new ArrayList<>());
+                }
+
+                atendimento.getDocumentos().add(imagem);
+                FileUtils.FILES.put(imagem.getNome(), documento);
+                Thread.sleep(10);
+            }
         }
 
         atendimento = service.save(atendimento);
@@ -109,16 +129,32 @@ public class AtendimentoController {
      * @param atendimento the atendimento
      * @param documentos  the documentos
      * @return the response entity
+     * @throws FileNotFoundException the file not found exception
+     * @throws InterruptedException  the interrupted exception
      */
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> update(@PathVariable UUID id,
                                     @RequestPart @Valid Atendimento atendimento,
-                                    @RequestPart(required = false) List<MultipartFile> documentos) {
+                                    @RequestPart(required = false) List<MultipartFile> documentos) throws FileNotFoundException, InterruptedException {
 
         if (atendimento.getId().equals(id)) {
 
             if (documentos != null) {
 
+                for (MultipartFile documento : documentos) {
+
+                    var imagem = Imagem.builder()
+                            .nome(System.currentTimeMillis() + "." + FileUtils.getExtension(documento))
+                            .build();
+
+                    if (atendimento.getDocumentos() == null) {
+                        atendimento.setDocumentos(new ArrayList<>());
+                    }
+
+                    atendimento.getDocumentos().add(imagem);
+                    FileUtils.FILES.put(imagem.getNome(), documento);
+                    Thread.sleep(10);
+                }
             }
 
             atendimento = service.save(atendimento);

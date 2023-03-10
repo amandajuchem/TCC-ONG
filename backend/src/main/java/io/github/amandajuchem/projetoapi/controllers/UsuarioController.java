@@ -74,11 +74,12 @@ public class UsuarioController {
 
         if (foto != null) {
 
-            usuario.setFoto(Imagem.builder()
+            var imagem = Imagem.builder()
                     .nome(System.currentTimeMillis() + "." + FileUtils.getExtension(foto))
-                    .build());
+                    .build();
 
-            FileUtils.FILE = foto;
+            usuario.setFoto(imagem);
+            FileUtils.FILES.put(imagem.getNome(), foto);
         }
 
         usuario = service.save(usuario);
@@ -128,11 +129,12 @@ public class UsuarioController {
 
             if (foto != null) {
 
-                usuario.setFoto(Imagem.builder()
+                var imagem = Imagem.builder()
                         .nome(System.currentTimeMillis() + "." + FileUtils.getExtension(foto))
-                        .build());
+                        .build();
 
-                FileUtils.FILE = foto;
+                usuario.setFoto(imagem);
+                FileUtils.FILES.put(imagem.getNome(), foto);
             }
 
             usuario = service.save(usuario);

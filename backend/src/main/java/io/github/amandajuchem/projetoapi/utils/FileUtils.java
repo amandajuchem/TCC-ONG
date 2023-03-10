@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The type File utils.
@@ -16,14 +18,14 @@ import java.nio.file.Paths;
 public class FileUtils {
 
     /**
+     * The constant FILES.
+     */
+    public static final Map<String, MultipartFile> FILES = new HashMap<>();
+
+    /**
      * The constant DOCUMENTS_DIRECTORY.
      */
     public static final String DOCUMENTS_DIRECTORY = File.separator + "files" + File.separator + "documents";
-
-    /**
-     * The constant FILE.
-     */
-    public static MultipartFile FILE;
 
     /**
      * The constant IMAGES_DIRECTORY.

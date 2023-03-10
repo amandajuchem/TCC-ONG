@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -89,11 +88,12 @@ public class AnimalController {
 
         if (foto != null) {
 
-            animal.setFoto(Imagem.builder()
+            var imagem = Imagem.builder()
                     .nome(System.currentTimeMillis() + "." + FileUtils.getExtension(foto))
-                    .build());
+                    .build();
 
-            FileUtils.FILE = foto;
+            animal.setFoto(imagem);
+            FileUtils.FILES.put(imagem.getNome(), foto);
         }
 
         animal = service.save(animal);
@@ -143,11 +143,12 @@ public class AnimalController {
 
             if (foto != null) {
 
-                animal.setFoto(Imagem.builder()
+                var imagem = Imagem.builder()
                         .nome(System.currentTimeMillis() + "." + FileUtils.getExtension(foto))
-                        .build());
+                        .build();
 
-                FileUtils.FILE = foto;
+                animal.setFoto(imagem);
+                FileUtils.FILES.put(imagem.getNome(), foto);
             }
 
             animal = service.save(animal);

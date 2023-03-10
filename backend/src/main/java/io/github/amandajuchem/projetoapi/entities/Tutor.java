@@ -11,6 +11,7 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -46,7 +47,7 @@ public class Tutor extends AbstractEntity {
 
     @Valid
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Telefone> telefones;
+    private List<Telefone> telefones;
 
     @Valid
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)

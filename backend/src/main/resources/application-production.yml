@@ -19,5 +19,8 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     show-sql: false
+  servlet:
+    multipart:
+      max-file-size: 10MB
   web:
     locale: pt_BR

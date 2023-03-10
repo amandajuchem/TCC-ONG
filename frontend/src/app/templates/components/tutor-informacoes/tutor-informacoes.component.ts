@@ -54,6 +54,8 @@ export class TutorInformacoesComponent implements OnInit {
 
           if (tutor.foto) {
             this.foto = { id: tutor.foto.id, nome: tutor.foto.nome, salvo: true};
+          } else {
+            this.foto = null;
           }
         }
       }

@@ -1,6 +1,8 @@
 package io.github.amandajuchem.projetoapi.entities;
 
+import io.github.amandajuchem.projetoapi.exceptions.OperationFailureException;
 import io.github.amandajuchem.projetoapi.utils.FileUtils;
+import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,9 +33,18 @@ public class Imagem extends AbstractEntity {
 
     @PostPersist
     @PostUpdate
-    private void postSave() throws IOException {
-        FileUtils.save(nome, FileUtils.FILE, FileUtils.IMAGES_DIRECTORY);
-        FileUtils.FILE = null;
+    private void postSave() {
+
+        FileUtils.FILES.forEach((key, value) -> {
+
+            try {
+                FileUtils.save(key, value, FileUtils.IMAGES_DIRECTORY);
+            } catch (IOException e) {
+                throw new OperationFailureException(MessageUtils.OPERATION_FAILURE);
+            }
+        });
+
+        FileUtils.FILES.clear();
     }
 
     @PostRemove

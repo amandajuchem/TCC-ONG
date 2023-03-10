@@ -50,6 +50,8 @@ export class UsuarioInformacoesComponent implements OnInit {
 
           if (usuario.foto) {
             this.foto = { id: usuario.foto.id, nome: usuario.foto.nome, salvo: true};
+          } else {
+            this.foto = null;
           }
         }
       }

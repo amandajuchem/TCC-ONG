@@ -54,6 +54,8 @@ export class AnimalInformacoesComponent implements OnInit {
 
           if (animal.foto) {
             this.foto = { id: animal.foto.id, nome: animal.foto.nome, salvo: true};
+          } else {
+            this.foto = null;
           }
         }
       }

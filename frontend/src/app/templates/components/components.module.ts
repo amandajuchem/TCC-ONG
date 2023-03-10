@@ -63,6 +63,7 @@ import { UsuarioInformacoesComponent } from './usuario-informacoes/usuario-infor
 import { UsuarioComponent } from './usuario/usuario.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
 import { TutorObservacoesComponent } from './tutor-observacoes/tutor-observacoes.component';
+import { TutorAdocoesComponent } from './tutor-adocoes/tutor-adocoes.component';
 
 @NgModule({
   declarations: [
@@ -105,7 +106,8 @@ import { TutorObservacoesComponent } from './tutor-observacoes/tutor-observacoes
     UsuarioCadastroComponent,
     UsuarioInformacoesComponent,
     UsuariosComponent,
-    TutorObservacoesComponent
+    TutorObservacoesComponent,
+    TutorAdocoesComponent
   ],
   imports: [
     CommonModule,

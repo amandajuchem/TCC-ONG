@@ -1,0 +1,33 @@
+<div class="overflow-hidden">
+
+    
+
+    <div class="row mb-3" *ngIf="isLoadingResults">
+        <div class="col-12">
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            <p class="text-center pt-3">Obtendo dados</p>
+        </div>
+    </div>
+
+    <div [hidden]="(dataSource && dataSource.data.length > 0) || isLoadingResults">
+        <mat-card>
+            <mat-card-content>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="text-center">
+                            <img src="/assets/images/nao-encontrado.png" width="100px">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="text-center">
+                            <h2 class="m-0">Não há dados a serem exibidos!</h2>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
