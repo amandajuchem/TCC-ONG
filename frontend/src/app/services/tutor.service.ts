@@ -65,17 +65,17 @@ export class TutorService {
   /**
    * 
    * @param tutor 
-   * @param novaFoto 
+   * @param foto 
    * @returns 
    */
-  save(tutor: Tutor, novaFoto: any) {
+  save(tutor: Tutor, foto: any) {
 
     let formData = new FormData();
 
     formData.append('tutor', new Blob([JSON.stringify(tutor)], { type: 'application/json' }));
 
-    if (novaFoto) {
-      formData.append('novaFoto', new Blob([novaFoto], { type: 'multipart/form-data' }), 'novaFoto.png');
+    if (foto) {
+      formData.append('foto', new Blob([foto], { type: 'multipart/form-data' }), 'foto.png');
     }
 
     return this._http.post<Tutor>(this._baseURL, formData);
@@ -114,22 +114,17 @@ export class TutorService {
   /**
    * 
    * @param tutor 
-   * @param novaFoto 
-   * @param antigaFoto 
+   * @param foto 
    * @returns 
    */
-  update(tutor: Tutor, novaFoto: any, antigaFoto: any) {
+  update(tutor: Tutor, foto: any) {
     
     let formData = new FormData();
 
     formData.append('tutor', new Blob([JSON.stringify(tutor)], { type: 'application/json' }));
 
-    if (novaFoto) {
-      formData.append('novaFoto', new Blob([novaFoto], { type: 'multipart/form-data' }), 'novaFoto.png');
-    }
-
-    if (antigaFoto) {
-      formData.append('antigaFoto', new Blob([antigaFoto], { type: 'text/plain' }));
+    if (foto) {
+      formData.append('foto', new Blob([foto], { type: 'multipart/form-data' }), 'foto.png');
     }
 
     return this._http.put<Tutor>(this._baseURL + '/' + tutor.id, formData);

@@ -4,7 +4,8 @@ import { Router } from '@angular/router';
 import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { Setor } from 'src/app/enums/setor';
-import { FacadeService } from 'src/app/services/facade.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { NotificationService } from 'src/app/services/notification.service';
 
 @Component({
   selector: 'app-login',
@@ -17,8 +18,9 @@ export class LoginComponent implements OnInit {
   hide!: boolean;
 
   constructor(
-    private _facade: FacadeService,
+    private _authService: AuthService,
     private _formBuilder: FormBuilder,
+    private _notificationService: NotificationService,
     private _router: Router
   ) { }
 
@@ -26,9 +28,9 @@ export class LoginComponent implements OnInit {
 
     this.hide = true;
 
-    if (this._facade.authIsAuthenticated()) {
+    if (this._authService.isAuthenticated()) {
 
-      let user: User = this._facade.authGetCurrentUser();
+      let user: User = this._authService.getCurrentUser();
 
       switch (user.role) {
 
@@ -55,11 +57,11 @@ export class LoginComponent implements OnInit {
     
     const user = Object.assign({}, this.form.value);
 
-    this._facade.authLogin(user).subscribe({
+    this._authService.login(user).subscribe({
 
       next: (authentication) => {
         
-        this._facade.authSetCurrentUser({
+        this._authService.setCurrentUser({
           token: authentication.access_token,
           role: authentication.role
         })
@@ -67,7 +69,7 @@ export class LoginComponent implements OnInit {
 
       complete: () => {
 
-        let user: User = this._facade.authGetCurrentUser();
+        let user: User = this._authService.getCurrentUser();
 
         switch (user.role) {
 
@@ -79,7 +81,7 @@ export class LoginComponent implements OnInit {
 
       error: (error) => {
         console.error(error);
-        this._facade.notificationShowNotification(error.error.message, NotificationType.FAIL);
+        this._notificationService.show(error.error.message, NotificationType.FAIL);
       }
     })
   }

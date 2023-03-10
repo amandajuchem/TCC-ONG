@@ -1,21 +1,22 @@
 <div class="overflow-hidden">
 
-    <div class="row mb-3">
-        <div class="col-12">
-            <div class="text-end">
-                <button mat-icon-button (click)="add()">
-                    <mat-icon>add</mat-icon>
-                </button>
-            </div>
-        </div>
+  <div class="row mb-3">
+    <div class="col-12">
+      <div class="text-end">
+        <button mat-icon-button (click)="add()">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
     </div>
+  </div>
 
   <div class="row mb-3" [hidden]="(dataSource && dataSource.data.length == 0) || isLoadingResults">
     <div class="col-12">
       <mat-card>
         <mat-card-content>
           <div class="table-responsive">
-            <table mat-table [dataSource]="dataSource" class="w-100 border" matSort matSortActive="nome" matSortDisableClear matSortDirection="asc">
+            <table mat-table [dataSource]="dataSource" class="w-100 border" matSort matSortActive="nome"
+              matSortDisableClear matSortDirection="asc">
 
               <!-- Index Column -->
               <ng-container matColumnDef="index">

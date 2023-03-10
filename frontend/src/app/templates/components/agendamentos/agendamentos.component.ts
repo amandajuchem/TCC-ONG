@@ -7,7 +7,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Agendamento } from 'src/app/entities/agendamento';
 import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
-import { FacadeService } from 'src/app/services/facade.service';
+import { AgendamentoService } from 'src/app/services/agendamento.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { DateUtils } from 'src/app/utils/date-utils';
 import { MessageUtils } from 'src/app/utils/message-utils';
 import { OperatorUtils } from 'src/app/utils/operator-utils';
@@ -34,15 +36,17 @@ export class AgendamentosComponent implements AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
+    private _agendamentoService: AgendamentoService,
+    private _authService: AuthService,
     private _datePipe: DatePipe,
     private _dialog: MatDialog,
-    private _facade: FacadeService
+    private _notificationService: NotificationService
   ) {
     this.columns = ['index', 'dataHora', 'animal', 'veterinario', 'acao'];
     this.dataSource = new MatTableDataSource();
     this.isLoadingResults = true;
     this.resultsLength = 0;
-    this.user = this._facade.authGetCurrentUser();
+    this.user = this._authService.getCurrentUser();
   }
 
   ngAfterViewInit() {
@@ -107,7 +111,7 @@ export class AgendamentosComponent implements AfterViewInit {
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
 
-    this._facade.agendamentoSearch(value, page, size, sort, direction).subscribe({
+    this._agendamentoService.search(value, page, size, sort, direction).subscribe({
 
       complete: () => {
         this.isLoadingResults = false;
@@ -121,7 +125,7 @@ export class AgendamentosComponent implements AfterViewInit {
       error: (err) => {
         this.isLoadingResults = false;
         console.error(err);
-        this._facade.notificationShowNotification(MessageUtils.AGENDAMENTOS_GET_FAIL, NotificationType.FAIL);    
+        this._notificationService.show(MessageUtils.AGENDAMENTOS_GET_FAIL, NotificationType.FAIL);    
       }
     });
   }
@@ -136,7 +140,7 @@ export class AgendamentosComponent implements AfterViewInit {
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
 
-    this._facade.agendamentoFindAll(page, size, sort, direction).subscribe({
+    this._agendamentoService.findAll(page, size, sort, direction).subscribe({
 
       complete: () => {
         this.isLoadingResults = false;
@@ -150,7 +154,7 @@ export class AgendamentosComponent implements AfterViewInit {
       error: (err) => {
         this.isLoadingResults = false;
         console.error(err);
-        this._facade.notificationShowNotification(MessageUtils.AGENDAMENTOS_GET_FAIL, NotificationType.FAIL);    
+        this._notificationService.show(MessageUtils.AGENDAMENTOS_GET_FAIL, NotificationType.FAIL);    
       }
     });
   }

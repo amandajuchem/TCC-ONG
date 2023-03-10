@@ -4,7 +4,8 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 import { Agendamento } from 'src/app/entities/agendamento';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { Setor } from 'src/app/enums/setor';
-import { FacadeService } from 'src/app/services/facade.service';
+import { AgendamentoService } from 'src/app/services/agendamento.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { DateUtils } from 'src/app/utils/date-utils';
 import { MessageUtils } from 'src/app/utils/message-utils';
 
@@ -22,10 +23,11 @@ export class AgendamentoCadastroComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
+    private _agendamentoService: AgendamentoService,
     private _dialog: MatDialog,
-    private _facade: FacadeService,
+    private _dialogRef: MatDialogRef<AgendamentoCadastroComponent>,
     private _formBuilder: FormBuilder,
-    private _dialogRef: MatDialogRef<AgendamentoCadastroComponent>
+    private _notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
@@ -102,32 +104,32 @@ export class AgendamentoCadastroComponent implements OnInit {
 
     if (agendamento.id) {
 
-      this._facade.agendamentoUpdate(agendamento).subscribe({
+      this._agendamentoService.update(agendamento).subscribe({
 
         complete: () => {
-          this._facade.notificationShowNotification(MessageUtils.AGENDAMENTO_UPDATE_SUCCESS, NotificationType.SUCCESS);
+          this._notificationService.show(MessageUtils.AGENDAMENTO_UPDATE_SUCCESS, NotificationType.SUCCESS);
           this._dialogRef.close({ status: true });
         },
 
         error: (error) => {
           console.error(error);
-          this._facade.notificationShowNotification(MessageUtils.AGENDAMENTO_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
+          this._notificationService.show(MessageUtils.AGENDAMENTO_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
         }
       });
     }
 
     else {
 
-      this._facade.agendamentoSave(agendamento).subscribe({
+      this._agendamentoService.save(agendamento).subscribe({
 
         complete: () => {
-          this._facade.notificationShowNotification(MessageUtils.AGENDAMENTO_SAVE_SUCCESS, NotificationType.SUCCESS);
+          this._notificationService.show(MessageUtils.AGENDAMENTO_SAVE_SUCCESS, NotificationType.SUCCESS);
           this._dialogRef.close({ status: true });
         },
 
         error: (error) => {
           console.error(error);
-          this._facade.notificationShowNotification(MessageUtils.AGENDAMENTO_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
+          this._notificationService.show(MessageUtils.AGENDAMENTO_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
         }
       });
     }

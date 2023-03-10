@@ -5,7 +5,9 @@ import { Atendimento } from 'src/app/entities/atendimento';
 import { Exame } from 'src/app/entities/exame';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { Setor } from 'src/app/enums/setor';
-import { FacadeService } from 'src/app/services/facade.service';
+import { AtendimentoService } from 'src/app/services/atendimento.service';
+import { ImagemService } from 'src/app/services/imagem.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { DateUtils } from 'src/app/utils/date-utils';
 import { MessageUtils } from 'src/app/utils/message-utils';
 import { environment } from 'src/environments/environment';
@@ -24,22 +26,22 @@ export class AtendimentoCadastroComponent implements OnInit {
 
   apiURL!: string;
   form!: FormGroup;
-  documentosToDelete!: Array<string>;
   documentosToSave!: Array<any>;
   documentosToShow!: Array<any>;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
+    private _atendimentoService: AtendimentoService,
     private _dialog: MatDialog,
-    private _facade: FacadeService,
     private _formBuilder: FormBuilder,
-    private _matDialogRef: MatDialogRef<AtendimentoCadastroComponent>
+    private _imagemService: ImagemService,
+    private _matDialogRef: MatDialogRef<AtendimentoCadastroComponent>,
+    private _notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
 
     this.apiURL = environment.apiURL;
-    this.documentosToDelete = [];
     this.documentosToSave = [];
     this.documentosToShow = [];
 
@@ -73,7 +75,7 @@ export class AtendimentoCadastroComponent implements OnInit {
 
             result.images.forEach((image: any) => {
 
-              this._facade.imagemToBase64(image)?.then((data: any) => {
+              this._imagemService.toBase64(image)?.then((data: any) => {
                 data = { id: new Date().getTime(), data: data, salvo: false };
                 this.documentosToShow.push(data);
                 this.documentosToSave.push(image);
@@ -134,11 +136,6 @@ export class AtendimentoCadastroComponent implements OnInit {
   }
 
   deleteImagem(imagem: any) {
-
-    if (imagem.salvo) {
-      this.documentosToDelete.push(imagem.id);
-    }
-
     this.documentosToSave = this.documentosToSave.filter((d: any) => d.id !== imagem.id);
     this.documentosToShow = this.documentosToShow.filter((d: any) => d.id !== imagem.id);
   }
@@ -205,32 +202,32 @@ export class AtendimentoCadastroComponent implements OnInit {
 
     if (atendimento.id) {
 
-      this._facade.atendimentoUpdate(atendimento, this.documentosToSave, this.documentosToDelete).subscribe({
+      this._atendimentoService.update(atendimento, this.documentosToSave).subscribe({
 
         complete: () => {
-          this._facade.notificationShowNotification(MessageUtils.ATENDIMENTO_UPDATE_SUCCESS, NotificationType.SUCCESS);
+          this._notificationService.show(MessageUtils.ATENDIMENTO_UPDATE_SUCCESS, NotificationType.SUCCESS);
           this._matDialogRef.close({ status: true });
         },
 
         error: (error) => {
           console.error(error);
-          this._facade.notificationShowNotification(MessageUtils.ATENDIMENTO_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
+          this._notificationService.show(MessageUtils.ATENDIMENTO_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
         }
       });
     }
 
     else {
 
-      this._facade.atendimentoSave(atendimento, this.documentosToSave).subscribe({
+      this._atendimentoService.save(atendimento, this.documentosToSave).subscribe({
 
         complete: () => {
-          this._facade.notificationShowNotification(MessageUtils.ATENDIMENTO_SAVE_SUCCESS, NotificationType.SUCCESS);
+          this._notificationService.show(MessageUtils.ATENDIMENTO_SAVE_SUCCESS, NotificationType.SUCCESS);
           this._matDialogRef.close({ status: true });
         },
 
         error: (error) => {
           console.error(error);
-          this._facade.notificationShowNotification(MessageUtils.ATENDIMENTO_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
+          this._notificationService.show(MessageUtils.ATENDIMENTO_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
         }
       });
     }

@@ -3,9 +3,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Usuario } from 'src/app/entities/usuario';
 import { NotificationType } from 'src/app/enums/notification-type';
-import { FacadeService } from 'src/app/services/facade.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { ImagemService } from 'src/app/services/imagem.service';
+import { NotificationService } from 'src/app/services/notification.service';
+import { UsuarioService } from 'src/app/services/usuario.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
-import { environment } from 'src/environments/environment';
 
 import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-imagem.component';
 
@@ -16,24 +18,24 @@ import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-image
 })
 export class UsuarioCadastroComponent implements OnInit {
   
-  apiURL!: string;
-  user!: any;
   form!: FormGroup;
   foto!: any;
   fotoToSave!: any;
   hide!: boolean;
+  user!: any;
 
   constructor(
+    private _authService: AuthService,
     private _dialog: MatDialog,
     private _dialogRef: MatDialogRef<UsuarioCadastroComponent>,
-    private _facade: FacadeService,
-    private _formBuilder: FormBuilder
+    private _formBuilder: FormBuilder,
+    private _imagemService: ImagemService,
+    private _notificationService: NotificationService,
+    private _usuarioService: UsuarioService
   ) { }
 
   ngOnInit(): void {
-    
-    this.apiURL = environment.apiURL;
-    this.user = this._facade.authGetCurrentUser();
+    this.user = this._authService.getCurrentUser();
     this.hide = true;
     this.buildForm();
   }
@@ -50,9 +52,9 @@ export class UsuarioCadastroComponent implements OnInit {
 
       if (result && result.status) {
 
-        this._facade.imagemToBase64(result.images[0])?.then(data => {
+        this._imagemService.toBase64(result.images[0])?.then(data => {
 
-          let imagem = { id: new Date().getTime(), data: data, nome: null, salvo: false };
+          let imagem = { id: new Date().getTime(), data: data };
 
           this.foto = imagem;
           this.fotoToSave = result.images[0];
@@ -75,7 +77,6 @@ export class UsuarioCadastroComponent implements OnInit {
   }
 
   removeFoto() {
-    
     this.foto = null;
     this.form.get('foto')?.patchValue(null);
   }
@@ -84,16 +85,16 @@ export class UsuarioCadastroComponent implements OnInit {
 
     let usuario: Usuario = Object.assign({}, this.form.getRawValue());
 
-    this._facade.usuarioSave(usuario, this.fotoToSave).subscribe({
+    this._usuarioService.save(usuario, this.fotoToSave).subscribe({
 
       complete: () => {
-        this._facade.notificationShowNotification(MessageUtils.USUARIO_SAVE_SUCCESS, NotificationType.SUCCESS);
+        this._notificationService.show(MessageUtils.USUARIO_SAVE_SUCCESS, NotificationType.SUCCESS);
         this._dialogRef.close({status: true});
       },
 
       error: (error) => {
         console.error(error);
-        this._facade.notificationShowNotification(MessageUtils.USUARIO_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.USUARIO_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
       }
     });
   }

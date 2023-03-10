@@ -1,6 +1,8 @@
 import { Situacao } from '../enums/situacao';
 import { AbstractEntity } from './abstract-entity';
+import { Adocao } from './adocao';
 import { Endereco } from './endereco';
+import { Observacao } from './observacao';
 import { Telefone } from './telefone';
 
 export interface Tutor extends AbstractEntity {
@@ -8,8 +10,9 @@ export interface Tutor extends AbstractEntity {
     cpf: string;
     rg: string;
     situacao: Situacao;
-    observacao: string;
     foto: any;
     telefones: Array<Telefone>;
     endereco: Endereco;
+    adocoes: Array<Adocao>;
+    observacoes: Array<Observacao>;
 }

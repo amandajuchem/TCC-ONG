@@ -3,7 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Animal } from 'src/app/entities/animal';
 import { FichaMedica } from 'src/app/entities/ficha-medica';
 import { NotificationType } from 'src/app/enums/notification-type';
-import { FacadeService } from 'src/app/services/facade.service';
+import { AnimalService } from 'src/app/services/animal.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
 
 @Component({
@@ -17,13 +18,14 @@ export class AnimalFichaMedicaComponent implements OnInit {
   form!: FormGroup;
 
   constructor(
-    private _facade: FacadeService,
-    private _formBuilder: FormBuilder
+    private _animalService: AnimalService,
+    private _formBuilder: FormBuilder,
+    private _notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
     
-    this._facade.animalGet().subscribe({
+    this._animalService.get().subscribe({
 
       next: (animal) => {
           
@@ -55,16 +57,16 @@ export class AnimalFichaMedicaComponent implements OnInit {
     let fichaMedica: FichaMedica = Object.assign({}, this.form.getRawValue());
     this.animal.fichaMedica = fichaMedica;
 
-    this._facade.animalUpdate(this.animal, null).subscribe({
+    this._animalService.update(this.animal, null).subscribe({
 
       next: (animal) => {
-        this._facade.notificationShowNotification(MessageUtils.ANIMAL_UPDATE_SUCCESS, NotificationType.SUCCESS);
-        this._facade.animalSet(animal);
+        this._animalService.set(animal);
+        this._notificationService.show(MessageUtils.ANIMAL_UPDATE_SUCCESS, NotificationType.SUCCESS);
       },
 
       error: (error) => {
         console.error(error);
-        this._facade.notificationShowNotification(MessageUtils.ANIMAL_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.ANIMAL_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
       }
     });
   }

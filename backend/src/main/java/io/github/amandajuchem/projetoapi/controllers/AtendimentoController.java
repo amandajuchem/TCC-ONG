@@ -35,13 +35,17 @@ public class AtendimentoController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id) {
-//        utils.delete(id);
+        service.delete(id);
         return ResponseEntity.status(OK).body(null);
     }
 
     /**
      * Find all response entity.
      *
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
      * @return the response entity
      */
     @GetMapping
@@ -57,29 +61,31 @@ public class AtendimentoController {
     /**
      * Save response entity.
      *
-     * @param atendimento        the atendimento
-     * @param documentosToSave   the documentos to save
-     * @param documentosToDelete the documentos to delete
+     * @param atendimento the atendimento
+     * @param documentos  the documentos
      * @return the response entity
      */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> save(@RequestPart @Valid Atendimento atendimento,
-                                  @RequestPart(required = false) List<MultipartFile> documentosToSave,
-                                  @RequestPart(required = false) List<UUID> documentosToDelete) {
+                                  @RequestPart(required = false) List<MultipartFile> documentos) {
 
-//        atendimento = utils.save(atendimento, documentosToSave, documentosToDelete);
+        if (documentos != null) {
+
+        }
+
+        atendimento = service.save(atendimento);
         return ResponseEntity.status(CREATED).body(AtendimentoDTO.toDTO(atendimento));
     }
 
     /**
      * Search response entity.
      *
-     * @param value     Data, nome do animal ou nome do veterinário
+     * @param value     the data, nome do animal ou nome do veterinário
      * @param page      the page
      * @param size      the size
      * @param sort      the sort
      * @param direction the direction
-     * @return the list of atendimentos
+     * @return the response entity
      */
     @GetMapping("/search")
     public ResponseEntity<?> search(@RequestParam(required = false) String value,
@@ -99,22 +105,25 @@ public class AtendimentoController {
     /**
      * Update response entity.
      *
-     * @param id                 the id
-     * @param atendimento        the atendimento
-     * @param documentosToSave   the documentos to save
-     * @param documentosToDelete the documentos to delete
+     * @param id          the id
+     * @param atendimento the atendimento
+     * @param documentos  the documentos
      * @return the response entity
      */
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> update(@PathVariable UUID id,
                                     @RequestPart @Valid Atendimento atendimento,
-                                    @RequestPart(required = false) List<MultipartFile> documentosToSave,
-                                    @RequestPart(required = false) List<UUID> documentosToDelete) {
+                                    @RequestPart(required = false) List<MultipartFile> documentos) {
 
-//        if (atendimento.getId().equals(id)) {
-//            atendimento = utils.save(atendimento, documentosToSave, documentosToDelete);
-//            return ResponseEntity.status(OK).body(AtendimentoDTO.toDTO(atendimento));
-//        }
+        if (atendimento.getId().equals(id)) {
+
+            if (documentos != null) {
+
+            }
+
+            atendimento = service.save(atendimento);
+            return ResponseEntity.status(OK).body(AtendimentoDTO.toDTO(atendimento));
+        }
 
         throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);
     }

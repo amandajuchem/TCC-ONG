@@ -3,7 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Tutor } from 'src/app/entities/tutor';
 import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
-import { FacadeService } from 'src/app/services/facade.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { NotificationService } from 'src/app/services/notification.service';
+import { TutorService } from 'src/app/services/tutor.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
 
 @Component({
@@ -18,12 +20,14 @@ export class TutorComponent implements OnInit {
 
   constructor(
     private _activatedRoute: ActivatedRoute,
-    private _facade: FacadeService
+    private _authService: AuthService,
+    private _notificationService: NotificationService,
+    private _tutorService: TutorService
   ) { }
 
   ngOnInit(): void {
     
-    this.user = this._facade.authGetCurrentUser();
+    this.user = this._authService.getCurrentUser();
 
     this._activatedRoute.params.subscribe({
 
@@ -31,22 +35,22 @@ export class TutorComponent implements OnInit {
           
         if (x && x.id) {
           
-          this._facade.tutorFindById(x.id).subscribe({
+          this._tutorService.findById(x.id).subscribe({
             
             next: (tutor) => {
-              this._facade.tutorSet(tutor);
+              this._tutorService.set(tutor);
             },
 
             error: (error) => {
               console.error(error);
-              this._facade.notificationShowNotification(MessageUtils.TUTOR_GET_FAIL, NotificationType.FAIL); 
+              this._notificationService.show(MessageUtils.TUTOR_GET_FAIL, NotificationType.FAIL); 
             }
           });
         }
       },
     });
 
-    this._facade.tutorGet().subscribe({
+    this._tutorService.get().subscribe({
 
       next: (tutor) => {
         

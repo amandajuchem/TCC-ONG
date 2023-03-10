@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/entities/user';
-import { FacadeService } from 'src/app/services/facade.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-painel',
@@ -12,10 +12,10 @@ export class PainelComponent implements OnInit {
   user!: User;
 
   constructor(
-    private _facade: FacadeService
+    private _authService: AuthService
   ) { }
 
   ngOnInit(): void {
-    this.user = this._facade.authGetCurrentUser();
+    this.user = this._authService.getCurrentUser();
   }
 }

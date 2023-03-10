@@ -3,10 +3,14 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Usuario } from 'src/app/entities/usuario';
 import { NotificationType } from 'src/app/enums/notification-type';
-import { FacadeService } from 'src/app/services/facade.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { ImagemService } from 'src/app/services/imagem.service';
+import { NotificationService } from 'src/app/services/notification.service';
+import { UsuarioService } from 'src/app/services/usuario.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
-import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-imagem.component';
 import { environment } from 'src/environments/environment';
+
+import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-imagem.component';
 
 @Component({
   selector: 'app-usuario-informacoes',
@@ -19,23 +23,25 @@ export class UsuarioInformacoesComponent implements OnInit {
   form!: FormGroup;
   foto!: any;
   fotoToSave!: any;
-  fotoToDelete!: any;
   hide!: boolean;
   user!: any;
 
   constructor(
+    private _authService: AuthService,
     private _dialog: MatDialog,
-    private _facade: FacadeService,
-    private _formBuilder: FormBuilder
+    private _formBuilder: FormBuilder,
+    private _imagemService: ImagemService,
+    private _notificationService: NotificationService,
+    private _usuarioService: UsuarioService
   ) { }
 
   ngOnInit(): void {
     
     this.apiURL = environment.apiURL;
     this.hide = true;
-    this.user = this._facade.authGetCurrentUser();
+    this.user = this._authService.getCurrentUser();
 
-    this._facade.usuarioGet().subscribe({
+    this._usuarioService.get().subscribe({
 
       next: (usuario) => {
           
@@ -62,13 +68,9 @@ export class UsuarioInformacoesComponent implements OnInit {
 
       if (result && result.status) {
 
-        this._facade.imagemToBase64(result.images[0])?.then(data => {
+        this._imagemService.toBase64(result.images[0])?.then(data => {
 
-          if (this.foto && this.foto.salvo) {
-            this.fotoToDelete = this.foto;
-          }
-
-          let imagem = { id: new Date().getTime(), data: data, nome: null, salvo: false };
+          let imagem = { id: new Date().getTime(), data: data, salvo: false };
 
           this.foto = imagem;
           this.fotoToSave = result.images[0];
@@ -93,11 +95,6 @@ export class UsuarioInformacoesComponent implements OnInit {
   }
 
   removeFoto() {
-
-    if (this.foto && this.foto.salvo) {
-      this.fotoToDelete = this.foto;
-    }
-
     this.foto = null;
     this.form.get('foto')?.patchValue(null);
   }
@@ -106,18 +103,17 @@ export class UsuarioInformacoesComponent implements OnInit {
 
     let usuario: Usuario = Object.assign({}, this.form.getRawValue());
 
-    this._facade.usuarioUpdate(usuario, this.fotoToSave, this.fotoToDelete?.id).subscribe({
+    this._usuarioService.update(usuario, this.fotoToSave).subscribe({
 
       next: (usuario) => {
         this.fotoToSave = null;
-        this.fotoToDelete = null;
-        this._facade.notificationShowNotification(MessageUtils.USUARIO_UPDATE_SUCCESS, NotificationType.SUCCESS);
-        this._facade.usuarioSet(usuario);
+        this._usuarioService.set(usuario);
+        this._notificationService.show(MessageUtils.USUARIO_UPDATE_SUCCESS, NotificationType.SUCCESS);
       },
 
       error: (error) => {
         console.error(error);
-        this._facade.notificationShowNotification(MessageUtils.USUARIO_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.USUARIO_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
       }
     });
   }

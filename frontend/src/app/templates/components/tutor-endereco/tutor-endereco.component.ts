@@ -3,7 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Endereco } from 'src/app/entities/endereco';
 import { Tutor } from 'src/app/entities/tutor';
 import { NotificationType } from 'src/app/enums/notification-type';
-import { FacadeService } from 'src/app/services/facade.service';
+import { NotificationService } from 'src/app/services/notification.service';
+import { TutorService } from 'src/app/services/tutor.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
 
 @Component({
@@ -17,13 +18,14 @@ export class TutorEnderecoComponent implements OnInit {
   tutor!: Tutor;
 
   constructor(
-    private _facade: FacadeService,
-    private _formBuilder: FormBuilder
+    private _formBuilder: FormBuilder,
+    private _notificationService: NotificationService,
+    private _tutorService: TutorService
   ) { }
 
   ngOnInit(): void {
     
-    this._facade.tutorGet().subscribe({
+    this._tutorService.get().subscribe({
 
       next: (tutor) => {
           
@@ -60,16 +62,16 @@ export class TutorEnderecoComponent implements OnInit {
     let endereco: Endereco = Object.assign({}, this.form.getRawValue());
     this.tutor.endereco = endereco;
 
-    this._facade.tutorUpdate(this.tutor, null, null).subscribe({
+    this._tutorService.update(this.tutor, null).subscribe({
 
       next: (tutor) => {
-        this._facade.notificationShowNotification(MessageUtils.TUTOR_UPDATE_SUCCESS, NotificationType.SUCCESS);
-        this._facade.tutorSet(tutor);
+        this._tutorService.set(tutor);
+        this._notificationService.show(MessageUtils.TUTOR_UPDATE_SUCCESS, NotificationType.SUCCESS);
       },
 
       error: (error) => {
         console.error(error);
-        this._facade.notificationShowNotification(MessageUtils.TUTOR_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.TUTOR_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
       }
     });
   }

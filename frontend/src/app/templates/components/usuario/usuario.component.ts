@@ -3,7 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { User } from 'src/app/entities/user';
 import { Usuario } from 'src/app/entities/usuario';
 import { NotificationType } from 'src/app/enums/notification-type';
-import { FacadeService } from 'src/app/services/facade.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { NotificationService } from 'src/app/services/notification.service';
+import { UsuarioService } from 'src/app/services/usuario.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
 
 @Component({
@@ -18,12 +20,14 @@ export class UsuarioComponent implements OnInit {
 
   constructor(
     private _activatedRoute: ActivatedRoute,
-    private _facade: FacadeService
+    private _authService: AuthService,
+    private _notificationService: NotificationService,
+    private _usuarioService: UsuarioService
   ) { }
 
   ngOnInit(): void {
     
-    this.user = this._facade.authGetCurrentUser();
+    this.user = this._authService.getCurrentUser();
 
     this._activatedRoute.params.subscribe({
 
@@ -31,22 +35,22 @@ export class UsuarioComponent implements OnInit {
           
         if (x && x.id) {
           
-          this._facade.usuarioFindById(x.id).subscribe({
+          this._usuarioService.findById(x.id).subscribe({
             
             next: (usuario) => {
-              this._facade.usuarioSet(usuario);
+              this._usuarioService.set(usuario);
             },
 
             error: (error) => {
               console.error(error);
-              this._facade.notificationShowNotification(MessageUtils.USUARIO_GET_FAIL, NotificationType.FAIL); 
+              this._notificationService.show(MessageUtils.USUARIO_GET_FAIL, NotificationType.FAIL); 
             }
           });
         }
       },
     });
 
-    this._facade.usuarioGet().subscribe({
+    this._usuarioService.get().subscribe({
 
       next: (usuario) => {
         

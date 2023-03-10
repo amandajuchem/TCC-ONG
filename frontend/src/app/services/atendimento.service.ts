@@ -46,17 +46,17 @@ export class AtendimentoService {
   /**
    * 
    * @param atendimento 
-   * @param documentosToSave 
+   * @param documentos 
    * @returns 
    */
-  save(atendimento: Atendimento, documentosToSave: Array<File> | null) {
+  save(atendimento: Atendimento, documentos: Array<File> | null) {
 
     let formData: FormData = new FormData();
 
     formData.append('atendimento', new Blob([JSON.stringify(atendimento)], { type: 'application/json' }));
 
-    if (documentosToSave) {
-      documentosToSave.forEach((imagem: any, index: number) => formData.append('documentosToSave', new Blob([imagem], { type: 'multipart/form-data' }), 'imagem' + index + '.png'));
+    if (documentos) {
+      documentos.forEach((imagem: any, index: number) => formData.append('documentos', new Blob([imagem], { type: 'multipart/form-data' }), 'imagem' + index + '.png'));
     }
 
     return this._http.post<Atendimento>(this._baseURL, formData);
@@ -87,22 +87,17 @@ export class AtendimentoService {
   /**
    * 
    * @param atendimento 
-   * @param documentosToSave 
-   * @param documentosToDelete 
+   * @param documentos 
    * @returns 
    */
-  update(atendimento: Atendimento, documentosToSave: Array<File> | null, documentosToDelete: Array<string> | null) {
+  update(atendimento: Atendimento, documentos: Array<File> | null) {
 
     let formData: FormData = new FormData();
 
     formData.append('atendimento', new Blob([JSON.stringify(atendimento)], { type: 'application/json' }));
 
-    if (documentosToSave) {
-      documentosToSave.forEach((imagem: any, index: number) => formData.append('documentosToSave', new Blob([imagem], { type: 'multipart/form-data' }), 'imagem' + index + '.png'));
-    }
-
-    if (documentosToDelete) {
-      formData.append('documentosToDelete', new Blob([JSON.stringify(documentosToDelete)], { type: 'application/json' }));
+    if (documentos) {
+      documentos.forEach((imagem: any, index: number) => formData.append('documentos', new Blob([imagem], { type: 'multipart/form-data' }), 'imagem' + index + '.png'));
     }
 
     return this._http.put<Atendimento>(this._baseURL + '/' + atendimento.id, formData);

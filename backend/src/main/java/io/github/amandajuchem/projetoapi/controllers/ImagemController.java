@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.ServletContext;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 import static org.springframework.http.HttpStatus.OK;
 
@@ -36,26 +37,20 @@ public class ImagemController {
      * @return the response entity
      */
     @GetMapping("/search")
-    public ResponseEntity<?> search(@RequestParam(required = false) String nome) {
+    public ResponseEntity<?> search(@RequestParam(required = false) String nome) throws FileNotFoundException {
 
         if (nome != null) {
 
-            try {
+            var file = FileUtils.find(nome, FileUtils.IMAGES_DIRECTORY);
+            var mediaType = MediaTypeUtils.getMediaTypeForFileName(this.servletContext, file.getName());
+            var resource = new InputStreamResource(new FileInputStream(file));
 
-                var file = FileUtils.find(nome, FileUtils.IMAGES_DIRECTORY);
-                var mediaType = MediaTypeUtils.getMediaTypeForFileName(this.servletContext, file.getName());
-                var resource = new InputStreamResource(new FileInputStream(file));
-
-                return ResponseEntity
-                        .status(OK)
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName())
-                        .contentType(mediaType)
-                        .contentLength(file.length())
-                        .body(resource);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                throw new OperationFailureException(MessageUtils.OPERATION_FAILURE);
-            }
+            return ResponseEntity
+                    .status(OK)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName())
+                    .contentType(mediaType)
+                    .contentLength(file.length())
+                    .body(resource);
         }
 
         throw new ObjectNotFoundException(MessageUtils.IMAGEM_NOT_FOUND);

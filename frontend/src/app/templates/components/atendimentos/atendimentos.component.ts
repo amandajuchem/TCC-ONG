@@ -7,7 +7,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Atendimento } from 'src/app/entities/atendimento';
 import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
-import { FacadeService } from 'src/app/services/facade.service';
+import { AtendimentoService } from 'src/app/services/atendimento.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { DateUtils } from 'src/app/utils/date-utils';
 import { MessageUtils } from 'src/app/utils/message-utils';
 import { OperatorUtils } from 'src/app/utils/operator-utils';
@@ -34,15 +36,17 @@ export class AtendimentosComponent implements AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
+    private _atendimentoService: AtendimentoService,
+    private _authService: AuthService,
     private _datePipe: DatePipe,
     private _dialog: MatDialog,
-    private _facade: FacadeService
+    private _notificationService: NotificationService
   ) {
     this.columns = ['index', 'dataHora', 'animal', 'veterinario', 'acao'];
     this.dataSource = new MatTableDataSource();
     this.isLoadingResults = true;
     this.resultsLength = 0;
-    this.user = this._facade.authGetCurrentUser();
+    this.user = this._authService.getCurrentUser();
   }
 
   ngAfterViewInit(): void {
@@ -107,7 +111,7 @@ export class AtendimentosComponent implements AfterViewInit {
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
 
-    this._facade.atendimentoSearch(value, page, size, sort, direction).subscribe({
+    this._atendimentoService.search(value, page, size, sort, direction).subscribe({
 
       complete: () => {
         this.isLoadingResults = false;
@@ -121,7 +125,7 @@ export class AtendimentosComponent implements AfterViewInit {
       error: (err) => {
         this.isLoadingResults = false;
         console.error(err);
-        this._facade.notificationShowNotification(MessageUtils.ATENDIMENTOS_GET_FAIL, NotificationType.FAIL);    
+        this._notificationService.show(MessageUtils.ATENDIMENTOS_GET_FAIL, NotificationType.FAIL);    
       }
     });
   }
@@ -136,7 +140,7 @@ export class AtendimentosComponent implements AfterViewInit {
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
 
-    this._facade.atendimentoFindAll(page, size, sort, direction).subscribe({
+    this._atendimentoService.findAll(page, size, sort, direction).subscribe({
 
       complete: () => {
         this.isLoadingResults = false;
@@ -150,7 +154,7 @@ export class AtendimentosComponent implements AfterViewInit {
       error: (err) => {
         this.isLoadingResults = false;
         console.error(err);
-        this._facade.notificationShowNotification(MessageUtils.ATENDIMENTOS_GET_FAIL, NotificationType.FAIL);    
+        this._notificationService.show(MessageUtils.ATENDIMENTOS_GET_FAIL, NotificationType.FAIL);    
       }
     });
   }

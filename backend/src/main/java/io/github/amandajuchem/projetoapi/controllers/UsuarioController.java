@@ -1,9 +1,11 @@
 package io.github.amandajuchem.projetoapi.controllers;
 
 import io.github.amandajuchem.projetoapi.dtos.UsuarioDTO;
+import io.github.amandajuchem.projetoapi.entities.Imagem;
 import io.github.amandajuchem.projetoapi.entities.Usuario;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.UsuarioService;
+import io.github.amandajuchem.projetoapi.utils.FileUtils;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.FileNotFoundException;
 import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.*;
@@ -29,6 +32,10 @@ public class UsuarioController {
     /**
      * Find all usuários.
      *
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
      * @return the list of usuários
      */
     @GetMapping
@@ -56,29 +63,37 @@ public class UsuarioController {
     /**
      * Save response entity.
      *
-     * @param usuario    the usuario
-     * @param novaFoto   the nova foto
-     * @param antigaFoto the antiga foto
+     * @param usuario the usuario
+     * @param foto    the foto
      * @return the response entity
+     * @throws FileNotFoundException the file not found exception
      */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> save(@RequestPart @Valid Usuario usuario,
-                                  @RequestPart(required = false) MultipartFile novaFoto,
-                                  @RequestPart(required = false) String antigaFoto) {
+                                  @RequestPart(required = false) MultipartFile foto) throws FileNotFoundException {
 
-//        usuario = utils.save(usuario, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
+        if (foto != null) {
+
+            usuario.setFoto(Imagem.builder()
+                    .nome(System.currentTimeMillis() + "." + FileUtils.getExtension(foto))
+                    .build());
+
+            FileUtils.FILE = foto;
+        }
+
+        usuario = service.save(usuario);
         return ResponseEntity.status(CREATED).body(UsuarioDTO.toDTO(usuario));
     }
 
     /**
      * Search usuários.
      *
-     * @param value     Nome ou CPF
+     * @param value     the nome ou CPF
      * @param page      the page
      * @param size      the size
      * @param sort      the sort
      * @param direction the direction
-     * @return the list of usuários
+     * @return the response entity
      */
     @GetMapping("/search")
     public ResponseEntity<?> search(@RequestParam(required = false) String value,
@@ -98,22 +113,31 @@ public class UsuarioController {
     /**
      * Update response entity.
      *
-     * @param id         the id
-     * @param usuario    the usuario
-     * @param novaFoto   the nova foto
-     * @param antigaFoto the antiga foto
+     * @param id      the id
+     * @param usuario the usuario
+     * @param foto    the foto
      * @return the response entity
+     * @throws FileNotFoundException the file not found exception
      */
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> update(@PathVariable UUID id,
                                     @RequestPart @Valid Usuario usuario,
-                                    @RequestPart(required = false) MultipartFile novaFoto,
-                                    @RequestPart(required = false) String antigaFoto) {
+                                    @RequestPart(required = false) MultipartFile foto) throws FileNotFoundException {
 
-//        if (usuario.getId().equals(id)) {
-//            usuario = utils.save(usuario, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
-//            return ResponseEntity.status(OK).body(UsuarioDTO.toDTO(usuario));
-//        }
+        if (usuario.getId().equals(id)) {
+
+            if (foto != null) {
+
+                usuario.setFoto(Imagem.builder()
+                        .nome(System.currentTimeMillis() + "." + FileUtils.getExtension(foto))
+                        .build());
+
+                FileUtils.FILE = foto;
+            }
+
+            usuario = service.save(usuario);
+            return ResponseEntity.status(OK).body(UsuarioDTO.toDTO(usuario));
+        }
 
         throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);
     }

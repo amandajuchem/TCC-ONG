@@ -37,8 +37,12 @@ public class AgendamentoController {
     }
 
     /**
-     * Find all agendamentos.
+     * Find all agendamento.
      *
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
      * @return the response entity
      */
     @GetMapping
@@ -64,14 +68,14 @@ public class AgendamentoController {
     }
 
     /**
-     * Search agendamentos.
+     * Search agendamento.
      *
-     * @param value     Data, nome do animal ou nome do veterinário
+     * @param value     the data, nome do animal ou nome do veterinário
      * @param page      the page
      * @param size      the size
      * @param sort      the sort
      * @param direction the direction
-     * @return the list of agendamentos
+     * @return the response entity
      */
     @GetMapping("/search")
     public ResponseEntity<?> search(@RequestParam(required = false) String value,

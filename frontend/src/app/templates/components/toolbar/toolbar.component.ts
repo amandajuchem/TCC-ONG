@@ -3,7 +3,9 @@ import { Router } from '@angular/router';
 import { User } from 'src/app/entities/user';
 import { Usuario } from 'src/app/entities/usuario';
 import { NotificationType } from 'src/app/enums/notification-type';
-import { FacadeService } from 'src/app/services/facade.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { NotificationService } from 'src/app/services/notification.service';
+import { UsuarioService } from 'src/app/services/usuario.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
 
 @Component({
@@ -17,15 +19,17 @@ export class ToolbarComponent implements OnInit {
   usuario!: Usuario;
 
   constructor(
-    private _facade: FacadeService,
-    private _router: Router
+    private _authService: AuthService,
+    private _router: Router,
+    private _notificationService: NotificationService,
+    private _usuarioService: UsuarioService
   ) { }
 
   ngOnInit(): void {
     
-    this.user = this._facade.authGetCurrentUser();
+    this.user = this._authService.getCurrentUser();
     
-    this._facade.usuarioSearch(this.user.username, 0, 1 , 'nome', 'asc').subscribe({
+    this._usuarioService.search(this.user.username, 0, 1 , 'nome', 'asc').subscribe({
 
       next: (usuarios) => {
         this.usuario = usuarios.content[0];
@@ -33,13 +37,13 @@ export class ToolbarComponent implements OnInit {
 
       error: (error) => {
         console.error(error);
-        this._facade.notificationShowNotification(MessageUtils.USUARIO_GET_FAIL, NotificationType.FAIL); 
+        this._notificationService.show(MessageUtils.USUARIO_GET_FAIL, NotificationType.FAIL); 
       }
     });
   }
 
   logout() {
-    this._facade.authLogout();
+    this._authService.logout();
     this._router.navigate(['']);
   }
 }

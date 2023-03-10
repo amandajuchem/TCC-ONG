@@ -1,9 +1,11 @@
 package io.github.amandajuchem.projetoapi.controllers;
 
 import io.github.amandajuchem.projetoapi.dtos.TutorDTO;
+import io.github.amandajuchem.projetoapi.entities.Imagem;
 import io.github.amandajuchem.projetoapi.entities.Tutor;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.TutorService;
+import io.github.amandajuchem.projetoapi.utils.FileUtils;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.FileNotFoundException;
 import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.*;
@@ -34,13 +37,17 @@ public class TutorController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id) {
-//        utils.delete(id);
+        service.delete(id);
         return ResponseEntity.status(OK).body(null);
     }
 
     /**
      * Find all response entity.
      *
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
      * @return the response entity
      */
     @GetMapping
@@ -68,29 +75,37 @@ public class TutorController {
     /**
      * Save response entity.
      *
-     * @param tutor      the tutor
-     * @param novaFoto   the nova foto
-     * @param antigaFoto the antiga foto
+     * @param tutor the tutor
+     * @param foto  the foto
      * @return the response entity
+     * @throws FileNotFoundException the file not found exception
      */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> save(@RequestPart @Valid Tutor tutor,
-                                  @RequestPart(required = false) MultipartFile novaFoto,
-                                  @RequestPart(required = false) String antigaFoto) {
+                                  @RequestPart(required = false) MultipartFile foto) throws FileNotFoundException {
 
-//        tutor = utils.save(tutor, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
+        if (foto != null) {
+
+            tutor.setFoto(Imagem.builder()
+                    .nome(System.currentTimeMillis() + "." + FileUtils.getExtension(foto))
+                    .build());
+
+            FileUtils.FILE = foto;
+        }
+
+        tutor = service.save(tutor);
         return ResponseEntity.status(CREATED).body(TutorDTO.toDTO(tutor));
     }
 
     /**
-     * Search tutores.
+     * Search tutor.
      *
-     * @param value     Nome, CPF ou RG
+     * @param value     the nome, CPF ou RG
      * @param page      the page
      * @param size      the size
      * @param sort      the sort
      * @param direction the direction
-     * @return the list of tutores
+     * @return the response entity
      */
     @GetMapping("/search")
     public ResponseEntity<?> search(@RequestParam(required = false) String value,
@@ -110,22 +125,31 @@ public class TutorController {
     /**
      * Update response entity.
      *
-     * @param id         the id
-     * @param tutor      the tutor
-     * @param novaFoto   the nova foto
-     * @param antigaFoto the antiga foto
+     * @param id    the id
+     * @param tutor the tutor
+     * @param foto  the foto
      * @return the response entity
+     * @throws FileNotFoundException the file not found exception
      */
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> update(@PathVariable UUID id,
                                     @RequestPart @Valid Tutor tutor,
-                                    @RequestPart(required = false) MultipartFile novaFoto,
-                                    @RequestPart(required = false) String antigaFoto) {
+                                    @RequestPart(required = false) MultipartFile foto) throws FileNotFoundException {
 
-//        if (tutor.getId().equals(id)) {
-//            tutor = utils.save(tutor, novaFoto, antigaFoto != null ? UUID.fromString(antigaFoto) : null);
-//            return ResponseEntity.status(OK).body(TutorDTO.toDTO(tutor));
-//        }
+        if (tutor.getId().equals(id)) {
+
+            if (foto != null) {
+
+                tutor.setFoto(Imagem.builder()
+                        .nome(System.currentTimeMillis() + "." + FileUtils.getExtension(foto))
+                        .build());
+
+                FileUtils.FILE = foto;
+            }
+
+            tutor = service.save(tutor);
+            return ResponseEntity.status(OK).body(TutorDTO.toDTO(tutor));
+        }
 
         throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);
     }

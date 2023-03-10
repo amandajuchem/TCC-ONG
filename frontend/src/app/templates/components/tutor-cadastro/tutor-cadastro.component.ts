@@ -3,9 +3,10 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Tutor } from 'src/app/entities/tutor';
 import { NotificationType } from 'src/app/enums/notification-type';
-import { FacadeService } from 'src/app/services/facade.service';
+import { ImagemService } from 'src/app/services/imagem.service';
+import { NotificationService } from 'src/app/services/notification.service';
+import { TutorService } from 'src/app/services/tutor.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
-import { environment } from 'src/environments/environment';
 
 import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-imagem.component';
 
@@ -16,21 +17,20 @@ import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-image
 })
 export class TutorCadastroComponent implements OnInit {
 
-  apiURL!: string;
   form!: FormGroup;
   foto!: any;
   fotoToSave!: any;
 
   constructor(
+    private _formBuilder: FormBuilder,
     private _dialog: MatDialog,
     private _dialogRef: MatDialogRef<TutorCadastroComponent>,
-    private _facade: FacadeService,
-    private _formBuilder: FormBuilder
+    private _imagemService: ImagemService,
+    private _notificationService: NotificationService,
+    private _tutorService: TutorService
   ) { }
 
   ngOnInit(): void {
-    
-    this.apiURL = environment.apiURL;
     this.buildForm();
   }
   
@@ -46,9 +46,9 @@ export class TutorCadastroComponent implements OnInit {
 
       if (result && result.status) {
 
-        this._facade.imagemToBase64(result.images[0])?.then(data => {
+        this._imagemService.toBase64(result.images[0])?.then(data => {
 
-          let imagem = { id: new Date().getTime(), data: data, nome: null, salvo: false };
+          let imagem = { id: new Date().getTime(), data: data };
 
           this.foto = imagem;
           this.fotoToSave = result.images[0];
@@ -94,7 +94,6 @@ export class TutorCadastroComponent implements OnInit {
   }
 
   removeFoto() {
-
     this.foto = null;
     this.form.get('foto')?.patchValue(null);
   }
@@ -107,16 +106,16 @@ export class TutorCadastroComponent implements OnInit {
 
     let tutor: Tutor = Object.assign({}, this.form.getRawValue());
 
-    this._facade.tutorSave(tutor, this.fotoToSave).subscribe({
+    this._tutorService.save(tutor, this.fotoToSave).subscribe({
 
       complete: () => {
-        this._facade.notificationShowNotification(MessageUtils.TUTOR_SAVE_SUCCESS, NotificationType.SUCCESS);
+        this._notificationService.show(MessageUtils.TUTOR_SAVE_SUCCESS, NotificationType.SUCCESS);
         this._dialogRef.close({status: true});
       },
 
       error: (error) => {
         console.error(error);
-        this._facade.notificationShowNotification(MessageUtils.TUTOR_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.TUTOR_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
       }
     });
   } 

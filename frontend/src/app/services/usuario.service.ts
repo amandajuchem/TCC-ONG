@@ -56,16 +56,17 @@ export class UsuarioService {
   /**
    * 
    * @param usuario 
+   * @param foto 
    * @returns 
    */
-  save(usuario: Usuario, novaFoto: any) {
+  save(usuario: Usuario, foto: any) {
 
     let formData = new FormData();
 
     formData.append('usuario', new Blob([JSON.stringify(usuario)], { type: 'application/json' }));
 
-    if (novaFoto) {
-      formData.append('novaFoto', new Blob([novaFoto], { type: 'multipart/form-data' }), 'novaFoto.png');
+    if (foto) {
+      formData.append('foto', new Blob([foto], { type: 'multipart/form-data' }), 'foto.png');
     }
 
     return this._http.post<Usuario>(this._baseURL, formData);
@@ -104,20 +105,17 @@ export class UsuarioService {
   /**
    * 
    * @param usuario 
+   * @param foto 
    * @returns 
    */
-  update(usuario: Usuario, novaFoto: any, antigaFoto: any) {
+  update(usuario: Usuario, foto: any) {
 
     let formData = new FormData();
 
     formData.append('usuario', new Blob([JSON.stringify(usuario)], { type: 'application/json' }));
 
-    if (novaFoto) {
-      formData.append('novaFoto', new Blob([novaFoto], { type: 'multipart/form-data' }), 'novaFoto.png');
-    }
-
-    if (antigaFoto) {
-      formData.append('antigaFoto', new Blob([antigaFoto], { type: 'text/plain' }));
+    if (foto) {
+      formData.append('foto', new Blob([foto], { type: 'multipart/form-data' }), 'foto.png');
     }
 
     return this._http.put<Usuario>(this._baseURL + '/' + usuario.id, formData);

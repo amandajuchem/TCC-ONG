@@ -39,6 +39,10 @@ public class ExamesController {
     /**
      * Find all response entity.
      *
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
      * @return the response entity
      */
     @GetMapping
@@ -64,14 +68,14 @@ public class ExamesController {
     }
 
     /**
-     * Search exames.
+     * Search exame.
      *
-     * @param value     Nome ou categoria
+     * @param value     the nome ou categoria
      * @param page      the page
      * @param size      the size
      * @param sort      the sort
      * @param direction the direction
-     * @return the list of exames
+     * @return the response entity
      */
     @GetMapping("/search")
     public ResponseEntity<?> search(@RequestParam(required = false) String value,

@@ -3,7 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Exame } from 'src/app/entities/exame';
 import { NotificationType } from 'src/app/enums/notification-type';
-import { FacadeService } from 'src/app/services/facade.service';
+import { ExameService } from 'src/app/services/exame.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
 
 @Component({
@@ -17,9 +18,10 @@ export class ExameCadastroComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private _facade: FacadeService,
+    private _dialogRef: MatDialogRef<ExameCadastroComponent>,
+    private _exameService: ExameService,
     private _formBuilder: FormBuilder,
-    private _dialogRef: MatDialogRef<ExameCadastroComponent>
+    private _notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
@@ -46,32 +48,32 @@ export class ExameCadastroComponent implements OnInit {
 
     if (exame.id) {
 
-      this._facade.exameUpdate(exame).subscribe({
+      this._exameService.update(exame).subscribe({
         
         complete: () => {
-          this._facade.notificationShowNotification(MessageUtils.EXAME_UPDATE_SUCCESS, NotificationType.SUCCESS);
+          this._notificationService.show(MessageUtils.EXAME_UPDATE_SUCCESS, NotificationType.SUCCESS);
           this._dialogRef.close({status: true});
         },
   
         error: (error) => {
           console.error(error);
-          this._facade.notificationShowNotification(MessageUtils.EXAME_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
+          this._notificationService.show(MessageUtils.EXAME_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
         }
       });
     } 
     
     else {
 
-      this._facade.exameSave(exame).subscribe({
+      this._exameService.save(exame).subscribe({
         
         complete: () => {
-          this._facade.notificationShowNotification(MessageUtils.EXAME_SAVE_SUCCESS, NotificationType.SUCCESS);
+          this._notificationService.show(MessageUtils.EXAME_SAVE_SUCCESS, NotificationType.SUCCESS);
           this._dialogRef.close({status: true});
         },
   
         error: (error) => {
           console.error(error);
-          this._facade.notificationShowNotification(MessageUtils.EXAME_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
+          this._notificationService.show(MessageUtils.EXAME_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
         }
       });
     }

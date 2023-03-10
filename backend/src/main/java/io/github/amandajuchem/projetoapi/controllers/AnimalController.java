@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
@@ -29,7 +30,7 @@ import static org.springframework.http.HttpStatus.*;
 @RequiredArgsConstructor
 public class AnimalController {
 
-    private final AnimalService animalService;
+    private final AnimalService service;
 
     /**
      * Delete response entity.
@@ -39,13 +40,17 @@ public class AnimalController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id) {
-        animalService.delete(id);
+        service.delete(id);
         return ResponseEntity.status(OK).body(null);
     }
 
     /**
      * Find all response entity.
      *
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
      * @return the response entity
      */
     @GetMapping
@@ -54,7 +59,7 @@ public class AnimalController {
                                      @RequestParam(required = false, defaultValue = "nome") String sort,
                                      @RequestParam(required = false, defaultValue = "asc") String direction) {
 
-        var animais = animalService.findAll(page, size, sort, direction).map(AnimalDTO::toDTO);
+        var animais = service.findAll(page, size, sort, direction).map(AnimalDTO::toDTO);
         return ResponseEntity.status(OK).body(animais);
     }
 
@@ -66,7 +71,7 @@ public class AnimalController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable UUID id) {
-        var animal = animalService.findById(id);
+        var animal = service.findById(id);
         return ResponseEntity.status(OK).body(AnimalDTO.toDTO(animal));
     }
 
@@ -76,10 +81,11 @@ public class AnimalController {
      * @param animal the animal
      * @param foto   the foto
      * @return the response entity
+     * @throws FileNotFoundException the file not found exception
      */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> save(@RequestPart @Valid Animal animal,
-                                  @RequestPart(required = false) MultipartFile foto) throws IOException {
+                                  @RequestPart(required = false) MultipartFile foto) throws FileNotFoundException {
 
         if (foto != null) {
 
@@ -90,7 +96,7 @@ public class AnimalController {
             FileUtils.FILE = foto;
         }
 
-        animal = animalService.save(animal);
+        animal = service.save(animal);
         return ResponseEntity.status(CREATED).body(AnimalDTO.toDTO(animal));
     }
 
@@ -102,7 +108,7 @@ public class AnimalController {
      * @param size      the size
      * @param sort      the sort
      * @param direction the direction
-     * @return the list of animais
+     * @return the response entity
      */
     @GetMapping("/search")
     public ResponseEntity<?> search(@RequestParam(required = false) String value,
@@ -112,7 +118,7 @@ public class AnimalController {
                                     @RequestParam(required = false, defaultValue = "asc") String direction) {
 
         if (value != null) {
-            var animais = animalService.search(value, page, size, sort, direction).map(AnimalDTO::toDTO);
+            var animais = service.search(value, page, size, sort, direction).map(AnimalDTO::toDTO);
             return ResponseEntity.status(OK).body(animais);
         }
 
@@ -126,11 +132,12 @@ public class AnimalController {
      * @param animal the animal
      * @param foto   the foto
      * @return the response entity
+     * @throws FileNotFoundException the file not found exception
      */
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> update(@PathVariable UUID id,
                                     @RequestPart @Valid Animal animal,
-                                    @RequestPart(required = false) MultipartFile foto) throws IOException {
+                                    @RequestPart(required = false) MultipartFile foto) throws FileNotFoundException {
 
         if (animal.getId().equals(id)) {
 
@@ -143,7 +150,7 @@ public class AnimalController {
                 FileUtils.FILE = foto;
             }
 
-            animal = animalService.save(animal);
+            animal = service.save(animal);
             return ResponseEntity.status(OK).body(AnimalDTO.toDTO(animal));
         }
 
@@ -153,17 +160,18 @@ public class AnimalController {
     //////////////////////////////////////////////// ADOÇÃO ////////////////////////////////////////////////
 
     /**
-     * Delete adoção.
+     * Delete adocao.
      *
+     * @param id       the id
      * @param idAdocao the id adocao
      * @return the response entity
      */
     @DeleteMapping("/{id}/adocoes/{idAdocao}")
     public ResponseEntity<?> adocaoDelete(@PathVariable UUID id, @PathVariable UUID idAdocao) {
 
-        var animal = animalService.findById(id);
+        var animal = service.findById(id);
         animal.getAdocoes().removeIf(adocao -> adocao.getId().equals(idAdocao));
-        animalService.save(animal);
+        service.save(animal);
 
         return ResponseEntity.status(OK).body(animal);
     }
@@ -189,10 +197,10 @@ public class AnimalController {
     /**
      * Update adoção.
      *
-     * @param id                 the id
-     * @param idAdocao           the id adocao
-     * @param adocao             the adocao
-     * @param documentosToSave   the documentos to save
+     * @param id               the id
+     * @param idAdocao         the id adocao
+     * @param adocao           the adocao
+     * @param documentosToSave the documentos to save
      * @return the response entity
      */
     @PutMapping("/{id}/adocoes/{idAdocao}")

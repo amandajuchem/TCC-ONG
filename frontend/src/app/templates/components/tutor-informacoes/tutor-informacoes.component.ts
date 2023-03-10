@@ -5,7 +5,10 @@ import { Router } from '@angular/router';
 import { Tutor } from 'src/app/entities/tutor';
 import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
-import { FacadeService } from 'src/app/services/facade.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { ImagemService } from 'src/app/services/imagem.service';
+import { NotificationService } from 'src/app/services/notification.service';
+import { TutorService } from 'src/app/services/tutor.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
 import { environment } from 'src/environments/environment';
 
@@ -23,23 +26,25 @@ export class TutorInformacoesComponent implements OnInit {
   form!: FormGroup;
   foto!: any;
   fotoToSave!: any;
-  fotoToDelete!: any;
   tutor!: Tutor;
   user!: User;
 
   constructor(
+    private _authService: AuthService,
     private _dialog: MatDialog,
-    private _facade: FacadeService,
     private _formBuilder: FormBuilder,
-    private _router: Router
+    private _imagemService: ImagemService,
+    private _notificationService: NotificationService,
+    private _router: Router,
+    private _tutorService: TutorService
   ) { }
 
   ngOnInit(): void {
     
     this.apiURL = environment.apiURL;
-    this.user = this._facade.authGetCurrentUser();
+    this.user = this._authService.getCurrentUser();
 
-    this._facade.tutorGet().subscribe({
+    this._tutorService.get().subscribe({
 
       next: (tutor) => {
           
@@ -67,11 +72,7 @@ export class TutorInformacoesComponent implements OnInit {
 
       if (result && result.status) {
 
-        this._facade.imagemToBase64(result.images[0])?.then(data => {
-
-          if (this.foto && this.foto.salvo) {
-            this.fotoToDelete = this.foto;
-          }
+        this._imagemService.toBase64(result.images[0])?.then(data => {
 
           let imagem = { id: new Date().getTime(), data: data, nome: null, salvo: false };
 
@@ -108,7 +109,9 @@ export class TutorInformacoesComponent implements OnInit {
         })) : []
       ),
 
-      endereco: [tutor.endereco, Validators.nullValidator]
+      endereco: [tutor.endereco, Validators.nullValidator],
+      adocoes: [tutor.adocoes, Validators.nullValidator],
+      observacoes: [tutor.observacoes, Validators.nullValidator]
     });
 
     this.form.disable();
@@ -149,11 +152,6 @@ export class TutorInformacoesComponent implements OnInit {
   }
 
   removeFoto() {
-
-    if (this.foto && this.foto.salvo) {
-      this.fotoToDelete = this.foto;
-    }
-
     this.foto = null;
     this.form.get('foto')?.patchValue(null);
   }
@@ -166,18 +164,17 @@ export class TutorInformacoesComponent implements OnInit {
 
     let tutor: Tutor = Object.assign({}, this.form.getRawValue());
 
-    this._facade.tutorUpdate(tutor, this.fotoToSave, this.fotoToDelete?.id).subscribe({
+    this._tutorService.update(tutor, this.fotoToSave).subscribe({
 
       next: (tutor) => {
         this.fotoToSave = null;
-        this.fotoToDelete = null;
-        this._facade.notificationShowNotification(MessageUtils.TUTOR_UPDATE_SUCCESS, NotificationType.SUCCESS);
-        this._facade.tutorSet(tutor);
+        this._tutorService.set(tutor);
+        this._notificationService.show(MessageUtils.TUTOR_UPDATE_SUCCESS, NotificationType.SUCCESS);
       },
 
       error: (error) => {
         console.error(error);
-        this._facade.notificationShowNotification(MessageUtils.TUTOR_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.TUTOR_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
       }
     });
   }

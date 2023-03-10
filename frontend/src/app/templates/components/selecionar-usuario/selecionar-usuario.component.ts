@@ -1,11 +1,12 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { AfterViewInit, Component, Inject, ViewChild } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Usuario } from 'src/app/entities/usuario';
 import { NotificationType } from 'src/app/enums/notification-type';
-import { FacadeService } from 'src/app/services/facade.service';
+import { NotificationService } from 'src/app/services/notification.service';
+import { UsuarioService } from 'src/app/services/usuario.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
 import { OperatorUtils } from 'src/app/utils/operator-utils';
 
@@ -16,19 +17,21 @@ import { OperatorUtils } from 'src/app/utils/operator-utils';
 })
 export class SelecionarUsuarioComponent implements AfterViewInit {
 
-  usuario!: Usuario;
   columns!: Array<string>;
   dataSource!: MatTableDataSource<Usuario>;
   filterString!: string;
   isLoadingResults!: boolean;
   resultsLength!: number;
+  usuario!: Usuario;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
-    private _facade: FacadeService,
-    private _matDialogRef: MatDialogRef<SelecionarUsuarioComponent>
+    @Inject(MAT_DIALOG_DATA) private _data: any,
+    private _dialogRef: MatDialogRef<SelecionarUsuarioComponent>,
+    private _notificationService: NotificationService,
+    private _usuarioService: UsuarioService
   ) {
     this.columns = ['index', 'nome', 'cpf', 'setor'];
     this.dataSource = new MatTableDataSource();
@@ -51,7 +54,7 @@ export class SelecionarUsuarioComponent implements AfterViewInit {
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
 
-    this._facade.usuarioSearch(this.filterString, page, size, sort, direction).subscribe({
+    this._usuarioService.search(this.filterString, page, size, sort, direction).subscribe({
 
       complete: () => {
         this.isLoadingResults = false;
@@ -65,7 +68,7 @@ export class SelecionarUsuarioComponent implements AfterViewInit {
       error: (err) => {
         this.isLoadingResults = false;
         console.error(err);
-        this._facade.notificationShowNotification(MessageUtils.USUARIOS_GET_FAIL, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.USUARIOS_GET_FAIL, NotificationType.FAIL);
       }
     });
   }
@@ -80,7 +83,7 @@ export class SelecionarUsuarioComponent implements AfterViewInit {
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
 
-    this._facade.usuarioFindAll(page, size, sort, direction).subscribe({
+    this._usuarioService.findAll(page, size, sort, direction).subscribe({
 
       complete: () => {
         this.isLoadingResults = false;
@@ -94,7 +97,7 @@ export class SelecionarUsuarioComponent implements AfterViewInit {
       error: (err) => {
         this.isLoadingResults = false;
         console.error(err);
-        this._facade.notificationShowNotification(MessageUtils.USUARIOS_GET_FAIL, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.USUARIOS_GET_FAIL, NotificationType.FAIL);
       }
     });
   }
@@ -110,7 +113,17 @@ export class SelecionarUsuarioComponent implements AfterViewInit {
   }
 
   select(usuario: Usuario) {
-    this.usuario = usuario;
+    
+    if (this._data.setor) {
+
+      if (this._data.setor === usuario.setor) {
+        this.usuario = usuario;
+      }
+    }
+
+    else {
+      this.usuario = usuario;
+    }
   }
 
   sortChange() {
@@ -126,6 +139,6 @@ export class SelecionarUsuarioComponent implements AfterViewInit {
   }
 
   submit() {
-    this._matDialogRef.close({ status: true, usuario: this.usuario });
+    this._dialogRef.close({ status: true, usuario: this.usuario });
   }
 }
