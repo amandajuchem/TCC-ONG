@@ -35,8 +35,8 @@ export class AnimalInformacoesComponent implements OnInit {
     private _dialog: MatDialog,
     private _formBuilder: FormBuilder,
     private _imagemService: ImagemService,
-    private _router: Router,
-    private _notificationService: NotificationService
+    private _notificationService: NotificationService,
+    private _router: Router
   ) { }
 
   ngOnInit(): void {
@@ -137,6 +137,7 @@ export class AnimalInformacoesComponent implements OnInit {
 
   removeFoto() {
     this.foto = null;
+    this.fotoToSave = null;
     this.form.get('foto')?.patchValue(null);
   }
 
@@ -148,8 +149,8 @@ export class AnimalInformacoesComponent implements OnInit {
 
       next: (animal) => {
         this.fotoToSave = null;
-        this._notificationService.show(MessageUtils.ANIMAL_UPDATE_SUCCESS, NotificationType.SUCCESS);
         this._animalService.set(animal);
+        this._notificationService.show(MessageUtils.ANIMAL_UPDATE_SUCCESS, NotificationType.SUCCESS);
       },
 
       error: (error) => {

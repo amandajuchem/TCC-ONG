@@ -1,5 +1,5 @@
-export interface Page {
-    content: any;
+export interface Page<T> {
+    content: Array<T>;
     empty: boolean;
     first: boolean;
     last: boolean;

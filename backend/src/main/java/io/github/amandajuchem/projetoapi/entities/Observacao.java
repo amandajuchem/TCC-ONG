@@ -7,6 +7,8 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotEmpty;
 
 @Data
@@ -19,6 +21,10 @@ public class Observacao extends AbstractEntity {
     @NotEmpty
     @Column(columnDefinition = "TEXT")
     private String conteudo;
+
+    @ManyToOne
+    @JoinColumn(name = "tutor_id")
+    private Tutor tutor;
 
     @Override
     public boolean equals(Object o) {

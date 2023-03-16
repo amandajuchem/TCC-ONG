@@ -41,6 +41,15 @@ export class MessageUtils {
   static EXAME_UPDATE_FAIL = 'Não foi possível atualizar os dados do exame! ';
   static EXAME_UPDATE_SUCCESS = 'Dados do exame atualizados com sucesso!';
 
+  static OBSERVACOES_GET_FAIL = 'Não foi possível obter a lista de observações! Por favor, contate o suporte técnico!';
+  static OBSERVACAO_DELETE_FAIL = 'Não foi possível excluir a observação! ';
+  static OBSERVACAO_DELETE_SUCCESS = 'Observação excluída com sucesso!';
+  static OBSERVACAO_GET_FAIL = 'Não foi possível obter os dados da observação! Por favor, contate o suporte técnico!';
+  static OBSERVACAO_SAVE_FAIL = 'Não foi possível cadastrar a observação! ';
+  static OBSERVACAO_SAVE_SUCCESS = 'Observação cadastrada com sucesso!';
+  static OBSERVACAO_UPDATE_FAIL = 'Não foi possível atualizar os dados da observação! ';
+  static OBSERVACAO_UPDATE_SUCCESS = 'Dados da observação atualizados com sucesso!';
+
   static TUTORES_GET_FAIL = 'Não foi possível obter a lista de tutores! Por favor, contate o suporte técnico!';
   static TUTOR_DELETE_FAIL = 'Não foi possível excluir o tutor! ';
   static TUTOR_DELETE_SUCCESS = 'Tutor excluído com sucesso!';

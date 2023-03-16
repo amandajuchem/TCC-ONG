@@ -39,40 +39,10 @@ export class SelecionarExameComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.findAllExames();
+    this.findAll();
   }
 
-  async filter() {
-
-    const page = this.paginator.pageIndex;
-    const size = this.paginator.pageSize;
-    const sort = this.sort.active;
-    const direction = this.sort.direction;
-
-    this.filterString = this.filterString ? this.filterString : '';
-    this.isLoadingResults = true;
-    await OperatorUtils.delay(1000);
-
-    this._exameService.search(this.filterString, page, size, sort, direction).subscribe({
-
-      complete: () => {
-        this.isLoadingResults = false;
-      },
-
-      next: (exames) => {
-        this.dataSource.data = exames.content;
-        this.resultsLength = exames.totalElements;
-      },
-
-      error: (err) => {
-        this.isLoadingResults = false;
-        console.error(err);
-        this._notificationService.show(MessageUtils.EXAMES_GET_FAIL, NotificationType.FAIL);
-      }
-    });
-  }
-
-  async findAllExames() {
+  async findAll() {
     
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
@@ -104,11 +74,41 @@ export class SelecionarExameComponent implements AfterViewInit {
   pageChange() {
     
     if (this.filterString) {
-      this.filter();
+      this.search();
       return;
     }    
 
-    this.findAllExames();
+    this.findAll();
+  }
+
+  async search() {
+
+    const page = this.paginator.pageIndex;
+    const size = this.paginator.pageSize;
+    const sort = this.sort.active;
+    const direction = this.sort.direction;
+
+    this.filterString = this.filterString ? this.filterString : '';
+    this.isLoadingResults = true;
+    await OperatorUtils.delay(1000);
+
+    this._exameService.search(this.filterString, page, size, sort, direction).subscribe({
+
+      complete: () => {
+        this.isLoadingResults = false;
+      },
+
+      next: (exames) => {
+        this.dataSource.data = exames.content;
+        this.resultsLength = exames.totalElements;
+      },
+
+      error: (err) => {
+        this.isLoadingResults = false;
+        console.error(err);
+        this._notificationService.show(MessageUtils.EXAMES_GET_FAIL, NotificationType.FAIL);
+      }
+    });
   }
 
   select(exame: Exame) {
@@ -120,11 +120,11 @@ export class SelecionarExameComponent implements AfterViewInit {
     this.paginator.pageIndex = 0;
     
     if (this.filterString) {
-      this.filter();
+      this.search();
       return;
     }
 
-    this.findAllExames();
+    this.findAll();
   }
 
   submit() {

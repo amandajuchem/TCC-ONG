@@ -9,6 +9,7 @@ CREATE TABLE tb_adocoes
     local              VARCHAR(10),
     local_adocao       VARCHAR(10),
     vale_castracao     BOOLEAN                     NOT NULL,
+    animal_id          UUID,
     tutor_id           UUID,
     CONSTRAINT pk_tb_adocoes PRIMARY KEY (id)
 );
@@ -16,8 +17,7 @@ CREATE TABLE tb_adocoes
 CREATE TABLE tb_adocoes_termo_responsabilidade
 (
     tb_adocoes_id             UUID NOT NULL,
-    termo_responsabilidade_id UUID NOT NULL,
-    CONSTRAINT pk_tb_adocoes_termoresponsabilidade PRIMARY KEY (tb_adocoes_id, termo_responsabilidade_id)
+    termo_responsabilidade_id UUID NOT NULL
 );
 
 CREATE TABLE tb_agendamentos
@@ -54,13 +54,6 @@ CREATE TABLE tb_animais
     CONSTRAINT pk_tb_animais PRIMARY KEY (id)
 );
 
-CREATE TABLE tb_animais_adocoes
-(
-    adocoes_id    UUID NOT NULL,
-    tb_animais_id UUID NOT NULL,
-    CONSTRAINT pk_tb_animais_adocoes PRIMARY KEY (adocoes_id, tb_animais_id)
-);
-
 CREATE TABLE tb_atendimentos
 (
     id                 UUID                        NOT NULL,
@@ -80,8 +73,7 @@ CREATE TABLE tb_atendimentos
 CREATE TABLE tb_atendimentos_documentos
 (
     documentos_id      UUID NOT NULL,
-    tb_atendimentos_id UUID NOT NULL,
-    CONSTRAINT pk_tb_atendimentos_documentos PRIMARY KEY (documentos_id, tb_atendimentos_id)
+    tb_atendimentos_id UUID NOT NULL
 );
 
 CREATE TABLE tb_atendimentos_exames
@@ -177,6 +169,7 @@ CREATE TABLE tb_observacoes
     created_by_user    VARCHAR(11),
     modified_by_user   VARCHAR(11),
     conteudo           TEXT,
+    tutor_id           UUID,
     CONSTRAINT pk_tb_observacoes PRIMARY KEY (id)
 );
 
@@ -207,18 +200,10 @@ CREATE TABLE tb_tutores
     CONSTRAINT pk_tb_tutores PRIMARY KEY (id)
 );
 
-CREATE TABLE tb_tutores_observacoes
-(
-    observacoes_id UUID NOT NULL,
-    tb_tutores_id  UUID NOT NULL,
-    CONSTRAINT pk_tb_tutores_observacoes PRIMARY KEY (observacoes_id, tb_tutores_id)
-);
-
 CREATE TABLE tb_tutores_telefones
 (
     tb_tutores_id UUID NOT NULL,
-    telefones_id  UUID NOT NULL,
-    CONSTRAINT pk_tb_tutores_telefones PRIMARY KEY (tb_tutores_id, telefones_id)
+    telefones_id  UUID NOT NULL
 );
 
 CREATE TABLE tb_usuarios
@@ -240,9 +225,6 @@ CREATE TABLE tb_usuarios
 ALTER TABLE tb_adocoes_termo_responsabilidade
     ADD CONSTRAINT uc_tb_adocoes_termo_responsabilidade_termoresponsabilidade UNIQUE (termo_responsabilidade_id);
 
-ALTER TABLE tb_animais_adocoes
-    ADD CONSTRAINT uc_tb_animais_adocoes_adocoes UNIQUE (adocoes_id);
-
 ALTER TABLE tb_atendimentos_documentos
     ADD CONSTRAINT uc_tb_atendimentos_documentos_documentos UNIQUE (documentos_id);
 
@@ -255,11 +237,11 @@ ALTER TABLE tb_feiras_adocao_animais
 ALTER TABLE tb_feiras_adocao_usuarios
     ADD CONSTRAINT uc_tb_feiras_adocao_usuarios_usuarios UNIQUE (usuarios_id);
 
-ALTER TABLE tb_tutores_observacoes
-    ADD CONSTRAINT uc_tb_tutores_observacoes_observacoes UNIQUE (observacoes_id);
-
 ALTER TABLE tb_tutores_telefones
     ADD CONSTRAINT uc_tb_tutores_telefones_telefones UNIQUE (telefones_id);
+
+ALTER TABLE tb_adocoes
+    ADD CONSTRAINT FK_TB_ADOCOES_ON_ANIMAL FOREIGN KEY (animal_id) REFERENCES tb_animais (id);
 
 ALTER TABLE tb_adocoes
     ADD CONSTRAINT FK_TB_ADOCOES_ON_TUTOR FOREIGN KEY (tutor_id) REFERENCES tb_tutores (id);
@@ -282,6 +264,9 @@ ALTER TABLE tb_atendimentos
 ALTER TABLE tb_atendimentos
     ADD CONSTRAINT FK_TB_ATENDIMENTOS_ON_VETERINARIO FOREIGN KEY (veterinario_id) REFERENCES tb_usuarios (id);
 
+ALTER TABLE tb_observacoes
+    ADD CONSTRAINT FK_TB_OBSERVACOES_ON_TUTOR FOREIGN KEY (tutor_id) REFERENCES tb_tutores (id);
+
 ALTER TABLE tb_tutores
     ADD CONSTRAINT FK_TB_TUTORES_ON_ENDERECO FOREIGN KEY (endereco_id) REFERENCES tb_enderecos (id);
 
@@ -296,12 +281,6 @@ ALTER TABLE tb_adocoes_termo_responsabilidade
 
 ALTER TABLE tb_adocoes_termo_responsabilidade
     ADD CONSTRAINT fk_tbadoterres_on_imagem FOREIGN KEY (termo_responsabilidade_id) REFERENCES tb_imagens (id);
-
-ALTER TABLE tb_animais_adocoes
-    ADD CONSTRAINT fk_tbaniado_on_adocao FOREIGN KEY (adocoes_id) REFERENCES tb_adocoes (id);
-
-ALTER TABLE tb_animais_adocoes
-    ADD CONSTRAINT fk_tbaniado_on_animal FOREIGN KEY (tb_animais_id) REFERENCES tb_animais (id);
 
 ALTER TABLE tb_atendimentos_documentos
     ADD CONSTRAINT fk_tbatedoc_on_atendimento FOREIGN KEY (tb_atendimentos_id) REFERENCES tb_atendimentos (id);
@@ -326,12 +305,6 @@ ALTER TABLE tb_feiras_adocao_usuarios
 
 ALTER TABLE tb_feiras_adocao_usuarios
     ADD CONSTRAINT fk_tbfeiadousu_on_usuario FOREIGN KEY (usuarios_id) REFERENCES tb_usuarios (id);
-
-ALTER TABLE tb_tutores_observacoes
-    ADD CONSTRAINT fk_tbtutobs_on_observacao FOREIGN KEY (observacoes_id) REFERENCES tb_observacoes (id);
-
-ALTER TABLE tb_tutores_observacoes
-    ADD CONSTRAINT fk_tbtutobs_on_tutor FOREIGN KEY (tb_tutores_id) REFERENCES tb_tutores (id);
 
 ALTER TABLE tb_tutores_telefones
     ADD CONSTRAINT fk_tbtuttel_on_telefone FOREIGN KEY (telefones_id) REFERENCES tb_telefones (id);

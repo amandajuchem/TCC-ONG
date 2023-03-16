@@ -40,6 +40,10 @@ public class Adocao extends AbstractEntity {
     private Boolean valeCastracao;
 
     @ManyToOne
+    @JoinColumn(name = "animal_id")
+    private Animal animal;
+
+    @ManyToOne
     @JoinColumn(name = "tutor_id")
     private Tutor tutor;
 

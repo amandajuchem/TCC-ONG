@@ -50,7 +50,7 @@ export class AtendimentosComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.findAllAtendimentos();
+    this.findAll();
   }
 
   add() {
@@ -66,7 +66,7 @@ export class AtendimentosComponent implements AfterViewInit {
       next: (result) => {
           
         if (result && result.status) {
-          this.findAllAtendimentos();
+          this.findAll();
         }
       }
     });
@@ -85,13 +85,63 @@ export class AtendimentosComponent implements AfterViewInit {
       next: (result) => {
           
         if (result && result.status) {
-          this.findAllAtendimentos();
+          this.findAll();
         }
       }
     });
   }
 
-  async filter(by: string) {
+  
+
+  async findAll() {
+
+    const page = this.paginator.pageIndex;
+    const size = this.paginator.pageSize;
+    const sort = this.sort.active;
+    const direction = this.sort.direction;
+
+    this.isLoadingResults = true;
+    await OperatorUtils.delay(1000);
+
+    this._atendimentoService.findAll(page, size, sort, direction).subscribe({
+
+      complete: () => {
+        this.isLoadingResults = false;
+      },
+
+      next: (atendimentos) => {
+        this.dataSource.data = atendimentos.content;
+        this.resultsLength = atendimentos.totalElements;
+      },
+
+      error: (err) => {
+        this.isLoadingResults = false;
+        console.error(err);
+        this._notificationService.show(MessageUtils.ATENDIMENTOS_GET_FAIL, NotificationType.FAIL);    
+      }
+    });
+  }
+
+  getDateWithTimeZone(date: any) {
+    return DateUtils.getDateWithTimeZone(date);
+  }
+
+  pageChange() {
+    
+    if (this.filterDate) {
+      this.search('date');
+      return;
+    }
+
+    if (this.filterString) {
+      this.search('string');
+      return;
+    }
+
+    this.findAll();
+  }
+
+  async search(by: string) {
     
     let value: any = null;
 
@@ -130,69 +180,21 @@ export class AtendimentosComponent implements AfterViewInit {
     });
   }
 
-  async findAllAtendimentos() {
-
-    const page = this.paginator.pageIndex;
-    const size = this.paginator.pageSize;
-    const sort = this.sort.active;
-    const direction = this.sort.direction;
-
-    this.isLoadingResults = true;
-    await OperatorUtils.delay(1000);
-
-    this._atendimentoService.findAll(page, size, sort, direction).subscribe({
-
-      complete: () => {
-        this.isLoadingResults = false;
-      },
-
-      next: (atendimentos) => {
-        this.dataSource.data = atendimentos.content;
-        this.resultsLength = atendimentos.totalElements;
-      },
-
-      error: (err) => {
-        this.isLoadingResults = false;
-        console.error(err);
-        this._notificationService.show(MessageUtils.ATENDIMENTOS_GET_FAIL, NotificationType.FAIL);    
-      }
-    });
-  }
-
-  getDateWithTimeZone(date: any) {
-    return DateUtils.getDateWithTimeZone(date);
-  }
-
-  pageChange() {
-    
-    if (this.filterDate) {
-      this.filter('date');
-      return;
-    }
-
-    if (this.filterString) {
-      this.filter('string');
-      return;
-    }
-
-    this.findAllAtendimentos();
-  }
-
   sortChange() {
     
     this.paginator.pageIndex = 0;
 
     if (this.filterDate) {
-      this.filter('date');
+      this.search('date');
       return;
     }
 
     if (this.filterString) {
-      this.filter('string');
+      this.search('string');
       return;
     }
 
-    this.findAllAtendimentos();
+    this.findAll();
   }
 
   update(atendimento: Atendimento) {
@@ -208,7 +210,7 @@ export class AtendimentosComponent implements AfterViewInit {
       next: (result) => {
           
         if (result && result.status) {
-          this.findAllAtendimentos();
+          this.findAll();
         }
       }
     });

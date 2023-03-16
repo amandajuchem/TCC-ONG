@@ -30,15 +30,15 @@
                             <mat-label>Buscar</mat-label>
                             <input matInput [(ngModel)]="filterDate" [matDatepicker]="pickerDataHora" placeholder="Data" readonly>
                             <mat-datepicker-toggle matIconSuffix [for]="pickerDataHora"></mat-datepicker-toggle>
-                            <mat-datepicker #pickerDataHora (closed)="filter('date')"></mat-datepicker>
+                            <mat-datepicker #pickerDataHora (closed)="search('date')"></mat-datepicker>
                         </mat-form-field>
                     </div>
 
                     <div class="col-12 col-md-8 mb-3 mb-md-0">
                         <mat-form-field appearance="outline" class="w-100" style="margin-bottom: -1.25em;">
                             <mat-label>Buscar</mat-label>
-                            <input type="text" matInput placeholder="Animal ou Veterinário" [(ngModel)]="filterString" (keyup.enter)="filter('string')">
-                            <button mat-icon-button matSuffix (click)="filter('string')">
+                            <input type="text" matInput placeholder="Animal ou Veterinário" [(ngModel)]="filterString" (keyup.enter)="search('string')">
+                            <button mat-icon-button matSuffix (click)="search('string')">
                                 <mat-icon>search</mat-icon>
                             </button>
                         </mat-form-field>

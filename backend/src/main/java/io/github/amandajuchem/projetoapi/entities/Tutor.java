@@ -58,7 +58,7 @@ public class Tutor extends AbstractEntity {
     private Set<Adocao> adocoes;
 
     @Valid
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(orphanRemoval = true, mappedBy = "tutor")
     private Set<Observacao> observacoes;
 
     @Override

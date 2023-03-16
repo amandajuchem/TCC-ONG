@@ -50,7 +50,7 @@ export class AgendamentosComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.findAllAgendamentos();
+    this.findAll();
   }
 
   add() {
@@ -66,7 +66,7 @@ export class AgendamentosComponent implements AfterViewInit {
       next: (result) => {
           
         if (result && result.status) {
-          this.findAllAgendamentos();
+          this.findAll();
         }
       }
     });
@@ -85,13 +85,61 @@ export class AgendamentosComponent implements AfterViewInit {
       next: (result) => {
           
         if (result && result.status) {
-          this.findAllAgendamentos();
+          this.findAll();
         }
       }
     });
   }
 
-  async filter(by: string) {
+  async findAll() {
+
+    const page = this.paginator.pageIndex;
+    const size = this.paginator.pageSize;
+    const sort = this.sort.active;
+    const direction = this.sort.direction;
+
+    this.isLoadingResults = true;
+    await OperatorUtils.delay(1000);
+
+    this._agendamentoService.findAll(page, size, sort, direction).subscribe({
+
+      complete: () => {
+        this.isLoadingResults = false;
+      },
+
+      next: (agendamentos) => {
+        this.dataSource.data = agendamentos.content;
+        this.resultsLength = agendamentos.totalElements;
+      },
+
+      error: (err) => {
+        this.isLoadingResults = false;
+        console.error(err);
+        this._notificationService.show(MessageUtils.AGENDAMENTOS_GET_FAIL, NotificationType.FAIL);    
+      }
+    });
+  }
+
+  getDateWithTimeZone(date: any) {
+    return DateUtils.getDateWithTimeZone(date);
+  }
+
+  pageChange() {
+    
+    if (this.filterDate) {
+      this.search('date');
+      return;
+    }
+
+    if (this.filterString) {
+      this.search('string');
+      return;
+    }
+
+    this.findAll();
+  }
+
+  async search(by: string) {
 
     let value: any = null;
 
@@ -130,69 +178,21 @@ export class AgendamentosComponent implements AfterViewInit {
     });
   }
 
-  async findAllAgendamentos() {
-
-    const page = this.paginator.pageIndex;
-    const size = this.paginator.pageSize;
-    const sort = this.sort.active;
-    const direction = this.sort.direction;
-
-    this.isLoadingResults = true;
-    await OperatorUtils.delay(1000);
-
-    this._agendamentoService.findAll(page, size, sort, direction).subscribe({
-
-      complete: () => {
-        this.isLoadingResults = false;
-      },
-
-      next: (agendamentos) => {
-        this.dataSource.data = agendamentos.content;
-        this.resultsLength = agendamentos.totalElements;
-      },
-
-      error: (err) => {
-        this.isLoadingResults = false;
-        console.error(err);
-        this._notificationService.show(MessageUtils.AGENDAMENTOS_GET_FAIL, NotificationType.FAIL);    
-      }
-    });
-  }
-
-  getDateWithTimeZone(date: any) {
-    return DateUtils.getDateWithTimeZone(date);
-  }
-
-  pageChange() {
-    
-    if (this.filterDate) {
-      this.filter('date');
-      return;
-    }
-
-    if (this.filterString) {
-      this.filter('string');
-      return;
-    }
-
-    this.findAllAgendamentos();
-  }
-
   sortChange() {
     
     this.paginator.pageIndex = 0;
 
     if (this.filterDate) {
-      this.filter('date');
+      this.search('date');
       return;
     }
 
     if (this.filterString) {
-      this.filter('string');
+      this.search('string');
       return;
     }
 
-    this.findAllAgendamentos();
+    this.findAll();
   }
 
   update(agendamento: Agendamento) {
@@ -208,7 +208,7 @@ export class AgendamentosComponent implements AfterViewInit {
       next: (result) => {
           
         if (result && result.status) {
-          this.findAllAgendamentos();
+          this.findAll();
         }
       }
     });

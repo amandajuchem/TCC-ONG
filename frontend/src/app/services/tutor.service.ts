@@ -5,11 +5,12 @@ import { environment } from 'src/environments/environment';
 
 import { Page } from '../entities/page';
 import { Tutor } from '../entities/tutor';
+import { AbstractService } from './abstract-service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TutorService {
+export class TutorService implements AbstractService<Tutor> {
 
   private _baseURL = environment.apiURL + '/tutores';
   private _subject = new BehaviorSubject<Tutor | null>(null);
@@ -35,7 +36,7 @@ export class TutorService {
    */
   findAll(page: number, size: number, sort: string, direction: string) {
     
-    return this._http.get<Page>(this._baseURL, {
+    return this._http.get<Page<Tutor>>(this._baseURL, {
       params: {
         page: page,
         size: size,
@@ -92,7 +93,7 @@ export class TutorService {
    */
   search(value: string, page: number, size: number, sort: string, direction: string) {
 
-    return this._http.get<Page>(this._baseURL + '/search', {
+    return this._http.get<Page<Tutor>>(this._baseURL + '/search', {
       params: {
         value: value,
         page: page,

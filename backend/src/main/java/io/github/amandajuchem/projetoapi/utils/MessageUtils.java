@@ -51,16 +51,6 @@ public class MessageUtils {
     public static final String ATENDIMENTO_NULL = "Atendimento nulo!";
 
     /**
-     * The constant ENDERECO_NOT_FOUND.
-     */
-    public static final String ENDERECO_NOT_FOUND = "Endereço não encontrado!";
-
-    /**
-     * The constant ENDERECO_NULL.
-     */
-    public static final String ENDERECO_NULL = "Endereço nulo!";
-
-    /**
      * The constant EXAME_NOT_FOUND.
      */
     public static final String EXAME_NOT_FOUND = "Exame não encontrado!";
@@ -71,39 +61,19 @@ public class MessageUtils {
     public static final String EXAME_NULL = "Exame nulo!";
 
     /**
-     * The constant FICHA_MEDICA_NOT_FOUND.
+     * The constant OBSERVACAO_NOT_FOUND.
      */
-    public static final String FICHA_MEDICA_NOT_FOUND = "Ficha médica não encontrada!";
+    public static final String OBSERVACAO_NOT_FOUND = "Observação não encontrada!";
 
     /**
-     * The constant FICHA_MEDICA_NULL.
+     * The constant OBSERVACAO_NULL.
      */
-    public static final String FICHA_MEDICA_NULL = "Ficha médica nula!";
-
-    /**
-     * The constant IMAGEM_NOT_FOUND.
-     */
-    public static final String IMAGEM_NOT_FOUND = "Imagem não encontrada!";
-
-    /**
-     * The constant IMAGEM_NULL.
-     */
-    public static final String IMAGEM_NULL = "Imagem nula!";
+    public static final String OBSERVACAO_NULL = "Observação nula";
 
     /**
      * The constant OPERATION_FAILURE.
      */
     public static final String OPERATION_FAILURE = "Não foi possível concluir a operação! Por favor, entre em contato com o suporte técnico!";
-
-    /**
-     * The constant TELEFONE_NOT_FOUND.
-     */
-    public static final String TELEFONE_NOT_FOUND = "Telefone não encontrado!";
-
-    /**
-     * The constant TELEFONE_NULL.
-     */
-    public static final String TELEFONE_NULL = "Telefone nulo!";
 
     /**
      * The constant TUTOR_NOT_FOUND.

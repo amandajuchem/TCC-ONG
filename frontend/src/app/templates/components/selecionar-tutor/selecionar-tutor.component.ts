@@ -39,40 +39,10 @@ export class SelecionarTutorComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.findAllTutores();
+    this.findAll();
   }
 
-  async filter() {
-
-    const page = this.paginator.pageIndex;
-    const size = this.paginator.pageSize;
-    const sort = this.sort.active;
-    const direction = this.sort.direction;
-
-    this.filterString = this.filterString ? this.filterString : '';
-    this.isLoadingResults = true;
-    await OperatorUtils.delay(1000);
-
-    this._tutorService.search(this.filterString, page, size, sort, direction).subscribe({
-
-      complete: () => {
-        this.isLoadingResults = false;
-      },
-
-      next: (animais) => {
-        this.dataSource.data = animais.content;
-        this.resultsLength = animais.totalElements;
-      },
-
-      error: (err) => {
-        this.isLoadingResults = false;
-        console.error(err);
-        this._notificationService.show(MessageUtils.TUTOR_GET_FAIL, NotificationType.FAIL);
-      }
-    });
-  }
-
-  async findAllTutores() {
+  async findAll() {
     
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
@@ -104,11 +74,41 @@ export class SelecionarTutorComponent implements AfterViewInit {
   pageChange() {
     
     if (this.filterString) {
-      this.filter();
+      this.search();
       return;
     }    
 
-    this.findAllTutores();
+    this.findAll();
+  }
+
+  async search() {
+
+    const page = this.paginator.pageIndex;
+    const size = this.paginator.pageSize;
+    const sort = this.sort.active;
+    const direction = this.sort.direction;
+
+    this.filterString = this.filterString ? this.filterString : '';
+    this.isLoadingResults = true;
+    await OperatorUtils.delay(1000);
+
+    this._tutorService.search(this.filterString, page, size, sort, direction).subscribe({
+
+      complete: () => {
+        this.isLoadingResults = false;
+      },
+
+      next: (animais) => {
+        this.dataSource.data = animais.content;
+        this.resultsLength = animais.totalElements;
+      },
+
+      error: (err) => {
+        this.isLoadingResults = false;
+        console.error(err);
+        this._notificationService.show(MessageUtils.TUTOR_GET_FAIL, NotificationType.FAIL);
+      }
+    });
   }
 
   select(tutor: Tutor) {
@@ -120,11 +120,11 @@ export class SelecionarTutorComponent implements AfterViewInit {
     this.paginator.pageIndex = 0;
     
     if (this.filterString) {
-      this.filter();
+      this.search();
       return;
     }
 
-    this.findAllTutores();
+    this.findAll();
   }
 
   submit() {

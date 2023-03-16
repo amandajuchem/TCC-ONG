@@ -45,7 +45,7 @@ export class TutoresComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.findAllTutores();
+    this.findAll();
   }
 
   add() {
@@ -61,43 +61,13 @@ export class TutoresComponent implements AfterViewInit {
       next: (result) => {
 
         if (result && result.status) {
-          this.findAllTutores();
+          this.findAll();
         }
       }
     });
   }
 
-  async filter() {
-
-    const page = this.paginator.pageIndex;
-    const size = this.paginator.pageSize;
-    const sort = this.sort.active;
-    const direction = this.sort.direction;
-
-    this.filterString = this.filterString ? this.filterString : '';
-    this.isLoadingResults = true;
-    await OperatorUtils.delay(1000);
-
-    this._tutorService.search(this.filterString, page, size, sort, direction).subscribe({
-
-      complete: () => {
-        this.isLoadingResults = false;
-      },
-
-      next: (tutores) => {
-        this.dataSource.data = tutores.content;
-        this.resultsLength = tutores.totalElements;
-      },
-
-      error: (err) => {
-        this.isLoadingResults = false;
-        console.error(err);
-        this._notificationService.show(MessageUtils.TUTORES_GET_FAIL, NotificationType.FAIL);
-      }
-    });
-  }
-
-  async findAllTutores() {
+  async findAll() {
 
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
@@ -129,11 +99,41 @@ export class TutoresComponent implements AfterViewInit {
   pageChange() {
 
     if (this.filterString) {
-      this.filter();
+      this.search();
       return;
     }
 
-    this.findAllTutores();
+    this.findAll();
+  }
+
+  async search() {
+
+    const page = this.paginator.pageIndex;
+    const size = this.paginator.pageSize;
+    const sort = this.sort.active;
+    const direction = this.sort.direction;
+
+    this.filterString = this.filterString ? this.filterString : '';
+    this.isLoadingResults = true;
+    await OperatorUtils.delay(1000);
+
+    this._tutorService.search(this.filterString, page, size, sort, direction).subscribe({
+
+      complete: () => {
+        this.isLoadingResults = false;
+      },
+
+      next: (tutores) => {
+        this.dataSource.data = tutores.content;
+        this.resultsLength = tutores.totalElements;
+      },
+
+      error: (err) => {
+        this.isLoadingResults = false;
+        console.error(err);
+        this._notificationService.show(MessageUtils.TUTORES_GET_FAIL, NotificationType.FAIL);
+      }
+    });
   }
 
   sortChange() {
@@ -141,10 +141,10 @@ export class TutoresComponent implements AfterViewInit {
     this.paginator.pageIndex = 0;
 
     if (this.filterString) {
-      this.filter();
+      this.search();
       return;
     }
 
-    this.findAllTutores();
+    this.findAll();
   }
 }

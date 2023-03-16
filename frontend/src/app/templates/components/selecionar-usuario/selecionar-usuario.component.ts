@@ -40,40 +40,10 @@ export class SelecionarUsuarioComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.findAllUsuarios();
+    this.findAll();
   }
 
-  async filter() {
-
-    const page = this.paginator.pageIndex;
-    const size = this.paginator.pageSize;
-    const sort = this.sort.active;
-    const direction = this.sort.direction;
-
-    this.filterString = this.filterString ? this.filterString : '';
-    this.isLoadingResults = true;
-    await OperatorUtils.delay(1000);
-
-    this._usuarioService.search(this.filterString, page, size, sort, direction).subscribe({
-
-      complete: () => {
-        this.isLoadingResults = false;
-      },
-
-      next: (animais) => {
-        this.dataSource.data = animais.content;
-        this.resultsLength = animais.totalElements;
-      },
-
-      error: (err) => {
-        this.isLoadingResults = false;
-        console.error(err);
-        this._notificationService.show(MessageUtils.USUARIOS_GET_FAIL, NotificationType.FAIL);
-      }
-    });
-  }
-
-  async findAllUsuarios() {
+  async findAll() {
     
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
@@ -105,11 +75,41 @@ export class SelecionarUsuarioComponent implements AfterViewInit {
   pageChange() {
     
     if (this.filterString) {
-      this.filter();
+      this.search();
       return;
     }    
 
-    this.findAllUsuarios();
+    this.findAll();
+  }
+
+  async search() {
+
+    const page = this.paginator.pageIndex;
+    const size = this.paginator.pageSize;
+    const sort = this.sort.active;
+    const direction = this.sort.direction;
+
+    this.filterString = this.filterString ? this.filterString : '';
+    this.isLoadingResults = true;
+    await OperatorUtils.delay(1000);
+
+    this._usuarioService.search(this.filterString, page, size, sort, direction).subscribe({
+
+      complete: () => {
+        this.isLoadingResults = false;
+      },
+
+      next: (animais) => {
+        this.dataSource.data = animais.content;
+        this.resultsLength = animais.totalElements;
+      },
+
+      error: (err) => {
+        this.isLoadingResults = false;
+        console.error(err);
+        this._notificationService.show(MessageUtils.USUARIOS_GET_FAIL, NotificationType.FAIL);
+      }
+    });
   }
 
   select(usuario: Usuario) {
@@ -131,11 +131,11 @@ export class SelecionarUsuarioComponent implements AfterViewInit {
     this.paginator.pageIndex = 0;
     
     if (this.filterString) {
-      this.filter();
+      this.search();
       return;
     }
 
-    this.findAllUsuarios();
+    this.findAll();
   }
 
   submit() {

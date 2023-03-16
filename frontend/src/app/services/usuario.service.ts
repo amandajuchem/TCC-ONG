@@ -5,16 +5,26 @@ import { environment } from 'src/environments/environment';
 
 import { Page } from '../entities/page';
 import { Usuario } from '../entities/usuario';
+import { AbstractService } from './abstract-service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UsuarioService {
+export class UsuarioService implements AbstractService<Usuario> {
 
   private _baseURL = environment.apiURL + '/usuarios';
   private _subject = new BehaviorSubject<Usuario | null>(null);
 
   constructor(private _http: HttpClient) { }
+
+  /**
+   * 
+   * @param id 
+   * @returns 
+   */
+  delete(id: string) {
+    return this._http.delete(this._baseURL + '/' + id);
+  }
 
   /**
    * 
@@ -26,7 +36,8 @@ export class UsuarioService {
    */
   findAll(page: number, size: number, sort: string, direction: string) {
     
-    return this._http.get<Page>(this._baseURL, {
+    return this._http.get<Page<Usuario>>(this._baseURL, {
+      
       params: {
         page: page,
         size: size,
@@ -83,7 +94,8 @@ export class UsuarioService {
    */
   search(value: string, page: number, size: number, sort: string, direction: string) {
 
-    return this._http.get<Page>(this._baseURL + '/search', {
+    return this._http.get<Page<Usuario>>(this._baseURL + '/search', {
+      
       params: {
         value: value,
         page: page,

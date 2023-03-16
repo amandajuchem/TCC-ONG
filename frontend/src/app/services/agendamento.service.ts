@@ -4,11 +4,12 @@ import { environment } from 'src/environments/environment';
 
 import { Agendamento } from '../entities/agendamento';
 import { Page } from '../entities/page';
+import { AbstractService } from './abstract-service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AgendamentoService {
+export class AgendamentoService implements AbstractService<Agendamento> {
 
   private _baseURL = environment.apiURL + '/agendamentos';
 
@@ -29,7 +30,7 @@ export class AgendamentoService {
    */
   findAll(page: number, size: number, sort: string, direction: string) {
 
-    return this._http.get<Page>(this._baseURL, {
+    return this._http.get<Page<Agendamento>>(this._baseURL, {
       params: {
         page: page,
         size: size, 
@@ -37,6 +38,15 @@ export class AgendamentoService {
         direction: direction
       }
     });
+  }
+
+  /**
+   * 
+   * @param id 
+   * @returns 
+   */
+  findById(id: string) {
+    return this._http.get<Agendamento>(this._baseURL + '/' + id);
   }
 
   /**
@@ -59,7 +69,8 @@ export class AgendamentoService {
    */
   search(value: string, page: number, size: number, sort: string, direction: string) {
 
-    return this._http.get<Page>(this._baseURL + '/search', {
+    return this._http.get<Page<Agendamento>>(this._baseURL + '/search', {
+      
       params: {
         value: value,
         page: page,

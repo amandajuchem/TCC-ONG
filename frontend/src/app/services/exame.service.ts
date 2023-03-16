@@ -4,11 +4,12 @@ import { environment } from 'src/environments/environment';
 
 import { Exame } from '../entities/exame';
 import { Page } from '../entities/page';
+import { AbstractService } from './abstract-service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ExameService {
+export class ExameService implements AbstractService<Exame> {
 
   private _baseURL = environment.apiURL + '/exames';
 
@@ -33,7 +34,8 @@ export class ExameService {
    */
   findAll(page: number, size: number, sort: string, direction: string) {
 
-    return this._http.get<Page>(this._baseURL, {
+    return this._http.get<Page<Exame>>(this._baseURL, {
+      
       params: {
         page: page,
         size: size,
@@ -41,6 +43,15 @@ export class ExameService {
         direction: direction
       }
     });
+  }
+
+  /**
+   * 
+   * @param id 
+   * @returns 
+   */
+  findById(id: string) {
+    return this._http.get<Exame>(this._baseURL + '/' + id);
   }
 
   /**
@@ -63,7 +74,8 @@ export class ExameService {
    */
   search(value: string, page: number, size: number, sort: string, direction: string) {
 
-    return this._http.get<Page>(this._baseURL + '/search', {
+    return this._http.get<Page<Exame>>(this._baseURL + '/search', {
+      
       params: {
         value: value,
         page: page,

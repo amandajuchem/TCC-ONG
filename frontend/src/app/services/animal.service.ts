@@ -3,17 +3,17 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
-import { Adocao } from '../entities/adocao';
 import { Animal } from '../entities/animal';
 import { Page } from '../entities/page';
+import { AbstractService } from './abstract-service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AnimalService {
+export class AnimalService implements AbstractService<Animal> {
 
-  private baseURL = environment.apiURL + '/animais';
-  private subject = new BehaviorSubject<Animal | null>(null);
+  private _baseURL = environment.apiURL + '/animais';
+  private _subject = new BehaviorSubject<Animal | null>(null);
 
   constructor(private _http: HttpClient) { }
 
@@ -23,7 +23,7 @@ export class AnimalService {
    * @returns
    */
   delete(id: string) {
-    return this._http.delete(this.baseURL + '/' + id);
+    return this._http.delete(this._baseURL + '/' + id);
   }
 
   /**
@@ -36,7 +36,7 @@ export class AnimalService {
    */
   findAll(page: number, size: number, sort: string, direction: string) {
 
-    return this._http.get<Page>(this.baseURL, {
+    return this._http.get<Page<Animal>>(this._baseURL, {
       params: {
         page: page,
         size: size,
@@ -52,7 +52,7 @@ export class AnimalService {
    * @returns
    */
   findById(id: string) {
-    return this._http.get<Animal>(this.baseURL + '/' + id);
+    return this._http.get<Animal>(this._baseURL + '/' + id);
   }
 
   /**
@@ -60,7 +60,7 @@ export class AnimalService {
    * @returns
    */
   get() {
-    return this.subject.asObservable();
+    return this._subject.asObservable();
   }
 
   /**
@@ -79,7 +79,7 @@ export class AnimalService {
       formData.append('foto', new Blob([foto], { type: 'multipart/form-data' }), 'foto.png');
     }
 
-    return this._http.post<Animal>(this.baseURL, formData);
+    return this._http.post<Animal>(this._baseURL, formData);
   }
 
   /**
@@ -93,7 +93,7 @@ export class AnimalService {
    */
   search(value: string, page: number, size: number, sort: string, direction: string) {
 
-    return this._http.get<Page>(this.baseURL + '/search', {
+    return this._http.get<Page<Animal>>(this._baseURL + '/search', {
       params: {
         value: value,
         page: page,
@@ -109,7 +109,7 @@ export class AnimalService {
    * @param animal
    */
   set(animal: Animal) {
-    this.subject.next(animal);
+    this._subject.next(animal);
   }
 
   /**
@@ -128,20 +128,6 @@ export class AnimalService {
       formData.append('foto', new Blob([foto], { type: 'multipart/form-data' }), 'foto.png');
     }
 
-    return this._http.put<Animal>(this.baseURL + '/' + animal.id, formData);
-  }
-
-  ////////////////////////////////////////////////// ADOÇÃO //////////////////////////////////////////////////
-
-  adocaoDelete(id: string, idAdocao: string) {
-    return this._http.delete(this.baseURL + '/' + id + '/adocoes/' + idAdocao);
-  }
-
-  adocaoSave(animal: Animal, adocao: Adocao) {
-    return this._http.post<Adocao>(this.baseURL + '/' + animal.id + '/adocoes', adocao);
-  }
-
-  adocaoUpdate(animal: Animal, adocao: Adocao) {
-    return this._http.put<Adocao>(this.baseURL + '/' + animal.id + '/adocoes/' + adocao.id, adocao);
+    return this._http.put<Animal>(this._baseURL + '/' + animal.id, formData);
   }
 }

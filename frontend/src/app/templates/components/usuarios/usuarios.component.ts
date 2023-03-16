@@ -45,7 +45,7 @@ export class UsuariosComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.findAllUsuarios();
+    this.findAll();
   }
 
   add() {
@@ -61,13 +61,52 @@ export class UsuariosComponent implements AfterViewInit {
       next: (result) => {
 
         if (result && result.status) {
-          this.findAllUsuarios();
+          this.findAll();
         }
       }
     });
   }
 
-  async filter() {
+  async findAll() {
+
+    const page = this.paginator.pageIndex;
+    const size = this.paginator.pageSize;
+    const sort = this.sort.active;
+    const direction = this.sort.direction;
+
+    this.isLoadingResults = true;
+    await OperatorUtils.delay(1000);
+
+    this._usuarioService.findAll(page, size, sort, direction).subscribe({
+
+      complete: () => {
+        this.isLoadingResults = false;
+      },
+
+      next: (usuarios) => {
+        this.dataSource.data = usuarios.content;
+        this.resultsLength = usuarios.totalElements;
+      },
+
+      error: (error) => {
+        this.isLoadingResults = false;
+        console.error(error);
+        this._notificationService.show(MessageUtils.USUARIOS_GET_FAIL, NotificationType.FAIL);
+      }
+    });
+  }
+
+  pageChange() {
+
+    if (this.filterString) {
+      this.search();
+      return;
+    }
+
+    this.findAll();
+  }
+
+  async search() {
 
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
@@ -97,54 +136,15 @@ export class UsuariosComponent implements AfterViewInit {
     });
   }
 
-  async findAllUsuarios() {
-
-    const page = this.paginator.pageIndex;
-    const size = this.paginator.pageSize;
-    const sort = this.sort.active;
-    const direction = this.sort.direction;
-
-    this.isLoadingResults = true;
-    await OperatorUtils.delay(1000);
-
-    this._usuarioService.findAll(page, size, sort, direction).subscribe({
-
-      complete: () => {
-        this.isLoadingResults = false;
-      },
-
-      next: (usuarioes) => {
-        this.dataSource.data = usuarioes.content;
-        this.resultsLength = usuarioes.totalElements;
-      },
-
-      error: (error) => {
-        this.isLoadingResults = false;
-        console.error(error);
-        this._notificationService.show(MessageUtils.USUARIOS_GET_FAIL, NotificationType.FAIL);
-      }
-    });
-  }
-
-  pageChange() {
-
-    if (this.filterString) {
-      this.filter();
-      return;
-    }
-
-    this.findAllUsuarios();
-  }
-
   sortChange() {
 
     this.paginator.pageIndex = 0;
     
     if (this.filterString) {
-      this.filter();
+      this.search();
       return;
     }
 
-    this.findAllUsuarios();
+    this.findAll();
   } 
 }

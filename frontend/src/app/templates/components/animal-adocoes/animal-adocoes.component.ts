@@ -4,10 +4,14 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Adocao } from 'src/app/entities/adocao';
+import { Animal } from 'src/app/entities/animal';
+import { NotificationType } from 'src/app/enums/notification-type';
+import { AdocaoService } from 'src/app/services/adocao.service';
 import { AnimalService } from 'src/app/services/animal.service';
+import { NotificationService } from 'src/app/services/notification.service';
+import { MessageUtils } from 'src/app/utils/message-utils';
 import { OperatorUtils } from 'src/app/utils/operator-utils';
 
-import { Animal } from '../../../entities/animal';
 import { AnimalAdocoesCadastroComponent } from '../animal-adocoes-cadastro/animal-adocoes-cadastro.component';
 import { AnimalAdocoesExcluirComponent } from '../animal-adocoes-excluir/animal-adocoes-excluir.component';
 
@@ -22,18 +26,21 @@ export class AnimalAdocoesComponent implements AfterViewInit {
   columns!: Array<string>;
   dataSource!: MatTableDataSource<Adocao>;
   isLoadingResults!: boolean;
+  resultsLength!: number;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
+    private _adocaoService: AdocaoService,
     private _animalService: AnimalService,
     private _dialog: MatDialog,
-
+    private _notificationService: NotificationService
   ) {
     this.columns = ['index', 'dataHora', 'localAdocao', 'tutor', 'acao'];
     this.dataSource = new MatTableDataSource();
     this.isLoadingResults = true;
+    this.resultsLength = 0;
   }
 
   ngAfterViewInit(): void {
@@ -44,7 +51,7 @@ export class AnimalAdocoesComponent implements AfterViewInit {
 
         if (animal) {
           this.animal = animal;
-          this.findAllAdocoes();
+          this.findAllA();
         }
       }
     });
@@ -63,7 +70,7 @@ export class AnimalAdocoesComponent implements AfterViewInit {
       next: (result) => {
 
         if (result && result.status) {
-          this.findAllAdocoes();
+          this.findAllA();
         }
       }
     });
@@ -82,19 +89,39 @@ export class AnimalAdocoesComponent implements AfterViewInit {
       next: (result) => {
 
         if (result && result.status) {
-          this.findAllAdocoes();
+          this.findAllA();
         }
       }
     });
   }
 
-  async findAllAdocoes() {
+  async findAllA() {
+
+    const page = this.paginator.pageIndex;
+    const size = this.paginator.pageSize;
+    const sort = this.sort.active;
+    const direction = this.sort.direction;
 
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
 
-    this.dataSource.data = this.animal.adocoes;
-    this.isLoadingResults = false;
+    this._adocaoService.findAll(page, size, sort, direction, this.animal.id).subscribe({
+
+      complete: () => {
+        this.isLoadingResults = false;
+      },
+
+      next: (adocoes) => {
+        this.dataSource.data = adocoes.content;
+        this.resultsLength = adocoes.totalElements;
+      },
+
+      error: (error) => {
+        this.isLoadingResults = false;
+        console.error(error);
+        this._notificationService.show(MessageUtils.ADOCOES_GET_FAIL, NotificationType.FAIL);
+      }
+    });
   }
 
   update(adocao: Adocao) {
@@ -110,7 +137,7 @@ export class AnimalAdocoesComponent implements AfterViewInit {
       next: (result) => {
 
         if (result && result.status) {
-          this.findAllAdocoes();
+          this.findAllA();
         }
       }
     });

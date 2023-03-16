@@ -5,7 +5,12 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observacao } from 'src/app/entities/observacao';
 import { Tutor } from 'src/app/entities/tutor';
+import { NotificationType } from 'src/app/enums/notification-type';
+import { NotificationService } from 'src/app/services/notification.service';
+import { ObservacaoService } from 'src/app/services/observacao.service';
 import { TutorService } from 'src/app/services/tutor.service';
+import { MessageUtils } from 'src/app/utils/message-utils';
+import { OperatorUtils } from 'src/app/utils/operator-utils';
 
 @Component({
   selector: 'app-tutor-observacoes',
@@ -17,6 +22,7 @@ export class TutorObservacoesComponent implements AfterViewInit {
   columns!: Array<string>;
   dataSource!: MatTableDataSource<Observacao>;
   isLoadingResults!: boolean;
+  resultsLength!: number;
   tutor!: Tutor;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -24,14 +30,28 @@ export class TutorObservacoesComponent implements AfterViewInit {
 
   constructor(
     private _dialog: MatDialog,
-    private _tutorService: TutorService
+    private _notificationService: NotificationService,
+    private _observacaoservice: ObservacaoService,
+    private _tutorService: TutorService,
   ) { }
 
   ngAfterViewInit(): void {
-  
+
+    this._tutorService.get().subscribe({
+
+      next: (tutor) => {
+        
+        if (tutor) {
+          this.tutor = tutor;
+        }
+      }
+    });
+
+    this.findAll();
   }
 
   add() {
+
 
   }
 
@@ -39,8 +59,42 @@ export class TutorObservacoesComponent implements AfterViewInit {
 
   }
 
-  findAllObservacoes() {
+  async findAll() {
 
+    const page = this.paginator.pageIndex;
+    const size = this.paginator.pageSize;
+    const sort = this.sort.active;
+    const direction = this.sort.direction;
+
+    this.isLoadingResults = true;
+    await OperatorUtils.delay(1000);
+
+    this._observacaoservice.findAll(page, size, sort, direction, this.tutor.id).subscribe({
+
+      complete: () => {
+        this.isLoadingResults = false;
+      },
+
+      next: (observacoes) => {
+        this.dataSource.data = observacoes.content;
+        this.resultsLength = observacoes.totalElements;
+      },
+
+      error: (error) => {
+        this.isLoadingResults = false;
+        console.error(error);
+        this._notificationService.show(MessageUtils.OBSERVACOES_GET_FAIL, NotificationType.FAIL);
+      }
+    });
+  }
+
+  pageChange() {
+    this.findAll();
+  }
+
+  sortChange() {
+    this.paginator.pageIndex = 0;
+    this.findAll();
   }
 
   update(observacao: Observacao) {

@@ -39,40 +39,10 @@ export class SelecionarAnimalComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.findAllAnimais();
+    this.findAll();
   }
 
-  async filter() {
-
-    const page = this.paginator.pageIndex;
-    const size = this.paginator.pageSize;
-    const sort = this.sort.active;
-    const direction = this.sort.direction;
-
-    this.filterString = this.filterString ? this.filterString : '';
-    this.isLoadingResults = true;
-    await OperatorUtils.delay(1000);
-
-    this._animalService.search(this.filterString, page, size, sort, direction).subscribe({
-
-      complete: () => {
-        this.isLoadingResults = false;
-      },
-
-      next: (animais) => {
-        this.dataSource.data = animais.content;
-        this.resultsLength = animais.totalElements;
-      },
-
-      error: (err) => {
-        this.isLoadingResults = false;
-        console.error(err);
-        this._notificationService.show(MessageUtils.ANIMAL_GET_FAIL, NotificationType.FAIL);
-      }
-    });
-  }
-
-  async findAllAnimais() {
+  async findAll() {
     
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
@@ -104,27 +74,57 @@ export class SelecionarAnimalComponent implements AfterViewInit {
   pageChange() {
     
     if (this.filterString) {
-      this.filter();
+      this.search();
       return;
     }    
 
-    this.findAllAnimais();
+    this.findAll();
+  }
+
+  async search() {
+
+    const page = this.paginator.pageIndex;
+    const size = this.paginator.pageSize;
+    const sort = this.sort.active;
+    const direction = this.sort.direction;
+
+    this.filterString = this.filterString ? this.filterString : '';
+    this.isLoadingResults = true;
+    await OperatorUtils.delay(1000);
+
+    this._animalService.search(this.filterString, page, size, sort, direction).subscribe({
+
+      complete: () => {
+        this.isLoadingResults = false;
+      },
+
+      next: (animais) => {
+        this.dataSource.data = animais.content;
+        this.resultsLength = animais.totalElements;
+      },
+
+      error: (err) => {
+        this.isLoadingResults = false;
+        console.error(err);
+        this._notificationService.show(MessageUtils.ANIMAL_GET_FAIL, NotificationType.FAIL);
+      }
+    });
   }
 
   select(animal: Animal) {
     this.animal = animal;
   }
-
+  
   sortChange() {
 
     this.paginator.pageIndex = 0;
     
     if (this.filterString) {
-      this.filter();
+      this.search();
       return;
     }
 
-    this.findAllAnimais();
+    this.findAll();
   }
 
   submit() {

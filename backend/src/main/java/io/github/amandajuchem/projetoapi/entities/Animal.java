@@ -70,7 +70,7 @@ public class Animal extends AbstractEntity {
     private FichaMedica fichaMedica;
 
     @Valid
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(orphanRemoval = true, mappedBy = "animal")
     private Set<Adocao> adocoes;
 
     @Override

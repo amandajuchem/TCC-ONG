@@ -28,8 +28,8 @@
                     <div class="col-12 col-md-11 mb-3 mb-md-0">
                         <mat-form-field appearance="outline" class="w-100" style="margin-bottom: -1.25em;">
                             <mat-label>Buscar</mat-label>
-                            <input type="text" matInput [(ngModel)]="filterString" (keyup.enter)="filter()" placeholder="Nome ou categoria">
-                            <button mat-icon-button matSuffix>
+                            <input type="text" matInput [(ngModel)]="filterString" (keyup.enter)="search()" placeholder="Nome ou categoria">
+                            <button mat-icon-button matSuffix (click)="search()">
                                 <mat-icon>search</mat-icon>
                             </button>
                         </mat-form-field>
