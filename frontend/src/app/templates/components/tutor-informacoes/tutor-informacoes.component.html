@@ -1,6 +1,6 @@
 <form [formGroup]="form" *ngIf="form" class="overflow-hidden">
 
-    <div class="row">
+    <div class="row my-3">
         <div class="col-12">
             <div class="text-end">
                 <button mat-icon-button (click)="form.enable()" *ngIf="form.disabled">
@@ -19,25 +19,25 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row mb-3">
         <div class="col-12">
             <div class="text-center">
                 <div *ngIf="!foto">
-                    <img src="assets/images/tutores.png" height="150px" class="mb-3">
+                    <img src="assets/images/tutores.png" height="150px" class="rounded-circle">
                 </div>
 
                 <div *ngIf="foto && foto.salvo">
-                    <img [src]="apiURL + '/imagens/search?nome=' + foto.nome" height="150px" class="mb-3 rounded">
+                    <img [src]="apiURL + '/imagens/search?nome=' + foto.nome" height="150px" class="rounded-circle">
                 </div>
 
                 <div *ngIf="foto && !foto.salvo">
-                    <img [src]="foto.data" height="150px" class="mb-3 rounded">
+                    <img [src]="foto.data" height="150px" class="rounded-circle">
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row" *ngIf="form.enabled">
+    <div class="row mb-3" *ngIf="form.enabled">
         <div class="col-12">
             <div class="text-center">
                 <button mat-icon-button type="button" [matMenuTriggerFor]="menuFoto">

@@ -102,7 +102,7 @@ export class AnimalCadastroComponent implements OnInit {
 
   submit() {
 
-    let animal: Animal = Object.assign({}, this.form.getRawValue());
+    const animal: Animal = Object.assign({}, this.form.getRawValue());
 
     this._animalService.save(animal, this.fotoToSave).subscribe({
 

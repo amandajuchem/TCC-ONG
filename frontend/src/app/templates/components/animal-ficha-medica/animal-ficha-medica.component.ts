@@ -54,8 +54,10 @@ export class AnimalFichaMedicaComponent implements OnInit {
 
   submit() {
 
-    let fichaMedica: FichaMedica = Object.assign({}, this.form.getRawValue());
+    const fichaMedica: FichaMedica = Object.assign({}, this.form.getRawValue());
+
     this.animal.fichaMedica = fichaMedica;
+    this.animal.adocoes = [];
 
     this._animalService.update(this.animal, null).subscribe({
 

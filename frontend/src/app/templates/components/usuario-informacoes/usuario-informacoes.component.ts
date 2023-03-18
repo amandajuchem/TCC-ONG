@@ -103,7 +103,7 @@ export class UsuarioInformacoesComponent implements OnInit {
 
   submit() {
 
-    let usuario: Usuario = Object.assign({}, this.form.getRawValue());
+    const usuario: Usuario = Object.assign({}, this.form.getRawValue());
 
     this._usuarioService.update(usuario, this.fotoToSave).subscribe({
 

@@ -44,7 +44,7 @@ export class ExameCadastroComponent implements OnInit {
 
   submit() {
 
-    let exame: Exame = Object.assign({}, this.form.getRawValue());
+    const exame: Exame = Object.assign({}, this.form.getRawValue());
 
     if (exame.id) {
 

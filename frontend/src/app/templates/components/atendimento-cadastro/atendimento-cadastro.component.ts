@@ -199,7 +199,7 @@ export class AtendimentoCadastroComponent implements OnInit {
 
   submit() {
 
-    let atendimento: Atendimento = Object.assign({}, this.form.getRawValue());
+    const atendimento: Atendimento = Object.assign({}, this.form.getRawValue());
 
     if (atendimento.id) {
 

@@ -59,8 +59,11 @@ export class TutorEnderecoComponent implements OnInit {
 
   submit() {
 
-    let endereco: Endereco = Object.assign({}, this.form.getRawValue());
+    const endereco: Endereco = Object.assign({}, this.form.getRawValue());
+    
     this.tutor.endereco = endereco;
+    this.tutor.adocoes = [];
+    this.tutor.observacoes = [];
 
     this._tutorService.update(this.tutor, null).subscribe({
 

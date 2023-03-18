@@ -100,7 +100,7 @@ export class AgendamentoCadastroComponent implements OnInit {
 
   submit() {
 
-    let agendamento: Agendamento = Object.assign({}, this.form.getRawValue());
+    const agendamento: Agendamento = Object.assign({}, this.form.getRawValue());
 
     if (agendamento.id) {
 

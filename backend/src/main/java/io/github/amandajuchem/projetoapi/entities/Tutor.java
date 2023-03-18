@@ -1,5 +1,6 @@
 package io.github.amandajuchem.projetoapi.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.github.amandajuchem.projetoapi.enums.Situacao;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -55,10 +56,11 @@ public class Tutor extends AbstractEntity {
 
     @Valid
     @OneToMany(mappedBy = "tutor")
+    @JsonManagedReference("referenceAdocaoTutor")
     private Set<Adocao> adocoes;
 
-    @Valid
     @OneToMany(orphanRemoval = true, mappedBy = "tutor")
+    @JsonManagedReference
     private Set<Observacao> observacoes;
 
     @Override

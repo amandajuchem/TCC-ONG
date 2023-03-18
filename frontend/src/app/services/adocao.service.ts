@@ -10,7 +10,7 @@ import { environment } from 'src/environments/environment';
 })
 export class AdocaoService implements AbstractService<Adocao> {
 
-  private _baseURL = environment.apiURL + '/animais';
+  private _baseURL = environment.apiURL + '/adocoes';
 
   constructor(private _http: HttpClient) { }
 

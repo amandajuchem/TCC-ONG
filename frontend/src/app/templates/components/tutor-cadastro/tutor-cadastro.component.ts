@@ -104,7 +104,7 @@ export class TutorCadastroComponent implements OnInit {
 
   submit() {
 
-    let tutor: Tutor = Object.assign({}, this.form.getRawValue());
+    const tutor: Tutor = Object.assign({}, this.form.getRawValue());
 
     this._tutorService.save(tutor, this.fotoToSave).subscribe({
 

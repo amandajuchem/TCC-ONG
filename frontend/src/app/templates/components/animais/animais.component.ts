@@ -13,6 +13,7 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 import { OperatorUtils } from 'src/app/utils/operator-utils';
 
 import { AnimalCadastroComponent } from '../animal-cadastro/animal-cadastro.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-animais',
@@ -21,15 +22,16 @@ import { AnimalCadastroComponent } from '../animal-cadastro/animal-cadastro.comp
 })
 export class AnimaisComponent implements AfterViewInit {
 
-  columns!: Array<string>;
-  dataSource!: MatTableDataSource<Animal>;
+  animais!: Array<Animal>;
+  apiURL!: string;
   filterString!: string;
   isLoadingResults!: boolean;
+  pageIndex!: number;
+  pageSize!: number;
   resultsLength!: number;
   user!: User;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private _animalService: AnimalService,
@@ -37,8 +39,7 @@ export class AnimaisComponent implements AfterViewInit {
     private _dialog: MatDialog,
     private _notificationService: NotificationService
   ) {
-    this.columns = ['index', 'nome', 'especie', 'porte', 'idade', 'acao'];
-    this.dataSource = new MatTableDataSource();
+    this.apiURL = environment.apiURL;
     this.isLoadingResults = true;
     this.resultsLength = 0;
     this.user = this._authService.getCurrentUser();
@@ -71,8 +72,8 @@ export class AnimaisComponent implements AfterViewInit {
 
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
-    const sort = this.sort.active;
-    const direction = this.sort.direction;
+    const sort = 'nome';
+    const direction = 'asc';
 
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
@@ -84,7 +85,7 @@ export class AnimaisComponent implements AfterViewInit {
       },
 
       next: (animais) => {
-        this.dataSource.data = animais.content;
+        this.animais = animais.content;
         this.resultsLength = animais.totalElements;
       },
 
@@ -96,7 +97,10 @@ export class AnimaisComponent implements AfterViewInit {
     });
   }
 
-  pageChange() {
+  pageChange(event: any) {
+
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
 
     if (this.filterString) {
       this.search();
@@ -110,8 +114,8 @@ export class AnimaisComponent implements AfterViewInit {
 
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
-    const sort = this.sort.active;
-    const direction = this.sort.direction;
+    const sort = 'nome';
+    const direction = 'asc';
 
     this.filterString = this.filterString ? this.filterString : '';
     this.isLoadingResults = true;
@@ -124,7 +128,7 @@ export class AnimaisComponent implements AfterViewInit {
       },
 
       next: (animais) => {
-        this.dataSource.data = animais.content;
+        this.animais = animais.content;
         this.resultsLength = animais.totalElements;
       },
 
@@ -134,17 +138,5 @@ export class AnimaisComponent implements AfterViewInit {
         this._notificationService.show(MessageUtils.ANIMAIS_GET_FAIL, NotificationType.FAIL);
       }
     });
-  }
-
-  sortChange() {
-
-    this.paginator.pageIndex = 0;
-    
-    if (this.filterString) {
-      this.search();
-      return;
-    }
-    
-    this.findAll();
   }
 }

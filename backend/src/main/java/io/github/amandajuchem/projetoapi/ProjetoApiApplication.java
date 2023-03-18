@@ -55,7 +55,7 @@ public class ProjetoApiApplication implements CommandLineRunner {
 
     private void saveDefaultUsuario(Usuario usuario) {
 
-        usuario.setNome("Amanda Juchem");
+        usuario.setNome("AMANDA JUCHEM");
         usuario.setCpf("07905836584");
         usuario.setSenha("admin");
         usuario.setSetor(Setor.ADMINISTRACAO);

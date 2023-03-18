@@ -47,55 +47,30 @@
     </div>
 </div>
 
-<div class="row mb-3" [hidden]="(dataSource && dataSource.data.length == 0) || isLoadingResults">
+<div class="row" [hidden]="(tutores && tutores.length == 0) || isLoadingResults">
+    <div class="col-12 col-md-3 mb-3" *ngFor="let tutor of tutores">
+        <a [routerLink]="'/' + user.role.toLowerCase() + '/tutores/' + tutor.id" class="text-decoration-none text-dark">
+            <mat-card>
+                <mat-card-content class="p-3">
+                    <div class="mb-3 text-center">
+                        <img [src]="tutor.foto ? apiURL + '/imagens/search?nome=' + tutor.foto.nome : '/assets/images/tutores.png'" height="150px" class="rounded-circle">
+                    </div>
+                    <div>
+                        <p class="m-0 fw-bold">{{tutor.nome}}</p>
+                        <p class="m-0">{{tutor.cpf | mask: 'CPF_CNPJ'}}</p>
+                        <p class="m-0">{{tutor.situacao}}</p>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </a>
+    </div>
+</div>
+
+<div class="row mb-3" [hidden]="(tutores && tutores.length == 0) || isLoadingResults">
     <div class="col-12">
         <mat-card>
             <mat-card-content>
-                <div class="table-responsive">
-                    <table mat-table [dataSource]="dataSource" class="w-100 border" matSort matSortActive="nome" matSortDisableClear matSortDirection="asc" (matSortChange)="sortChange()">
-
-                        <!-- Index Column -->
-                        <ng-container matColumnDef="index">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-index">#</th>
-                            <td mat-cell *matCellDef="let tutor; let i = index">{{i+1}}</td>
-                        </ng-container>
-
-                        <!-- Nome Column -->
-                        <ng-container matColumnDef="nome">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-nome">Nome</th>
-                            <td mat-cell *matCellDef="let tutor" class="text-center">{{tutor.nome}}</td>
-                        </ng-container>
-
-                        <!-- CPF Column -->
-                        <ng-container matColumnDef="cpf">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-cpf">CPF</th>
-                            <td mat-cell *matCellDef="let tutor" class="text-center">{{tutor.cpf | mask: 'CPF_CNPJ'}}</td>
-                        </ng-container>
-
-                        <!-- RG Column -->
-                        <ng-container matColumnDef="rg">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-rg">RG</th>
-                            <td mat-cell *matCellDef="let tutor" class="text-center">{{tutor.rg}}</td>
-                        </ng-container>
-
-                        <!-- Ação Column -->
-                        <ng-container matColumnDef="acao">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-acao">&nbsp;</th>
-                            <td mat-cell *matCellDef="let tutor">
-                                <div class="text-end">
-                                    <button mat-icon-button [routerLink]="'/' + user.role.toLowerCase() + '/tutores/' + tutor.id">
-                                        <mat-icon>arrow_forward</mat-icon>
-                                    </button>
-                                </div>
-                            </td>
-                        </ng-container>
-
-                        <tr mat-header-row *matHeaderRowDef="columns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: columns;"></tr>
-                    </table>
-
-                    <mat-paginator [length]="resultsLength" [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons class="w-100" (page)="pageChange()"></mat-paginator>
-                </div>
+                <mat-paginator showFirstLastButtons [length]="resultsLength" [pageSize]="10" [pageSizeOptions]="[10, 25, 50, 100]" (page)="pageChange($event)"></mat-paginator>
             </mat-card-content>
         </mat-card>
     </div>
@@ -112,7 +87,7 @@
     </div>
 </div>
 
-<div [hidden]="(dataSource && dataSource.data.length > 0) || isLoadingResults">
+<div [hidden]="(tutores && tutores.length > 0) || isLoadingResults">
     <mat-card>
         <mat-card-content>
             <div class="row">

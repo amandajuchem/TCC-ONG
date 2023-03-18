@@ -91,8 +91,6 @@ export class AtendimentosComponent implements AfterViewInit {
     });
   }
 
-  
-
   async findAll() {
 
     const page = this.paginator.pageIndex;

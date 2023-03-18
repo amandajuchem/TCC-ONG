@@ -1,8 +1,6 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
 import { User } from 'src/app/entities/user';
 import { Usuario } from 'src/app/entities/usuario';
 import { NotificationType } from 'src/app/enums/notification-type';
@@ -11,6 +9,7 @@ import { NotificationService } from 'src/app/services/notification.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
 import { OperatorUtils } from 'src/app/utils/operator-utils';
+import { environment } from 'src/environments/environment';
 
 import { UsuarioCadastroComponent } from '../usuario-cadastro/usuario-cadastro.component';
 
@@ -21,15 +20,16 @@ import { UsuarioCadastroComponent } from '../usuario-cadastro/usuario-cadastro.c
 })
 export class UsuariosComponent implements AfterViewInit {
 
-  columns!: Array<string>;
-  dataSource!: MatTableDataSource<Usuario>;
+  apiURL!: string;
   filterString!: string;
   isLoadingResults!: boolean;
+  pageIndex!: number;
+  pageSize!: number;
   resultsLength!: number;
   user!: User;
+  usuarios!: Array<Usuario>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private _authService: AuthService,
@@ -37,8 +37,7 @@ export class UsuariosComponent implements AfterViewInit {
     private _notificationService: NotificationService,
     private _usuarioService: UsuarioService
   ) {
-    this.columns = ['index', 'nome', 'cpf', 'setor', 'acao'];
-    this.dataSource = new MatTableDataSource();
+    this.apiURL = environment.apiURL;
     this.isLoadingResults = true;
     this.resultsLength = 0;
     this.user = this._authService.getCurrentUser();
@@ -71,8 +70,8 @@ export class UsuariosComponent implements AfterViewInit {
 
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
-    const sort = this.sort.active;
-    const direction = this.sort.direction;
+    const sort = 'nome';
+    const direction = 'asc';
 
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
@@ -84,7 +83,7 @@ export class UsuariosComponent implements AfterViewInit {
       },
 
       next: (usuarios) => {
-        this.dataSource.data = usuarios.content;
+        this.usuarios= usuarios.content;
         this.resultsLength = usuarios.totalElements;
       },
 
@@ -96,7 +95,10 @@ export class UsuariosComponent implements AfterViewInit {
     });
   }
 
-  pageChange() {
+  pageChange(event: any) {
+
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
 
     if (this.filterString) {
       this.search();
@@ -110,8 +112,8 @@ export class UsuariosComponent implements AfterViewInit {
 
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
-    const sort = this.sort.active;
-    const direction = this.sort.direction;
+    const sort = 'nome';
+    const direction = 'asc';
 
     this.filterString = this.filterString ? this.filterString : '';
     this.isLoadingResults = true;
@@ -123,9 +125,9 @@ export class UsuariosComponent implements AfterViewInit {
         this.isLoadingResults = false;
       },
 
-      next: (usuarioes) => {
-        this.dataSource.data = usuarioes.content;
-        this.resultsLength = usuarioes.totalElements;
+      next: (usuarios) => {
+        this.usuarios = usuarios.content;
+        this.resultsLength = usuarios.totalElements;
       },
 
       error: (err) => {
@@ -135,16 +137,4 @@ export class UsuariosComponent implements AfterViewInit {
       }
     });
   }
-
-  sortChange() {
-
-    this.paginator.pageIndex = 0;
-    
-    if (this.filterString) {
-      this.search();
-      return;
-    }
-
-    this.findAll();
-  } 
 }

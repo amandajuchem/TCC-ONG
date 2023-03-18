@@ -99,7 +99,7 @@ export class AnimalInformacoesComponent implements OnInit {
       situacao: [animal.situacao, Validators.required],
       foto: [animal.foto, Validators.nullValidator],
       fichaMedica: [animal.fichaMedica, Validators.nullValidator],
-      adocoes: [animal.adocoes, Validators.nullValidator]
+      adocoes: [[], Validators.nullValidator]
     });
 
     this.form.disable();
@@ -143,7 +143,7 @@ export class AnimalInformacoesComponent implements OnInit {
 
   submit() {
 
-    let animal: Animal = Object.assign({}, this.form.getRawValue());
+    const animal: Animal = Object.assign({}, this.form.getRawValue());
 
     this._animalService.update(animal, this.fotoToSave).subscribe({
 

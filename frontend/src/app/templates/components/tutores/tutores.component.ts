@@ -1,8 +1,6 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
 import { Tutor } from 'src/app/entities/tutor';
 import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
@@ -11,6 +9,7 @@ import { NotificationService } from 'src/app/services/notification.service';
 import { TutorService } from 'src/app/services/tutor.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
 import { OperatorUtils } from 'src/app/utils/operator-utils';
+import { environment } from 'src/environments/environment';
 
 import { TutorCadastroComponent } from '../tutor-cadastro/tutor-cadastro.component';
 
@@ -21,15 +20,16 @@ import { TutorCadastroComponent } from '../tutor-cadastro/tutor-cadastro.compone
 })
 export class TutoresComponent implements AfterViewInit {
 
-  columns!: Array<string>;
-  dataSource!: MatTableDataSource<Tutor>;
+  apiURL!: string;
   filterString!: string;
   isLoadingResults!: boolean;
+  pageIndex!: number;
+  pageSize!: number;
   resultsLength!: number;
+  tutores!: Array<Tutor>;
   user!: User;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private _authService: AuthService,
@@ -37,8 +37,7 @@ export class TutoresComponent implements AfterViewInit {
     private _notificationService: NotificationService,
     private _tutorService: TutorService
   ) {
-    this.columns = ['index', 'nome', 'cpf', 'rg', 'acao'];
-    this.dataSource = new MatTableDataSource();
+    this.apiURL = environment.apiURL;
     this.isLoadingResults = true;
     this.resultsLength = 0;
     this.user = this._authService.getCurrentUser();
@@ -71,8 +70,8 @@ export class TutoresComponent implements AfterViewInit {
 
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
-    const sort = this.sort.active;
-    const direction = this.sort.direction;
+    const sort = 'nome';
+    const direction = 'asc';
 
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
@@ -84,7 +83,7 @@ export class TutoresComponent implements AfterViewInit {
       },
 
       next: (tutores) => {
-        this.dataSource.data = tutores.content;
+        this.tutores = tutores.content;
         this.resultsLength = tutores.totalElements;
       },
 
@@ -96,7 +95,10 @@ export class TutoresComponent implements AfterViewInit {
     });
   }
 
-  pageChange() {
+  pageChange(event: any) {
+
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
 
     if (this.filterString) {
       this.search();
@@ -110,8 +112,8 @@ export class TutoresComponent implements AfterViewInit {
 
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
-    const sort = this.sort.active;
-    const direction = this.sort.direction;
+    const sort = 'nome';
+    const direction = 'asc';
 
     this.filterString = this.filterString ? this.filterString : '';
     this.isLoadingResults = true;
@@ -124,7 +126,7 @@ export class TutoresComponent implements AfterViewInit {
       },
 
       next: (tutores) => {
-        this.dataSource.data = tutores.content;
+        this.tutores = tutores.content;
         this.resultsLength = tutores.totalElements;
       },
 
@@ -134,17 +136,5 @@ export class TutoresComponent implements AfterViewInit {
         this._notificationService.show(MessageUtils.TUTORES_GET_FAIL, NotificationType.FAIL);
       }
     });
-  }
-
-  sortChange() {
-    
-    this.paginator.pageIndex = 0;
-
-    if (this.filterString) {
-      this.search();
-      return;
-    }
-
-    this.findAll();
   }
 }

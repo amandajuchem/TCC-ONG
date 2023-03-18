@@ -1,7 +1,6 @@
 package io.github.amandajuchem.projetoapi.controllers;
 
 import io.github.amandajuchem.projetoapi.dtos.AnimalDTO;
-import io.github.amandajuchem.projetoapi.entities.Adocao;
 import io.github.amandajuchem.projetoapi.entities.Animal;
 import io.github.amandajuchem.projetoapi.entities.Imagem;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
@@ -16,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.FileNotFoundException;
-import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.*;
@@ -154,63 +152,6 @@ public class AnimalController {
             animal = service.save(animal);
             return ResponseEntity.status(OK).body(AnimalDTO.toDTO(animal));
         }
-
-        throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);
-    }
-
-    //////////////////////////////////////////////// ADOÇÃO ////////////////////////////////////////////////
-
-    /**
-     * Delete adocao.
-     *
-     * @param id       the id
-     * @param idAdocao the id adocao
-     * @return the response entity
-     */
-    @DeleteMapping("/{id}/adocoes/{idAdocao}")
-    public ResponseEntity<?> adocaoDelete(@PathVariable UUID id, @PathVariable UUID idAdocao) {
-
-        var animal = service.findById(id);
-        animal.getAdocoes().removeIf(adocao -> adocao.getId().equals(idAdocao));
-        service.save(animal);
-
-        return ResponseEntity.status(OK).body(animal);
-    }
-
-    /**
-     * Save adoção.
-     *
-     * @param id               the id
-     * @param adocao           the adocao
-     * @param documentosToSave the documentos to save
-     * @return the response entity
-     */
-    @PostMapping("/{id}/adocoes")
-    public ResponseEntity<?> adocaoSave(@PathVariable UUID id,
-                                        @RequestPart @Valid Adocao adocao,
-                                        @RequestPart(required = false) List<MultipartFile> documentosToSave) {
-
-
-
-        throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);
-    }
-
-    /**
-     * Update adoção.
-     *
-     * @param id               the id
-     * @param idAdocao         the id adocao
-     * @param adocao           the adocao
-     * @param documentosToSave the documentos to save
-     * @return the response entity
-     */
-    @PutMapping("/{id}/adocoes/{idAdocao}")
-    public ResponseEntity<?> adocaoUpdate(@PathVariable UUID id,
-                                          @PathVariable UUID idAdocao,
-                                          @RequestPart @Valid Adocao adocao,
-                                          @RequestPart(required = false) List<MultipartFile> documentosToSave) {
-
-
 
         throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);
     }

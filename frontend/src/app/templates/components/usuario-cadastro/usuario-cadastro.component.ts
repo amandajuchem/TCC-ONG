@@ -83,7 +83,7 @@ export class UsuarioCadastroComponent implements OnInit {
 
   submit() {
 
-    let usuario: Usuario = Object.assign({}, this.form.getRawValue());
+    const usuario: Usuario = Object.assign({}, this.form.getRawValue());
 
     this._usuarioService.save(usuario, this.fotoToSave).subscribe({
 

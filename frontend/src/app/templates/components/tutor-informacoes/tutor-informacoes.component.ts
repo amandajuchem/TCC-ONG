@@ -112,8 +112,8 @@ export class TutorInformacoesComponent implements OnInit {
       ),
 
       endereco: [tutor.endereco, Validators.nullValidator],
-      adocoes: [tutor.adocoes, Validators.nullValidator],
-      observacoes: [tutor.observacoes, Validators.nullValidator]
+      adocoes: [[], Validators.nullValidator],
+      observacoes: [[], Validators.nullValidator]
     });
 
     this.form.disable();
@@ -164,7 +164,7 @@ export class TutorInformacoesComponent implements OnInit {
 
   submit() {
 
-    let tutor: Tutor = Object.assign({}, this.form.getRawValue());
+    const tutor: Tutor = Object.assign({}, this.form.getRawValue());
 
     this._tutorService.update(tutor, this.fotoToSave).subscribe({
 
