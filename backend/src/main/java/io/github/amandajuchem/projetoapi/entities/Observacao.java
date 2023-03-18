@@ -25,7 +25,7 @@ public class Observacao extends AbstractEntity {
 
     @ManyToOne
     @JoinColumn(name = "tutor_id")
-    @JsonBackReference
+    @JsonBackReference("referenceObservacaoTutor")
     private Tutor tutor;
 
     @Override

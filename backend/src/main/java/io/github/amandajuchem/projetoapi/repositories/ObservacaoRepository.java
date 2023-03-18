@@ -18,10 +18,10 @@ public interface ObservacaoRepository extends JpaRepository<Observacao, UUID> {
     /**
      * Find all.
      *
-     * @param id
+     * @param tutorId
      * @param page
      * @return
      */
     @Query("SELECT o FROM tb_observacoes AS o INNER JOIN o.tutor AS t ON t.id = ?1")
-    Page<Observacao> findAll(UUID id, Pageable page);
+    Page<Observacao> findAll(UUID tutorId, Pageable page);
 }

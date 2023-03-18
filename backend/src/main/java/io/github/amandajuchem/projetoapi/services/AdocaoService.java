@@ -69,6 +69,31 @@ public class AdocaoService implements AbstractService<Adocao> {
     }
 
     /**
+     * Find all.
+     *
+     * @param animalId  the animal id
+     * @param tutorId   the tutor id
+     * @param page      the page
+     * @param size      the size
+     * @param sort      the sort
+     * @param direction the direction
+     * @return
+     */
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public Page<Adocao> findAll(UUID animalId, UUID tutorId, Integer page, Integer size, String sort, String direction) {
+
+        if (sort.equalsIgnoreCase("animal")) {
+            sort = "animal.nome";
+        }
+
+        if (sort.equalsIgnoreCase("tutor")) {
+            sort = "tutor.nome";
+        }
+
+        return repository.findAll(animalId, tutorId, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
+    }
+
+    /**
      * Find by id.
      *
      * @param id the id

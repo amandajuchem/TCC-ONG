@@ -54,13 +54,12 @@ public class Tutor extends AbstractEntity {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Endereco endereco;
 
-    @Valid
     @OneToMany(mappedBy = "tutor")
     @JsonManagedReference("referenceAdocaoTutor")
     private Set<Adocao> adocoes;
 
     @OneToMany(orphanRemoval = true, mappedBy = "tutor")
-    @JsonManagedReference
+    @JsonManagedReference("referenceObservacaoTutor")
     private Set<Observacao> observacoes;
 
     @Override
