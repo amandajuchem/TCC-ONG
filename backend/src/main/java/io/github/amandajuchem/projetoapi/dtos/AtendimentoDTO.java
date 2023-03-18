@@ -3,8 +3,6 @@ package io.github.amandajuchem.projetoapi.dtos;
 import io.github.amandajuchem.projetoapi.entities.Atendimento;
 import io.github.amandajuchem.projetoapi.enums.Motivo;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -20,10 +18,10 @@ public record AtendimentoDTO(
         LocalDateTime lastModifiedDate,
         String createdByUser,
         String modifiedByUser,
-        @NotNull LocalDateTime dataHora,
-        @NotEmpty Motivo motivo,
-        @NotEmpty String diagnostico,
-        @NotEmpty String posologia,
+        LocalDateTime dataHora,
+        Motivo motivo,
+        String diagnostico,
+        String posologia,
         Set<ImagemDTO> documentos,
         AnimalDTO animal,
         UsuarioDTO veterinario,

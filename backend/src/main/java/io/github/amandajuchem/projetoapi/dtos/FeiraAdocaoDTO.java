@@ -2,8 +2,6 @@ package io.github.amandajuchem.projetoapi.dtos;
 
 import io.github.amandajuchem.projetoapi.entities.FeiraAdocao;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -19,8 +17,8 @@ public record FeiraAdocaoDTO(
         LocalDateTime lastModifiedDate,
         String createdByUser,
         String modifiedByUser,
-        @NotEmpty String nome,
-        @NotNull LocalDateTime dataHora,
+        String nome,
+        LocalDateTime dataHora,
         Set<AnimalDTO> animais,
         Set<UsuarioDTO> usuarios
 ) implements Serializable {

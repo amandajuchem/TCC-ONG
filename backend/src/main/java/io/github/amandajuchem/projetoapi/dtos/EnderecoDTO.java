@@ -3,8 +3,6 @@ package io.github.amandajuchem.projetoapi.dtos;
 import io.github.amandajuchem.projetoapi.entities.Endereco;
 import io.github.amandajuchem.projetoapi.enums.Estado;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -18,13 +16,13 @@ public record EnderecoDTO(
         LocalDateTime lastModifiedDate,
         String createdByUser,
         String modifiedByUser,
-        @NotEmpty String rua,
-        @NotNull String numeroResidencia,
-        @NotEmpty String bairro,
-        @NotEmpty String cidade,
-        @NotNull Estado estado,
+        String rua,
+        String numeroResidencia,
+        String bairro,
+        String cidade,
+        Estado estado,
         String complemento,
-        @NotEmpty String cep
+        String cep
 ) implements Serializable {
 
     /**

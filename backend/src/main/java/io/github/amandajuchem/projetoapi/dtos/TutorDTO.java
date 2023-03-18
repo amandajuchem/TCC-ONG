@@ -3,8 +3,6 @@ package io.github.amandajuchem.projetoapi.dtos;
 import io.github.amandajuchem.projetoapi.entities.Tutor;
 import io.github.amandajuchem.projetoapi.enums.Situacao;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -20,13 +18,14 @@ public record TutorDTO(
         LocalDateTime lastModifiedDate,
         String createdByUser,
         String modifiedByUser,
-        @NotEmpty String nome,
-        @NotEmpty String cpf,
+        String nome,
+        String cpf,
         String rg,
-        @NotNull Situacao situacao,
+        Situacao situacao,
         ImagemDTO foto,
         Set<TelefoneDTO> telefones,
         EnderecoDTO endereco,
+        Set<AdocaoDTO> adocoes,
         Set<ObservacaoDTO> observacoes
 ) implements Serializable {
 
@@ -51,7 +50,8 @@ public record TutorDTO(
                 tutor.getFoto() != null ? ImagemDTO.toDTO(tutor.getFoto()) : null,
                 tutor.getTelefones() != null ? tutor.getTelefones().stream().map(t -> TelefoneDTO.toDTO(t)).collect(Collectors.toSet()) : null,
                 tutor.getEndereco() != null ? EnderecoDTO.toDTO(tutor.getEndereco()) : null,
-                tutor.getObservacoes() != null ? tutor.getObservacoes().stream().map(o -> ObservacaoDTO.toDTO(o)).collect(Collectors.toSet()) : null
+                null,
+                null
         );
     }
 }

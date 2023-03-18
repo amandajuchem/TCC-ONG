@@ -6,13 +6,10 @@ import io.github.amandajuchem.projetoapi.enums.Porte;
 import io.github.amandajuchem.projetoapi.enums.Sexo;
 import io.github.amandajuchem.projetoapi.enums.Situacao;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 
 /**
@@ -24,14 +21,14 @@ public record AnimalDTO(
         LocalDateTime lastModifiedDate,
         String createdByUser,
         String modifiedByUser,
-        @NotEmpty String nome,
-        @NotNull Integer idade,
-        @NotEmpty Especie especie,
-        @NotNull Sexo sexo,
-        @NotEmpty String raca,
-        @NotEmpty String cor,
-        @NotNull Porte porte,
-        @NotNull Situacao situacao,
+        String nome,
+        Integer idade,
+        Especie especie,
+        Sexo sexo,
+        String raca,
+        String cor,
+        Porte porte,
+        Situacao situacao,
         ImagemDTO foto,
         FichaMedicaDTO fichaMedica,
         Set<AdocaoDTO> adocoes
@@ -61,7 +58,7 @@ public record AnimalDTO(
                 animal.getSituacao(),
                 animal.getFoto() != null ? ImagemDTO.toDTO(animal.getFoto()) : null,
                 animal.getFichaMedica() != null ? FichaMedicaDTO.toDTO(animal.getFichaMedica()) : null,
-                animal.getAdocoes() != null ? animal.getAdocoes().stream().map(a -> AdocaoDTO.toDTO(a)).collect(Collectors.toSet()) : null
+                null
         );
     }
 }

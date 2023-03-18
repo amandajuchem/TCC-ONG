@@ -11,7 +11,7 @@ import { AbstractService } from './abstract-service';
 })
 export class ObservacaoService implements AbstractService<Observacao> {
 
-  private _baseURL = environment.apiURL + '/tutores';
+  private _baseURL = environment.apiURL + '/observacoes';
 
   constructor(private _http: HttpClient) { }
 

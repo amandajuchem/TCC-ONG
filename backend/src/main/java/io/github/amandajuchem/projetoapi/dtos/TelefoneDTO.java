@@ -2,7 +2,6 @@ package io.github.amandajuchem.projetoapi.dtos;
 
 import io.github.amandajuchem.projetoapi.entities.Telefone;
 
-import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -16,7 +15,7 @@ public record TelefoneDTO(
         LocalDateTime lastModifiedDate,
         String createdByUser,
         String modifiedByUser,
-        @NotEmpty String numero
+        String numero
 ) implements Serializable {
 
     /**

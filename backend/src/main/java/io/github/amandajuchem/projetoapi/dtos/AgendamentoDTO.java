@@ -2,8 +2,6 @@ package io.github.amandajuchem.projetoapi.dtos;
 
 import io.github.amandajuchem.projetoapi.entities.Agendamento;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -17,8 +15,8 @@ public record AgendamentoDTO(
         LocalDateTime lastModifiedDate,
         String createdByUser,
         String modifiedByUser,
-        @NotNull LocalDateTime dataHora,
-        @NotEmpty String descricao,
+        LocalDateTime dataHora,
+        String descricao,
         AnimalDTO animal,
         UsuarioDTO veterinario
 ) implements Serializable {

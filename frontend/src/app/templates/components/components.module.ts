@@ -52,18 +52,20 @@ import { SelecionarImagemComponent } from './selecionar-imagem/selecionar-imagem
 import { SelecionarTutorComponent } from './selecionar-tutor/selecionar-tutor.component';
 import { SelecionarUsuarioComponent } from './selecionar-usuario/selecionar-usuario.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
+import { TutorAdocoesComponent } from './tutor-adocoes/tutor-adocoes.component';
 import { TutorCadastroComponent } from './tutor-cadastro/tutor-cadastro.component';
 import { TutorEnderecoComponent } from './tutor-endereco/tutor-endereco.component';
 import { TutorExcluirComponent } from './tutor-excluir/tutor-excluir.component';
 import { TutorInformacoesComponent } from './tutor-informacoes/tutor-informacoes.component';
+import { TutorObservacoesCadastroComponent } from './tutor-observacoes-cadastro/tutor-observacoes-cadastro.component';
+import { TutorObservacoesExcluirComponent } from './tutor-observacoes-excluir/tutor-observacoes-excluir.component';
+import { TutorObservacoesComponent } from './tutor-observacoes/tutor-observacoes.component';
 import { TutorComponent } from './tutor/tutor.component';
 import { TutoresComponent } from './tutores/tutores.component';
 import { UsuarioCadastroComponent } from './usuario-cadastro/usuario-cadastro.component';
 import { UsuarioInformacoesComponent } from './usuario-informacoes/usuario-informacoes.component';
 import { UsuarioComponent } from './usuario/usuario.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
-import { TutorObservacoesComponent } from './tutor-observacoes/tutor-observacoes.component';
-import { TutorAdocoesComponent } from './tutor-adocoes/tutor-adocoes.component';
 
 @NgModule({
   declarations: [
@@ -96,18 +98,20 @@ import { TutorAdocoesComponent } from './tutor-adocoes/tutor-adocoes.component';
     SelecionarTutorComponent,
     SelecionarUsuarioComponent,
     ToolbarComponent,
+    TutorAdocoesComponent,
     TutorCadastroComponent,
     TutorEnderecoComponent,
     TutorExcluirComponent,
     TutorInformacoesComponent,
+    TutorObservacoesCadastroComponent,
+    TutorObservacoesExcluirComponent,
+    TutorObservacoesComponent,
     TutorComponent,
     TutoresComponent,
     UsuarioComponent,
     UsuarioCadastroComponent,
     UsuarioInformacoesComponent,
     UsuariosComponent,
-    TutorObservacoesComponent,
-    TutorAdocoesComponent
   ],
   imports: [
     CommonModule,

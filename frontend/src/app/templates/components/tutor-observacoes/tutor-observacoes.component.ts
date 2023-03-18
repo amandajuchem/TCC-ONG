@@ -12,6 +12,9 @@ import { TutorService } from 'src/app/services/tutor.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
 import { OperatorUtils } from 'src/app/utils/operator-utils';
 
+import { TutorObservacoesCadastroComponent } from '../tutor-observacoes-cadastro/tutor-observacoes-cadastro.component';
+import { TutorObservacoesExcluirComponent } from '../tutor-observacoes-excluir/tutor-observacoes-excluir.component';
+
 @Component({
   selector: 'app-tutor-observacoes',
   templateUrl: './tutor-observacoes.component.html',
@@ -33,7 +36,12 @@ export class TutorObservacoesComponent implements AfterViewInit {
     private _notificationService: NotificationService,
     private _observacaoservice: ObservacaoService,
     private _tutorService: TutorService,
-  ) { }
+  ) {
+    this.columns = ['index', 'createdDate', 'empty', 'acao'];
+    this.dataSource = new MatTableDataSource();
+    this.isLoadingResults = true;
+    this.resultsLength = 0;
+  }
 
   ngAfterViewInit(): void {
 
@@ -52,11 +60,41 @@ export class TutorObservacoesComponent implements AfterViewInit {
 
   add() {
 
+    this._dialog.open(TutorObservacoesCadastroComponent, {
+      data: {
+        observacao: null,
+        tutor: this.tutor
+      },
+      width: '100%'
+    })
+    .afterClosed().subscribe({
 
+      next: (result) => {
+
+        if (result && result.status) {
+          this.findAll();
+        }
+      }
+    });
   }
 
   delete(observacao: Observacao) {
+    
+    this._dialog.open(TutorObservacoesExcluirComponent, {
+      data: {
+        observacao: observacao
+      },
+      width: '100%'
+    })
+    .afterClosed().subscribe({
 
+      next: (result) => {
+
+        if (result && result.status) {
+          this.findAll();
+        }
+      }
+    });
   }
 
   async findAll() {
@@ -99,6 +137,21 @@ export class TutorObservacoesComponent implements AfterViewInit {
 
   update(observacao: Observacao) {
 
-    
+    this._dialog.open(TutorObservacoesCadastroComponent, {
+      data: {
+        observacao: observacao,
+        tutor: this.tutor
+      },
+      width: '100%'
+    })
+    .afterClosed().subscribe({
+
+      next: (result) => {
+
+        if (result && result.status) {
+          this.findAll();
+        }
+      }
+    });
   }
 }

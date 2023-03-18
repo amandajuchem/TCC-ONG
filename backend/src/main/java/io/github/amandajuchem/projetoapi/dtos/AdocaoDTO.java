@@ -4,7 +4,6 @@ import io.github.amandajuchem.projetoapi.entities.Adocao;
 import io.github.amandajuchem.projetoapi.enums.Local;
 import io.github.amandajuchem.projetoapi.enums.LocalAdocao;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -20,12 +19,12 @@ public record AdocaoDTO(
         LocalDateTime lastModifiedDate,
         String createdByUser,
         String modifiedByUser,
-        @NotNull LocalDateTime dataHora,
-        @NotNull Local local,
-        @NotNull LocalAdocao localAdocao,
-        @NotNull Boolean valeCastracao,
-        @NotNull TutorDTO tutor,
-        @NotNull Set<ImagemDTO> termoResponsabilidade
+        LocalDateTime dataHora,
+        Local local,
+        LocalAdocao localAdocao,
+        Boolean valeCastracao,
+        TutorDTO tutor,
+        Set<ImagemDTO> termoResponsabilidade
 ) implements Serializable {
 
     /**

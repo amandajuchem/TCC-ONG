@@ -3,8 +3,6 @@ package io.github.amandajuchem.projetoapi.dtos;
 import io.github.amandajuchem.projetoapi.entities.Usuario;
 import io.github.amandajuchem.projetoapi.enums.Setor;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -18,11 +16,11 @@ public record UsuarioDTO(
         LocalDateTime lastModifiedDate,
         String createdByUser,
         String modifiedByUser,
-        @NotEmpty String nome,
-        @NotEmpty String cpf,
-        @NotEmpty String senha,
-        @NotNull Boolean status,
-        @NotNull Setor setor,
+        String nome,
+        String cpf,
+        String senha,
+        Boolean status,
+        Setor setor,
         ImagemDTO foto
 ) implements Serializable {
 
