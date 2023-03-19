@@ -1,9 +1,9 @@
 package io.github.amandajuchem.projetoapi.controllers;
 
-import io.github.amandajuchem.projetoapi.dtos.ExameDTO;
-import io.github.amandajuchem.projetoapi.entities.Exame;
+import io.github.amandajuchem.projetoapi.dtos.FeiraAdocaoDTO;
+import io.github.amandajuchem.projetoapi.entities.FeiraAdocao;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
-import io.github.amandajuchem.projetoapi.services.ExameService;
+import io.github.amandajuchem.projetoapi.services.FeiraAdocaoService;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,17 +15,17 @@ import java.util.UUID;
 import static org.springframework.http.HttpStatus.*;
 
 /**
- * The type Exames controller.
+ * The type Feira Adocao controller.
  */
 @RestController
-@RequestMapping("/exames")
+@RequestMapping("/feiras-adocao")
 @RequiredArgsConstructor
-public class ExamesController {
+public class FeiraAdocaoController {
 
-    private final ExameService service;
+    private final FeiraAdocaoService service;
 
     /**
-     * Delete response entity.
+     * Delete.
      *
      * @param id the id
      * @return the response entity
@@ -37,7 +37,7 @@ public class ExamesController {
     }
 
     /**
-     * Find all response entity.
+     * Find all.
      *
      * @param page      the page
      * @param size      the size
@@ -51,26 +51,26 @@ public class ExamesController {
                                      @RequestParam(required = false, defaultValue = "nome") String sort,
                                      @RequestParam(required = false, defaultValue = "asc") String direction) {
 
-        var exames = service.findAll(page, size, sort, direction).map(ExameDTO::toDTO);
+        var exames = service.findAll(page, size, sort, direction).map(FeiraAdocaoDTO::toDTO);
         return ResponseEntity.status(OK).body(exames);
     }
 
     /**
-     * Save response entity.
+     * Save.
      *
-     * @param exame the exame
+     * @param feiraAdocao the feira adocao
      * @return the response entity
      */
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody @Valid Exame exame) {
-        exame = service.save(exame);
-        return ResponseEntity.status(CREATED).body(ExameDTO.toDTO(exame));
+    public ResponseEntity<?> save(@RequestBody @Valid FeiraAdocao feiraAdocao) {
+        feiraAdocao = service.save(feiraAdocao);
+        return ResponseEntity.status(CREATED).body(FeiraAdocaoDTO.toDTO(feiraAdocao));
     }
 
     /**
-     * Search exame.
+     * Search.
      *
-     * @param value     the nome ou categoria
+     * @param value     the value
      * @param page      the page
      * @param size      the size
      * @param sort      the sort
@@ -85,26 +85,26 @@ public class ExamesController {
                                     @RequestParam(required = false, defaultValue = "asc") String direction) {
 
         if (value != null) {
-            var exames = service.search(value, page, size, sort, direction).map(ExameDTO::toDTO);
-            return ResponseEntity.status(OK).body(exames);
+            var feirasAdocao = service.search(value, page, size, sort, direction).map(FeiraAdocaoDTO::toDTO);
+            return ResponseEntity.status(OK).body(feirasAdocao);
         }
 
         return ResponseEntity.status(NOT_FOUND).body(null);
     }
 
     /**
-     * Update response entity.
+     * Update.
      *
-     * @param id    the id
-     * @param exame the exame
+     * @param id          the id
+     * @param feiraAdocao the feira adocao
      * @return the response entity
      */
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody @Valid Exame exame) {
+    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody @Valid FeiraAdocao feiraAdocao) {
 
-        if (exame.getId().equals(id)) {
-            exame = service.save(exame);
-            return ResponseEntity.status(OK).body(ExameDTO.toDTO(exame));
+        if (feiraAdocao.getId().equals(id)) {
+            feiraAdocao = service.save(feiraAdocao);
+            return ResponseEntity.status(OK).body(FeiraAdocaoDTO.toDTO(feiraAdocao));
         }
 
         throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);

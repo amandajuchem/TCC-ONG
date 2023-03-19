@@ -1,6 +1,6 @@
 package io.github.amandajuchem.projetoapi.repositories;
 
-import io.github.amandajuchem.projetoapi.entities.Exame;
+import io.github.amandajuchem.projetoapi.entities.FeiraAdocao;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,10 +11,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * The interface Exame repository.
+ * The interface Feira adocao repository.
  */
 @Repository
-public interface ExameRepository extends JpaRepository<Exame, UUID> {
+public interface FeiraAdocaoRepository extends JpaRepository<FeiraAdocao, UUID> {
 
     /**
      * Find by nome.
@@ -22,17 +22,15 @@ public interface ExameRepository extends JpaRepository<Exame, UUID> {
      * @param nome the nome
      * @return the optional
      */
-    Optional<Exame> findByNomeIgnoreCase(String nome);
+    Optional<FeiraAdocao> findByNomeIgnoreCase(String nome);
 
     /**
      * Search.
      *
-     * @param value the nome ou categoria
+     * @param value the value
      * @param page  the page
      * @return the page
      */
-    @Query(value = "SELECT e FROM tb_exames AS e " +
-            "WHERE upper(e.nome) LIKE upper(concat('%', ?1, '%')) " +
-            "OR upper(e.categoria) LIKE upper(concat('%', ?1, '%'))")
-    Page<Exame> search(String value, Pageable page);
+    @Query("SELECT f FROM tb_feiras_adocao AS f WHERE upper(f.nome) LIKE upper(concat('%', ?1, '%'))")
+    Page<FeiraAdocao> search(String value, Pageable page);
 }

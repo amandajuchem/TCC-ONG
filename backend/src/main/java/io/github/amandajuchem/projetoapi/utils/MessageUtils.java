@@ -61,6 +61,16 @@ public class MessageUtils {
     public static final String EXAME_NULL = "Exame nulo!";
 
     /**
+     * The constant FEIRA_ADOCAO_NOT_FOUND.
+     */
+    public static final String FEIRA_ADOCAO_NOT_FOUND = "Exame não encontrado!";
+
+    /**
+     * The constant FEIRA_ADOCAO_NULL.
+     */
+    public static final String FEIRA_ADOCAO_NULL = "Exame nulo!";
+
+    /**
      * The constant OBSERVACAO_NOT_FOUND.
      */
     public static final String OBSERVACAO_NOT_FOUND = "Observação não encontrada!";
