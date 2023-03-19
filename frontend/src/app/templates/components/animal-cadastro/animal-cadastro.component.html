@@ -4,21 +4,15 @@
     <div mat-dialog-content class="py-3">
         <form [formGroup]="form" *ngIf="form">
 
-            <div class="row">
+            <div class="row mb-3">
                 <div class="col-12">
                     <div class="text-center">
-                        <div *ngIf="!foto">
-                            <img src="assets/images/animais.png" height="150px" class="mb-3">
-                        </div>
-
-                        <div *ngIf="foto">
-                            <img [src]="foto.data" height="150px" class="mb-3 rounded">
-                        </div>
+                        <img [src]="foto ? foto.data : '/assets/images/animais.png'" height="150px" class="rounded-circle">
                     </div>
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row mb-3">
                 <div class="col-12">
                     <div class="text-center">
                         <button mat-icon-button type="button" [matMenuTriggerFor]="menuFoto">

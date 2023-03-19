@@ -67,23 +67,23 @@ export class AtendimentoCadastroComponent implements OnInit {
       },
       width: '100%'
     })
-      .afterClosed().subscribe({
+    .afterClosed().subscribe({
 
-        next: (result) => {
+      next: (result) => {
 
-          if (result && result.status) {
+        if (result && result.status) {
 
-            result.images.forEach((image: any) => {
+          result.images.forEach((image: any) => {
 
-              this._imagemService.toBase64(image)?.then((data: any) => {
-                data = { id: new Date().getTime(), data: data, salvo: false };
-                this.documentosToShow.push(data);
-                this.documentosToSave.push(image);
-              })
-            });
-          }
+            this._imagemService.toBase64(image)?.then((data: any) => {
+              data = { id: new Date().getTime(), data: data, salvo: false };
+              this.documentosToShow.push(data);
+              this.documentosToSave.push(image);
+            })
+          });
         }
-      });
+      }
+    });
   }
 
   addExame() {

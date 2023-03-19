@@ -14,6 +14,7 @@ import { OperatorUtils } from 'src/app/utils/operator-utils';
 
 import { AnimalAdocoesCadastroComponent } from '../animal-adocoes-cadastro/animal-adocoes-cadastro.component';
 import { AnimalAdocoesExcluirComponent } from '../animal-adocoes-excluir/animal-adocoes-excluir.component';
+import { DateUtils } from 'src/app/utils/date-utils';
 
 @Component({
   selector: 'app-animal-adocoes',
@@ -51,7 +52,7 @@ export class AnimalAdocoesComponent implements AfterViewInit {
 
         if (animal) {
           this.animal = animal;
-          this.findAllA();
+          this.findAll();
         }
       }
     });
@@ -61,7 +62,8 @@ export class AnimalAdocoesComponent implements AfterViewInit {
 
     this._dialog.open(AnimalAdocoesCadastroComponent, {
       data: {
-        adocao: null
+        adocao: null,
+        animal: this.animal
       },
       width: '100%'
     })
@@ -70,7 +72,7 @@ export class AnimalAdocoesComponent implements AfterViewInit {
       next: (result) => {
 
         if (result && result.status) {
-          this.findAllA();
+          this.findAll();
         }
       }
     });
@@ -89,13 +91,13 @@ export class AnimalAdocoesComponent implements AfterViewInit {
       next: (result) => {
 
         if (result && result.status) {
-          this.findAllA();
+          this.findAll();
         }
       }
     });
   }
 
-  async findAllA() {
+  async findAll() {
 
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
@@ -124,11 +126,25 @@ export class AnimalAdocoesComponent implements AfterViewInit {
     });
   }
 
+  getDateWithTimeZone(date: any) {
+    return DateUtils.getDateWithTimeZone(date);
+  }
+
+  pageChange() {
+    this.findAll();
+  }
+
+  sortChange() {
+    this.paginator.pageIndex = 0;
+    this.findAll();
+  }
+
   update(adocao: Adocao) {
 
     this._dialog.open(AnimalAdocoesCadastroComponent, {
       data: {
-        adocao: adocao
+        adocao: adocao,
+        animal: this.animal
       },
       width: '100%'
     })
@@ -137,7 +153,7 @@ export class AnimalAdocoesComponent implements AfterViewInit {
       next: (result) => {
 
         if (result && result.status) {
-          this.findAllA();
+          this.findAll();
         }
       }
     });

@@ -53,16 +53,28 @@ export class AdocaoService implements AbstractService<Adocao> {
     return this._http.get<Adocao>(this._baseURL + '/' + id);
   }
 
-  save(adocao: Adocao) {
+  save(adocao: Adocao, termoResponsabilidade: Array<File> | null) {
 
     const form = new FormData();
+
+    form.append('adocao', new Blob([JSON.stringify(adocao)], { type: 'application/json' }));
+
+    if (termoResponsabilidade) {
+      termoResponsabilidade.forEach((imagem: any, index: number) => form.append('termoResponsabilidade', new Blob([imagem], { type: 'multipart/form-data' }), 'imagem' + index + '.png'));
+    }
 
     return this._http.post<Adocao>(this._baseURL, form);
   }
 
-  update(adocao: Adocao) {
+  update(adocao: Adocao, termoResponsabilidade: Array<File> | null) {
 
     const form = new FormData();
+
+    form.append('adocao', new Blob([JSON.stringify(adocao)], { type: 'application/json' }));
+
+    if (termoResponsabilidade) {
+      termoResponsabilidade.forEach((imagem: any, index: number) => form.append('termoResponsabilidade', new Blob([imagem], { type: 'multipart/form-data' }), 'imagem' + index + '.png'));
+    }
 
     return this._http.put<Adocao>(this._baseURL + '/' + adocao.id, form);
   }
