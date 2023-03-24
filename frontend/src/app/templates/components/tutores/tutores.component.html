@@ -27,7 +27,7 @@
                     <div class="col-12 col-md-11 mb-3 mb-md-0">
                         <mat-form-field appearance="outline" class="w-100" style="margin-bottom: -1.25em;">
                             <mat-label>Buscar</mat-label>
-                            <input type="text" matInput [(ngModel)]="filterString" (keyup.enter)="search()" placeholder="Nome, CPF ou RG">
+                            <input type="text" matInput [(ngModel)]="filterString" (keyup.enter)="search()" placeholder="Nome, CPF (sem pontuação) ou RG">
                             <button mat-icon-button matSuffix (click)="search()">
                                 <mat-icon>search</mat-icon>
                             </button>
@@ -47,43 +47,49 @@
     </div>
 </div>
 
-<div class="row" [hidden]="(tutores && tutores.length == 0) || isLoadingResults">
-    <div class="col-12 col-md-3 mb-3" *ngFor="let tutor of tutores">
-        <a [routerLink]="'/' + user.role.toLowerCase() + '/tutores/' + tutor.id" class="text-decoration-none text-dark">
+<div [hidden]="(tutores && tutores.length == 0) || isLoadingResults">
+    <div class="row">
+        <div class="col-12 col-md-3 mb-3" *ngFor="let tutor of tutores">
+            <a [routerLink]="'/' + user.role.toLowerCase() + '/tutores/' + tutor.id" class="text-decoration-none text-dark">
+                <mat-card>
+                    <mat-card-content class="p-3">
+                        <div class="mb-3 text-center">
+                            <img [src]="tutor.foto ? apiURL + '/imagens/search?nome=' + tutor.foto.nome : '/assets/images/tutores.png'" height="150px" class="rounded-circle">
+                        </div>
+                        <div>
+                            <p class="m-0 fw-bold">{{tutor.nome}}</p>
+                            <p class="m-0">{{tutor.cpf | mask: 'CPF_CNPJ'}}</p>
+                            <p class="m-0">{{tutor.situacao}}</p>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div [hidden]="(tutores && tutores.length == 0) || isLoadingResults">
+    <div class="row mb-3">
+        <div class="col-12">
             <mat-card>
-                <mat-card-content class="p-3">
-                    <div class="mb-3 text-center">
-                        <img [src]="tutor.foto ? apiURL + '/imagens/search?nome=' + tutor.foto.nome : '/assets/images/tutores.png'" height="150px" class="rounded-circle">
-                    </div>
-                    <div>
-                        <p class="m-0 fw-bold">{{tutor.nome}}</p>
-                        <p class="m-0">{{tutor.cpf | mask: 'CPF_CNPJ'}}</p>
-                        <p class="m-0">{{tutor.situacao}}</p>
-                    </div>
+                <mat-card-content>
+                    <mat-paginator showFirstLastButtons [length]="resultsLength" [pageSize]="10" [pageSizeOptions]="[10, 25, 50, 100]" (page)="pageChange($event)"></mat-paginator>
                 </mat-card-content>
             </mat-card>
-        </a>
+        </div>
     </div>
 </div>
 
-<div class="row mb-3" [hidden]="(tutores && tutores.length == 0) || isLoadingResults">
-    <div class="col-12">
-        <mat-card>
-            <mat-card-content>
-                <mat-paginator showFirstLastButtons [length]="resultsLength" [pageSize]="10" [pageSizeOptions]="[10, 25, 50, 100]" (page)="pageChange($event)"></mat-paginator>
-            </mat-card-content>
-        </mat-card>
-    </div>
-</div>
-
-<div class="row mb-3" *ngIf="isLoadingResults">
-    <div class="col-12">
-        <mat-card>
-            <mat-card-content>
-                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-                <p class="text-center pt-3">Obtendo dados</p>
-            </mat-card-content>
-        </mat-card>
+<div [hidden]="!isLoadingResults">
+    <div class="row mb-3">
+        <div class="col-12">
+            <mat-card>
+                <mat-card-content>
+                    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                    <p class="text-center pt-3">Obtendo dados</p>
+                </mat-card-content>
+            </mat-card>
+        </div>
     </div>
 </div>
 

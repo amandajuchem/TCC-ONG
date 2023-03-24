@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { AfterViewInit, Component, Inject, ViewChild } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -18,6 +18,7 @@ import { OperatorUtils } from 'src/app/utils/operator-utils';
 export class SelecionarAnimalComponent implements AfterViewInit {
 
   animal!: Animal;
+  animais!: Array<Animal>;
   columns!: Array<string>;
   dataSource!: MatTableDataSource<Animal>;
   filterString!: string;
@@ -28,10 +29,12 @@ export class SelecionarAnimalComponent implements AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
+    @Inject(MAT_DIALOG_DATA) private _data: any,
     private _animalService: AnimalService,
     private _dialogRef: MatDialogRef<SelecionarAnimalComponent>,
     private _notificationService: NotificationService  
   ) {
+    this.animais = [];
     this.columns = ['index', 'nome', 'especie', 'porte', 'idade'];
     this.dataSource = new MatTableDataSource();
     this.isLoadingResults = true;
@@ -112,9 +115,13 @@ export class SelecionarAnimalComponent implements AfterViewInit {
   }
 
   select(animal: Animal) {
-    this.animal = animal;
+    this._data.multiplus ? this.animais.push(animal) : this.animal = animal;
   }
   
+  selected(animal: Animal) {
+    return this._data.multiplus ? this.animais?.some(a => a.id === animal.id) : this.animal?.id === animal.id;
+  }
+
   sortChange() {
 
     this.paginator.pageIndex = 0;
@@ -128,6 +135,6 @@ export class SelecionarAnimalComponent implements AfterViewInit {
   }
 
   submit() {
-    this._dialogRef.close({ status: true, animal: this.animal });
+    this._dialogRef.close({ status: true, animal: this.animal, animais: this.animais });
   }
 }

@@ -26,8 +26,7 @@ export class AtendimentoCadastroComponent implements OnInit {
 
   apiURL!: string;
   form!: FormGroup;
-  documentosToSave!: Array<any>;
-  documentosToShow!: Array<any>;
+  documentos!: Array<any>;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -42,8 +41,7 @@ export class AtendimentoCadastroComponent implements OnInit {
   ngOnInit(): void {
 
     this.apiURL = environment.apiURL;
-    this.documentosToSave = [];
-    this.documentosToShow = [];
+    this.documentos = [];
 
     if (this.data.atendimento) {
       this.buildForm(this.data.atendimento);
@@ -51,7 +49,7 @@ export class AtendimentoCadastroComponent implements OnInit {
       if (this.data.atendimento.documentos) {
 
         this.data.atendimento.documentos.forEach((d: any) => {
-          this.documentosToShow.push({ id: d.id, data: d.nome, salvo: true });
+          this.documentos.push({ id: d.id, nome: d.nome });
         });
       }
     } else {
@@ -76,9 +74,7 @@ export class AtendimentoCadastroComponent implements OnInit {
           result.images.forEach((image: any) => {
 
             this._imagemService.toBase64(image)?.then((data: any) => {
-              data = { id: new Date().getTime(), data: data, salvo: false };
-              this.documentosToShow.push(data);
-              this.documentosToSave.push(image);
+              this.documentos.push({ id: new Date().getTime(), data: data, file: image });
             })
           });
         }
@@ -156,14 +152,20 @@ export class AtendimentoCadastroComponent implements OnInit {
   }
 
   removeImagem(imagem: any) {
-    this.form.get('documentos')?.patchValue(this.form.get('documentos')?.value.filter((d: any) => d.id !== imagem.id));
-    this.documentosToSave = this.documentosToSave.filter((d: any) => d.id !== imagem.id);
-    this.documentosToShow = this.documentosToShow.filter((d: any) => d.id !== imagem.id);
+
+    if (this.form.get('documentos')?.value) {
+      this.form.get('documentos')?.patchValue(this.form.get('documentos')?.value.filter((d: any) => d.id !== imagem.id));
+    }
+
+    this.documentos = this.documentos.filter((d: any) => d.id !== imagem.id);
   }
 
   selectAnimal() {
 
     this._dialog.open(SelecionarAnimalComponent, {
+      data: {
+        multiplus: false
+      },
       width: '100%'
     })
     .afterClosed().subscribe({
@@ -200,10 +202,11 @@ export class AtendimentoCadastroComponent implements OnInit {
   submit() {
 
     const atendimento: Atendimento = Object.assign({}, this.form.getRawValue());
+    const imagens: Array<File> = this.documentos.map((d: any) => d.file);
 
     if (atendimento.id) {
 
-      this._atendimentoService.update(atendimento, this.documentosToSave).subscribe({
+      this._atendimentoService.update(atendimento, imagens).subscribe({
 
         complete: () => {
           this._notificationService.show(MessageUtils.ATENDIMENTO_UPDATE_SUCCESS, NotificationType.SUCCESS);
@@ -219,7 +222,7 @@ export class AtendimentoCadastroComponent implements OnInit {
 
     else {
 
-      this._atendimentoService.save(atendimento, this.documentosToSave).subscribe({
+      this._atendimentoService.save(atendimento, imagens).subscribe({
 
         complete: () => {
           this._notificationService.show(MessageUtils.ATENDIMENTO_SAVE_SUCCESS, NotificationType.SUCCESS);

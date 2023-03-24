@@ -9,7 +9,7 @@
                 <button mat-icon-button (click)="submit()" *ngIf="form.enabled">
                     <mat-icon>save</mat-icon>
                 </button>
-                <button mat-icon-button (click)="form.disable()" *ngIf="form.enabled">
+                <button mat-icon-button (click)="cancel()" *ngIf="form.enabled">
                     <mat-icon>close</mat-icon>
                 </button>
             </div>
@@ -23,12 +23,8 @@
                     <img src="assets/images/usuarios.png" height="150px" class="rounded-circle">
                 </div>
 
-                <div *ngIf="foto && foto.salvo">
-                    <img [src]="apiURL + '/imagens/search?nome=' + foto.nome" height="150px" class="rounded-circle">
-                </div>
-
-                <div *ngIf="foto && !foto.salvo">
-                    <img [src]="foto.data" height="150px" class="rounded-circle">
+                <div *ngIf="foto">
+                    <img [src]="foto.nome ? apiURL + '/imagens/search?nome=' + foto.nome : foto.data" height="150px" class="rounded-circle">
                 </div>
             </div>
         </div>

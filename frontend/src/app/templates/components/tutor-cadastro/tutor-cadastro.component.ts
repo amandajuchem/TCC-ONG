@@ -19,7 +19,6 @@ export class TutorCadastroComponent implements OnInit {
 
   form!: FormGroup;
   foto!: any;
-  fotoToSave!: any;
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -47,11 +46,7 @@ export class TutorCadastroComponent implements OnInit {
       if (result && result.status) {
 
         this._imagemService.toBase64(result.images[0])?.then(data => {
-
-          let imagem = { id: new Date().getTime(), data: data };
-
-          this.foto = imagem;
-          this.fotoToSave = result.images[0];
+          this.foto = { id: new Date().getTime(), data: data, file: result.images[0] };
         });
       }
     });
@@ -95,7 +90,6 @@ export class TutorCadastroComponent implements OnInit {
 
   removeFoto() {
     this.foto = null;
-    this.form.get('foto')?.patchValue(null);
   }
 
   removeTelefone(index: number) {
@@ -105,8 +99,9 @@ export class TutorCadastroComponent implements OnInit {
   submit() {
 
     const tutor: Tutor = Object.assign({}, this.form.getRawValue());
+    const imagem: File = this.foto?.file;
 
-    this._tutorService.save(tutor, this.fotoToSave).subscribe({
+    this._tutorService.save(tutor, imagem).subscribe({
 
       complete: () => {
         this._notificationService.show(MessageUtils.TUTOR_SAVE_SUCCESS, NotificationType.SUCCESS);

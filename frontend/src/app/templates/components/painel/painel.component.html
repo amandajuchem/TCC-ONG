@@ -78,6 +78,23 @@
     </div>
 
     <div class="col-12 col-md-3 mb-3">
+        <a [routerLink]="'/' + user.role.toLowerCase() +'/feiras-adocao'">
+            <mat-card>
+                <mat-card-content>
+                    <div class="text-center">
+                        <img src="assets/images/feira-adocao.png" width="64px">
+                    </div>
+                </mat-card-content>
+                <mat-card-footer>
+                    <div class="text-center pt-3">
+                        <h2 class="text-dark">Feiras de Adoção</h2>
+                    </div>
+                </mat-card-footer>
+            </mat-card>
+        </a>
+    </div>
+
+    <div class="col-12 col-md-3 mb-3">
         <a [routerLink]="'/' + user.role.toLowerCase() +'/tutores'">
             <mat-card>
                 <mat-card-content>

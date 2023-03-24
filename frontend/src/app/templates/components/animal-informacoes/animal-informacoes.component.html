@@ -26,12 +26,8 @@
                     <img src="assets/images/animais.png" height="150px">
                 </div>
 
-                <div *ngIf="foto && foto.salvo">
-                    <img [src]="apiURL + '/imagens/search?nome=' + foto.nome" height="150px" class="rounded-circle">
-                </div>
-
-                <div *ngIf="foto && !foto.salvo">
-                    <img [src]="foto.data" height="150px" class="rounded-circle">
+                <div *ngIf="foto">
+                    <img [src]="foto.nome ? apiURL + '/imagens/search?nome=' + foto.nome : foto.data" height="150px" class="rounded-circle">
                 </div>
             </div>
         </div>

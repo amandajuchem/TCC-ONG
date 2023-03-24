@@ -57,9 +57,9 @@ public class UsuarioService implements AbstractService<Usuario> {
 
         if (usuario.getId() != null) {
 
-            var usuario_findByCpf = repository.findByCpf(usuario.getCpf()).get();
+            var usuario_old = repository.findById(usuario.getId()).get();
 
-            if (!usuario.getSenha().equals(usuario_findByCpf.getSenha())) {
+            if (!usuario.getSenha().equals(usuario_old.getSenha())) {
                 usuario.setSenha(encoder.encode(usuario.getSenha()));
             }
         } else {

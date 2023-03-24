@@ -26,12 +26,8 @@
                     <img src="assets/images/tutores.png" height="150px" class="rounded-circle">
                 </div>
 
-                <div *ngIf="foto && foto.salvo">
-                    <img [src]="apiURL + '/imagens/search?nome=' + foto.nome" height="150px" class="rounded-circle">
-                </div>
-
-                <div *ngIf="foto && !foto.salvo">
-                    <img [src]="foto.data" height="150px" class="rounded-circle">
+                <div *ngIf="foto">
+                    <img [src]="foto.nome ? apiURL + '/imagens/search?nome=' + foto.nome : foto.data" height="150px" class="rounded-circle">
                 </div>
             </div>
         </div>
@@ -94,13 +90,23 @@
     </div>
 
     <div formArrayName="telefones">
-                    
-        <div class="row">
-            <div class="col-12">
-                <h3 class="text-dark">Telefones</h3>
+                   
+        <div class="row mb-3">
+            <div class="col-11">
+                <div class="d-flex align-items-center justify-content-start h-100">
+                    <h3 class="m-0 text-dark">Telefones</h3>
+                </div>
+            </div>
+
+            <div class="col-1" *ngIf="form.enabled">
+                <div class="d-flex align-items-center justify-content-end h-100">
+                    <button type="button" mat-icon-button (click)="addTelefone()">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </div>
             </div>
         </div>
-        
+
         <div class="row">
             <div class="col-12 col-md-3" *ngFor="let telefone of telefones.controls, let i = index">
                 <mat-form-field appearance="outline" class="w-100" [formGroupName]="i">
@@ -110,14 +116,6 @@
                       <mat-icon>close</mat-icon>
                     </button>
                 </mat-form-field>
-            </div>
-        </div>
-
-        <div class="row" *ngIf="form.enabled">
-            <div class="col">
-                <div class="text-center">
-                    <button type="button" mat-button (click)="addTelefone()">Adicionar Telefone</button>
-                </div>
             </div>
         </div>
     </div>

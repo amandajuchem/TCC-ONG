@@ -22,8 +22,7 @@ export class AnimalAdocoesCadastroComponent implements OnInit {
   
   apiURL!: string;
   form!: FormGroup;
-  termoResponsabilidadeToShow!: Array<any>;
-  termoResponsabilidadeToSave!: Array<any>;
+  termoResponsabilidade!: Array<any>;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -38,8 +37,7 @@ export class AnimalAdocoesCadastroComponent implements OnInit {
   ngOnInit(): void {
     
     this.apiURL = environment.apiURL;
-    this.termoResponsabilidadeToSave = [];
-    this.termoResponsabilidadeToShow = [];
+    this.termoResponsabilidade = [];
 
     if (this.data.adocao) {
       this.buildForm(this.data.adocao);
@@ -47,7 +45,7 @@ export class AnimalAdocoesCadastroComponent implements OnInit {
       if (this.data.adocao.termoResponsabilidade) {
 
         this.data.adocao.termoResponsabilidade.forEach((t: any) => {
-          this.termoResponsabilidadeToShow.push({ id: t.id, nome: t.nome });
+          this.termoResponsabilidade.push({ id: t.id, nome: t.nome });
         });
       }
     } else {
@@ -72,9 +70,7 @@ export class AnimalAdocoesCadastroComponent implements OnInit {
           result.images.forEach((image: any) => {
 
             this._imagemService.toBase64(image)?.then((data: any) => {
-              data = { id: new Date().getTime(), data: data };
-              this.termoResponsabilidadeToShow.push(data);
-              this.termoResponsabilidadeToSave.push(image);
+              this.termoResponsabilidade.push({ id: new Date().getTime(), data: data, file: image });
             })
           });
         }
@@ -121,9 +117,12 @@ export class AnimalAdocoesCadastroComponent implements OnInit {
   }
 
   removeImagem(imagem: any) {
-    this.form.get('termoResponsabilidade')?.patchValue(this.form.get('termoResponsabilidade')?.value.filter((t: any) => t.id !== imagem.id));
-    this.termoResponsabilidadeToSave = this.termoResponsabilidadeToSave.filter((t: any) => t.id !== imagem.id);
-    this.termoResponsabilidadeToShow = this.termoResponsabilidadeToShow.filter((t: any) => t.id !== imagem.id);
+    
+    if (this.form.get('termoResponsabilidade')?.value) {
+      this.form.get('termoResponsabilidade')?.patchValue(this.form.get('termoResponsabilidade')?.value.filter((t: any) => t.id !== imagem.id));
+    }
+
+    this.termoResponsabilidade = this.termoResponsabilidade.filter((t: any) => t.id !== imagem.id);
   }
 
   selectTutor() {
@@ -145,10 +144,11 @@ export class AnimalAdocoesCadastroComponent implements OnInit {
   submit() {
 
     const adocao: Adocao = Object.assign({}, this.form.getRawValue());
+    const images = this.termoResponsabilidade.map((t: any) => t.file);
 
     if (adocao.id) {
 
-      this._adocaoService.update(adocao, this.termoResponsabilidadeToSave).subscribe({
+      this._adocaoService.update(adocao, images).subscribe({
         complete: () => {
           this._notificationService.show(MessageUtils.ADOCAO_UPDATE_SUCCESS, NotificationType.SUCCESS);
           this._dialogRef.close({ status: true });
@@ -163,7 +163,7 @@ export class AnimalAdocoesCadastroComponent implements OnInit {
 
     else {
 
-      this._adocaoService.save(adocao, this.termoResponsabilidadeToSave).subscribe({
+      this._adocaoService.save(adocao, images).subscribe({
         complete: () => {
           this._notificationService.show(MessageUtils.ADOCAO_SAVE_SUCCESS, NotificationType.SUCCESS);
           this._dialogRef.close({ status: true });

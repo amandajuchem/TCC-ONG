@@ -31,6 +31,8 @@ public interface FeiraAdocaoRepository extends JpaRepository<FeiraAdocao, UUID> 
      * @param page  the page
      * @return the page
      */
-    @Query("SELECT f FROM tb_feiras_adocao AS f WHERE upper(f.nome) LIKE upper(concat('%', ?1, '%'))")
+    @Query("SELECT f FROM tb_feiras_adocao AS f " +
+            "WHERE upper(f.nome) LIKE upper(concat('%', ?1, '%')) " +
+            "OR cast(f.dataHora as string) LIKE concat('%', ?1, '%')")
     Page<FeiraAdocao> search(String value, Pageable page);
 }

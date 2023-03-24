@@ -26,7 +26,6 @@ export class AnimalInformacoesComponent implements OnInit {
   apiURL!: string;
   form!: FormGroup;
   foto!: any;
-  fotoToSave!: any;
   user!: User;
 
   constructor(
@@ -53,7 +52,7 @@ export class AnimalInformacoesComponent implements OnInit {
           this.buildForm(animal);
 
           if (animal.foto) {
-            this.foto = { id: animal.foto.id, nome: animal.foto.nome, salvo: true};
+            this.foto = { id: animal.foto.id, nome: animal.foto.nome };
           } else {
             this.foto = null;
           }
@@ -75,11 +74,7 @@ export class AnimalInformacoesComponent implements OnInit {
       if (result && result.status) {
 
         this._imagemService.toBase64(result.images[0])?.then(data => {
-
-          let imagem = { id: new Date().getTime(), data: data, nome: null, salvo: false };
-
-          this.foto = imagem;
-          this.fotoToSave = result.images[0];
+          this.foto = { id: new Date().getTime(), data: data, file: result.images[0] };
         });
       }
     });
@@ -106,14 +101,8 @@ export class AnimalInformacoesComponent implements OnInit {
   }
 
   cancel() {
-    
     this.buildForm(this.animal);
-
-    if (this.animal.foto) {
-      this.foto = { id: this.animal.foto.id, nome: this.animal.foto.nome, salvo: true};
-    } else {
-      this.foto = null;
-    }
+    this.foto = this.animal.foto ? { id: this.animal.foto.id, nome: this.animal.foto.nome } : null;
   }
 
   delete() {
@@ -137,18 +126,18 @@ export class AnimalInformacoesComponent implements OnInit {
 
   removeFoto() {
     this.foto = null;
-    this.fotoToSave = null;
     this.form.get('foto')?.patchValue(null);
   }
 
   submit() {
 
     const animal: Animal = Object.assign({}, this.form.getRawValue());
+    const imagem: File = this.foto?.file;
 
-    this._animalService.update(animal, this.fotoToSave).subscribe({
+    this._animalService.update(animal, imagem).subscribe({
 
       next: (animal) => {
-        this.fotoToSave = null;
+        this.foto ? this.foto.file = null : null;
         this._animalService.set(animal);
         this._notificationService.show(MessageUtils.ANIMAL_UPDATE_SUCCESS, NotificationType.SUCCESS);
       },

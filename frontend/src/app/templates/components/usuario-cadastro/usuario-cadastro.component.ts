@@ -20,7 +20,6 @@ export class UsuarioCadastroComponent implements OnInit {
   
   form!: FormGroup;
   foto!: any;
-  fotoToSave!: any;
   hide!: boolean;
   user!: any;
 
@@ -53,11 +52,7 @@ export class UsuarioCadastroComponent implements OnInit {
       if (result && result.status) {
 
         this._imagemService.toBase64(result.images[0])?.then(data => {
-
-          let imagem = { id: new Date().getTime(), data: data };
-
-          this.foto = imagem;
-          this.fotoToSave = result.images[0];
+          this.foto = { id: new Date().getTime(), data: data, file: result.images[0] };
         });
       }
     });
@@ -78,14 +73,14 @@ export class UsuarioCadastroComponent implements OnInit {
 
   removeFoto() {
     this.foto = null;
-    this.form.get('foto')?.patchValue(null);
   }
 
   submit() {
 
     const usuario: Usuario = Object.assign({}, this.form.getRawValue());
+    const imagem: File = this.foto?.file;
 
-    this._usuarioService.save(usuario, this.fotoToSave).subscribe({
+    this._usuarioService.save(usuario, imagem).subscribe({
 
       complete: () => {
         this._notificationService.show(MessageUtils.USUARIO_SAVE_SUCCESS, NotificationType.SUCCESS);

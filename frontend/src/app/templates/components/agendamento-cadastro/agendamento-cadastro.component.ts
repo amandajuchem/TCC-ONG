@@ -66,6 +66,9 @@ export class AgendamentoCadastroComponent implements OnInit {
   selectAnimal() {
 
     this._dialog.open(SelecionarAnimalComponent, {
+      data: {
+        multiplus: false
+      },
       width: '100%'
     })
     .afterClosed().subscribe({

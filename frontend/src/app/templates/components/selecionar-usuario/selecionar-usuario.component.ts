@@ -23,6 +23,7 @@ export class SelecionarUsuarioComponent implements AfterViewInit {
   isLoadingResults!: boolean;
   resultsLength!: number;
   usuario!: Usuario;
+  usuarios!: Array<Usuario>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -37,6 +38,7 @@ export class SelecionarUsuarioComponent implements AfterViewInit {
     this.dataSource = new MatTableDataSource();
     this.isLoadingResults = true;
     this.resultsLength = 0;
+    this.usuarios = [];
   }
 
   ngAfterViewInit(): void {
@@ -114,16 +116,13 @@ export class SelecionarUsuarioComponent implements AfterViewInit {
 
   select(usuario: Usuario) {
     
-    if (this._data.setor) {
-
-      if (this._data.setor === usuario.setor) {
-        this.usuario = usuario;
-      }
+    if (!this._data.setor || this._data.setor === usuario.setor) {
+      this._data.multiplus ? this.usuarios.push(usuario) : this.usuario = usuario;
     }
+  }
 
-    else {
-      this.usuario = usuario;
-    }
+  selected(usuario: Usuario) {
+    return this._data.multiplus ? this.usuarios?.some(u => u.id === usuario.id) : this.usuario?.id === usuario.id;
   }
 
   sortChange() {
@@ -139,6 +138,6 @@ export class SelecionarUsuarioComponent implements AfterViewInit {
   }
 
   submit() {
-    this._dialogRef.close({ status: true, usuario: this.usuario });
+    this._dialogRef.close({ status: true, usuario: this.usuario, usuarios: this.usuarios });
   }
 }

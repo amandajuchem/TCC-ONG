@@ -10,6 +10,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -41,6 +42,9 @@ import { AtendimentosComponent } from './atendimentos/atendimentos.component';
 import { ExameCadastroComponent } from './exame-cadastro/exame-cadastro.component';
 import { ExameExcluirComponent } from './exame-excluir/exame-excluir.component';
 import { ExamesComponent } from './exames/exames.component';
+import { FeiraAdocaoCadastroComponent } from './feira-adocao-cadastro/feira-adocao-cadastro.component';
+import { FeiraAdocaoExcluirComponent } from './feira-adocao-excluir/feira-adocao-excluir.component';
+import { FeirasAdocaoComponent } from './feiras-adocao/feiras-adocao.component';
 import { FooterComponent } from './footer/footer.component';
 import { LayoutComponent } from './layout/layout.component';
 import { LoginComponent } from './login/login.component';
@@ -112,6 +116,9 @@ import { UsuariosComponent } from './usuarios/usuarios.component';
     UsuarioCadastroComponent,
     UsuarioInformacoesComponent,
     UsuariosComponent,
+    FeirasAdocaoComponent,
+    FeiraAdocaoCadastroComponent,
+    FeiraAdocaoExcluirComponent,
   ],
   imports: [
     CommonModule,
@@ -123,6 +130,7 @@ import { UsuariosComponent } from './usuarios/usuarios.component';
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
+    MatListModule,
     MatMenuModule,
     MatNativeDateModule,
     MatPaginatorModule,

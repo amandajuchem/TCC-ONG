@@ -25,7 +25,6 @@ export class TutorInformacoesComponent implements OnInit {
   apiURL!: string;
   form!: FormGroup;
   foto!: any;
-  fotoToSave!: any;
   tutor!: Tutor;
   user!: User;
 
@@ -53,7 +52,7 @@ export class TutorInformacoesComponent implements OnInit {
           this.buildForm(tutor);
 
           if (tutor.foto) {
-            this.foto = { id: tutor.foto.id, nome: tutor.foto.nome, salvo: true};
+            this.foto = { id: tutor.foto.id, nome: tutor.foto.nome };
           } else {
             this.foto = null;
           }
@@ -75,11 +74,7 @@ export class TutorInformacoesComponent implements OnInit {
       if (result && result.status) {
 
         this._imagemService.toBase64(result.images[0])?.then(data => {
-
-          let imagem = { id: new Date().getTime(), data: data, nome: null, salvo: false };
-
-          this.foto = imagem;
-          this.fotoToSave = result.images[0];
+          this.foto = { id: new Date().getTime(), data: data };
         });
       }
     });
@@ -120,14 +115,8 @@ export class TutorInformacoesComponent implements OnInit {
   }
 
   cancel() {
-
     this.buildForm(this.tutor);
-
-    if (this.tutor.foto) {
-      this.foto = { id: this.tutor.foto.id, nome: this.tutor.foto.nome, salvo: true};
-    } else {
-      this.foto = null;
-    }
+    this.foto = this.tutor.foto ? { id: this.tutor.foto.id, nome: this.tutor.foto.nome } : null;
   }
 
   delete() {
@@ -165,11 +154,12 @@ export class TutorInformacoesComponent implements OnInit {
   submit() {
 
     const tutor: Tutor = Object.assign({}, this.form.getRawValue());
+    const imagem: File = this.foto?.file;
 
-    this._tutorService.update(tutor, this.fotoToSave).subscribe({
+    this._tutorService.update(tutor, imagem).subscribe({
 
       next: (tutor) => {
-        this.fotoToSave = null;
+        this.foto ? this.foto.file = null : null;
         this._tutorService.set(tutor);
         this._notificationService.show(MessageUtils.TUTOR_UPDATE_SUCCESS, NotificationType.SUCCESS);
       },

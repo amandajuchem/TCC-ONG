@@ -79,9 +79,19 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-12">
-                    <h3 class="text-dark">Exames</h3>
+            <div class="row mb-3">
+                <div class="col-11">
+                    <div class="d-flex align-items-center justify-content-start h-100">
+                        <h3 class="m-0 text-dark">Exames</h3>
+                    </div>
+                </div>
+
+                <div class="col-1">
+                    <div class="d-flex align-items-center justify-content-end h-100">
+                        <button type="button" mat-icon-button (click)="addExame()">
+                            <mat-icon>add</mat-icon>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -96,29 +106,30 @@
                     </mat-form-field>
                 </div>
             </div>
+            
+            <div class="row mb-3">
+                <div class="col-11">
+                    <div class="d-flex align-items-center justify-content-start h-100">
+                        <h3 class="m-0 text-dark">Documentos</h3>
+                    </div>
+                </div>
 
-            <div class="row">
-                <div class="col-12">
-                    <div class="text-center">
-                        <button type="button" mat-button class="bg-secondary text-white" (click)="addExame()">Adicionar Exame</button>
+                <div class="col-1">
+                    <div class="d-flex align-items-center justify-content-end h-100">
+                        <button type="button" mat-icon-button (click)="addImagem()">
+                            <mat-icon>add</mat-icon>
+                        </button>
                     </div>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-12">
-                    <h3 class="text-dark">Documentos</h3>
-                </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-12 col-md-3 mb-3" *ngFor="let documento of documentosToShow">
+                <div class="col-12 col-md-3 mb-3" *ngFor="let documento of documentos">
                     <mat-card>
-                        <img mat-card-image [src]="apiURL + '/imagens/search?nome=' + documento.data" *ngIf="documento.salvo">
-                        <img mat-card-image [src]="documento.data" *ngIf="!documento.salvo">
+                        <img mat-card-image [src]="documento.nome ? apiURL + '/imagens/search?nome=' + documento.nome : documento.data">
                         <mat-card-footer class="p-2">
                             <div class="text-center">
-                                <button type="button" mat-icon-button class="me-3" (click)="downloadImagem(documento)" *ngIf="documento.salvo">
+                                <button type="button" mat-icon-button class="me-3" (click)="downloadImagem(documento)" *ngIf="documento.nome">
                                     <mat-icon>download</mat-icon>
                                 </button>
                                 <button type="button" mat-icon-button class="ms-3" (click)="removeImagem(documento)">
@@ -127,14 +138,6 @@
                             </div>
                         </mat-card-footer>
                     </mat-card>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-12">
-                    <div class="text-center">
-                        <button type="button" mat-button class="bg-secondary text-white" (click)="addImagem()">Adicionar Imagem</button>
-                    </div>
                 </div>
             </div>
         </form>

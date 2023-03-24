@@ -4,7 +4,7 @@ export class MessageUtils {
   static ADOCAO_DELETE_FAIL = 'Não foi possível excluir a adoção! ';
   static ADOCAO_DELETE_SUCCESS = 'Adoção excluída com sucesso!';
   static ADOCAO_SAVE_FAIL = 'Não foi possível cadastrar a adoção! ';
-  static ADOCAO_SAVE_SUCCESS = 'Adoção cadastrado com sucesso!';
+  static ADOCAO_SAVE_SUCCESS = 'Adoção cadastrada com sucesso!';
   static ADOCAO_UPDATE_FAIL = 'Não foi possível atualizar os dados da adoção! ';
   static ADOCAO_UPDATE_SUCCESS = 'Dados da adoção atualizados com sucesso!';
 
@@ -40,6 +40,14 @@ export class MessageUtils {
   static EXAME_SAVE_SUCCESS = 'Exame cadastrado com sucesso!';
   static EXAME_UPDATE_FAIL = 'Não foi possível atualizar os dados do exame! ';
   static EXAME_UPDATE_SUCCESS = 'Dados do exame atualizados com sucesso!';
+
+  static FEIRAS_ADOCAO_GET_FAIL = 'Não foi possível obter a lista de feiras de adoção! Por favor, contate o suporte técnico!';
+  static FEIRA_ADOCAO_DELETE_FAIL = 'Não foi possível excluir a feira de adoção! ';
+  static FEIRA_ADOCAO_DELETE_SUCCESS = 'Feira de adoção excluída com sucesso!';
+  static FEIRA_ADOCAO_SAVE_FAIL = 'Não foi possível cadastrar a feira de adoção! ';
+  static FEIRA_ADOCAO_SAVE_SUCCESS = 'Feira de adoção cadastrada com sucesso!';
+  static FEIRA_ADOCAO_UPDATE_FAIL = 'Não foi possível atualizar os dados da feira de adoção! ';
+  static FEIRA_ADOCAO_UPDATE_SUCCESS = 'Dados da feira de adoção atualizados com sucesso!';
 
   static OBSERVACOES_GET_FAIL = 'Não foi possível obter a lista de observações! Por favor, contate o suporte técnico!';
   static OBSERVACAO_DELETE_FAIL = 'Não foi possível excluir a observação! ';

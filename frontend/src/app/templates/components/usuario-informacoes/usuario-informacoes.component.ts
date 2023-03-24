@@ -22,9 +22,9 @@ export class UsuarioInformacoesComponent implements OnInit {
   apiURL!: string;
   form!: FormGroup;
   foto!: any;
-  fotoToSave!: any;
   hide!: boolean;
   user!: any;
+  usuario!: Usuario;
 
   constructor(
     private _authService: AuthService,
@@ -46,10 +46,11 @@ export class UsuarioInformacoesComponent implements OnInit {
       next: (usuario) => {
           
         if (usuario) {
+          this.usuario = usuario;
           this.buildForm(usuario);
 
           if (usuario.foto) {
-            this.foto = { id: usuario.foto.id, nome: usuario.foto.nome, salvo: true};
+            this.foto = { id: usuario.foto.id, nome: usuario.foto.nome };
           } else {
             this.foto = null;
           }
@@ -71,11 +72,7 @@ export class UsuarioInformacoesComponent implements OnInit {
       if (result && result.status) {
 
         this._imagemService.toBase64(result.images[0])?.then(data => {
-
-          let imagem = { id: new Date().getTime(), data: data, salvo: false };
-
-          this.foto = imagem;
-          this.fotoToSave = result.images[0];
+          this.foto = { id: new Date().getTime(), data: data, file: result.images[0] };;
         });
       }
     });
@@ -96,6 +93,11 @@ export class UsuarioInformacoesComponent implements OnInit {
     this.form.disable();
   }
 
+  cancel() {
+    this.buildForm(this.usuario);
+    this.foto = this.usuario.foto ? { id: this.usuario.foto.id, nome: this.usuario.foto.nome } : null;
+  }
+
   removeFoto() {
     this.foto = null;
     this.form.get('foto')?.patchValue(null);
@@ -104,11 +106,12 @@ export class UsuarioInformacoesComponent implements OnInit {
   submit() {
 
     const usuario: Usuario = Object.assign({}, this.form.getRawValue());
+    const imagem: File = this.foto?.file;
 
-    this._usuarioService.update(usuario, this.fotoToSave).subscribe({
+    this._usuarioService.update(usuario, imagem).subscribe({
 
       next: (usuario) => {
-        this.fotoToSave = null;
+        this.foto ? this.foto.file = null : null;
         this._usuarioService.set(usuario);
         this._notificationService.show(MessageUtils.USUARIO_UPDATE_SUCCESS, NotificationType.SUCCESS);
       },

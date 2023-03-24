@@ -20,7 +20,6 @@ export class AnimalCadastroComponent implements OnInit {
   
   form!: FormGroup;
   foto!: any;
-  fotoToSave!: any;
 
   constructor(
     private _animalService: AnimalService,
@@ -48,11 +47,7 @@ export class AnimalCadastroComponent implements OnInit {
       if (result && result.status) {
 
         this._imagemService.toBase64(result.images[0])?.then(data => {
-
-          let imagem = { id: new Date().getTime(), data: data };
-
-          this.foto = imagem;
-          this.fotoToSave = result.images[0];
+          this.foto = { id: new Date().getTime(), data: data, file: result.images[0] };;
         });
       }
     });
@@ -81,7 +76,6 @@ export class AnimalCadastroComponent implements OnInit {
 
   removeFoto() {
     this.foto = null;
-    this.form.get('foto')?.patchValue(null);
   }
 
   selectTutor() {
@@ -103,8 +97,9 @@ export class AnimalCadastroComponent implements OnInit {
   submit() {
 
     const animal: Animal = Object.assign({}, this.form.getRawValue());
+    const imagem: File = this.foto?.file;
 
-    this._animalService.save(animal, this.fotoToSave).subscribe({
+    this._animalService.save(animal, imagem).subscribe({
 
       complete: () => {
         this._notificationService.show(MessageUtils.ANIMAL_SAVE_SUCCESS, NotificationType.SUCCESS);
