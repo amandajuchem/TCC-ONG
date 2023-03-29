@@ -3,7 +3,7 @@
     <div class="row my-3">
         <div class="col-12">
             <div class="text-end">
-                <button mat-icon-button (click)="form.enable()" *ngIf="form.disabled">
+                <button mat-icon-button (click)="update()" *ngIf="form.disabled">
                     <mat-icon>edit</mat-icon>
                 </button>
                 <button mat-icon-button (click)="submit()" *ngIf="form.enabled">

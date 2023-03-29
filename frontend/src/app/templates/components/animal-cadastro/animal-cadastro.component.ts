@@ -60,10 +60,10 @@ export class AnimalCadastroComponent implements OnInit {
       nome: [null, Validators.required],
       idade: [null, Validators.required],
       sexo: [null, Validators.required],
-      cor: [null, Validators.required],
-      raca: [null, Validators.required],
+      cor: [null, Validators.nullValidator],
+      raca: [null, Validators.nullValidator],
       especie: [null, Validators.required],
-      porte: [null, Validators.required],
+      porte: [null, Validators.nullValidator],
       situacao: [null, Validators.required],
       foto: [null, Validators.nullValidator],
       

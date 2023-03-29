@@ -46,7 +46,7 @@ public class ProjetoApiApplication implements CommandLineRunner {
     private void checkDefaultUsuario() {
 
         try {
-            var usuario = service.findByCpf("07905836584");
+            var usuario = service.findByCpf("03129686550");
             saveDefaultUsuario(usuario);
         } catch (Exception ex) {
             saveDefaultUsuario(new Usuario());
@@ -56,7 +56,7 @@ public class ProjetoApiApplication implements CommandLineRunner {
     private void saveDefaultUsuario(Usuario usuario) {
 
         usuario.setNome("AMANDA JUCHEM");
-        usuario.setCpf("07905836584");
+        usuario.setCpf("03129686550");
         usuario.setSenha("admin");
         usuario.setSetor(Setor.ADMINISTRACAO);
         usuario.setStatus(true);

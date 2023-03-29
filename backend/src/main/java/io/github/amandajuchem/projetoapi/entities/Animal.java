@@ -44,15 +44,12 @@ public class Animal extends AbstractEntity {
     @Enumerated(value = EnumType.STRING)
     private Sexo sexo;
 
-    @NotEmpty
     @Column(name = "raca", length = 50)
     private String raca;
 
-    @NotEmpty
     @Column(name = "cor", length = 50)
     private String cor;
 
-    @NotNull
     @Column(name = "porte", length = 10)
     @Enumerated(value = EnumType.STRING)
     private Porte porte;

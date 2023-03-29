@@ -85,8 +85,8 @@ export class UsuarioInformacoesComponent implements OnInit {
       nome: [usuario.nome, Validators.required],
       cpf: [usuario.cpf, Validators.required],
       senha: [usuario.senha, Validators.required],
-      setor: [{value: usuario.setor, disabled: usuario.cpf == this.user.username}, Validators.required],
-      status: [{value: usuario.status, disabled: usuario.cpf == this.user.username}, Validators.required],
+      setor: [usuario.setor, Validators.required],
+      status: [usuario.status, Validators.required],
       foto: [usuario.foto, Validators.nullValidator]
     });
 
@@ -121,5 +121,16 @@ export class UsuarioInformacoesComponent implements OnInit {
         this._notificationService.show(MessageUtils.USUARIO_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
       }
     });
+  }
+
+  update() {
+
+    this.form.enable();
+
+    if (this.usuario.cpf === this.user.username) {
+      this.form.get('cpf')?.disable();
+      this.form.get('setor')?.disable();
+      this.form.get('status')?.disable();
+    }
   }
 }
