@@ -71,6 +71,11 @@ public class MessageUtils {
     public static final String FEIRA_ADOCAO_NULL = "Exame nulo!";
 
     /**
+     * The constant FILE_NOT_FOUND.
+     */
+    public static final String FILE_NOT_FOUND = "Arquivo não encontrado!";
+
+    /**
      * The constant OBSERVACAO_NOT_FOUND.
      */
     public static final String OBSERVACAO_NOT_FOUND = "Observação não encontrada!";

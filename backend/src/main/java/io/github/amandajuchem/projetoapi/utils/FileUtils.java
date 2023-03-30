@@ -45,7 +45,7 @@ public class FileUtils {
         File file = new File(System.getProperty("user.dir") + path + File.separator + filename);
 
         if (!file.exists()) {
-            throw new FileNotFoundException("Arquivo não encontrado!");
+            throw new FileNotFoundException(MessageUtils.FILE_NOT_FOUND);
         }
 
         return file;
