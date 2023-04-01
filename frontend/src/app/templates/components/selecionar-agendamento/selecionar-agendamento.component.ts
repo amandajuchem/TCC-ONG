@@ -1,98 +1,55 @@
 import { DatePipe } from '@angular/common';
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { AfterViewInit, Component, Inject, ViewChild } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Agendamento } from 'src/app/entities/agendamento';
-import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { AgendamentoService } from 'src/app/services/agendamento.service';
-import { AuthService } from 'src/app/services/auth.service';
 import { NotificationService } from 'src/app/services/notification.service';
-import { DateUtils } from 'src/app/utils/date-utils';
 import { MessageUtils } from 'src/app/utils/message-utils';
 import { OperatorUtils } from 'src/app/utils/operator-utils';
 
-import { AgendamentoCadastroComponent } from '../agendamento-cadastro/agendamento-cadastro.component';
-import { AgendamentoExcluirComponent } from '../agendamento-excluir/agendamento-excluir.component';
-
 @Component({
-  selector: 'app-agendamentos',
-  templateUrl: './agendamentos.component.html',
-  styleUrls: ['./agendamentos.component.sass']
+  selector: 'app-selecionar-agendamento',
+  templateUrl: './selecionar-agendamento.component.html',
+  styleUrls: ['./selecionar-agendamento.component.sass']
 })
-export class AgendamentosComponent implements AfterViewInit {
-
+export class SelecionarAgendamentoComponent implements AfterViewInit {
+  
+  agendamento!: Agendamento;
+  agendamentos!: Array<Agendamento>;
   columns!: Array<string>;
   dataSource!: MatTableDataSource<Agendamento>;
   filterDate!: Date | null;
   filterString!: string;
   isLoadingResults!: boolean;
   resultsLength!: number;
-  user!: User;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
+    @Inject(MAT_DIALOG_DATA) private _data: any,
     private _agendamentoService: AgendamentoService,
-    private _authService: AuthService,
     private _datePipe: DatePipe,
-    private _dialog: MatDialog,
+    private _dialogRef: MatDialogRef<SelecionarAgendamentoComponent>,
     private _notificationService: NotificationService
   ) {
-    this.columns = ['index', 'dataHora', 'animal', 'veterinario', 'acao'];
+    this.agendamentos = [];
+    this.columns = ['index', 'dataHora', 'animal', 'veterinario'];
     this.dataSource = new MatTableDataSource();
     this.isLoadingResults = true;
     this.resultsLength = 0;
-    this.user = this._authService.getCurrentUser();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.findAll();
   }
 
-  add() {
-
-    this._dialog.open(AgendamentoCadastroComponent, {
-      data: {
-        agendamento: null
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-
-      next: (result) => {
-          
-        if (result && result.status) {
-          this.findAll();
-        }
-      }
-    });
-  }
-
-  delete(agendamento: Agendamento) {
-
-    this._dialog.open(AgendamentoExcluirComponent, {
-      data: {
-        agendamento: agendamento
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-
-      next: (result) => {
-          
-        if (result && result.status) {
-          this.findAll();
-        }
-      }
-    });
-  }
-
   async findAll() {
-
+    
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
     const sort = this.sort.active;
@@ -115,7 +72,7 @@ export class AgendamentosComponent implements AfterViewInit {
       error: (err) => {
         this.isLoadingResults = false;
         console.error(err);
-        this._notificationService.show(MessageUtils.AGENDAMENTOS_GET_FAIL, NotificationType.FAIL);    
+        this._notificationService.show(MessageUtils.AGENDAMENTOS_GET_FAIL, NotificationType.FAIL);
       }
     });
   }
@@ -174,6 +131,14 @@ export class AgendamentosComponent implements AfterViewInit {
     });
   }
 
+  select(agendamento: Agendamento) {
+    this._data.multiplus ? this.agendamentos.push(agendamento) : this.agendamento = agendamento;
+  }
+  
+  isSelected(agendamento: Agendamento) {
+    return this._data.multiplus ? this.agendamentos?.some(a => a.id === agendamento.id) : this.agendamento?.id === agendamento.id;
+  }
+
   sortChange() {
     
     this.paginator.pageIndex = 0;
@@ -191,22 +156,7 @@ export class AgendamentosComponent implements AfterViewInit {
     this.findAll();
   }
 
-  update(agendamento: Agendamento) {
-
-    this._dialog.open(AgendamentoCadastroComponent, {
-      data: {
-        agendamento: agendamento
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-
-      next: (result) => {
-          
-        if (result && result.status) {
-          this.findAll();
-        }
-      }
-    });
+  submit() {
+    this._dialogRef.close({ status: true, agendamento: this.agendamento, agendamentos: this.agendamentos });
   }
 }

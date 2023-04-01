@@ -82,7 +82,7 @@ export class AnimalAdocoesCadastroComponent implements OnInit {
 
     this.form = this._formBuilder.group({
       id: [adocao?.id, Validators.nullValidator],
-      dataHora: [adocao?.dataHora ? this.getDateWithTimeZone(adocao.dataHora) : null, Validators.required],
+      dataHora: [adocao?.dataHora, Validators.required],
       local: [adocao?.local, Validators.required],
       localAdocao: [adocao?.localAdocao, Validators.required],
       valeCastracao: [adocao?.valeCastracao, Validators.required],
@@ -110,10 +110,6 @@ export class AnimalAdocoesCadastroComponent implements OnInit {
     link.download = imagem.data;
     link.click();
     link.remove();
-  }
-
-  getDateWithTimeZone(date: any) {
-    return DateUtils.getDateWithTimeZone(date);
   }
 
   removeImagem(imagem: any) {
@@ -145,6 +141,7 @@ export class AnimalAdocoesCadastroComponent implements OnInit {
 
     const adocao: Adocao = Object.assign({}, this.form.getRawValue());
     const images = this.termoResponsabilidade.map((t: any) => t.file);
+    adocao.dataHora = DateUtils.addHours(adocao.dataHora, DateUtils.offsetBrasilia);
 
     if (adocao.id) {
 

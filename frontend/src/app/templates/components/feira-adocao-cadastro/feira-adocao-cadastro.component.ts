@@ -115,7 +115,7 @@ export class FeiraAdocaoCadastroComponent implements OnInit {
 
     this.form = this._formBuilder.group({
       id: [feiraAdocao?.id, Validators.nullValidator],
-      dataHora: [feiraAdocao?.dataHora ? this.getDateWithTimeZone(feiraAdocao.dataHora) : null, Validators.required],
+      dataHora: [feiraAdocao?.dataHora, Validators.required],
       nome: [feiraAdocao?.nome, Validators.required],
       animais: [feiraAdocao?.animais, Validators.nullValidator],
       usuarios: [feiraAdocao?.usuarios, Validators.nullValidator]
@@ -125,16 +125,10 @@ export class FeiraAdocaoCadastroComponent implements OnInit {
   dateChange() {
 
     if (this.form.get('dataHora')?.value) {
-
-      this.form.get('dataHora')?.patchValue(
-        DateUtils.getDateTimeWithoutSecondsAndMilliseconds(this.form.get('dataHora')?.value)
-      );
+      this.form.get('dataHora')?.patchValue(DateUtils.getDateTimeWithoutSecondsAndMilliseconds(this.form.get('dataHora')?.value));
     }
   }
 
-  getDateWithTimeZone(date: any) {
-    return DateUtils.getDateWithTimeZone(date);
-  }
 
   removeAnimal(animal: Animal) {
     this.dataSourceAnimais.data = this.dataSourceAnimais.data.filter(a => a.id !== animal.id);
@@ -150,6 +144,7 @@ export class FeiraAdocaoCadastroComponent implements OnInit {
 
     const feiraAdocao: FeiraAdocao = Object.assign({}, this.form.getRawValue());
 
+    feiraAdocao.dataHora = DateUtils.addHours(feiraAdocao.dataHora, DateUtils.offsetBrasilia);
     feiraAdocao.animais = this.dataSourceAnimais.data;
     feiraAdocao.usuarios = this.dataSourceUsuarios.data;
 

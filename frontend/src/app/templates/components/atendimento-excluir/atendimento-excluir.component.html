@@ -4,7 +4,7 @@
     <div mat-dialog-content>
         <div class="row">
             <div class="col-12">
-                <p class="text-dark">Deseja excluir o atendimento realizado no dia <strong>{{getDateWithTimeZone(data.atendimento.dataHora) | date: 'dd/MM/yyyy HH:mm'}}</strong> no 
+                <p class="text-dark">Deseja excluir o atendimento realizado no dia <strong>{{data.atendimento.dataHora | date: 'dd/MM/yyyy HH:mm'}}</strong> no 
                     animal <strong>{{data.atendimento.animal.nome}}</strong> pelo(a) veterinário(a) <strong>{{data.atendimento.veterinario.nome}}</strong>?
                 </p>
             </div>

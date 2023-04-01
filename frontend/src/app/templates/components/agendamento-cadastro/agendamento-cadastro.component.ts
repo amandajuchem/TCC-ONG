@@ -43,7 +43,7 @@ export class AgendamentoCadastroComponent implements OnInit {
 
     this.form = this._formBuilder.group({
       id: [agendamento?.id, Validators.nullValidator],
-      dataHora: [agendamento?.dataHora ? this.getDateWithTimeZone(agendamento.dataHora) : null, Validators.required],
+      dataHora: [agendamento?.dataHora, Validators.required],
       animal: [agendamento?.animal, Validators.required],
       veterinario: [agendamento?.veterinario, Validators.required],
       descricao: [agendamento?.descricao, Validators.required]
@@ -53,14 +53,8 @@ export class AgendamentoCadastroComponent implements OnInit {
   dateChange() {
 
     if (this.form.get('dataHora')?.value) {
-      
-      this.form.get('dataHora')?.patchValue(
-        DateUtils.getDateTimeWithoutSecondsAndMilliseconds(this.form.get('dataHora')?.value));
+      this.form.get('dataHora')?.patchValue(DateUtils.getDateTimeWithoutSecondsAndMilliseconds(this.form.get('dataHora')?.value));
     }
-  }
-
-  getDateWithTimeZone(date: any) {
-    return DateUtils.getDateWithTimeZone(date);
   }
 
   selectAnimal() {
@@ -104,6 +98,7 @@ export class AgendamentoCadastroComponent implements OnInit {
   submit() {
 
     const agendamento: Agendamento = Object.assign({}, this.form.getRawValue());
+    agendamento.dataHora = DateUtils.addHours(agendamento.dataHora, DateUtils.offsetBrasilia);
 
     if (agendamento.id) {
 

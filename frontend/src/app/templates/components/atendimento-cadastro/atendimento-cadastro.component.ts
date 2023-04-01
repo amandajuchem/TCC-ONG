@@ -16,6 +16,8 @@ import { SelecionarAnimalComponent } from '../selecionar-animal/selecionar-anima
 import { SelecionarExameComponent } from '../selecionar-exame/selecionar-exame.component';
 import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-imagem.component';
 import { SelecionarUsuarioComponent } from '../selecionar-usuario/selecionar-usuario.component';
+import { SelecionarAgendamentoComponent } from '../selecionar-agendamento/selecionar-agendamento.component';
+import { Agendamento } from 'src/app/entities/agendamento';
 
 @Component({
   selector: 'app-atendimento-cadastro',
@@ -113,7 +115,7 @@ export class AtendimentoCadastroComponent implements OnInit {
       animal: [atendimento?.animal, Validators.required],
       veterinario: [atendimento?.veterinario, Validators.required],
       comorbidades: [atendimento?.animal.fichaMedica.comorbidades, Validators.nullValidator],
-      dataHora: [atendimento?.dataHora ? this.getDateWithTimeZone(atendimento.dataHora) : null, Validators.required],
+      dataHora: [atendimento?.dataHora, Validators.required],
       motivo: [atendimento?.motivo, Validators.required],
       diagnostico: [atendimento?.diagnostico, Validators.required],
       posologia: [atendimento?.posologia, Validators.required],
@@ -125,9 +127,7 @@ export class AtendimentoCadastroComponent implements OnInit {
   dateChange() {
 
     if (this.form.get('dataHora')?.value) {
-
-      this.form.get('dataHora')?.patchValue(
-        DateUtils.getDateTimeWithoutSecondsAndMilliseconds(this.form.get('dataHora')?.value));
+      this.form.get('dataHora')?.patchValue(DateUtils.getDateTimeWithoutSecondsAndMilliseconds(this.form.get('dataHora')?.value));
     }
   }
 
@@ -141,8 +141,29 @@ export class AtendimentoCadastroComponent implements OnInit {
     link.remove();
   }
 
-  getDateWithTimeZone(date: any) {
-    return DateUtils.getDateWithTimeZone(date);
+  importFromAgendamento() {
+
+    this._dialog.open(SelecionarAgendamentoComponent, {
+      data: {
+        multiplus: false
+      },
+      width: '100%'
+    })
+    .afterClosed().subscribe({
+
+      next: (result) => {
+
+        if (result && result.status) {
+          
+          const agendamento: Agendamento = result.agendamento;
+
+          this.form.get('animal')?.patchValue(agendamento.animal);
+          this.form.get('veterinario')?.patchValue(agendamento.veterinario);
+          this.form.get('comorbidades')?.patchValue(agendamento.animal.fichaMedica.comorbidades);
+          this.form.get('dataHora')?.patchValue(agendamento.dataHora);
+        }
+      }
+    });
   }
 
   removeExame(exame: Exame) {
@@ -203,6 +224,7 @@ export class AtendimentoCadastroComponent implements OnInit {
 
     const atendimento: Atendimento = Object.assign({}, this.form.getRawValue());
     const imagens: Array<File> = this.documentos.map((d: any) => d.file);
+    atendimento.dataHora = DateUtils.addHours(atendimento.dataHora, DateUtils.offsetBrasilia);
 
     if (atendimento.id) {
 

@@ -120,10 +120,6 @@ export class AtendimentosComponent implements AfterViewInit {
     });
   }
 
-  getDateWithTimeZone(date: any) {
-    return DateUtils.getDateWithTimeZone(date);
-  }
-
   pageChange() {
     
     if (this.filterDate) {

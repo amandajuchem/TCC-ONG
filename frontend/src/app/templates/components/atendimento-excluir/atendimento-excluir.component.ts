@@ -3,7 +3,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { AtendimentoService } from 'src/app/services/atendimento.service';
 import { NotificationService } from 'src/app/services/notification.service';
-import { DateUtils } from 'src/app/utils/date-utils';
 import { MessageUtils } from 'src/app/utils/message-utils';
 
 @Component({
@@ -19,10 +18,6 @@ export class AtendimentoExcluirComponent {
     private _dialogRef: MatDialogRef<AtendimentoExcluirComponent>,
     private _notificationService: NotificationService
   ) { }
-
-  getDateWithTimeZone(date: Date) {
-    return DateUtils.getDateWithTimeZone(date);
-  }
 
   submit() {
 

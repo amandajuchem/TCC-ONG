@@ -73,7 +73,7 @@
                         <!-- Data Hora Column -->
                         <ng-container matColumnDef="dataHora">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-dataHora">Data</th>
-                            <td mat-cell *matCellDef="let feiraAdocao" class="text-center">{{getDateWithTimeZone(feiraAdocao.dataHora) | date: 'dd/MM/yyyy HH:mm'}}</td>
+                            <td mat-cell *matCellDef="let feiraAdocao" class="text-center">{{feiraAdocao.dataHora | date: 'dd/MM/yyyy HH:mm'}}</td>
                         </ng-container>
 
                         <!-- Nome Column -->

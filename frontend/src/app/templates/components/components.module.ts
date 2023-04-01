@@ -70,6 +70,7 @@ import { UsuarioCadastroComponent } from './usuario-cadastro/usuario-cadastro.co
 import { UsuarioInformacoesComponent } from './usuario-informacoes/usuario-informacoes.component';
 import { UsuarioComponent } from './usuario/usuario.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
+import { SelecionarAgendamentoComponent } from './selecionar-agendamento/selecionar-agendamento.component';
 
 @NgModule({
   declarations: [
@@ -119,6 +120,7 @@ import { UsuariosComponent } from './usuarios/usuarios.component';
     FeirasAdocaoComponent,
     FeiraAdocaoCadastroComponent,
     FeiraAdocaoExcluirComponent,
+    SelecionarAgendamentoComponent,
   ],
   imports: [
     CommonModule,

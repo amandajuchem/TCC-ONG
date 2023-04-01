@@ -1,5 +1,18 @@
 export class DateUtils {
 
+    static offsetBrasilia: number = -3;
+
+    /**
+     * 
+     * @param date 
+     * @param hours 
+     */
+    static addHours(date: Date, hours: number) {
+        date = new Date(date);
+        date.setHours(date.getHours() + hours);
+        return date;
+    }
+
     /**
      * 
      * @param date 

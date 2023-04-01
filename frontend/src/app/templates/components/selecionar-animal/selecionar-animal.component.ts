@@ -69,7 +69,7 @@ export class SelecionarAnimalComponent implements AfterViewInit {
       error: (err) => {
         this.isLoadingResults = false;
         console.error(err);
-        this._notificationService.show(MessageUtils.ANIMAL_GET_FAIL, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.ANIMAIS_GET_FAIL, NotificationType.FAIL);
       }
     });
   }
@@ -109,7 +109,7 @@ export class SelecionarAnimalComponent implements AfterViewInit {
       error: (err) => {
         this.isLoadingResults = false;
         console.error(err);
-        this._notificationService.show(MessageUtils.ANIMAL_GET_FAIL, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.ANIMAIS_GET_FAIL, NotificationType.FAIL);
       }
     });
   }
