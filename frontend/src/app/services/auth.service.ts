@@ -18,7 +18,7 @@ export class AuthService {
     this._jwtHelper = new JwtHelperService();
   }
 
-  getCurrentUser() {
+  getCurrentUser(): User {
     
     let user!: User;
 

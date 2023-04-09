@@ -1,16 +1,20 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Agendamento } from 'src/app/entities/agendamento';
+import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { Setor } from 'src/app/enums/setor';
 import { AgendamentoService } from 'src/app/services/agendamento.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { DateUtils } from 'src/app/utils/date-utils';
 import { MessageUtils } from 'src/app/utils/message-utils';
 
 import { SelecionarAnimalComponent } from '../selecionar-animal/selecionar-animal.component';
 import { SelecionarUsuarioComponent } from '../selecionar-usuario/selecionar-usuario.component';
+import { AgendamentoExcluirComponent } from '../agendamento-excluir/agendamento-excluir.component';
 
 @Component({
   selector: 'app-agendamento-cadastro',
@@ -19,24 +23,46 @@ import { SelecionarUsuarioComponent } from '../selecionar-usuario/selecionar-usu
 })
 export class AgendamentoCadastroComponent implements OnInit {
 
+  agendamento!: Agendamento;
   form!: FormGroup;
+  user!: User;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    private _activatedRoute: ActivatedRoute,
     private _agendamentoService: AgendamentoService,
+    private _authService: AuthService,
     private _dialog: MatDialog,
-    private _dialogRef: MatDialogRef<AgendamentoCadastroComponent>,
     private _formBuilder: FormBuilder,
-    private _notificationService: NotificationService
+    private _notificationService: NotificationService,
+    private _router: Router
   ) { }
 
   ngOnInit(): void {
 
-    if (this.data.agendamento) {
-      this.buildForm(this.data.agendamento);
-    } else {
-      this.buildForm(null);
-    }
+    this.user = this._authService.getCurrentUser();
+
+    this._activatedRoute.params.subscribe({
+
+      next: (params: any) => {
+          
+        if (params && params.id) {
+          
+          if (params.id.includes('cadastro')) {
+            this.buildForm(null);
+          }
+          
+          else {
+            this._agendamentoService.findById(params.id).subscribe({
+
+              next: (agendamento) => {
+                this.agendamento = agendamento;
+                this.buildForm(agendamento);
+              },
+            });
+          }
+        }  
+      }
+    });
   }
 
   buildForm(agendamento: Agendamento | null) {
@@ -48,6 +74,19 @@ export class AgendamentoCadastroComponent implements OnInit {
       veterinario: [agendamento?.veterinario, Validators.required],
       descricao: [agendamento?.descricao, Validators.required]
     });
+
+    agendamento?.id ? this.form.disable() : this.form.enable();
+  }
+
+  cancel() {
+    
+    if (this.agendamento) {
+      this.buildForm(this.agendamento);
+    }
+
+    else {
+      this._router.navigate(['/' + this.user.role.toLowerCase() + '/agendamentos']);
+    }
   }
 
   dateChange() {
@@ -55,6 +94,25 @@ export class AgendamentoCadastroComponent implements OnInit {
     if (this.form.get('dataHora')?.value) {
       this.form.get('dataHora')?.patchValue(DateUtils.getDateTimeWithoutSecondsAndMilliseconds(this.form.get('dataHora')?.value));
     }
+  }
+
+  delete() {
+
+    this._dialog.open(AgendamentoExcluirComponent, {
+      data: {
+        agendamento: this.agendamento
+      },
+      width: '100%'
+    })
+    .afterClosed().subscribe({
+
+      next: (result) => {
+          
+        if (result && result.status) {
+          this._router.navigate(['/' + this.user.role.toLowerCase() + '/agendamentos']);
+        }
+      }
+    });
   }
 
   selectAnimal() {
@@ -104,9 +162,9 @@ export class AgendamentoCadastroComponent implements OnInit {
 
       this._agendamentoService.update(agendamento).subscribe({
 
-        complete: () => {
+        next: (agendamento) => {
           this._notificationService.show(MessageUtils.AGENDAMENTO_UPDATE_SUCCESS, NotificationType.SUCCESS);
-          this._dialogRef.close({ status: true });
+          this.buildForm(agendamento);
         },
 
         error: (error) => {
@@ -120,9 +178,9 @@ export class AgendamentoCadastroComponent implements OnInit {
 
       this._agendamentoService.save(agendamento).subscribe({
 
-        complete: () => {
+        next: (agendamento) => {
           this._notificationService.show(MessageUtils.AGENDAMENTO_SAVE_SUCCESS, NotificationType.SUCCESS);
-          this._dialogRef.close({ status: true });
+          this._router.navigate(['/' + this.user.role.toLowerCase() + '/agendamentos/' + agendamento.id]);
         },
 
         error: (error) => {

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from 'src/app/guards/auth.guard';
 
+import { AgendamentoCadastroComponent } from '../../components/agendamento-cadastro/agendamento-cadastro.component';
 import { AgendamentosComponent } from '../../components/agendamentos/agendamentos.component';
 import { AnimaisComponent } from '../../components/animais/animais.component';
 import { AnimalComponent } from '../../components/animal/animal.component';
@@ -19,6 +20,7 @@ const routes: Routes = [
   {
     path: '', component: LayoutComponent, children: [
       { path: 'agendamentos', component: AgendamentosComponent, canActivate: [AuthGuard] },
+      { path: 'agendamentos/:id', component: AgendamentoCadastroComponent, canActivate: [AuthGuard] },
       { path: 'animais', component: AnimaisComponent, canActivate: [AuthGuard] },
       { path: 'animais/:id', component: AnimalComponent, canActivate: [AuthGuard] },
       { path: 'atendimentos', component: AtendimentosComponent, canActivate: [AuthGuard] },

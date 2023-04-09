@@ -56,6 +56,18 @@ public class AgendamentoController {
     }
 
     /**
+     * Find agendamento by id
+     * 
+     * @param id the id
+     * @return the response entity
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable UUID id) {
+        var agendamento = service.findById(id);
+        return ResponseEntity.status(OK).body(AgendamentoDTO.toDTO(agendamento));
+    }
+
+    /**
      * Save agendamento.
      *
      * @param agendamento the agendamento
