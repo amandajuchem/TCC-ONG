@@ -20,7 +20,7 @@ import javax.validation.constraints.NotEmpty;
 public class Observacao extends AbstractEntity {
 
     @NotEmpty
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "VARCHAR")
     private String conteudo;
 
     @ManyToOne

@@ -34,11 +34,11 @@ public class Atendimento extends AbstractEntity {
     private Motivo motivo;
 
     @NotEmpty
-    @Column(name = "diagnostico", columnDefinition = "TEXT")
+    @Column(name = "diagnostico", columnDefinition = "VARCHAR")
     private String diagnostico;
 
     @NotEmpty
-    @Column(name = "posologia", columnDefinition = "TEXT")
+    @Column(name = "posologia", columnDefinition = "VARCHAR")
     private String posologia;
 
     @OneToMany

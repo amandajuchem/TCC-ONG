@@ -4,16 +4,20 @@ jwt:
 
 spring:
   datasource:
-    driver-class-name: org.postgresql.Driver
-    password: ${APP_DATASOURCE_PASSWORD}
-    url: ${APP_DATASOURCE_URL}
-    username: ${APP_DATASOURCE_USERNAME}
+    driver-class-name: org.h2.Driver
+    password: projetoapi
+    url: jdbc:h2:file:./data/database/database
+    username: projetoapi
+  h2:
+    console:
+      enabled: true
+      path: /database/h2-console
   jpa:
     hibernate:
       ddl-auto: validate
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.dialect.H2Dialect
         format_sql: true
     show-sql: false
   servlet:

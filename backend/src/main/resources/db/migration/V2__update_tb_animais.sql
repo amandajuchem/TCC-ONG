@@ -1,1 +1,0 @@
-ALTER TABLE tb_animais ALTER COLUMN porte DROP NOT NULL;

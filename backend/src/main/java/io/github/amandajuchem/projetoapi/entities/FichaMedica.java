@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 public class FichaMedica extends AbstractEntity {
 
     @NotEmpty
-    @Column(name = "comorbidades", columnDefinition = "TEXT")
+    @Column(name = "comorbidades", columnDefinition = "VARCHAR")
     private String comorbidades;
 
     @NotNull

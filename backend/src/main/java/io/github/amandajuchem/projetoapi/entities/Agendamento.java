@@ -27,7 +27,7 @@ public class Agendamento extends AbstractEntity {
     private LocalDateTime dataHora;
 
     @NotEmpty
-    @Column(name = "descricao", columnDefinition = "TEXT")
+    @Column(name = "descricao", columnDefinition = "VARCHAR")
     private String descricao;
 
     @OneToOne

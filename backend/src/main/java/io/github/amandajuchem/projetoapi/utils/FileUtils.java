@@ -25,12 +25,12 @@ public class FileUtils {
     /**
      * The constant DOCUMENTS_DIRECTORY.
      */
-    public static final String DOCUMENTS_DIRECTORY = File.separator + "files" + File.separator + "documents";
+    public static final String DOCUMENTS_DIRECTORY = File.separator + "data" + File.separator + "files" + File.separator + "documents";
 
     /**
      * The constant IMAGES_DIRECTORY.
      */
-    public static final String IMAGES_DIRECTORY = File.separator + "files" + File.separator + "images";
+    public static final String IMAGES_DIRECTORY = File.separator + "data" + File.separator + "files" + File.separator + "images";
 
     /**
      * Find file.

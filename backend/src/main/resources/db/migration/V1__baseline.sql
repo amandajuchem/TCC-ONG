@@ -1,14 +1,14 @@
 CREATE TABLE tb_adocoes
 (
-    id                 UUID                        NOT NULL,
-    created_date       TIMESTAMP WITHOUT TIME ZONE,
-    last_modified_date TIMESTAMP WITHOUT TIME ZONE,
+    id                 UUID      NOT NULL,
+    created_date       TIMESTAMP,
+    last_modified_date TIMESTAMP,
     created_by_user    VARCHAR(11),
     modified_by_user   VARCHAR(11),
-    data_hora          TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    data_hora          TIMESTAMP NOT NULL,
     local              VARCHAR(10),
     local_adocao       VARCHAR(10),
-    vale_castracao     BOOLEAN                     NOT NULL,
+    vale_castracao     BOOLEAN   NOT NULL,
     animal_id          UUID,
     tutor_id           UUID,
     CONSTRAINT pk_tb_adocoes PRIMARY KEY (id)
@@ -22,13 +22,13 @@ CREATE TABLE tb_adocoes_termo_responsabilidade
 
 CREATE TABLE tb_agendamentos
 (
-    id                 UUID                        NOT NULL,
-    created_date       TIMESTAMP WITHOUT TIME ZONE,
-    last_modified_date TIMESTAMP WITHOUT TIME ZONE,
+    id                 UUID      NOT NULL,
+    created_date       TIMESTAMP,
+    last_modified_date TIMESTAMP,
     created_by_user    VARCHAR(11),
     modified_by_user   VARCHAR(11),
-    data_hora          TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-    descricao          TEXT,
+    data_hora          TIMESTAMP NOT NULL,
+    descricao          VARCHAR,
     animal_id          UUID,
     veterinario_id     UUID,
     CONSTRAINT pk_tb_agendamentos PRIMARY KEY (id)
@@ -37,17 +37,17 @@ CREATE TABLE tb_agendamentos
 CREATE TABLE tb_animais
 (
     id                 UUID        NOT NULL,
-    created_date       TIMESTAMP WITHOUT TIME ZONE,
-    last_modified_date TIMESTAMP WITHOUT TIME ZONE,
+    created_date       TIMESTAMP,
+    last_modified_date TIMESTAMP,
     created_by_user    VARCHAR(11),
     modified_by_user   VARCHAR(11),
     nome               VARCHAR(50),
-    idade              INTEGER     NOT NULL,
+    idade              INT         NOT NULL,
     especie            VARCHAR(10) NOT NULL,
     sexo               VARCHAR(5)  NOT NULL,
     raca               VARCHAR(50),
     cor                VARCHAR(50),
-    porte              VARCHAR(10) NOT NULL,
+    porte              VARCHAR(10),
     situacao           VARCHAR(10) NOT NULL,
     foto_id            UUID,
     ficha_medica_id    UUID,
@@ -56,15 +56,15 @@ CREATE TABLE tb_animais
 
 CREATE TABLE tb_atendimentos
 (
-    id                 UUID                        NOT NULL,
-    created_date       TIMESTAMP WITHOUT TIME ZONE,
-    last_modified_date TIMESTAMP WITHOUT TIME ZONE,
+    id                 UUID        NOT NULL,
+    created_date       TIMESTAMP,
+    last_modified_date TIMESTAMP,
     created_by_user    VARCHAR(11),
     modified_by_user   VARCHAR(11),
-    data_hora          TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-    motivo             VARCHAR(25)                 NOT NULL,
-    diagnostico        TEXT,
-    posologia          TEXT,
+    data_hora          TIMESTAMP   NOT NULL,
+    motivo             VARCHAR(25) NOT NULL,
+    diagnostico        VARCHAR,
+    posologia          VARCHAR,
     animal_id          UUID,
     veterinario_id     UUID,
     CONSTRAINT pk_tb_atendimentos PRIMARY KEY (id)
@@ -86,8 +86,8 @@ CREATE TABLE tb_atendimentos_exames
 CREATE TABLE tb_enderecos
 (
     id                 UUID        NOT NULL,
-    created_date       TIMESTAMP WITHOUT TIME ZONE,
-    last_modified_date TIMESTAMP WITHOUT TIME ZONE,
+    created_date       TIMESTAMP,
+    last_modified_date TIMESTAMP,
     created_by_user    VARCHAR(11),
     modified_by_user   VARCHAR(11),
     rua                VARCHAR(100),
@@ -103,8 +103,8 @@ CREATE TABLE tb_enderecos
 CREATE TABLE tb_exames
 (
     id                 UUID NOT NULL,
-    created_date       TIMESTAMP WITHOUT TIME ZONE,
-    last_modified_date TIMESTAMP WITHOUT TIME ZONE,
+    created_date       TIMESTAMP,
+    last_modified_date TIMESTAMP,
     created_by_user    VARCHAR(11),
     modified_by_user   VARCHAR(11),
     nome               VARCHAR(100),
@@ -114,13 +114,13 @@ CREATE TABLE tb_exames
 
 CREATE TABLE tb_feiras_adocao
 (
-    id                 UUID                        NOT NULL,
-    created_date       TIMESTAMP WITHOUT TIME ZONE,
-    last_modified_date TIMESTAMP WITHOUT TIME ZONE,
+    id                 UUID      NOT NULL,
+    created_date       TIMESTAMP,
+    last_modified_date TIMESTAMP,
     created_by_user    VARCHAR(11),
     modified_by_user   VARCHAR(11),
     nome               VARCHAR(100),
-    data_hora          TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    data_hora          TIMESTAMP NOT NULL,
     CONSTRAINT pk_tb_feiras_adocao PRIMARY KEY (id)
 );
 
@@ -141,11 +141,11 @@ CREATE TABLE tb_feiras_adocao_usuarios
 CREATE TABLE tb_fichas_medicas
 (
     id                 UUID    NOT NULL,
-    created_date       TIMESTAMP WITHOUT TIME ZONE,
-    last_modified_date TIMESTAMP WITHOUT TIME ZONE,
+    created_date       TIMESTAMP,
+    last_modified_date TIMESTAMP,
     created_by_user    VARCHAR(11),
     modified_by_user   VARCHAR(11),
-    comorbidades       TEXT,
+    comorbidades       VARCHAR,
     castrado           BOOLEAN NOT NULL,
     CONSTRAINT pk_tb_fichas_medicas PRIMARY KEY (id)
 );
@@ -153,8 +153,8 @@ CREATE TABLE tb_fichas_medicas
 CREATE TABLE tb_imagens
 (
     id                 UUID NOT NULL,
-    created_date       TIMESTAMP WITHOUT TIME ZONE,
-    last_modified_date TIMESTAMP WITHOUT TIME ZONE,
+    created_date       TIMESTAMP,
+    last_modified_date TIMESTAMP,
     created_by_user    VARCHAR(11),
     modified_by_user   VARCHAR(11),
     nome               VARCHAR(25),
@@ -164,11 +164,11 @@ CREATE TABLE tb_imagens
 CREATE TABLE tb_observacoes
 (
     id                 UUID NOT NULL,
-    created_date       TIMESTAMP WITHOUT TIME ZONE,
-    last_modified_date TIMESTAMP WITHOUT TIME ZONE,
+    created_date       TIMESTAMP,
+    last_modified_date TIMESTAMP,
     created_by_user    VARCHAR(11),
     modified_by_user   VARCHAR(11),
-    conteudo           TEXT,
+    conteudo           VARCHAR,
     tutor_id           UUID,
     CONSTRAINT pk_tb_observacoes PRIMARY KEY (id)
 );
@@ -176,8 +176,8 @@ CREATE TABLE tb_observacoes
 CREATE TABLE tb_telefones
 (
     id                 UUID NOT NULL,
-    created_date       TIMESTAMP WITHOUT TIME ZONE,
-    last_modified_date TIMESTAMP WITHOUT TIME ZONE,
+    created_date       TIMESTAMP,
+    last_modified_date TIMESTAMP,
     created_by_user    VARCHAR(11),
     modified_by_user   VARCHAR(11),
     numero             VARCHAR(11),
@@ -187,8 +187,8 @@ CREATE TABLE tb_telefones
 CREATE TABLE tb_tutores
 (
     id                 UUID        NOT NULL,
-    created_date       TIMESTAMP WITHOUT TIME ZONE,
-    last_modified_date TIMESTAMP WITHOUT TIME ZONE,
+    created_date       TIMESTAMP,
+    last_modified_date TIMESTAMP,
     created_by_user    VARCHAR(11),
     modified_by_user   VARCHAR(11),
     nome               VARCHAR(100),
@@ -209,8 +209,8 @@ CREATE TABLE tb_tutores_telefones
 CREATE TABLE tb_usuarios
 (
     id                 UUID        NOT NULL,
-    created_date       TIMESTAMP WITHOUT TIME ZONE,
-    last_modified_date TIMESTAMP WITHOUT TIME ZONE,
+    created_date       TIMESTAMP,
+    last_modified_date TIMESTAMP,
     created_by_user    VARCHAR(11),
     modified_by_user   VARCHAR(11),
     nome               VARCHAR(100),
