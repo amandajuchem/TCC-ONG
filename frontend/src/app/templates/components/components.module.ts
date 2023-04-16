@@ -31,7 +31,6 @@ import { AnimaisComponent } from './animais/animais.component';
 import { AnimalAdocoesCadastroComponent } from './animal-adocoes-cadastro/animal-adocoes-cadastro.component';
 import { AnimalAdocoesExcluirComponent } from './animal-adocoes-excluir/animal-adocoes-excluir.component';
 import { AnimalAdocoesComponent } from './animal-adocoes/animal-adocoes.component';
-import { AnimalCadastroComponent } from './animal-cadastro/animal-cadastro.component';
 import { AnimalExcluirComponent } from './animal-excluir/animal-excluir.component';
 import { AnimalFichaMedicaComponent } from './animal-ficha-medica/animal-ficha-medica.component';
 import { AnimalInformacoesComponent } from './animal-informacoes/animal-informacoes.component';
@@ -81,7 +80,6 @@ import { SelecionarAgendamentoComponent } from './selecionar-agendamento/selecio
     AnimalAdocoesComponent,
     AnimalAdocoesCadastroComponent,
     AnimalAdocoesExcluirComponent,
-    AnimalCadastroComponent,
     AnimalExcluirComponent,
     AnimalFichaMedicaComponent,
     AnimalInformacoesComponent,

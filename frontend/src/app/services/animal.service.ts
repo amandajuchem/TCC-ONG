@@ -108,7 +108,7 @@ export class AnimalService implements AbstractService<Animal> {
    *
    * @param animal
    */
-  set(animal: Animal) {
+  set(animal: Animal | null) {
     this._subject.next(animal);
   }
 

@@ -15,7 +15,7 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 })
 export class AnimalComponent implements OnInit {
 
-  animal!: Animal;
+  animal!: Animal | null;
   user!: User;
 
   constructor(
@@ -31,33 +31,38 @@ export class AnimalComponent implements OnInit {
 
     this._activatedRoute.params.subscribe({
 
-      next: (x: any) => {
+      next: (params: any) => {
           
-        if (x && x.id) {
+        
+        if (params && params.id) {
           
-          this._animalService.findById(x.id).subscribe({
-            
-            next: (animal) => {
-              this._animalService.set(animal);
-            },
+          if (params.id.includes('cadastro')) {
+            this._animalService.set(null);
+          }
 
-            error: (error) => {
-              console.error(error);
-              this._notificationService.show(MessageUtils.ANIMAL_GET_FAIL, NotificationType.FAIL); 
-            }
-          });
+          else {
+
+            this._animalService.findById(params.id).subscribe({
+            
+              next: (animal) => {
+                this._animalService.set(animal);
+              },
+  
+              error: (error) => {
+                console.error(error);
+                this._notificationService.show(MessageUtils.ANIMAL_GET_FAIL, NotificationType.FAIL); 
+              }
+            });
+          }
         }
-      },
+      }
     });
 
     this._animalService.get().subscribe({
 
       next: (animal) => {
-        
-        if (animal) {
-          this.animal = animal;
-        }
-      },
+        this.animal = animal;
+      }
     });
   }
 }

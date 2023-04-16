@@ -57,6 +57,10 @@ export class AnimalInformacoesComponent implements OnInit {
             this.foto = null;
           }
         }
+
+        else {
+          this.buildForm(null);
+        }
       }
     });
   }
@@ -80,29 +84,29 @@ export class AnimalInformacoesComponent implements OnInit {
     });
   }
 
-  buildForm(animal: Animal) {
+  buildForm(animal: Animal | null) {
 
-    this.form =this._formBuilder.group({
-      id: [animal.id, Validators.nullValidator],
-      nome: [animal.nome, Validators.required],
-      idade: [animal.idade, Validators.required],
-      sexo: [animal.sexo, Validators.required],
-      cor: [animal.cor, Validators.nullValidator],
-      raca: [animal.raca, Validators.nullValidator],
-      especie: [animal.especie, Validators.required],
-      porte: [animal.porte, Validators.nullValidator],
-      situacao: [animal.situacao, Validators.required],
-      foto: [animal.foto, Validators.nullValidator],
-      fichaMedica: [animal.fichaMedica, Validators.nullValidator],
+    this.form = this._formBuilder.group({
+      id: [animal?.id, Validators.nullValidator],
+      nome: [animal?.nome, Validators.required],
+      idade: [animal?.idade, Validators.required],
+      sexo: [animal?.sexo, Validators.required],
+      cor: [animal?.cor, Validators.nullValidator],
+      raca: [animal?.raca, Validators.nullValidator],
+      especie: [animal?.especie, Validators.required],
+      porte: [animal?.porte, Validators.nullValidator],
+      situacao: [animal?.situacao, Validators.required],
+      foto: [animal?.foto, Validators.nullValidator],
+      fichaMedica: [animal?.fichaMedica, Validators.nullValidator],
       adocoes: [[], Validators.nullValidator]
     });
 
-    this.form.disable();
+    animal ? this.form.disable() : this.form.enable();
   }
 
   cancel() {
-    this.buildForm(this.animal);
-    this.foto = this.animal.foto ? { id: this.animal.foto.id, nome: this.animal.foto.nome } : null;
+    this.foto = this.animal?.foto ? { id: this.animal?.foto.id, nome: this.animal?.foto.nome } : null;
+    this.animal ? this.buildForm(this.animal) : this._router.navigate(['/' + this.user.role.toLowerCase() + '/animais']);
   }
 
   delete() {
@@ -134,18 +138,38 @@ export class AnimalInformacoesComponent implements OnInit {
     const animal: Animal = Object.assign({}, this.form.getRawValue());
     const imagem: File = this.foto?.file;
 
-    this._animalService.update(animal, imagem).subscribe({
+    if (animal.id) {
 
-      next: (animal) => {
-        this.foto ? this.foto.file = null : null;
-        this._animalService.set(animal);
-        this._notificationService.show(MessageUtils.ANIMAL_UPDATE_SUCCESS, NotificationType.SUCCESS);
-      },
+      this._animalService.update(animal, imagem).subscribe({
 
-      error: (error) => {
-        console.error(error);
-        this._notificationService.show(MessageUtils.ANIMAL_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
-      }
-    });
+        next: (animal) => {
+          this.foto ? this.foto.file = null : null;
+          this._router.navigate(['/' + this.user.role.toLowerCase() + '/animais/' + animal.id]);
+          this._notificationService.show(MessageUtils.ANIMAL_UPDATE_SUCCESS, NotificationType.SUCCESS);
+        },
+  
+        error: (error) => {
+          console.error(error);
+          this._notificationService.show(MessageUtils.ANIMAL_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
+        }
+      });
+    }
+
+    else {
+
+      this._animalService.save(animal, imagem).subscribe({
+
+        next: (animal) => {
+          this.foto ? this.foto.file = null : null;
+          this._router.navigate(['/' + this.user.role.toLowerCase() + '/animais/' + animal.id]);
+          this._notificationService.show(MessageUtils.ANIMAL_SAVE_SUCCESS, NotificationType.SUCCESS);
+        },
+  
+        error: (error) => {
+          console.error(error);
+          this._notificationService.show(MessageUtils.ANIMAL_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
+        }
+      });
+    }
   }
 }

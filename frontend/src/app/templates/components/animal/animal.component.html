@@ -4,17 +4,17 @@
             <ol class="breadcrumb m-0">
                 <li class="breadcrumb-item"><a class="text-white" [routerLink]="'/' + user.role.toLowerCase() + '/painel'">Início</a></li>
                 <li class="breadcrumb-item"><a class="text-white" [routerLink]="'/' + user.role.toLowerCase() + '/animais'">Animais</a></li>
-                <li class="breadcrumb-item active" aria-current="page" *ngIf="animal">{{animal.nome}}</li>
+                <li class="breadcrumb-item active" aria-current="page">{{animal ? animal.nome : 'Cadastro'}}</li>
             </ol>
         </nav>
     </div>
 </div>
 
-<mat-card *ngIf="animal">
+<mat-card>
     <mat-card-header>
         <div class="mat-card-header-text">
             <div class="text-center">
-                <h2>{{animal.nome}}</h2>
+                <h2>{{animal ? animal.nome : 'Cadastrar Animal'}}</h2>
             </div>
         </div>
     </mat-card-header>
@@ -26,12 +26,12 @@
                     <app-animal-informacoes></app-animal-informacoes>
                 </ng-template>
             </mat-tab>
-            <mat-tab label="Ficha Médica">
+            <mat-tab label="Ficha Médica" *ngIf="animal">
                 <ng-template matTabContent>
                     <app-animal-ficha-medica></app-animal-ficha-medica>
                 </ng-template>
             </mat-tab>
-            <mat-tab label="Adoções">
+            <mat-tab label="Adoções" *ngIf="animal">
                 <ng-template matTabContent>
                     <app-animal-adocoes></app-animal-adocoes>
                 </ng-template>

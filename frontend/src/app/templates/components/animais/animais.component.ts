@@ -1,8 +1,6 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { Animal } from 'src/app/entities/animal';
 import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
@@ -11,8 +9,6 @@ import { AuthService } from 'src/app/services/auth.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
 import { OperatorUtils } from 'src/app/utils/operator-utils';
-
-import { AnimalCadastroComponent } from '../animal-cadastro/animal-cadastro.component';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -36,8 +32,8 @@ export class AnimaisComponent implements AfterViewInit {
   constructor(
     private _animalService: AnimalService,
     private _authService: AuthService,
-    private _dialog: MatDialog,
-    private _notificationService: NotificationService
+    private _notificationService: NotificationService,
+    private _router: Router
   ) {
     this.apiURL = environment.apiURL;
     this.isLoadingResults = true;
@@ -50,22 +46,7 @@ export class AnimaisComponent implements AfterViewInit {
   }
 
   add() {
-
-    this._dialog.open(AnimalCadastroComponent, {
-      data: {
-        animal: null
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-
-      next: (result) => {
-
-        if (result && result.status) {
-          this.findAll();
-        }
-      }
-    });
+    this._router.navigate(['/' + this.user.role.toLowerCase() + '/animais/cadastro']);
   }
 
   async findAll() {
