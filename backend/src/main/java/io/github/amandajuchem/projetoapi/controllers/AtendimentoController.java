@@ -63,6 +63,18 @@ public class AtendimentoController {
     }
 
     /**
+     * Find atendimento by id.
+     *
+     * @param id the id
+     * @return the response entity
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable UUID id) {
+        var atendimento = service.findById(id);
+        return ResponseEntity.status(OK).body(AtendimentoDTO.toDTO(atendimento));
+    }
+
+    /**
      * Save response entity.
      *
      * @param atendimento the atendimento

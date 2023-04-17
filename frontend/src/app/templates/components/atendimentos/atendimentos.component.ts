@@ -4,18 +4,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { Atendimento } from 'src/app/entities/atendimento';
 import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { AtendimentoService } from 'src/app/services/atendimento.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { NotificationService } from 'src/app/services/notification.service';
-import { DateUtils } from 'src/app/utils/date-utils';
 import { MessageUtils } from 'src/app/utils/message-utils';
 import { OperatorUtils } from 'src/app/utils/operator-utils';
-
-import { AtendimentoCadastroComponent } from '../atendimento-cadastro/atendimento-cadastro.component';
-import { AtendimentoExcluirComponent } from '../atendimento-excluir/atendimento-excluir.component';
 
 @Component({
   selector: 'app-atendimentos',
@@ -40,7 +37,8 @@ export class AtendimentosComponent implements AfterViewInit {
     private _authService: AuthService,
     private _datePipe: DatePipe,
     private _dialog: MatDialog,
-    private _notificationService: NotificationService
+    private _notificationService: NotificationService,
+    private _router: Router
   ) {
     this.columns = ['index', 'dataHora', 'animal', 'veterinario', 'acao'];
     this.dataSource = new MatTableDataSource();
@@ -54,41 +52,7 @@ export class AtendimentosComponent implements AfterViewInit {
   }
 
   add() {
-
-    this._dialog.open(AtendimentoCadastroComponent, {
-      data: {
-        atendimento: null
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-
-      next: (result) => {
-          
-        if (result && result.status) {
-          this.findAll();
-        }
-      }
-    });
-  }
-
-  delete(atendimento: Atendimento) {
-
-    this._dialog.open(AtendimentoExcluirComponent, {
-      data: {
-        atendimento: atendimento
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-
-      next: (result) => {
-          
-        if (result && result.status) {
-          this.findAll();
-        }
-      }
-    });
+    this._router.navigate(['/' + this.user.role.toLowerCase() + '/atendimentos/cadastro']);
   }
 
   async findAll() {
@@ -174,6 +138,10 @@ export class AtendimentosComponent implements AfterViewInit {
     });
   }
 
+  show(atendimento: Atendimento) {
+    this._router.navigate(['/' + this.user.role.toLowerCase() + '/atendimentos/' + atendimento.id]);
+  }
+
   sortChange() {
     
     this.paginator.pageIndex = 0;
@@ -189,24 +157,5 @@ export class AtendimentosComponent implements AfterViewInit {
     }
 
     this.findAll();
-  }
-
-  update(atendimento: Atendimento) {
-
-    this._dialog.open(AtendimentoCadastroComponent, {
-      data: {
-        atendimento: atendimento
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-
-      next: (result) => {
-          
-        if (result && result.status) {
-          this.findAll();
-        }
-      }
-    });
   }
 }

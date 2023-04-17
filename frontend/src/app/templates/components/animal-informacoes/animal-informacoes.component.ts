@@ -144,7 +144,7 @@ export class AnimalInformacoesComponent implements OnInit {
 
         next: (animal) => {
           this.foto ? this.foto.file = null : null;
-          this._router.navigate(['/' + this.user.role.toLowerCase() + '/animais/' + animal.id]);
+          this._animalService.set(animal);
           this._notificationService.show(MessageUtils.ANIMAL_UPDATE_SUCCESS, NotificationType.SUCCESS);
         },
   

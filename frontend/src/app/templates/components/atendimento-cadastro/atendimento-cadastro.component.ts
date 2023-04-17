@@ -1,23 +1,27 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Agendamento } from 'src/app/entities/agendamento';
 import { Atendimento } from 'src/app/entities/atendimento';
 import { Exame } from 'src/app/entities/exame';
+import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { Setor } from 'src/app/enums/setor';
 import { AtendimentoService } from 'src/app/services/atendimento.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { ImagemService } from 'src/app/services/imagem.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { DateUtils } from 'src/app/utils/date-utils';
 import { MessageUtils } from 'src/app/utils/message-utils';
 import { environment } from 'src/environments/environment';
 
+import { SelecionarAgendamentoComponent } from '../selecionar-agendamento/selecionar-agendamento.component';
 import { SelecionarAnimalComponent } from '../selecionar-animal/selecionar-animal.component';
 import { SelecionarExameComponent } from '../selecionar-exame/selecionar-exame.component';
 import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-imagem.component';
 import { SelecionarUsuarioComponent } from '../selecionar-usuario/selecionar-usuario.component';
-import { SelecionarAgendamentoComponent } from '../selecionar-agendamento/selecionar-agendamento.component';
-import { Agendamento } from 'src/app/entities/agendamento';
+import { AtendimentoExcluirComponent } from '../atendimento-excluir/atendimento-excluir.component';
 
 @Component({
   selector: 'app-atendimento-cadastro',
@@ -27,36 +31,57 @@ import { Agendamento } from 'src/app/entities/agendamento';
 export class AtendimentoCadastroComponent implements OnInit {
 
   apiURL!: string;
-  form!: FormGroup;
+  atendimento!: Atendimento;
   documentos!: Array<any>;
+  form!: FormGroup;
+  user!: User;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    private _activatedRoute: ActivatedRoute,
     private _atendimentoService: AtendimentoService,
+    private _authService: AuthService,
     private _dialog: MatDialog,
     private _formBuilder: FormBuilder,
     private _imagemService: ImagemService,
-    private _matDialogRef: MatDialogRef<AtendimentoCadastroComponent>,
-    private _notificationService: NotificationService
+    private _notificationService: NotificationService,
+    private _router: Router
   ) { }
 
   ngOnInit(): void {
 
     this.apiURL = environment.apiURL;
     this.documentos = [];
+    this.user = this._authService.getCurrentUser();
 
-    if (this.data.atendimento) {
-      this.buildForm(this.data.atendimento);
+    this._activatedRoute.params.subscribe({
+      
+      next: (params: any) => {
+        
+        if (params && params.id) {
 
-      if (this.data.atendimento.documentos) {
+          if (params.id.includes('cadastro')) {
+            this.buildForm(null);
+          }
 
-        this.data.atendimento.documentos.forEach((d: any) => {
-          this.documentos.push({ id: d.id, nome: d.nome });
-        });
+          else {
+
+            this._atendimentoService.findById(params.id).subscribe({
+
+              next: (atendimento) => {
+                this.atendimento = atendimento;
+                this.buildForm(atendimento);
+                
+                if (atendimento.documentos) {
+                  atendimento.documentos.forEach((d: any) => {
+                    this.documentos.push({id: d.id, nome: d.nome});
+                  });
+                }
+              }
+            });
+          }
+        }
       }
-    } else {
-      this.buildForm(null);
-    }
+    });
   }
 
   addImagem() {
@@ -122,6 +147,12 @@ export class AtendimentoCadastroComponent implements OnInit {
       exames: [atendimento?.exames, Validators.required],
       documentos: [atendimento?.documentos, Validators.nullValidator]
     });
+
+    atendimento ? this.form.disable() : this.form.enable();
+  }
+
+  cancel() {
+    this.atendimento ? this.buildForm(this.atendimento) : this._router.navigate(['/' + this.user.role.toLowerCase() + '/atendimentos']);
   }
 
   dateChange() {
@@ -131,12 +162,31 @@ export class AtendimentoCadastroComponent implements OnInit {
     }
   }
 
+  delete() {
+    
+    this._dialog.open(AtendimentoExcluirComponent, {
+      data: {
+        atendimento: this.atendimento
+      },
+      width: '100%'
+    })
+    .afterClosed().subscribe({
+
+      next: (result) => {
+          
+        if (result && result.status) {
+          this._router.navigate(['/' + this.user.role.toLowerCase() + '/atendimentos']);
+        }
+      }
+    });
+  }
+
   downloadImagem(imagem: any) {
 
     const link = document.createElement('a');
 
-    link.href = this.apiURL + '/imagens/search?nome=' + imagem.data;
-    link.download = imagem.data;
+    link.href = this.apiURL + '/imagens/search?nome=' + imagem.nome;
+    link.download = imagem.nome;
     link.click();
     link.remove();
   }
@@ -232,7 +282,7 @@ export class AtendimentoCadastroComponent implements OnInit {
 
         complete: () => {
           this._notificationService.show(MessageUtils.ATENDIMENTO_UPDATE_SUCCESS, NotificationType.SUCCESS);
-          this._matDialogRef.close({ status: true });
+          this.ngOnInit();
         },
 
         error: (error) => {
@@ -246,9 +296,9 @@ export class AtendimentoCadastroComponent implements OnInit {
 
       this._atendimentoService.save(atendimento, imagens).subscribe({
 
-        complete: () => {
+        next: (atendimento) => {
           this._notificationService.show(MessageUtils.ATENDIMENTO_SAVE_SUCCESS, NotificationType.SUCCESS);
-          this._matDialogRef.close({ status: true });
+          this._router.navigate(['/' + this.user.role.toLowerCase() + '/atendimentos/' + atendimento.id]);
         },
 
         error: (error) => {

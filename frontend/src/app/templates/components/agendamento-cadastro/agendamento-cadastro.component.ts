@@ -52,6 +52,7 @@ export class AgendamentoCadastroComponent implements OnInit {
           }
           
           else {
+            
             this._agendamentoService.findById(params.id).subscribe({
 
               next: (agendamento) => {
@@ -75,7 +76,7 @@ export class AgendamentoCadastroComponent implements OnInit {
       descricao: [agendamento?.descricao, Validators.required]
     });
 
-    agendamento?.id ? this.form.disable() : this.form.enable();
+    agendamento ? this.form.disable() : this.form.enable();
   }
 
   cancel() {
@@ -164,6 +165,7 @@ export class AgendamentoCadastroComponent implements OnInit {
 
         next: (agendamento) => {
           this._notificationService.show(MessageUtils.AGENDAMENTO_UPDATE_SUCCESS, NotificationType.SUCCESS);
+          this.agendamento = agendamento;
           this.buildForm(agendamento);
         },
 

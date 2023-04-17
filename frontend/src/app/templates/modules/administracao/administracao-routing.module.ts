@@ -6,6 +6,7 @@ import { AgendamentoCadastroComponent } from '../../components/agendamento-cadas
 import { AgendamentosComponent } from '../../components/agendamentos/agendamentos.component';
 import { AnimaisComponent } from '../../components/animais/animais.component';
 import { AnimalComponent } from '../../components/animal/animal.component';
+import { AtendimentoCadastroComponent } from '../../components/atendimento-cadastro/atendimento-cadastro.component';
 import { AtendimentosComponent } from '../../components/atendimentos/atendimentos.component';
 import { ExamesComponent } from '../../components/exames/exames.component';
 import { FeirasAdocaoComponent } from '../../components/feiras-adocao/feiras-adocao.component';
@@ -24,6 +25,7 @@ const routes: Routes = [
       { path: 'animais', component: AnimaisComponent, canActivate: [AuthGuard] },
       { path: 'animais/:id', component: AnimalComponent, canActivate: [AuthGuard] },
       { path: 'atendimentos', component: AtendimentosComponent, canActivate: [AuthGuard] },
+      { path: 'atendimentos/:id', component: AtendimentoCadastroComponent, canActivate: [AuthGuard] },
       { path: 'exames', component: ExamesComponent, canActivate: [AuthGuard] },
       { path: 'feiras-adocao', component: FeirasAdocaoComponent, canActivate: [AuthGuard] },
       { path: 'painel', component: PainelComponent, canActivate: [AuthGuard] },
