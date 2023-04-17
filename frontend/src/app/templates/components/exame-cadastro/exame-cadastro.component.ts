@@ -1,11 +1,16 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Exame } from 'src/app/entities/exame';
+import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
+import { AuthService } from 'src/app/services/auth.service';
 import { ExameService } from 'src/app/services/exame.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
+
+import { ExameExcluirComponent } from '../exame-excluir/exame-excluir.component';
 
 @Component({
   selector: 'app-exame-cadastro',
@@ -14,23 +19,47 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 })
 export class ExameCadastroComponent implements OnInit {
 
+  exame!: Exame;
   form!: FormGroup;
+  user!: User;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private _dialogRef: MatDialogRef<ExameCadastroComponent>,
+    private _activatedRoute: ActivatedRoute,
+    private _authService: AuthService,
+    private _dialog: MatDialog,
     private _exameService: ExameService,
     private _formBuilder: FormBuilder,
-    private _notificationService: NotificationService
+    private _notificationService: NotificationService,
+    private _router: Router
   ) { }
 
   ngOnInit(): void {
     
-    if (this.data.exame) {
-      this.buildForm(this.data.exame);
-    } else {
-      this.buildForm(null);
-    }
+    this.user = this._authService.getCurrentUser();
+    
+    this._activatedRoute.params.subscribe({
+
+      next: (params: any) => {
+        
+        if (params && params.id) {
+
+          if (params.id.includes('cadastro')) {
+            this.buildForm(null);
+          }
+
+          else {
+
+            this._exameService.findById(params.id).subscribe({
+
+              next: (exame) => {
+                this.exame = exame;
+                this.buildForm(exame);
+              }
+            });
+          }
+        }
+      }
+    });
   }
   
   buildForm(exame: Exame | null) {
@@ -39,6 +68,31 @@ export class ExameCadastroComponent implements OnInit {
       id: [exame?.id, Validators.nullValidator],
       nome: [exame?.nome, Validators.required],
       categoria: [exame?.categoria, Validators.required]
+    });
+
+    exame ? this.form.disable() : this.form.enable();
+  }
+
+  cancel() {
+    this.exame ? this.buildForm(this.exame) : this._router.navigate(['/' + this.user.role.toLowerCase() + '/exames']);
+  }
+
+  delete() {
+
+    this._dialog.open(ExameExcluirComponent, {
+      data: {
+        exame: this.exame
+      },
+      width: '100%'
+    })
+    .afterClosed().subscribe({
+
+      next: (result) => {
+
+        if (result && result.status) {
+          this._router.navigate(['/' + this.user.role.toLowerCase() + '/exames']);
+        }
+      }
     });
   }
 
@@ -52,7 +106,7 @@ export class ExameCadastroComponent implements OnInit {
         
         complete: () => {
           this._notificationService.show(MessageUtils.EXAME_UPDATE_SUCCESS, NotificationType.SUCCESS);
-          this._dialogRef.close({status: true});
+          this.ngOnInit();
         },
   
         error: (error) => {
@@ -66,9 +120,9 @@ export class ExameCadastroComponent implements OnInit {
 
       this._exameService.save(exame).subscribe({
         
-        complete: () => {
+        next: (exame) => {
           this._notificationService.show(MessageUtils.EXAME_SAVE_SUCCESS, NotificationType.SUCCESS);
-          this._dialogRef.close({status: true});
+          this._router.navigate(['/' + this.user.role.toLowerCase() + '/exames/' + exame.id]);
         },
   
         error: (error) => {

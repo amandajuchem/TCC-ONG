@@ -56,6 +56,18 @@ public class ExamesController {
     }
 
     /**
+     * Find exame by id.
+     *
+     * @param id the id
+     * @return the response entity
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable UUID id) {
+        var exame = service.findById(id);
+        return ResponseEntity.status(OK).body(ExameDTO.toDTO(exame));
+    }
+
+    /**
      * Save response entity.
      *
      * @param exame the exame

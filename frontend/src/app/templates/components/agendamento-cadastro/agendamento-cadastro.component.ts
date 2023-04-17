@@ -79,15 +79,8 @@ export class AgendamentoCadastroComponent implements OnInit {
     agendamento ? this.form.disable() : this.form.enable();
   }
 
-  cancel() {
-    
-    if (this.agendamento) {
-      this.buildForm(this.agendamento);
-    }
-
-    else {
-      this._router.navigate(['/' + this.user.role.toLowerCase() + '/agendamentos']);
-    }
+  cancel() {    
+    this.agendamento ? this.buildForm(this.agendamento) : this._router.navigate(['/' + this.user.role.toLowerCase() + '/agendamentos']);
   }
 
   dateChange() {
@@ -163,10 +156,9 @@ export class AgendamentoCadastroComponent implements OnInit {
 
       this._agendamentoService.update(agendamento).subscribe({
 
-        next: (agendamento) => {
+        complete: () => {
           this._notificationService.show(MessageUtils.AGENDAMENTO_UPDATE_SUCCESS, NotificationType.SUCCESS);
-          this.agendamento = agendamento;
-          this.buildForm(agendamento);
+          this.ngOnInit();
         },
 
         error: (error) => {

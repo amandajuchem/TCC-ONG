@@ -78,12 +78,8 @@
                             <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-acao">&nbsp;</th>
                             <td mat-cell *matCellDef="let exame">
                                 <div class="text-end">
-                                    <button mat-icon-button (click)="update(exame)">
-                                        <mat-icon>edit</mat-icon>
-                                    </button>
-
-                                    <button mat-icon-button (click)="delete(exame)">
-                                        <mat-icon>delete</mat-icon>
+                                    <button mat-icon-button (click)="show(exame)">
+                                        <mat-icon>remove_red_eye</mat-icon>
                                     </button>
                                 </div>
                             </td>

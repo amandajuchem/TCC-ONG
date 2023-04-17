@@ -14,6 +14,7 @@ import { OperatorUtils } from 'src/app/utils/operator-utils';
 
 import { ExameCadastroComponent } from '../exame-cadastro/exame-cadastro.component';
 import { ExameExcluirComponent } from '../exame-excluir/exame-excluir.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-exames',
@@ -36,7 +37,8 @@ export class ExamesComponent implements AfterViewInit {
     private _authService: AuthService,
     private _dialog: MatDialog,
     private _exameService: ExameService,
-    private _notificationService: NotificationService
+    private _notificationService: NotificationService,
+    private _router: Router
   ) {
     this.columns = ['index', 'nome', 'categoria', 'acao'];
     this.dataSource = new MatTableDataSource();
@@ -50,41 +52,7 @@ export class ExamesComponent implements AfterViewInit {
   }
 
   add() {
-
-    this._dialog.open(ExameCadastroComponent, {
-      data: {
-        exame: null
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-
-      next: (result) => {
-
-        if (result && result.status) {
-          this.findAll();
-        }
-      }
-    });
-  }
-
-  delete(exame: Exame) {
-
-    this._dialog.open(ExameExcluirComponent, {
-      data: {
-        exame: exame
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-
-      next: (result) => {
-
-        if (result && result.status) {
-          this.findAll();
-        }
-      }
-    });
+    this._router.navigate(['/' + this.user.role.toLowerCase() + '/exames/cadastro']);
   }
 
   async findAll() {
@@ -156,6 +124,10 @@ export class ExamesComponent implements AfterViewInit {
     });
   }
 
+  show(exame: Exame) {
+    this._router.navigate(['/' + this.user.role.toLowerCase() + '/exames/' + exame.id]);
+  }
+
   sortChange() {
 
     this.paginator.pageIndex = 0;
@@ -166,24 +138,5 @@ export class ExamesComponent implements AfterViewInit {
     }
     
     this.findAll();
-  }
-
-  update(exame: Exame) {
-
-    this._dialog.open(ExameCadastroComponent, {
-      data: {
-        exame: exame
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-
-      next: (result) => {
-
-        if (result && result.status) {
-          this.findAll();
-        }
-      }
-    });
   }
 }
