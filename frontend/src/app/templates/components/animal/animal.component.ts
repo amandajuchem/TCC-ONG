@@ -32,7 +32,6 @@ export class AnimalComponent implements OnInit {
     this._activatedRoute.params.subscribe({
 
       next: (params: any) => {
-          
         
         if (params && params.id) {
           

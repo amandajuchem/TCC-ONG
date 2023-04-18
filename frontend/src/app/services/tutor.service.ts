@@ -108,7 +108,7 @@ export class TutorService implements AbstractService<Tutor> {
    * 
    * @param tutor 
    */
-  set(tutor: Tutor) {
+  set(tutor: Tutor | null) {
     this._subject.next(tutor);
   }
 

@@ -6,7 +6,7 @@
                 <button mat-icon-button (click)="form.enable()" *ngIf="form.disabled">
                     <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-icon-button (click)="submit()" *ngIf="form.enabled">
+                <button mat-icon-button (click)="submit()" *ngIf="form.enabled && form.valid">
                     <mat-icon>save</mat-icon>
                 </button>
                 <button mat-icon-button (click)="cancel()" *ngIf="form.enabled">
@@ -23,7 +23,7 @@
         <div class="col-12">
             <div class="text-center">
                 <div *ngIf="!foto">
-                    <img src="assets/images/tutores.png" height="150px" class="rounded-circle">
+                    <img src="assets/images/tutores.png" height="150px">
                 </div>
 
                 <div *ngIf="foto">

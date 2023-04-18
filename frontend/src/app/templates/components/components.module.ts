@@ -56,7 +56,6 @@ import { SelecionarTutorComponent } from './selecionar-tutor/selecionar-tutor.co
 import { SelecionarUsuarioComponent } from './selecionar-usuario/selecionar-usuario.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { TutorAdocoesComponent } from './tutor-adocoes/tutor-adocoes.component';
-import { TutorCadastroComponent } from './tutor-cadastro/tutor-cadastro.component';
 import { TutorEnderecoComponent } from './tutor-endereco/tutor-endereco.component';
 import { TutorExcluirComponent } from './tutor-excluir/tutor-excluir.component';
 import { TutorInformacoesComponent } from './tutor-informacoes/tutor-informacoes.component';
@@ -102,7 +101,6 @@ import { SelecionarAgendamentoComponent } from './selecionar-agendamento/selecio
     SelecionarUsuarioComponent,
     ToolbarComponent,
     TutorAdocoesComponent,
-    TutorCadastroComponent,
     TutorEnderecoComponent,
     TutorExcluirComponent,
     TutorInformacoesComponent,

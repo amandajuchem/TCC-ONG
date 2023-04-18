@@ -16,7 +16,7 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 export class TutorComponent implements OnInit {
 
   user!: User;
-  tutor!: Tutor;
+  tutor!: Tutor | null;
 
   constructor(
     private _activatedRoute: ActivatedRoute,
@@ -31,21 +31,28 @@ export class TutorComponent implements OnInit {
 
     this._activatedRoute.params.subscribe({
 
-      next: (x: any) => {
+      next: (params: any) => {
           
-        if (x && x.id) {
+        if (params && params.id) {
           
-          this._tutorService.findById(x.id).subscribe({
-            
-            next: (tutor) => {
-              this._tutorService.set(tutor);
-            },
+          if (params.id.includes('cadastro')) {
+            this._tutorService.set(null);
+          }
 
-            error: (error) => {
-              console.error(error);
-              this._notificationService.show(MessageUtils.TUTOR_GET_FAIL, NotificationType.FAIL); 
-            }
-          });
+          else {
+
+            this._tutorService.findById(params.id).subscribe({
+            
+              next: (tutor) => {
+                this._tutorService.set(tutor);
+              },
+  
+              error: (error) => {
+                console.error(error);
+                this._notificationService.show(MessageUtils.TUTOR_GET_FAIL, NotificationType.FAIL); 
+              }
+            });
+          }
         }
       },
     });
@@ -53,10 +60,7 @@ export class TutorComponent implements OnInit {
     this._tutorService.get().subscribe({
 
       next: (tutor) => {
-        
-        if (tutor) {
-          this.tutor = tutor;
-        }
+        this.tutor = tutor;
       },
     });
   }

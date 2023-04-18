@@ -4,17 +4,17 @@
             <ol class="breadcrumb m-0">
                 <li class="breadcrumb-item"><a class="text-white" [routerLink]="'/' + user.role.toLowerCase() + '/painel'">Início</a></li>
                 <li class="breadcrumb-item"><a class="text-white" [routerLink]="'/' + user.role.toLowerCase() + '/tutores'">Tutores</a></li>
-                <li class="breadcrumb-item active" aria-current="page" *ngIf="tutor">{{tutor.nome}}</li>
+                <li class="breadcrumb-item active" aria-current="page">{{tutor ? tutor.nome : 'Cadastro'}}</li>
             </ol>
         </nav>
     </div>
 </div>
 
-<mat-card *ngIf="tutor">
+<mat-card>
     <mat-card-header>
         <div class="mat-card-header-text">
             <div class="text-center">
-                <h2>{{tutor.nome}}</h2>
+                <h2>{{tutor ? tutor.nome : 'Cadastrar Tutor'}}</h2>
             </div>
         </div>
     </mat-card-header>
@@ -26,17 +26,17 @@
                     <app-tutor-informacoes></app-tutor-informacoes>
                 </ng-template>
             </mat-tab>
-            <mat-tab label="Endereço">
+            <mat-tab label="Endereço" *ngIf="tutor">
                 <ng-template matTabContent>
                     <app-tutor-endereco></app-tutor-endereco>
                 </ng-template>
             </mat-tab>
-            <mat-tab label="Adoções">
+            <mat-tab label="Adoções" *ngIf="tutor">
                 <ng-template matTabContent>
                     <app-tutor-adocoes></app-tutor-adocoes>
                 </ng-template>
             </mat-tab>
-            <mat-tab label="Observações">
+            <mat-tab label="Observações" *ngIf="tutor">
                 <ng-template matTabContent>
                     <app-tutor-observacoes></app-tutor-observacoes>
                 </ng-template>

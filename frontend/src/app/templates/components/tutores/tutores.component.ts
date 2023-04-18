@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
+import { Router } from '@angular/router';
 import { Tutor } from 'src/app/entities/tutor';
 import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
@@ -10,8 +10,6 @@ import { TutorService } from 'src/app/services/tutor.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
 import { OperatorUtils } from 'src/app/utils/operator-utils';
 import { environment } from 'src/environments/environment';
-
-import { TutorCadastroComponent } from '../tutor-cadastro/tutor-cadastro.component';
 
 @Component({
   selector: 'app-tutores',
@@ -33,8 +31,8 @@ export class TutoresComponent implements AfterViewInit {
 
   constructor(
     private _authService: AuthService,
-    private _dialog: MatDialog,
     private _notificationService: NotificationService,
+    private _router: Router,
     private _tutorService: TutorService
   ) {
     this.apiURL = environment.apiURL;
@@ -48,22 +46,7 @@ export class TutoresComponent implements AfterViewInit {
   }
 
   add() {
-
-    this._dialog.open(TutorCadastroComponent, {
-      data: {
-        animal: null
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-
-      next: (result) => {
-
-        if (result && result.status) {
-          this.findAll();
-        }
-      }
-    });
+    this._router.navigate(['/' + this.user.role.toLowerCase() + '/tutores/cadastro']);
   }
 
   async findAll() {

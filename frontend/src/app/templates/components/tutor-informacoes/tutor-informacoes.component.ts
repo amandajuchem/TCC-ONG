@@ -57,6 +57,10 @@ export class TutorInformacoesComponent implements OnInit {
             this.foto = null;
           }
         }
+
+        else {
+          this.buildForm(null);
+        }
       }
     });
   }
@@ -74,7 +78,7 @@ export class TutorInformacoesComponent implements OnInit {
       if (result && result.status) {
 
         this._imagemService.toBase64(result.images[0])?.then(data => {
-          this.foto = { id: new Date().getTime(), data: data };
+          this.foto = { id: new Date().getTime(), data: data, file: result.images[0] };
         });
       }
     });
@@ -88,35 +92,35 @@ export class TutorInformacoesComponent implements OnInit {
     }));
   }
 
-  buildForm(tutor: Tutor) {
+  buildForm(tutor: Tutor | null) {
 
     this.form = this._formBuilder.group({
-      id: [tutor.id, Validators.nullValidator],
-      nome: [tutor.nome, Validators.required],
-      cpf: [tutor.cpf, Validators.required],
-      rg: [tutor.rg, Validators.nullValidator],
-      situacao: [tutor.situacao, Validators.required],
-      foto: [tutor.foto, Validators.nullValidator],
+      id: [tutor?.id, Validators.nullValidator],
+      nome: [tutor?.nome, Validators.required],
+      cpf: [tutor?.cpf, Validators.required],
+      rg: [tutor?.rg, Validators.nullValidator],
+      situacao: [tutor?.situacao, Validators.required],
+      foto: [tutor?.foto, Validators.nullValidator],
 
       telefones: this._formBuilder.array(
         
-        tutor.telefones ? tutor.telefones.map(telefone => this._formBuilder.group({
+        tutor?.telefones ? tutor.telefones.map(telefone => this._formBuilder.group({
           id: [telefone.id, Validators.nullValidator],
           numero: [telefone.numero, Validators.required]
         })) : []
       ),
 
-      endereco: [tutor.endereco, Validators.nullValidator],
+      endereco: [tutor?.endereco, Validators.nullValidator],
       adocoes: [[], Validators.nullValidator],
       observacoes: [[], Validators.nullValidator]
     });
 
-    this.form.disable();
+    tutor ? this.form.disable() : this.form.enable();
   }
 
   cancel() {
-    this.buildForm(this.tutor);
-    this.foto = this.tutor.foto ? { id: this.tutor.foto.id, nome: this.tutor.foto.nome } : null;
+    this.foto = this.tutor?.foto ? { id: this.tutor?.foto.id, nome: this.tutor?.foto.nome } : null;
+    this.tutor ? this.buildForm(this.tutor) : this._router.navigate(['/' + this.user.role.toLowerCase() + '/tutores']);
   }
 
   delete() {
@@ -156,18 +160,38 @@ export class TutorInformacoesComponent implements OnInit {
     const tutor: Tutor = Object.assign({}, this.form.getRawValue());
     const imagem: File = this.foto?.file;
 
-    this._tutorService.update(tutor, imagem).subscribe({
+    if (tutor.id) {
 
-      next: (tutor) => {
-        this.foto ? this.foto.file = null : null;
-        this._tutorService.set(tutor);
-        this._notificationService.show(MessageUtils.TUTOR_UPDATE_SUCCESS, NotificationType.SUCCESS);
-      },
+      this._tutorService.update(tutor, imagem).subscribe({
 
-      error: (error) => {
-        console.error(error);
-        this._notificationService.show(MessageUtils.TUTOR_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
-      }
-    });
+        next: (tutor) => {
+          this.foto ? this.foto.file = null : null;
+          this._tutorService.set(tutor);
+          this._notificationService.show(MessageUtils.TUTOR_UPDATE_SUCCESS, NotificationType.SUCCESS);
+        },
+  
+        error: (error) => {
+          console.error(error);
+          this._notificationService.show(MessageUtils.TUTOR_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
+        }
+      });
+    }
+
+    else {
+
+      this._tutorService.save(tutor, imagem).subscribe({
+
+        next: (tutor) => {
+          this.foto ? this.foto.file = null : null;
+          this._router.navigate(['/' + this.user.role.toLowerCase() + '/tutores/' + tutor.id]);
+          this._notificationService.show(MessageUtils.TUTOR_SAVE_SUCCESS, NotificationType.SUCCESS);
+        },
+  
+        error: (error) => {
+          console.error(error);
+          this._notificationService.show(MessageUtils.TUTOR_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
+        }
+      });
+    }
   }
 }

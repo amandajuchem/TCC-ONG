@@ -27,8 +27,8 @@ export class TutorEnderecoComponent implements OnInit {
     
     this._tutorService.get().subscribe({
 
-      next: (tutor) => {
-          
+      next: (tutor) => {  
+        
         if (tutor) {
           this.tutor = tutor;
           this.buildForm(tutor);
@@ -40,14 +40,14 @@ export class TutorEnderecoComponent implements OnInit {
   buildForm(tutor: Tutor) {
 
     this.form = this._formBuilder.group({
-      id: [tutor.endereco.id, Validators.nullValidator],
-      rua: [tutor.endereco.rua, Validators.required],
-      numeroResidencia: [tutor.endereco.numeroResidencia, Validators.required],
-      bairro: [tutor.endereco.bairro, Validators.required],
-      complemento: [tutor.endereco.complemento, Validators.nullValidator],
-      cidade: [tutor.endereco.cidade, Validators.required],
-      estado: [tutor.endereco.estado, Validators.required],
-      cep: [tutor.endereco.cep, Validators.required]
+      id: [tutor.endereco?.id, Validators.nullValidator],
+      rua: [tutor.endereco?.rua, Validators.required],
+      numeroResidencia: [tutor.endereco?.numeroResidencia, Validators.required],
+      bairro: [tutor.endereco?.bairro, Validators.required],
+      complemento: [tutor.endereco?.complemento, Validators.nullValidator],
+      cidade: [tutor.endereco?.cidade, Validators.required],
+      estado: [tutor.endereco?.estado, Validators.required],
+      cep: [tutor.endereco?.cep, Validators.required]
     });
 
     this.form.disable();
