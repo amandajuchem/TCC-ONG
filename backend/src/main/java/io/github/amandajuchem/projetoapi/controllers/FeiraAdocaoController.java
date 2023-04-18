@@ -56,6 +56,18 @@ public class FeiraAdocaoController {
     }
 
     /**
+     * Find Feira Adoção by id.
+     *
+     * @param id the id
+     * @return the response entity
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable UUID id) {
+        var feiraAdocao = service.findById(id);
+        return ResponseEntity.status(OK).body(FeiraAdocaoDTO.toDTO(feiraAdocao));
+    }
+
+    /**
      * Save.
      *
      * @param feiraAdocao the feira adocao

@@ -59,6 +59,11 @@ export class AgendamentoCadastroComponent implements OnInit {
                 this.agendamento = agendamento;
                 this.buildForm(agendamento);
               },
+
+              error: (error) => {
+                console.error(error);
+                this._notificationService.show(MessageUtils.AGENDAMENTO_GET_FAIL + error.error[0].message, NotificationType.FAIL);
+              }
             });
           }
         }  

@@ -15,6 +15,10 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelecionarUsuarioComponent } from '../selecionar-usuario/selecionar-usuario.component';
+import { User } from 'src/app/entities/user';
+import { AuthService } from 'src/app/services/auth.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FeiraAdocaoExcluirComponent } from '../feira-adocao-excluir/feira-adocao-excluir.component';
 
 @Component({
   selector: 'app-feira-adocao-cadastro',
@@ -27,7 +31,9 @@ export class FeiraAdocaoCadastroComponent implements OnInit {
   dataSourceUsuarios!: MatTableDataSource<Usuario>;
   columnsAnimais!: Array<string>;
   columnsUsuarios!: Array<string>;
+  feiraAdocao!: FeiraAdocao;
   form!: FormGroup;
+  user!: User;
 
   @ViewChild('animaisPaginator') animaisPaginator!: MatPaginator;
   @ViewChild('usuariosPaginator') usuariosPaginator!: MatPaginator;
@@ -35,12 +41,13 @@ export class FeiraAdocaoCadastroComponent implements OnInit {
   @ViewChild('usuariosSort') usuariosSort!: MatSort;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    private _activatedRoute: ActivatedRoute,
+    private _authService: AuthService,
     private _dialog: MatDialog,
-    private _dialogRef: MatDialogRef<FeiraAdocaoCadastroComponent>,
     private _feiraAdocaoService: FeiraAdocaoService,
     private _formBuilder: FormBuilder,
-    private _notificationService: NotificationService
+    private _notificationService: NotificationService,
+    private _router: Router
   ) {
     this.dataSourceAnimais = new MatTableDataSource();
     this.dataSourceUsuarios = new MatTableDataSource();
@@ -49,14 +56,39 @@ export class FeiraAdocaoCadastroComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    
+    this.user = this._authService.getCurrentUser();
 
-    if (this.data.feiraAdocao) {
-      this.buildForm(this.data.feiraAdocao);
-      this.dataSourceAnimais.data = this.data.feiraAdocao.animais;
-      this.dataSourceUsuarios.data = this.data.feiraAdocao.usuarios;
-    } else {
-      this.buildForm(null);
-    }
+    this._activatedRoute.params.subscribe({
+
+      next: (params: any) => {
+        
+        if (params && params.id) {
+
+          if (params.id.includes('cadastro')) {
+            this.buildForm(null);
+          }
+
+          else {
+
+            this._feiraAdocaoService.findById(params.id).subscribe({
+
+              next: (feiraAdocao) => {
+                this.feiraAdocao = feiraAdocao;
+                this.dataSourceAnimais.data = feiraAdocao.animais;
+                this.dataSourceUsuarios.data = feiraAdocao.usuarios;
+                this.buildForm(feiraAdocao);   
+              },
+
+              error: (error) => {
+                console.error(error);
+                this._notificationService.show(MessageUtils.FEIRA_ADOCAO_GET_FAIL + error.error[0].message, NotificationType.FAIL);
+              }
+            });
+          }
+        }
+      }
+    });
   }
 
   addAnimais() {
@@ -120,6 +152,12 @@ export class FeiraAdocaoCadastroComponent implements OnInit {
       animais: [feiraAdocao?.animais, Validators.nullValidator],
       usuarios: [feiraAdocao?.usuarios, Validators.nullValidator]
     });
+
+    feiraAdocao ? this.form.disable() : this.form.enable();
+  }
+
+  cancel() {
+    this.feiraAdocao ? this.buildForm(this.feiraAdocao) : this._router.navigate(['/' + this.user.role.toLowerCase() + '/feiras-adocao']);
   }
 
   dateChange() {
@@ -129,6 +167,24 @@ export class FeiraAdocaoCadastroComponent implements OnInit {
     }
   }
 
+  delete() {
+
+    this._dialog.open(FeiraAdocaoExcluirComponent, {
+      data: {
+        feiraAdocao: this.feiraAdocao
+      },
+      width: '100%'
+    })
+    .afterClosed().subscribe({
+
+      next: (result) => {
+          
+        if (result && result.status) {
+          this._router.navigate(['/' + this.user.role.toLowerCase() + '/feiras-adocao']);
+        }
+      }
+    });
+  }
 
   removeAnimal(animal: Animal) {
     this.dataSourceAnimais.data = this.dataSourceAnimais.data.filter(a => a.id !== animal.id);
@@ -154,7 +210,7 @@ export class FeiraAdocaoCadastroComponent implements OnInit {
 
         complete: () => {
           this._notificationService.show(MessageUtils.FEIRA_ADOCAO_UPDATE_SUCCESS, NotificationType.SUCCESS);
-          this._dialogRef.close({ status: true });
+          this.ngOnInit();
         },
 
         error: (error) => {
@@ -168,9 +224,9 @@ export class FeiraAdocaoCadastroComponent implements OnInit {
 
       this._feiraAdocaoService.save(feiraAdocao).subscribe({
 
-        complete: () => {
+        next: (feiraAdocao) => {
           this._notificationService.show(MessageUtils.FEIRA_ADOCAO_SAVE_SUCCESS, NotificationType.SUCCESS);
-          this._dialogRef.close({ status: true });
+          this._router.navigate(['/' + this.user.role.toLowerCase() + '/feiras-adocao/' + feiraAdocao.id]);
         },
 
         error: (error) => {

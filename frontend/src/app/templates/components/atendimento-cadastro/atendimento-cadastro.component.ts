@@ -76,6 +76,11 @@ export class AtendimentoCadastroComponent implements OnInit {
                     this.documentos.push({id: d.id, nome: d.nome});
                   });
                 }
+              },
+
+              error: (error) => {
+                console.error(error);
+                this._notificationService.show(MessageUtils.ATENDIMENTO_GET_FAIL + error.error[0].message, NotificationType.FAIL);
               }
             });
           }

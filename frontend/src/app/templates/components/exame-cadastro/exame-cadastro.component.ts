@@ -54,6 +54,11 @@ export class ExameCadastroComponent implements OnInit {
               next: (exame) => {
                 this.exame = exame;
                 this.buildForm(exame);
+              },
+
+              error: (error) => {
+                console.error(error);
+                this._notificationService.show(MessageUtils.EXAME_GET_FAIL + error.error[0].message, NotificationType.FAIL);
               }
             });
           }

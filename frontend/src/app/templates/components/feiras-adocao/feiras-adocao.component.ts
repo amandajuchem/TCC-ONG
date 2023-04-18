@@ -16,6 +16,7 @@ import { OperatorUtils } from 'src/app/utils/operator-utils';
 
 import { FeiraAdocaoCadastroComponent } from '../feira-adocao-cadastro/feira-adocao-cadastro.component';
 import { FeiraAdocaoExcluirComponent } from '../feira-adocao-excluir/feira-adocao-excluir.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-feiras-adocao',
@@ -38,9 +39,9 @@ export class FeirasAdocaoComponent implements AfterViewInit {
   constructor(
     private _authService: AuthService,
     private _datePipe: DatePipe,
-    private _dialog: MatDialog,
     private _feiraAdocaoService: FeiraAdocaoService,
-    private _notificationService: NotificationService
+    private _notificationService: NotificationService,
+    private _router: Router
   ) {
     this.columns = ['index', 'dataHora', 'nome', 'totalAnimais', 'totalUsuarios', 'acao'];
     this.dataSource = new MatTableDataSource();
@@ -54,41 +55,7 @@ export class FeirasAdocaoComponent implements AfterViewInit {
   }
 
   add() {
-
-    this._dialog.open(FeiraAdocaoCadastroComponent, {
-      data: {
-        feiraAdocao: null
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-
-      next: (result) => {
-          
-        if (result && result.status) {
-          this.findAll();
-        }
-      }
-    });
-  }
-
-  delete(feiraAdocao: FeiraAdocao) {
-
-    this._dialog.open(FeiraAdocaoExcluirComponent, {
-      data: {
-        feiraAdocao: feiraAdocao
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-
-      next: (result) => {
-          
-        if (result && result.status) {
-          this.findAll();
-        }
-      }
-    });
+    this._router.navigate(['/' + this.user.role.toLowerCase() + '/feiras-adocao/cadastro']);
   }
 
   async findAll() {
@@ -174,6 +141,10 @@ export class FeirasAdocaoComponent implements AfterViewInit {
     });
   }
 
+  show(feiraAdocao: FeiraAdocao) {
+    this._router.navigate(['/' + this.user.role.toLowerCase() + '/feiras-adocao/' + feiraAdocao.id]);
+  }
+
   sortChange() {
     
     this.paginator.pageIndex = 0;
@@ -190,23 +161,4 @@ export class FeirasAdocaoComponent implements AfterViewInit {
 
     this.findAll();
   }
-
-  update(feiraAdocao: FeiraAdocao) {
-
-    this._dialog.open(FeiraAdocaoCadastroComponent, {
-      data: {
-        feiraAdocao: feiraAdocao
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-
-      next: (result) => {
-          
-        if (result && result.status) {
-          this.findAll();
-        }
-      }
-    });
-  } 
 }
