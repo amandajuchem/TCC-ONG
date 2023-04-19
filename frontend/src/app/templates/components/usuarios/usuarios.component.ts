@@ -12,6 +12,7 @@ import { OperatorUtils } from 'src/app/utils/operator-utils';
 import { environment } from 'src/environments/environment';
 
 import { UsuarioCadastroComponent } from '../usuario-cadastro/usuario-cadastro.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-usuarios',
@@ -33,8 +34,8 @@ export class UsuariosComponent implements AfterViewInit {
 
   constructor(
     private _authService: AuthService,
-    private _dialog: MatDialog,
     private _notificationService: NotificationService,
+    private _router: Router,
     private _usuarioService: UsuarioService
   ) {
     this.apiURL = environment.apiURL;
@@ -48,22 +49,7 @@ export class UsuariosComponent implements AfterViewInit {
   }
 
   add() {
-
-    this._dialog.open(UsuarioCadastroComponent, {
-      data: {
-        animal: null
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-
-      next: (result) => {
-
-        if (result && result.status) {
-          this.findAll();
-        }
-      }
-    });
+    this._router.navigate(['/' + this.user.role.toLowerCase() + '/usuarios/cadastro']);
   }
 
   async findAll() {
@@ -106,6 +92,10 @@ export class UsuariosComponent implements AfterViewInit {
     }
 
     this.findAll();
+  }
+
+  show(usuario: Usuario) {
+    this._router.navigate(['/' + this.user.role.toLowerCase() + '/usuarios/' + usuario.id]);
   }
 
   async search() {
