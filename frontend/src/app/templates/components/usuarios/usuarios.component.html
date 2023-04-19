@@ -51,11 +51,12 @@
 <div [hidden]="(usuarios && usuarios.length == 0) || isLoadingResults">
     <div class="row">
         <div class="col-12 col-md-3 mb-3" *ngFor="let usuario of usuarios">
-            <a [routerLink]="'/' + user.role.toLowerCase() + '/usuarios/' + usuario.id" class="text-decoration-none text-dark">
+            <a class="text-decoration-none text-dark" (click)="show(usuario)">
                 <mat-card>
                     <mat-card-content class="p-3">
                         <div class="mb-3 text-center">
-                            <img [src]="usuario.foto ? apiURL + '/imagens/search?nome=' + usuario.foto.nome : '/assets/images/usuarios.png'" height="150px" class="rounded-circle">
+                            <img [src]="usuario.foto ? apiURL + '/imagens/search?nome=' + usuario.foto.nome : '/assets/images/usuarios.png'" height="150px" 
+                                [ngClass]="usuario.foto ? 'rounded-circle' : ''">
                         </div>
                         <div>
                             <p class="m-0 fw-bold">{{usuario.nome}}</p>

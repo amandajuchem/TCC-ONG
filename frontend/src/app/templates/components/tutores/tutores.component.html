@@ -54,7 +54,8 @@
                 <mat-card>
                     <mat-card-content class="p-3">
                         <div class="mb-3 text-center">
-                            <img [src]="tutor.foto ? apiURL + '/imagens/search?nome=' + tutor.foto.nome : '/assets/images/tutores.png'" height="150px" class="rounded-circle">
+                            <img [src]="tutor.foto ? apiURL + '/imagens/search?nome=' + tutor.foto.nome : '/assets/images/tutores.png'" height="150px" 
+                                [ngClass]="tutor.foto ? 'rounded-circle' : ''">
                         </div>
                         <div>
                             <p class="m-0 fw-bold">{{tutor.nome}}</p>

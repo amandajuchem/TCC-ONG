@@ -4,17 +4,17 @@
             <ol class="breadcrumb m-0">
                 <li class="breadcrumb-item"><a class="text-white" [routerLink]="'/' + user.role.toLowerCase() + '/painel'">Início</a></li>
                 <li class="breadcrumb-item"><a class="text-white" [routerLink]="'/' + user.role.toLowerCase() + '/usuarios'">Usuários</a></li>
-                <li class="breadcrumb-item active" aria-current="page" *ngIf="usuario">{{usuario.nome}}</li>
+                <li class="breadcrumb-item active" aria-current="page">{{usuario ? usuario.nome : 'Cadastro'}}</li>
             </ol>
         </nav>
     </div>
 </div>
 
-<mat-card *ngIf="usuario">
+<mat-card>
     <mat-card-header>
         <div class="mat-card-header-text">
             <div class="text-center">
-                <h2>{{usuario.nome}}</h2>
+                <h2>{{usuario ? usuario.nome : 'Cadastrar Usuário'}}</h2>
             </div>
         </div>
     </mat-card-header>

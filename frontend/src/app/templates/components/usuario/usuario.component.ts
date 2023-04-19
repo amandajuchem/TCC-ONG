@@ -31,21 +31,28 @@ export class UsuarioComponent implements OnInit {
 
     this._activatedRoute.params.subscribe({
 
-      next: (x: any) => {
+      next: (params: any) => {
           
-        if (x && x.id) {
+        if (params && params.id) {
           
-          this._usuarioService.findById(x.id).subscribe({
-            
-            next: (usuario) => {
-              this._usuarioService.set(usuario);
-            },
+          if (params.id.includes('cadastro')) {
+            this._usuarioService.set(null);
+          }
 
-            error: (error) => {
-              console.error(error);
-              this._notificationService.show(MessageUtils.USUARIO_GET_FAIL, NotificationType.FAIL); 
-            }
-          });
+          else {
+
+            this._usuarioService.findById(params.id).subscribe({
+            
+              next: (usuario) => {
+                this._usuarioService.set(usuario);
+              },
+  
+              error: (error) => {
+                console.error(error);
+                this._notificationService.show(MessageUtils.USUARIO_GET_FAIL, NotificationType.FAIL); 
+              }
+            });
+          }
         }
       },
     });

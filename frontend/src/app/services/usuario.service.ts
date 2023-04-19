@@ -110,7 +110,7 @@ export class UsuarioService implements AbstractService<Usuario> {
    * 
    * @param usuario 
    */
-  set(usuario: Usuario) {
+  set(usuario: Usuario | null) {
     this._subject.next(usuario);
   }
 

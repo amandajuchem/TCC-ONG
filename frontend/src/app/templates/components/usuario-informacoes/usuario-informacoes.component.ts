@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { User } from 'src/app/entities/user';
 import { Usuario } from 'src/app/entities/usuario';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { AuthService } from 'src/app/services/auth.service';
@@ -23,7 +25,7 @@ export class UsuarioInformacoesComponent implements OnInit {
   form!: FormGroup;
   foto!: any;
   hide!: boolean;
-  user!: any;
+  user!: User;
   usuario!: Usuario;
 
   constructor(
@@ -32,6 +34,7 @@ export class UsuarioInformacoesComponent implements OnInit {
     private _formBuilder: FormBuilder,
     private _imagemService: ImagemService,
     private _notificationService: NotificationService,
+    private _router: Router,
     private _usuarioService: UsuarioService
   ) { }
 
@@ -54,6 +57,10 @@ export class UsuarioInformacoesComponent implements OnInit {
           } else {
             this.foto = null;
           }
+        }
+
+        else {
+          this.buildForm(null);
         }
       }
     });
@@ -78,24 +85,24 @@ export class UsuarioInformacoesComponent implements OnInit {
     });
   }
 
-  buildForm(usuario: Usuario) {
+  buildForm(usuario: Usuario | null) {
 
     this.form = this._formBuilder.group({
-      id: [usuario.id, Validators.nullValidator],
-      nome: [usuario.nome, Validators.required],
-      cpf: [usuario.cpf, Validators.required],
-      senha: [usuario.senha, Validators.required],
-      setor: [usuario.setor, Validators.required],
-      status: [usuario.status, Validators.required],
-      foto: [usuario.foto, Validators.nullValidator]
+      id: [usuario?.id, Validators.nullValidator],
+      nome: [usuario?.nome, Validators.required],
+      cpf: [usuario?.cpf, Validators.required],
+      senha: [usuario?.senha, Validators.required],
+      setor: [usuario?.setor, Validators.required],
+      status: [usuario?.status, Validators.required],
+      foto: [usuario?.foto, Validators.nullValidator]
     });
 
-    this.form.disable();
+    usuario ? this.form.disable() : this.form.enable();
   }
 
   cancel() {
-    this.buildForm(this.usuario);
-    this.foto = this.usuario.foto ? { id: this.usuario.foto.id, nome: this.usuario.foto.nome } : null;
+    this.foto = this.usuario?.foto ? { id: this.usuario?.foto.id, nome: this.usuario?.foto.nome } : null;
+    this.usuario ? this.buildForm(this.usuario) : this._router.navigate(['/' + this.user.role.toLowerCase() + '/usuarios']);
   }
 
   removeFoto() {
@@ -108,19 +115,39 @@ export class UsuarioInformacoesComponent implements OnInit {
     const usuario: Usuario = Object.assign({}, this.form.getRawValue());
     const imagem: File = this.foto?.file;
 
-    this._usuarioService.update(usuario, imagem).subscribe({
+    if (usuario.id) {
 
-      next: (usuario) => {
-        this.foto ? this.foto.file = null : null;
-        this._usuarioService.set(usuario);
-        this._notificationService.show(MessageUtils.USUARIO_UPDATE_SUCCESS, NotificationType.SUCCESS);
-      },
+      this._usuarioService.update(usuario, imagem).subscribe({
 
-      error: (error) => {
-        console.error(error);
-        this._notificationService.show(MessageUtils.USUARIO_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
-      }
-    });
+        next: (usuario) => {
+          this.foto ? this.foto.file = null : null;
+          this._usuarioService.set(usuario);
+          this._notificationService.show(MessageUtils.USUARIO_UPDATE_SUCCESS, NotificationType.SUCCESS);
+        },
+  
+        error: (error) => {
+          console.error(error);
+          this._notificationService.show(MessageUtils.USUARIO_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
+        }
+      });
+    }
+
+    else {
+
+      this._usuarioService.save(usuario, imagem).subscribe({
+
+        next: (usuario) => {
+          this.foto ? this.foto.file = null : null;
+          this._router.navigate(['/' + this.user.role.toLowerCase() + '/usuarios/' + usuario.id]);
+          this._notificationService.show(MessageUtils.USUARIO_SAVE_SUCCESS, NotificationType.SUCCESS);
+        },
+  
+        error: (error) => {
+          console.error(error);
+          this._notificationService.show(MessageUtils.USUARIO_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
+        }
+      });
+    }
   }
 
   update() {
