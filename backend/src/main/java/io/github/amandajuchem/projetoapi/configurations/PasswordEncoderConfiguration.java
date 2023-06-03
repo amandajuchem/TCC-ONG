@@ -9,7 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * The type Encode configuration.
  */
 @Configuration
-public class EncodeConfiguration {
+public class PasswordEncoderConfiguration {
 
     /**
      * Bcrypt password encoder b crypt password encoder.
@@ -17,7 +17,7 @@ public class EncodeConfiguration {
      * @return the b crypt password encoder
      */
     @Bean
-    public PasswordEncoder bCryptPasswordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }
