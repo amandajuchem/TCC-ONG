@@ -5,15 +5,15 @@ import io.github.amandajuchem.projetoapi.enums.Especie;
 import io.github.amandajuchem.projetoapi.enums.Porte;
 import io.github.amandajuchem.projetoapi.enums.Sexo;
 import io.github.amandajuchem.projetoapi.enums.Situacao;
+import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 /**

@@ -7,13 +7,13 @@ import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.AtendimentoService;
 import io.github.amandajuchem.projetoapi.utils.FileUtils;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;

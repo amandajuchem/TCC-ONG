@@ -4,6 +4,7 @@ import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
 import io.github.amandajuchem.projetoapi.utils.FileUtils;
 import io.github.amandajuchem.projetoapi.utils.MediaTypeUtils;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
+import jakarta.servlet.ServletContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.ServletContext;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
