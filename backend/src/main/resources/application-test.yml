@@ -1,6 +1,8 @@
-jwt:
-  expiration: 43200000
-  secret: zE)*wwRHJ=Dr:jvqC6w)VTDpif1}Xbw>GY}#E!R=6#agoK8XgJmgAxqyU^8!-qdsV
+app:
+  security:
+    rsa:
+      public-key: classpath:certs/public.pem
+      private-key: classpath:certs/private.pem
 
 spring:
   datasource:

@@ -1,8 +1,7 @@
 package io.github.amandajuchem.projetoapi.utils;
 
+import jakarta.servlet.ServletContext;
 import org.springframework.http.MediaType;
-
-import javax.servlet.ServletContext;
 
 /**
  * The type Media type utils.

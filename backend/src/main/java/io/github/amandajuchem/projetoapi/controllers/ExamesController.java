@@ -5,11 +5,11 @@ import io.github.amandajuchem.projetoapi.entities.Exame;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.ExameService;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.*;
