@@ -9,9 +9,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-/**
- * The type Atendimento dto.
- */
 public record AtendimentoDTO(
         UUID id,
         LocalDateTime createdDate,
@@ -28,12 +25,6 @@ public record AtendimentoDTO(
         Set<ExameDTO> exames
 ) implements Serializable {
 
-    /**
-     * To atendimento dto.
-     *
-     * @param atendimento the atendimento
-     * @return the atendimento dto
-     */
     public static AtendimentoDTO toDTO(Atendimento atendimento) {
 
         return new AtendimentoDTO(

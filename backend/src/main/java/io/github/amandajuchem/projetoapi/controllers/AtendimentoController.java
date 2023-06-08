@@ -7,8 +7,11 @@ import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.AtendimentoService;
 import io.github.amandajuchem.projetoapi.utils.FileUtils;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,73 +22,47 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
-/**
- * The type Atendimento controller.
- */
 @RestController
 @RequestMapping("/atendimentos")
 @RequiredArgsConstructor
-public class AtendimentoController {
+@Tag(name = "Atendimento", description = "Endpoints para gerenciamento de atendimentos")
+public class AtendimentoController implements AbstractController<Atendimento, AtendimentoDTO> {
 
     private final AtendimentoService service;
 
-    /**
-     * Delete response entity.
-     *
-     * @param id the id
-     * @return the response entity
-     */
+    @Override
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable UUID id) {
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
         service.delete(id);
         return ResponseEntity.status(OK).body(null);
     }
 
-    /**
-     * Find all response entity.
-     *
-     * @param page      the page
-     * @param size      the size
-     * @param sort      the sort
-     * @param direction the direction
-     * @return the response entity
-     */
+    @Override
     @GetMapping
-    public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") Integer page,
-                                     @RequestParam(required = false, defaultValue = "10") Integer size,
-                                     @RequestParam(required = false, defaultValue = "dataHora") String sort,
-                                     @RequestParam(required = false, defaultValue = "desc") String direction) {
+    public ResponseEntity<Page<AtendimentoDTO>> findAll(@RequestParam(required = false, defaultValue = "0") Integer page,
+                                                        @RequestParam(required = false, defaultValue = "10") Integer size,
+                                                        @RequestParam(required = false, defaultValue = "dataHora") String sort,
+                                                        @RequestParam(required = false, defaultValue = "desc") String direction) {
 
-        var atendimentos = service.findAll(page, size, sort, direction).map(AtendimentoDTO::toDTO);
+        final var atendimentos = service.findAll(page, size, sort, direction);
         return ResponseEntity.status(OK).body(atendimentos);
     }
 
-    /**
-     * Find atendimento by id.
-     *
-     * @param id the id
-     * @return the response entity
-     */
+    @Override
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable UUID id) {
-        var atendimento = service.findById(id);
-        return ResponseEntity.status(OK).body(AtendimentoDTO.toDTO(atendimento));
+    public ResponseEntity<AtendimentoDTO> findById(@PathVariable UUID id) {
+        final var atendimento = service.findById(id);
+        return ResponseEntity.status(OK).body(atendimento);
     }
 
-    /**
-     * Save response entity.
-     *
-     * @param atendimento the atendimento
-     * @param documentos  the documentos
-     * @return the response entity
-     * @throws FileNotFoundException the file not found exception
-     * @throws InterruptedException  the interrupted exception
-     */
+    @Operation(summary = "Save", description = "Save an item")
+    @ResponseStatus(CREATED)
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> save(@RequestPart @Valid Atendimento atendimento,
-                                  @RequestPart(required = false) List<MultipartFile> documentos) throws FileNotFoundException, InterruptedException {
+    public ResponseEntity<AtendimentoDTO> save(@RequestPart @Valid Atendimento atendimento,
+                                               @RequestPart(required = false) List<MultipartFile> documentos) throws FileNotFoundException, InterruptedException {
 
         if (documentos != null) {
 
@@ -105,49 +82,33 @@ public class AtendimentoController {
             }
         }
 
-        atendimento = service.save(atendimento);
-        return ResponseEntity.status(CREATED).body(AtendimentoDTO.toDTO(atendimento));
+        return save(atendimento);
     }
 
-    /**
-     * Search response entity.
-     *
-     * @param value     the data, nome do animal ou nome do veterinário
-     * @param page      the page
-     * @param size      the size
-     * @param sort      the sort
-     * @param direction the direction
-     * @return the response entity
-     */
+    @Override
+    public ResponseEntity<AtendimentoDTO> save(Atendimento atendimento) {
+        final var atendimentoSaved = service.save(atendimento);
+        return ResponseEntity.status(CREATED).body(atendimentoSaved);
+    }
+
+    @Override
     @GetMapping("/search")
-    public ResponseEntity<?> search(@RequestParam(required = false) String value,
-                                    @RequestParam(required = false, defaultValue = "0") Integer page,
-                                    @RequestParam(required = false, defaultValue = "10") Integer size,
-                                    @RequestParam(required = false, defaultValue = "dataHora") String sort,
-                                    @RequestParam(required = false, defaultValue = "desc") String direction) {
+    public ResponseEntity<Page<AtendimentoDTO>> search(@RequestParam String value,
+                                                       @RequestParam(required = false, defaultValue = "0") Integer page,
+                                                       @RequestParam(required = false, defaultValue = "10") Integer size,
+                                                       @RequestParam(required = false, defaultValue = "dataHora") String sort,
+                                                       @RequestParam(required = false, defaultValue = "desc") String direction) {
 
-        if (value != null) {
-            var atendimentos = service.search(value, page, size, sort, direction).map(AtendimentoDTO::toDTO);
-            return ResponseEntity.status(OK).body(atendimentos);
-        }
-
-        return ResponseEntity.status(NOT_FOUND).body(null);
+        final var atendimentos = service.search(value, page, size, sort, direction);
+        return ResponseEntity.status(OK).body(atendimentos);
     }
 
-    /**
-     * Update response entity.
-     *
-     * @param id          the id
-     * @param atendimento the atendimento
-     * @param documentos  the documentos
-     * @return the response entity
-     * @throws FileNotFoundException the file not found exception
-     * @throws InterruptedException  the interrupted exception
-     */
+    @Operation(summary = "Update", description = "Update an item")
+    @ResponseStatus(OK)
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> update(@PathVariable UUID id,
-                                    @RequestPart @Valid Atendimento atendimento,
-                                    @RequestPart(required = false) List<MultipartFile> documentos) throws FileNotFoundException, InterruptedException {
+    public ResponseEntity<AtendimentoDTO> update(@PathVariable UUID id,
+                                                 @RequestPart @Valid Atendimento atendimento,
+                                                 @RequestPart(required = false) List<MultipartFile> documentos) throws FileNotFoundException, InterruptedException {
 
         if (atendimento.getId().equals(id)) {
 
@@ -169,10 +130,15 @@ public class AtendimentoController {
                 }
             }
 
-            atendimento = service.save(atendimento);
-            return ResponseEntity.status(OK).body(AtendimentoDTO.toDTO(atendimento));
+            return update(id, atendimento);
         }
 
         throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);
+    }
+
+    @Override
+    public ResponseEntity<AtendimentoDTO> update(UUID id, Atendimento atendimento) {
+        final var atendimentoSaved = service.save(atendimento);
+        return ResponseEntity.status(OK).body(atendimentoSaved);
     }
 }

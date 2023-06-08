@@ -6,9 +6,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-/**
- * The type Telefone dto.
- */
 public record TelefoneDTO(
         UUID id,
         LocalDateTime createdDate,
@@ -18,12 +15,6 @@ public record TelefoneDTO(
         String numero
 ) implements Serializable {
 
-    /**
-     * To dto telefone dto.
-     *
-     * @param telefone the telefone
-     * @return the telefone dto
-     */
     public static TelefoneDTO toDTO(Telefone telefone) {
 
         return new TelefoneDTO(

@@ -7,17 +7,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-/**
- * The type Cors configuration.
- */
 @Configuration
 public class CorsConfiguration {
 
-    /**
-     * Cors configuration source cors configuration source.
-     *
-     * @return cors configuration source
-     */
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         final var source = new UrlBasedCorsConfigurationSource();

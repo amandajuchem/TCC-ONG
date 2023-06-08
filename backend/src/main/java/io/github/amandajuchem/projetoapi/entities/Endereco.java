@@ -12,9 +12,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-/**
- * The type Endereco.
- */
 @Data
 @SuperBuilder
 @NoArgsConstructor

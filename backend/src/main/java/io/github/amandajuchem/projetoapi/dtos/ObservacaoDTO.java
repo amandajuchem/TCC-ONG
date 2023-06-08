@@ -6,9 +6,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-/**
- * The type Observacao dto.
- */
 public record ObservacaoDTO(
         UUID id,
         LocalDateTime createdDate,
@@ -18,12 +15,6 @@ public record ObservacaoDTO(
         String conteudo
 ) implements Serializable {
 
-    /**
-     * To dto observacao dto.
-     *
-     * @param observacao the observacao
-     * @return the observacao dto
-     */
     public static ObservacaoDTO toDTO(Observacao observacao) {
 
         return new ObservacaoDTO(

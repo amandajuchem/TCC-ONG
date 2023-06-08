@@ -13,9 +13,6 @@ import lombok.experimental.SuperBuilder;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-/**
- * The type Feira adocao.
- */
 @Data
 @SuperBuilder
 @NoArgsConstructor

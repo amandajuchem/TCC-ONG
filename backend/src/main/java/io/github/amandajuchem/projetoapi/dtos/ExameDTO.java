@@ -6,9 +6,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-/**
- * The type Exame dto.
- */
 public record ExameDTO(
         UUID id,
         LocalDateTime createdDate,
@@ -19,12 +16,6 @@ public record ExameDTO(
         String categoria
 ) implements Serializable {
 
-    /**
-     * To dto exame dto.
-     *
-     * @param exame the exame
-     * @return the exame dto
-     */
     public static ExameDTO toDTO(Exame exame) {
 
         return new ExameDTO(

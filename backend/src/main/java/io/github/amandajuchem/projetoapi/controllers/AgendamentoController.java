@@ -5,118 +5,77 @@ import io.github.amandajuchem.projetoapi.entities.Agendamento;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.AgendamentoService;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
-/**
- * The type Agendamento controller.
- */
 @RestController
 @RequestMapping("/agendamentos")
 @RequiredArgsConstructor
-public class AgendamentoController {
+@Tag(name = "Agendamento", description = "Endpoints para gerenciamento de agendamentos")
+public class AgendamentoController implements AbstractController<Agendamento, AgendamentoDTO> {
 
     private final AgendamentoService service;
 
-    /**
-     * Delete agendamento.
-     *
-     * @param id the id
-     * @return the response entity
-     */
+    @Override
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable UUID id) {
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
         service.delete(id);
         return ResponseEntity.status(OK).body(null);
     }
 
-    /**
-     * Find all agendamento.
-     *
-     * @param page      the page
-     * @param size      the size
-     * @param sort      the sort
-     * @param direction the direction
-     * @return the response entity
-     */
+    @Override
     @GetMapping
-    public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") Integer page,
-                                     @RequestParam(required = false, defaultValue = "10") Integer size,
-                                     @RequestParam(required = false, defaultValue = "dataHora") String sort,
-                                     @RequestParam(required = false, defaultValue = "desc") String direction) {
+    public ResponseEntity<Page<AgendamentoDTO>> findAll(@RequestParam(required = false, defaultValue = "0") Integer page,
+                                                        @RequestParam(required = false, defaultValue = "10") Integer size,
+                                                        @RequestParam(required = false, defaultValue = "dataHora") String sort,
+                                                        @RequestParam(required = false, defaultValue = "desc") String direction) {
 
-        var agendamentos = service.findAll(page, size, sort, direction).map(AgendamentoDTO::toDTO);
+        final var agendamentos = service.findAll(page, size, sort, direction);
         return ResponseEntity.status(OK).body(agendamentos);
     }
 
-    /**
-     * Find agendamento by id
-     * 
-     * @param id the id
-     * @return the response entity
-     */
+    @Override
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable UUID id) {
-        var agendamento = service.findById(id);
-        return ResponseEntity.status(OK).body(AgendamentoDTO.toDTO(agendamento));
+    public ResponseEntity<AgendamentoDTO> findById(@PathVariable UUID id) {
+        final var agendamento = service.findById(id);
+        return ResponseEntity.status(OK).body(agendamento);
     }
 
-    /**
-     * Save agendamento.
-     *
-     * @param agendamento the agendamento
-     * @return the response entity
-     */
+    @Override
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody @Valid Agendamento agendamento) {
-        agendamento = service.save(agendamento);
-        return ResponseEntity.status(CREATED).body(AgendamentoDTO.toDTO(agendamento));
+    public ResponseEntity<AgendamentoDTO> save(@RequestBody @Valid Agendamento agendamento) {
+        final var agendamentoSaved = service.save(agendamento);
+        return ResponseEntity.status(CREATED).body(agendamentoSaved);
     }
 
-    /**
-     * Search agendamento.
-     *
-     * @param value     the data, nome do animal ou nome do veterinário
-     * @param page      the page
-     * @param size      the size
-     * @param sort      the sort
-     * @param direction the direction
-     * @return the response entity
-     */
+    @Override
     @GetMapping("/search")
-    public ResponseEntity<?> search(@RequestParam(required = false) String value,
-                                    @RequestParam(required = false, defaultValue = "0") Integer page,
-                                    @RequestParam(required = false, defaultValue = "10") Integer size,
-                                    @RequestParam(required = false, defaultValue = "dataHora") String sort,
-                                    @RequestParam(required = false, defaultValue = "desc") String direction) {
+    public ResponseEntity<Page<AgendamentoDTO>> search(@RequestParam String value,
+                                                       @RequestParam(required = false, defaultValue = "0") Integer page,
+                                                       @RequestParam(required = false, defaultValue = "10") Integer size,
+                                                       @RequestParam(required = false, defaultValue = "dataHora") String sort,
+                                                       @RequestParam(required = false, defaultValue = "desc") String direction) {
 
-        if (value != null) {
-            var agendamentos = service.search(value, page, size, sort, direction).map(AgendamentoDTO::toDTO);
-            return ResponseEntity.status(OK).body(agendamentos);
-        }
-
-        return ResponseEntity.status(NOT_FOUND).body(null);
+        final var agendamentos = service.search(value, page, size, sort, direction);
+        return ResponseEntity.status(OK).body(agendamentos);
     }
 
-    /**
-     * Update agendamento.
-     *
-     * @param id          the id
-     * @param agendamento the agendamento
-     * @return the response entity
-     */
+    @Override
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody @Valid Agendamento agendamento) {
+    public ResponseEntity<AgendamentoDTO> update(@PathVariable UUID id, @RequestBody @Valid Agendamento agendamento) {
 
         if (agendamento.getId().equals(id)) {
-            agendamento = service.save(agendamento);
-            return ResponseEntity.status(OK).body(AgendamentoDTO.toDTO(agendamento));
+            final var agendamentoSaved = service.save(agendamento);
+            return ResponseEntity.status(OK).body(agendamentoSaved);
         }
 
         throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);

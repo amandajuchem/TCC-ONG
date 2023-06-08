@@ -4,6 +4,7 @@ import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
 import io.github.amandajuchem.projetoapi.utils.FileUtils;
 import io.github.amandajuchem.projetoapi.utils.MediaTypeUtils;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.ServletContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
@@ -19,22 +20,14 @@ import java.io.FileNotFoundException;
 
 import static org.springframework.http.HttpStatus.OK;
 
-/**
- * The type Imagem controller.
- */
 @RestController
 @RequestMapping("/imagens")
 @RequiredArgsConstructor
+@Tag(name = "Imagem", description = "Endpoints para gerenciamento de imagens")
 public class ImagemController {
 
     private final ServletContext servletContext;
 
-    /**
-     * Search response entity.
-     *
-     * @param nome the nome
-     * @return the response entity
-     */
     @GetMapping("/search")
     public ResponseEntity<?> search(@RequestParam(required = false) String nome) throws FileNotFoundException {
 

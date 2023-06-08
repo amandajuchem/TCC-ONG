@@ -12,9 +12,6 @@ import lombok.experimental.SuperBuilder;
 
 import java.io.IOException;
 
-/**
- * The type Imagem.
- */
 @Data
 @SuperBuilder
 @NoArgsConstructor

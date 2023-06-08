@@ -7,8 +7,11 @@ import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.UsuarioService;
 import io.github.amandajuchem.projetoapi.utils.FileUtils;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,58 +22,43 @@ import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.*;
 
-/**
- * The type Usuario controller.
- */
 @RestController
 @RequestMapping("/usuarios")
 @RequiredArgsConstructor
-public class UsuarioController {
+@Tag(name = "Usuário", description = "Endpoints para gerenciamento de usuários")
+public class UsuarioController implements AbstractController<Usuario, UsuarioDTO> {
 
     private final UsuarioService service;
 
-    /**
-     * Find all usuários.
-     *
-     * @param page      the page
-     * @param size      the size
-     * @param sort      the sort
-     * @param direction the direction
-     * @return the list of usuários
-     */
-    @GetMapping
-    public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") Integer page,
-                                     @RequestParam(required = false, defaultValue = "10") Integer size,
-                                     @RequestParam(required = false, defaultValue = "nome") String sort,
-                                     @RequestParam(required = false, defaultValue = "asc") String direction) {
+    @Override
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        return ResponseEntity.status(NOT_IMPLEMENTED).build();
+    }
 
-        var usuarios = service.findAll(page, size, sort, direction).map(UsuarioDTO::toDTO);
+    @Override
+    @GetMapping
+    public ResponseEntity<Page<UsuarioDTO>> findAll(@RequestParam(required = false, defaultValue = "0") Integer page,
+                                                    @RequestParam(required = false, defaultValue = "10") Integer size,
+                                                    @RequestParam(required = false, defaultValue = "nome") String sort,
+                                                    @RequestParam(required = false, defaultValue = "asc") String direction) {
+
+        final var usuarios = service.findAll(page, size, sort, direction);
         return ResponseEntity.status(OK).body(usuarios);
     }
 
-    /**
-     * Find by id response entity.
-     *
-     * @param id the id
-     * @return the response entity
-     */
+    @Override
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable UUID id) {
-        var usuario = service.findById(id);
-        return ResponseEntity.status(OK).body(UsuarioDTO.toDTO(usuario));
+    public ResponseEntity<UsuarioDTO> findById(@PathVariable UUID id) {
+        final var usuario = service.findById(id);
+        return ResponseEntity.status(OK).body(usuario);
     }
 
-    /**
-     * Save response entity.
-     *
-     * @param usuario the usuario
-     * @param foto    the foto
-     * @return the response entity
-     * @throws FileNotFoundException the file not found exception
-     */
+    @Operation(summary = "Save", description = "Save an item")
+    @ResponseStatus(CREATED)
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> save(@RequestPart @Valid Usuario usuario,
-                                  @RequestPart(required = false) MultipartFile foto) throws FileNotFoundException {
+    public ResponseEntity<UsuarioDTO> save(@RequestPart @Valid Usuario usuario,
+                                           @RequestPart(required = false) MultipartFile foto) throws FileNotFoundException {
 
         if (foto != null) {
 
@@ -82,48 +70,33 @@ public class UsuarioController {
             FileUtils.FILES.put(imagem.getNome(), foto);
         }
 
-        usuario = service.save(usuario);
-        return ResponseEntity.status(CREATED).body(UsuarioDTO.toDTO(usuario));
+        return save(usuario);
     }
 
-    /**
-     * Search usuários.
-     *
-     * @param value     the nome ou CPF
-     * @param page      the page
-     * @param size      the size
-     * @param sort      the sort
-     * @param direction the direction
-     * @return the response entity
-     */
+    @Override
+    public ResponseEntity<UsuarioDTO> save(Usuario usuario) {
+        final var usuarioSaved = service.save(usuario);
+        return ResponseEntity.status(CREATED).body(usuarioSaved);
+    }
+
+    @Override
     @GetMapping("/search")
-    public ResponseEntity<?> search(@RequestParam(required = false) String value,
-                                    @RequestParam(required = false, defaultValue = "0") Integer page,
-                                    @RequestParam(required = false, defaultValue = "10") Integer size,
-                                    @RequestParam(required = false, defaultValue = "nome") String sort,
-                                    @RequestParam(required = false, defaultValue = "asc") String direction) {
+    public ResponseEntity<Page<UsuarioDTO>> search(@RequestParam String value,
+                                                   @RequestParam(required = false, defaultValue = "0") Integer page,
+                                                   @RequestParam(required = false, defaultValue = "10") Integer size,
+                                                   @RequestParam(required = false, defaultValue = "nome") String sort,
+                                                   @RequestParam(required = false, defaultValue = "asc") String direction) {
 
-        if (value != null) {
-            var usuarios = service.search(value, page, size, sort, direction).map(UsuarioDTO::toDTO);
-            return ResponseEntity.status(OK).body(usuarios);
-        }
-
-        return ResponseEntity.status(NOT_FOUND).body(null);
+        final var usuarios = service.search(value, page, size, sort, direction);
+        return ResponseEntity.status(OK).body(usuarios);
     }
 
-    /**
-     * Update response entity.
-     *
-     * @param id      the id
-     * @param usuario the usuario
-     * @param foto    the foto
-     * @return the response entity
-     * @throws FileNotFoundException the file not found exception
-     */
+    @Operation(summary = "Update", description = "Update an item")
+    @ResponseStatus(OK)
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> update(@PathVariable UUID id,
-                                    @RequestPart @Valid Usuario usuario,
-                                    @RequestPart(required = false) MultipartFile foto) throws FileNotFoundException {
+    public ResponseEntity<UsuarioDTO> update(@PathVariable UUID id,
+                                             @RequestPart @Valid Usuario usuario,
+                                             @RequestPart(required = false) MultipartFile foto) throws FileNotFoundException {
 
         if (usuario.getId().equals(id)) {
 
@@ -137,10 +110,15 @@ public class UsuarioController {
                 FileUtils.FILES.put(imagem.getNome(), foto);
             }
 
-            usuario = service.save(usuario);
-            return ResponseEntity.status(OK).body(UsuarioDTO.toDTO(usuario));
+            return update(id, usuario);
         }
 
         throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);
+    }
+
+    @Override
+    public ResponseEntity<UsuarioDTO> update(UUID id, Usuario usuario) {
+        final var usuarioSaved = service.save(usuario);
+        return ResponseEntity.status(OK).body(usuarioSaved);
     }
 }

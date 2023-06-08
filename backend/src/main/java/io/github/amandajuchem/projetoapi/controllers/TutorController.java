@@ -7,8 +7,11 @@ import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.TutorService;
 import io.github.amandajuchem.projetoapi.utils.FileUtils;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,72 +20,47 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.FileNotFoundException;
 import java.util.UUID;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
-/**
- * The type Tutor controller.
- */
 @RestController
 @RequestMapping("/tutores")
 @RequiredArgsConstructor
-public class TutorController {
+@Tag(name = "Tutor", description = "Endpoints para gerenciamento de tutores")
+public class TutorController implements AbstractController<Tutor, TutorDTO> {
 
     private final TutorService service;
 
-    /**
-     * Delete response entity.
-     *
-     * @param id the id
-     * @return the response entity
-     */
+    @Override
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable UUID id) {
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
         service.delete(id);
         return ResponseEntity.status(OK).body(null);
     }
 
-    /**
-     * Find all response entity.
-     *
-     * @param page      the page
-     * @param size      the size
-     * @param sort      the sort
-     * @param direction the direction
-     * @return the response entity
-     */
+    @Override
     @GetMapping
-    public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") Integer page,
-                                     @RequestParam(required = false, defaultValue = "10") Integer size,
-                                     @RequestParam(required = false, defaultValue = "nome") String sort,
-                                     @RequestParam(required = false, defaultValue = "asc") String direction) {
+    public ResponseEntity<Page<TutorDTO>> findAll(@RequestParam(required = false, defaultValue = "0") Integer page,
+                                                  @RequestParam(required = false, defaultValue = "10") Integer size,
+                                                  @RequestParam(required = false, defaultValue = "nome") String sort,
+                                                  @RequestParam(required = false, defaultValue = "asc") String direction) {
 
-        var tutores = service.findAll(page, size, sort, direction).map(TutorDTO::toDTO);
+        final var tutores = service.findAll(page, size, sort, direction);
         return ResponseEntity.status(OK).body(tutores);
     }
 
-    /**
-     * Find by id response entity.
-     *
-     * @param id the id
-     * @return the response entity
-     */
+    @Override
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable UUID id) {
-        var tutor = service.findById(id);
-        return ResponseEntity.status(OK).body(TutorDTO.toDTO(tutor));
+    public ResponseEntity<TutorDTO> findById(@PathVariable UUID id) {
+        final var tutor = service.findById(id);
+        return ResponseEntity.status(OK).body(tutor);
     }
 
-    /**
-     * Save response entity.
-     *
-     * @param tutor the tutor
-     * @param foto  the foto
-     * @return the response entity
-     * @throws FileNotFoundException the file not found exception
-     */
+    @Operation(summary = "Save", description = "Save an item")
+    @ResponseStatus(CREATED)
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> save(@RequestPart @Valid Tutor tutor,
-                                  @RequestPart(required = false) MultipartFile foto) throws FileNotFoundException {
+    public ResponseEntity<TutorDTO> save(@RequestPart @Valid Tutor tutor,
+                                         @RequestPart(required = false) MultipartFile foto) throws FileNotFoundException {
 
         if (foto != null) {
 
@@ -94,48 +72,33 @@ public class TutorController {
             FileUtils.FILES.put(imagem.getNome(), foto);
         }
 
-        tutor = service.save(tutor);
-        return ResponseEntity.status(CREATED).body(TutorDTO.toDTO(tutor));
+        return save(tutor);
     }
 
-    /**
-     * Search tutor.
-     *
-     * @param value     the nome, CPF ou RG
-     * @param page      the page
-     * @param size      the size
-     * @param sort      the sort
-     * @param direction the direction
-     * @return the response entity
-     */
+    @Override
+    public ResponseEntity<TutorDTO> save(Tutor tutor) {
+        final var tutorSaved = service.save(tutor);
+        return ResponseEntity.status(CREATED).body(tutorSaved);
+    }
+
+    @Override
     @GetMapping("/search")
-    public ResponseEntity<?> search(@RequestParam(required = false) String value,
-                                    @RequestParam(required = false, defaultValue = "0") Integer page,
-                                    @RequestParam(required = false, defaultValue = "10") Integer size,
-                                    @RequestParam(required = false, defaultValue = "nome") String sort,
-                                    @RequestParam(required = false, defaultValue = "asc") String direction) {
+    public ResponseEntity<Page<TutorDTO>> search(@RequestParam String value,
+                                                 @RequestParam(required = false, defaultValue = "0") Integer page,
+                                                 @RequestParam(required = false, defaultValue = "10") Integer size,
+                                                 @RequestParam(required = false, defaultValue = "nome") String sort,
+                                                 @RequestParam(required = false, defaultValue = "asc") String direction) {
 
-        if (value != null) {
-            var tutores = service.search(value, page, size, sort, direction).map(TutorDTO::toDTO);
-            return ResponseEntity.status(OK).body(tutores);
-        }
-
-        return ResponseEntity.status(NOT_FOUND).body(null);
+        final var tutores = service.search(value, page, size, sort, direction);
+        return ResponseEntity.status(OK).body(tutores);
     }
 
-    /**
-     * Update response entity.
-     *
-     * @param id    the id
-     * @param tutor the tutor
-     * @param foto  the foto
-     * @return the response entity
-     * @throws FileNotFoundException the file not found exception
-     */
+    @Operation(summary = "Update", description = "Update an item")
+    @ResponseStatus(OK)
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> update(@PathVariable UUID id,
-                                    @RequestPart @Valid Tutor tutor,
-                                    @RequestPart(required = false) MultipartFile foto) throws FileNotFoundException {
+    public ResponseEntity<TutorDTO> update(@PathVariable UUID id,
+                                           @RequestPart @Valid Tutor tutor,
+                                           @RequestPart(required = false) MultipartFile foto) throws FileNotFoundException {
 
         if (tutor.getId().equals(id)) {
 
@@ -149,10 +112,15 @@ public class TutorController {
                 FileUtils.FILES.put(imagem.getNome(), foto);
             }
 
-            tutor = service.save(tutor);
-            return ResponseEntity.status(OK).body(TutorDTO.toDTO(tutor));
+            return update(id, tutor);
         }
 
         throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);
+    }
+
+    @Override
+    public ResponseEntity<TutorDTO> update(UUID id, Tutor tutor) {
+        final var tutorSaved = service.save(tutor);
+        return ResponseEntity.status(OK).body(tutorSaved);
     }
 }

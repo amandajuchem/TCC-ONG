@@ -7,9 +7,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-/**
- * The type Endereco dto.
- */
 public record EnderecoDTO(
         UUID id,
         LocalDateTime createdDate,
@@ -25,12 +22,6 @@ public record EnderecoDTO(
         String cep
 ) implements Serializable {
 
-    /**
-     * To dto endereco dto.
-     *
-     * @param endereco the endereco
-     * @return the endereco dto
-     */
     public static EnderecoDTO toDTO(Endereco endereco) {
 
         return new EnderecoDTO(

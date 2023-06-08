@@ -7,9 +7,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-/**
- * The type Usuario dto.
- */
 public record UsuarioDTO(
         UUID id,
         LocalDateTime createdDate,
@@ -24,12 +21,6 @@ public record UsuarioDTO(
         ImagemDTO foto
 ) implements Serializable {
 
-    /**
-     * To dto usuario dto.
-     *
-     * @param usuario the usuario
-     * @return the usuario dto
-     */
     public static UsuarioDTO toDTO(Usuario usuario) {
 
         return new UsuarioDTO(

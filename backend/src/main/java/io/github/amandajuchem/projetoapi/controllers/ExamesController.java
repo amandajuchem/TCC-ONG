@@ -5,118 +5,77 @@ import io.github.amandajuchem.projetoapi.entities.Exame;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.ExameService;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
-/**
- * The type Exames controller.
- */
 @RestController
 @RequestMapping("/exames")
 @RequiredArgsConstructor
-public class ExamesController {
+@Tag(name = "Exame", description = "Endpoints para gerenciamento de exames")
+public class ExamesController implements AbstractController<Exame, ExameDTO> {
 
     private final ExameService service;
 
-    /**
-     * Delete response entity.
-     *
-     * @param id the id
-     * @return the response entity
-     */
+    @Override
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable UUID id) {
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
         service.delete(id);
         return ResponseEntity.status(OK).body(null);
     }
 
-    /**
-     * Find all response entity.
-     *
-     * @param page      the page
-     * @param size      the size
-     * @param sort      the sort
-     * @param direction the direction
-     * @return the response entity
-     */
+    @Override
     @GetMapping
-    public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") Integer page,
-                                     @RequestParam(required = false, defaultValue = "10") Integer size,
-                                     @RequestParam(required = false, defaultValue = "nome") String sort,
-                                     @RequestParam(required = false, defaultValue = "asc") String direction) {
+    public ResponseEntity<Page<ExameDTO>> findAll(@RequestParam(required = false, defaultValue = "0") Integer page,
+                                                  @RequestParam(required = false, defaultValue = "10") Integer size,
+                                                  @RequestParam(required = false, defaultValue = "nome") String sort,
+                                                  @RequestParam(required = false, defaultValue = "asc") String direction) {
 
-        var exames = service.findAll(page, size, sort, direction).map(ExameDTO::toDTO);
+        final var exames = service.findAll(page, size, sort, direction);
         return ResponseEntity.status(OK).body(exames);
     }
 
-    /**
-     * Find exame by id.
-     *
-     * @param id the id
-     * @return the response entity
-     */
+    @Override
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable UUID id) {
-        var exame = service.findById(id);
-        return ResponseEntity.status(OK).body(ExameDTO.toDTO(exame));
+    public ResponseEntity<ExameDTO> findById(@PathVariable UUID id) {
+        final var exame = service.findById(id);
+        return ResponseEntity.status(OK).body(exame);
     }
 
-    /**
-     * Save response entity.
-     *
-     * @param exame the exame
-     * @return the response entity
-     */
+    @Override
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody @Valid Exame exame) {
-        exame = service.save(exame);
-        return ResponseEntity.status(CREATED).body(ExameDTO.toDTO(exame));
+    public ResponseEntity<ExameDTO> save(@RequestBody @Valid Exame exame) {
+        final var exameSaved = service.save(exame);
+        return ResponseEntity.status(CREATED).body(exameSaved);
     }
 
-    /**
-     * Search exame.
-     *
-     * @param value     the nome ou categoria
-     * @param page      the page
-     * @param size      the size
-     * @param sort      the sort
-     * @param direction the direction
-     * @return the response entity
-     */
+    @Override
     @GetMapping("/search")
-    public ResponseEntity<?> search(@RequestParam(required = false) String value,
-                                    @RequestParam(required = false, defaultValue = "0") Integer page,
-                                    @RequestParam(required = false, defaultValue = "10") Integer size,
-                                    @RequestParam(required = false, defaultValue = "nome") String sort,
-                                    @RequestParam(required = false, defaultValue = "asc") String direction) {
+    public ResponseEntity<Page<ExameDTO>> search(@RequestParam String value,
+                                                 @RequestParam(required = false, defaultValue = "0") Integer page,
+                                                 @RequestParam(required = false, defaultValue = "10") Integer size,
+                                                 @RequestParam(required = false, defaultValue = "nome") String sort,
+                                                 @RequestParam(required = false, defaultValue = "asc") String direction) {
 
-        if (value != null) {
-            var exames = service.search(value, page, size, sort, direction).map(ExameDTO::toDTO);
-            return ResponseEntity.status(OK).body(exames);
-        }
-
-        return ResponseEntity.status(NOT_FOUND).body(null);
+        final var exames = service.search(value, page, size, sort, direction);
+        return ResponseEntity.status(OK).body(exames);
     }
 
-    /**
-     * Update response entity.
-     *
-     * @param id    the id
-     * @param exame the exame
-     * @return the response entity
-     */
+    @Override
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody @Valid Exame exame) {
+    public ResponseEntity<ExameDTO> update(@PathVariable UUID id, @RequestBody @Valid Exame exame) {
 
         if (exame.getId().equals(id)) {
-            exame = service.save(exame);
-            return ResponseEntity.status(OK).body(ExameDTO.toDTO(exame));
+            final var exameSaved = service.save(exame);
+            return ResponseEntity.status(OK).body(exameSaved);
         }
 
         throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);

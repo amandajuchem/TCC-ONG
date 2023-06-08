@@ -9,9 +9,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-/**
- * The type Tutor dto.
- */
 public record TutorDTO(
         UUID id,
         LocalDateTime createdDate,
@@ -29,12 +26,6 @@ public record TutorDTO(
         Set<ObservacaoDTO> observacoes
 ) implements Serializable {
 
-    /**
-     * To dto tutor dto.
-     *
-     * @param tutor the tutor
-     * @return the tutor dto
-     */
     public static TutorDTO toDTO(Tutor tutor) {
 
         return new TutorDTO(

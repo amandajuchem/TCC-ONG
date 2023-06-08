@@ -5,118 +5,77 @@ import io.github.amandajuchem.projetoapi.entities.FeiraAdocao;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.FeiraAdocaoService;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
-/**
- * The type Feira Adocao controller.
- */
 @RestController
 @RequestMapping("/feiras-adocao")
 @RequiredArgsConstructor
-public class FeiraAdocaoController {
+@Tag(name = "Feira de Adoção", description = "Endpoints para gerenciamento de feiras de adoção")
+public class FeiraAdocaoController implements AbstractController<FeiraAdocao, FeiraAdocaoDTO> {
 
     private final FeiraAdocaoService service;
 
-    /**
-     * Delete.
-     *
-     * @param id the id
-     * @return the response entity
-     */
+    @Override
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable UUID id) {
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
         service.delete(id);
         return ResponseEntity.status(OK).body(null);
     }
 
-    /**
-     * Find all.
-     *
-     * @param page      the page
-     * @param size      the size
-     * @param sort      the sort
-     * @param direction the direction
-     * @return the response entity
-     */
+    @Override
     @GetMapping
-    public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") Integer page,
-                                     @RequestParam(required = false, defaultValue = "10") Integer size,
-                                     @RequestParam(required = false, defaultValue = "nome") String sort,
-                                     @RequestParam(required = false, defaultValue = "asc") String direction) {
+    public ResponseEntity<Page<FeiraAdocaoDTO>> findAll(@RequestParam(required = false, defaultValue = "0") Integer page,
+                                                        @RequestParam(required = false, defaultValue = "10") Integer size,
+                                                        @RequestParam(required = false, defaultValue = "nome") String sort,
+                                                        @RequestParam(required = false, defaultValue = "asc") String direction) {
 
-        var exames = service.findAll(page, size, sort, direction).map(FeiraAdocaoDTO::toDTO);
-        return ResponseEntity.status(OK).body(exames);
+        final var feirasAdocao = service.findAll(page, size, sort, direction);
+        return ResponseEntity.status(OK).body(feirasAdocao);
     }
 
-    /**
-     * Find Feira Adoção by id.
-     *
-     * @param id the id
-     * @return the response entity
-     */
+    @Override
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable UUID id) {
-        var feiraAdocao = service.findById(id);
-        return ResponseEntity.status(OK).body(FeiraAdocaoDTO.toDTO(feiraAdocao));
+    public ResponseEntity<FeiraAdocaoDTO> findById(@PathVariable UUID id) {
+        final var feiraAdocao = service.findById(id);
+        return ResponseEntity.status(OK).body(feiraAdocao);
     }
 
-    /**
-     * Save.
-     *
-     * @param feiraAdocao the feira adocao
-     * @return the response entity
-     */
+    @Override
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody @Valid FeiraAdocao feiraAdocao) {
-        feiraAdocao = service.save(feiraAdocao);
-        return ResponseEntity.status(CREATED).body(FeiraAdocaoDTO.toDTO(feiraAdocao));
+    public ResponseEntity<FeiraAdocaoDTO> save(@RequestBody @Valid FeiraAdocao feiraAdocao) {
+        final var feiraAdocaoSaved = service.save(feiraAdocao);
+        return ResponseEntity.status(CREATED).body(feiraAdocaoSaved);
     }
 
-    /**
-     * Search.
-     *
-     * @param value     the value
-     * @param page      the page
-     * @param size      the size
-     * @param sort      the sort
-     * @param direction the direction
-     * @return the response entity
-     */
+    @Override
     @GetMapping("/search")
-    public ResponseEntity<?> search(@RequestParam(required = false) String value,
-                                    @RequestParam(required = false, defaultValue = "0") Integer page,
-                                    @RequestParam(required = false, defaultValue = "10") Integer size,
-                                    @RequestParam(required = false, defaultValue = "nome") String sort,
-                                    @RequestParam(required = false, defaultValue = "asc") String direction) {
+    public ResponseEntity<Page<FeiraAdocaoDTO>> search(@RequestParam String value,
+                                                       @RequestParam(required = false, defaultValue = "0") Integer page,
+                                                       @RequestParam(required = false, defaultValue = "10") Integer size,
+                                                       @RequestParam(required = false, defaultValue = "nome") String sort,
+                                                       @RequestParam(required = false, defaultValue = "asc") String direction) {
 
-        if (value != null) {
-            var feirasAdocao = service.search(value, page, size, sort, direction).map(FeiraAdocaoDTO::toDTO);
-            return ResponseEntity.status(OK).body(feirasAdocao);
-        }
-
-        return ResponseEntity.status(NOT_FOUND).body(null);
+        final var feirasAdocao = service.search(value, page, size, sort, direction);
+        return ResponseEntity.status(OK).body(feirasAdocao);
     }
 
-    /**
-     * Update.
-     *
-     * @param id          the id
-     * @param feiraAdocao the feira adocao
-     * @return the response entity
-     */
+    @Override
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody @Valid FeiraAdocao feiraAdocao) {
+    public ResponseEntity<FeiraAdocaoDTO> update(@PathVariable UUID id, @RequestBody @Valid FeiraAdocao feiraAdocao) {
 
         if (feiraAdocao.getId().equals(id)) {
-            feiraAdocao = service.save(feiraAdocao);
-            return ResponseEntity.status(OK).body(FeiraAdocaoDTO.toDTO(feiraAdocao));
+            final var feiraAdocaoSaved = service.save(feiraAdocao);
+            return ResponseEntity.status(OK).body(feiraAdocaoSaved);
         }
 
         throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);

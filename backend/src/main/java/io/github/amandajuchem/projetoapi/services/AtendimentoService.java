@@ -1,5 +1,6 @@
 package io.github.amandajuchem.projetoapi.services;
 
+import io.github.amandajuchem.projetoapi.dtos.AtendimentoDTO;
 import io.github.amandajuchem.projetoapi.entities.Atendimento;
 import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
@@ -15,20 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-/**
- * The type Atendimento service.
- */
 @Service
 @RequiredArgsConstructor
-public class AtendimentoService implements AbstractService<Atendimento> {
+public class AtendimentoService implements AbstractService<Atendimento, AtendimentoDTO> {
 
     private final AtendimentoRepository repository;
 
-    /**
-     * Delete atendimento.
-     *
-     * @param id the id
-     */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void delete(UUID id) {
@@ -44,14 +37,9 @@ public class AtendimentoService implements AbstractService<Atendimento> {
         throw new ObjectNotFoundException(MessageUtils.ATENDIMENTO_NOT_FOUND);
     }
 
-    /**
-     * Find all atendimento.
-     *
-     * @return the atendimento list
-     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Page<Atendimento> findAll(Integer page, Integer size, String sort, String direction) {
+    public Page<AtendimentoDTO> findAll(Integer page, Integer size, String sort, String direction) {
 
         if (sort.equalsIgnoreCase("animal")) {
             sort = "animal.nome";
@@ -61,33 +49,20 @@ public class AtendimentoService implements AbstractService<Atendimento> {
             sort = "veterinario.nome";
         }
 
-        return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
+        return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)))
+                .map(AtendimentoDTO::toDTO);
     }
 
-    /**
-     * Find atendimento by id.
-     *
-     * @param id the id
-     * @return the atendimento
-     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Atendimento findById(UUID id) {
-
-        return repository.findById(id).orElseThrow(() -> {
-            throw new ObjectNotFoundException(MessageUtils.ATENDIMENTO_NOT_FOUND);
-        });
+    public AtendimentoDTO findById(UUID id) {
+        final var atendimento = repository.findById(id).orElseThrow(() -> new ObjectNotFoundException(MessageUtils.ATENDIMENTO_NOT_FOUND));
+        return AtendimentoDTO.toDTO(atendimento);
     }
 
-    /**
-     * Save atendimento.
-     *
-     * @param atendimento the atendimento
-     * @return the atendimento
-     */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public Atendimento save(Atendimento atendimento) {
+    public AtendimentoDTO save(Atendimento atendimento) {
 
         if (atendimento == null) {
             throw new ValidationException(MessageUtils.ATENDIMENTO_NULL);
@@ -97,21 +72,12 @@ public class AtendimentoService implements AbstractService<Atendimento> {
             atendimento = repository.save(atendimento);
         }
 
-        return atendimento;
+        return AtendimentoDTO.toDTO(atendimento);
     }
 
-    /**
-     * Search atendimento.
-     *
-     * @param value     the data, nome do animal ou nome do veterinário
-     * @param page      the page
-     * @param size      the size
-     * @param sort      the sort
-     * @param direction the direction
-     * @return the atendimento list
-     */
+    @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Page<Atendimento> search(String value, Integer page, Integer size, String sort, String direction) {
+    public Page<AtendimentoDTO> search(String value, Integer page, Integer size, String sort, String direction) {
 
         if (sort.equalsIgnoreCase("animal")) {
             sort = "animal.nome";
@@ -121,20 +87,16 @@ public class AtendimentoService implements AbstractService<Atendimento> {
             sort = "veterinario.nome";
         }
 
-        return repository.search(value, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
+        return repository.search(value, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)))
+                .map(AtendimentoDTO::toDTO);
     }
 
-    /**
-     * Validate atendimento.
-     *
-     * @param atendimento the atendimento
-     * @return the boolean
-     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public boolean validate(Atendimento atendimento) {
 
-        var atendimento_findByDataHoraAndVeterinario = repository.findByDataHoraAndVeterinario(atendimento.getDataHora(), atendimento.getVeterinario()).orElse(null);
+        final var atendimento_findByDataHoraAndVeterinario = repository.findByDataHoraAndVeterinario(atendimento.getDataHora(), atendimento.getVeterinario())
+                .orElse(null);
 
         if (atendimento_findByDataHoraAndVeterinario != null && !atendimento_findByDataHoraAndVeterinario.equals(atendimento)) {
             throw new ValidationException("O veterinário já possui um atendimento realizado para esta data e hora!");

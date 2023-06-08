@@ -1,5 +1,6 @@
 package io.github.amandajuchem.projetoapi.services;
 
+import io.github.amandajuchem.projetoapi.dtos.AnimalDTO;
 import io.github.amandajuchem.projetoapi.entities.Animal;
 import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
@@ -15,20 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-/**
- * The type Animal service.
- */
 @Service
 @RequiredArgsConstructor
-public class AnimalService implements AbstractService<Animal> {
+public class AnimalService implements AbstractService<Animal, AnimalDTO> {
 
     private final AnimalRepository repository;
 
-    /**
-     * Delete.
-     *
-     * @param id the id
-     */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void delete(UUID id) {
@@ -44,41 +37,24 @@ public class AnimalService implements AbstractService<Animal> {
         throw new ObjectNotFoundException(MessageUtils.ANIMAL_NOT_FOUND);
     }
 
-    /**
-     * Find all animal.
-     *
-     * @return the animal list
-     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Page<Animal> findAll(Integer page, Integer size, String sort, String direction) {
-        return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
+    public Page<AnimalDTO> findAll(Integer page, Integer size, String sort, String direction) {
+
+        return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)))
+                .map(AnimalDTO::toDTO);
     }
 
-    /**
-     * Find animal by id.
-     *
-     * @param id the id
-     * @return the animal
-     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Animal findById(UUID id) {
-
-        return repository.findById(id).orElseThrow(() -> {
-            throw new ObjectNotFoundException(MessageUtils.ANIMAL_NOT_FOUND);
-        });
+    public AnimalDTO findById(UUID id) {
+        final var animal = repository.findById(id).orElseThrow(() -> new ObjectNotFoundException(MessageUtils.ANIMAL_NOT_FOUND));
+        return AnimalDTO.toDTO(animal);
     }
 
-    /**
-     * Save animal.
-     *
-     * @param animal the animal
-     * @return the animal
-     */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public Animal save(Animal animal) {
+    public AnimalDTO save(Animal animal) {
 
         if (animal == null) {
             throw new ValidationException(MessageUtils.ANIMAL_NULL);
@@ -88,34 +64,20 @@ public class AnimalService implements AbstractService<Animal> {
             animal = repository.save(animal);
         }
 
-        return animal;
+        return AnimalDTO.toDTO(animal);
     }
 
-    /**
-     * Search animal.
-     *
-     * @param value     the nome
-     * @param page      the page
-     * @param size      the size
-     * @param sort      the sort
-     * @param direction the direction
-     * @return the animal list
-     */
+    @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Page<Animal> search(String value, Integer page, Integer size, String sort, String direction) {
-        return repository.search(value, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
+    public Page<AnimalDTO> search(String value, Integer page, Integer size, String sort, String direction) {
+
+        return repository.search(value, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)))
+                .map(AnimalDTO::toDTO);
     }
 
-    /**
-     * Validate animal.
-     *
-     * @param animal the animal
-     * @return the boolean
-     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public boolean validate(Animal animal) {
-
         return true;
     }
 }

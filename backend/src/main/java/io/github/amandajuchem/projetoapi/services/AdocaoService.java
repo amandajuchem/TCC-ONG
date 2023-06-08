@@ -1,5 +1,6 @@
 package io.github.amandajuchem.projetoapi.services;
 
+import io.github.amandajuchem.projetoapi.dtos.AdocaoDTO;
 import io.github.amandajuchem.projetoapi.entities.Adocao;
 import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
@@ -15,20 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-/**
- * The type Adocao service.
- */
 @Service
 @RequiredArgsConstructor
-public class AdocaoService implements AbstractService<Adocao> {
+public class AdocaoService implements AbstractService<Adocao, AdocaoDTO> {
 
     private final AdocaoRepository repository;
 
-    /**
-     * Delete.
-     *
-     * @param id the id
-     */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void delete(UUID id) {
@@ -44,18 +37,9 @@ public class AdocaoService implements AbstractService<Adocao> {
         throw new ObjectNotFoundException(MessageUtils.ADOCAO_NOT_FOUND);
     }
 
-    /**
-     * Find all.
-     *
-     * @param page      the page
-     * @param size      the size
-     * @param sort      the sort
-     * @param direction the direction
-     * @return
-     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Page<Adocao> findAll(Integer page, Integer size, String sort, String direction) {
+    public Page<AdocaoDTO> findAll(Integer page, Integer size, String sort, String direction) {
 
         if (sort.equalsIgnoreCase("animal")) {
             sort = "animal.nome";
@@ -65,58 +49,20 @@ public class AdocaoService implements AbstractService<Adocao> {
             sort = "tutor.nome";
         }
 
-        return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
+        return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)))
+                .map(AdocaoDTO::toDTO);
     }
 
-    /**
-     * Find all.
-     *
-     * @param animalId  the animal id
-     * @param tutorId   the tutor id
-     * @param page      the page
-     * @param size      the size
-     * @param sort      the sort
-     * @param direction the direction
-     * @return
-     */
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Page<Adocao> findAll(UUID animalId, UUID tutorId, Integer page, Integer size, String sort, String direction) {
-
-        if (sort.equalsIgnoreCase("animal")) {
-            sort = "animal.nome";
-        }
-
-        if (sort.equalsIgnoreCase("tutor")) {
-            sort = "tutor.nome";
-        }
-
-        return repository.findAll(animalId, tutorId, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
-    }
-
-    /**
-     * Find by id.
-     *
-     * @param id the id
-     * @return
-     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Adocao findById(UUID id) {
-
-        return repository.findById(id).orElseThrow(() -> {
-           throw new ObjectNotFoundException(MessageUtils.ADOCAO_NOT_FOUND);
-        });
+    public AdocaoDTO findById(UUID id) {
+        final var adocao = repository.findById(id).orElseThrow(() -> new ObjectNotFoundException(MessageUtils.ADOCAO_NOT_FOUND));
+        return AdocaoDTO.toDTO(adocao);
     }
 
-    /**
-     * Save.
-     *
-     * @param adocao the object
-     * @return
-     */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public Adocao save(Adocao adocao) {
+    public AdocaoDTO save(Adocao adocao) {
 
         if (adocao == null) {
             throw new ValidationException(MessageUtils.ADOCAO_NULL);
@@ -126,19 +72,28 @@ public class AdocaoService implements AbstractService<Adocao> {
             adocao = repository.save(adocao);
         }
 
-        return adocao;
+        return AdocaoDTO.toDTO(adocao);
     }
 
-    /**
-     * Validate.
-     *
-     * @param adocao the object
-     * @return
-     */
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public Page<AdocaoDTO> search(String value, Integer page, Integer size, String sort, String direction) {
+
+        if (sort.equalsIgnoreCase("animal")) {
+            sort = "animal.nome";
+        }
+
+        if (sort.equalsIgnoreCase("tutor")) {
+            sort = "tutor.nome";
+        }
+
+        return repository.search(value, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)))
+                .map(AdocaoDTO::toDTO);
+    }
+
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public boolean validate(Adocao adocao) {
-
         return true;
     }
 }

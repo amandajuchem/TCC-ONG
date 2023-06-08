@@ -5,11 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * The type Standard error.
- *
- * @author Edson Isaac
- */
 @Data
 @Builder
 @NoArgsConstructor

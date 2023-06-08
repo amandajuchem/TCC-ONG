@@ -8,9 +8,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-/**
- * The type Feira adocao dto.
- */
 public record FeiraAdocaoDTO(
         UUID id,
         LocalDateTime createdDate,
@@ -23,12 +20,6 @@ public record FeiraAdocaoDTO(
         Set<UsuarioDTO> usuarios
 ) implements Serializable {
 
-    /**
-     * To dto feira adocao dto.
-     *
-     * @param feiraAdocao the feira adocao
-     * @return the feira adocao dto
-     */
     public static FeiraAdocaoDTO toDTO(FeiraAdocao feiraAdocao) {
 
         return new FeiraAdocaoDTO(

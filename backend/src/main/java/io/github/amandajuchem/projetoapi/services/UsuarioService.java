@@ -1,5 +1,6 @@
 package io.github.amandajuchem.projetoapi.services;
 
+import io.github.amandajuchem.projetoapi.dtos.UsuarioDTO;
 import io.github.amandajuchem.projetoapi.entities.Usuario;
 import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
@@ -9,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -16,21 +20,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-/**
- * The type Usuario service.
- */
 @Service
 @RequiredArgsConstructor
-public class UsuarioService implements AbstractService<Usuario> {
+public class UsuarioService implements AbstractService<Usuario, UsuarioDTO>, UserDetailsService {
 
     private final PasswordEncoder encoder;
     private final UsuarioRepository repository;
 
-    /**
-     * Delete usuário.
-     *
-     * @param id the id
-     */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void delete(UUID id) {
@@ -46,18 +42,12 @@ public class UsuarioService implements AbstractService<Usuario> {
         throw new ObjectNotFoundException(MessageUtils.USUARIO_NOT_FOUND);
     }
 
-    /**
-     * Encode usuário password.
-     *
-     * @param usuario the usuário
-     * @return the usuário
-     */
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Usuario encodePassword(Usuario usuario) {
 
         if (usuario.getId() != null) {
 
-            var usuario_old = repository.findById(usuario.getId()).get();
+            final var usuario_old = repository.findById(usuario.getId()).get();
 
             if (!usuario.getSenha().equals(usuario_old.getSenha())) {
                 usuario.setSenha(encoder.encode(usuario.getSenha()));
@@ -69,55 +59,36 @@ public class UsuarioService implements AbstractService<Usuario> {
         return usuario;
     }
 
-    /**
-     * Find all usuário.
-     *
-     * @return the usuário list
-     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Page<Usuario> findAll(Integer page, Integer size, String sort, String direction) {
-        return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
+    public Page<UsuarioDTO> findAll(Integer page, Integer size, String sort, String direction) {
+
+        return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)))
+                .map(UsuarioDTO::toDTO);
     }
 
-    /**
-     * Find usuário by CPF.
-     *
-     * @param cpf the cpf
-     * @return the usuário
-     */
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Usuario findByCpf(String cpf) {
-
-        return repository.findByCpf(cpf).orElseThrow(() -> {
-            throw new ObjectNotFoundException(MessageUtils.USUARIO_NOT_FOUND);
-        });
+    public UsuarioDTO findByCpf(String cpf) {
+        final var usuario = repository.findByCpf(cpf).orElseThrow(() -> new ObjectNotFoundException(MessageUtils.USUARIO_NOT_FOUND));
+        return UsuarioDTO.toDTO(usuario);
     }
 
-    /**
-     * Find usuário by id.
-     *
-     * @param id the id
-     * @return the usuário
-     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Usuario findById(UUID id) {
-
-        return repository.findById(id).orElseThrow(() -> {
-            throw new ObjectNotFoundException(MessageUtils.USUARIO_NOT_FOUND);
-        });
+    public UsuarioDTO findById(UUID id) {
+        final var usuario = repository.findById(id).orElseThrow(() -> new ObjectNotFoundException(MessageUtils.USUARIO_NOT_FOUND));
+        return UsuarioDTO.toDTO(usuario);
     }
 
-    /**
-     * Save usuário.
-     *
-     * @param usuario the usuário
-     * @return the usuário
-     */
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return repository.findByCpf(username).orElseThrow(() -> new UsernameNotFoundException(MessageUtils.AUTHENTICATION_FAIL));
+    }
+
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public Usuario save(Usuario usuario) {
+    public UsuarioDTO save(Usuario usuario) {
 
         if (usuario == null) {
             throw new ValidationException(MessageUtils.USUARIO_NULL);
@@ -128,35 +99,22 @@ public class UsuarioService implements AbstractService<Usuario> {
             usuario = repository.save(usuario);
         }
 
-        return usuario;
+        return UsuarioDTO.toDTO(usuario);
     }
 
-    /**
-     * Search usuário.
-     *
-     * @param value     the nome ou CPF
-     * @param page      the page
-     * @param size      the size
-     * @param sort      the sort
-     * @param direction the direction
-     * @return the usuario list
-     */
+    @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Page<Usuario> search(String value, Integer page, Integer size, String sort, String direction) {
-        return repository.search(value, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
+    public Page<UsuarioDTO> search(String value, Integer page, Integer size, String sort, String direction) {
+
+        return repository.search(value, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)))
+                .map(UsuarioDTO::toDTO);
     }
 
-    /**
-     * Validate usuário.
-     *
-     * @param usuario the usuário
-     * @return the boolean
-     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public boolean validate(Usuario usuario) {
 
-        var usuario_findByCPF = repository.findByCpf(usuario.getCpf()).orElse(null);
+        final var usuario_findByCPF = repository.findByCpf(usuario.getCpf()).orElse(null);
 
         if (usuario_findByCPF != null && !usuario.equals(usuario_findByCPF)) {
             throw new ValidationException("Usuário já cadastrado!");

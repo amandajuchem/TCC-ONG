@@ -4,37 +4,44 @@ import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
 import io.github.amandajuchem.projetoapi.exceptions.OperationFailureException;
 import io.github.amandajuchem.projetoapi.exceptions.StandardError;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
+import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.io.FileNotFoundException;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
 
-/**
- * The type Controller advice.
- *
- * @author Edson Isaac
- */
-@ControllerAdvice
+@RestControllerAdvice
 public class ExceptionHandlerController {
 
-    /**
-     * File not found exception response entity.
-     *
-     * @param ex      the ex
-     * @param request the request
-     * @return the response entity
-     */
-    @ExceptionHandler(FileNotFoundException.class)
-    public ResponseEntity<?> fileNotFoundException(FileNotFoundException ex, HttpServletRequest request) {
+    @ExceptionHandler(AuthenticationException.class)
+    @ResponseStatus(UNAUTHORIZED)
+    public ResponseEntity<StandardError> authenticationException(AuthenticationException ex, HttpServletRequest request) {
 
-        var error = StandardError.builder()
+        final var error = StandardError.builder()
+                .timestamp(System.currentTimeMillis())
+                .status(UNAUTHORIZED.value())
+                .error("Unauthorized")
+                .message(MessageUtils.AUTHENTICATION_FAIL)
+                .path(request.getRequestURI())
+                .build();
+
+        return new ResponseEntity<>(error, UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(FileNotFoundException.class)
+    @ResponseStatus(NOT_FOUND)
+    public ResponseEntity<StandardError> fileNotFoundException(FileNotFoundException ex, HttpServletRequest request) {
+
+        final var error = StandardError.builder()
                 .timestamp(System.currentTimeMillis())
                 .status(NOT_FOUND.value())
                 .error("Not Found")
@@ -42,20 +49,14 @@ public class ExceptionHandlerController {
                 .path(request.getRequestURI())
                 .build();
 
-        return ResponseEntity.status(NOT_FOUND).body(List.of(error));
+        return new ResponseEntity<>(error, NOT_FOUND);
     }
 
-    /**
-     * Method argument not valid exception response entity.
-     *
-     * @param ex      the ex
-     * @param request the request
-     * @return the response entity
-     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> methodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request) {
+    @ResponseStatus(BAD_REQUEST)
+    public ResponseEntity<List<StandardError>> methodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request) {
 
-        var errors = ex.getBindingResult().getFieldErrors().stream().map(error ->
+        final var errors = ex.getBindingResult().getFieldErrors().stream().map(error ->
                 StandardError.builder()
                         .timestamp(System.currentTimeMillis())
                         .status(BAD_REQUEST.value())
@@ -65,20 +66,14 @@ public class ExceptionHandlerController {
                         .build()
         ).toList();
 
-        return ResponseEntity.status(BAD_REQUEST).body(errors);
+        return new ResponseEntity<>(errors, BAD_REQUEST);
     }
 
-    /**
-     * Object not found response entity.
-     *
-     * @param ex      the ex
-     * @param request the request
-     * @return the response entity
-     */
     @ExceptionHandler(ObjectNotFoundException.class)
-    public ResponseEntity<?> objectNotFound(ObjectNotFoundException ex, HttpServletRequest request) {
+    @ResponseStatus(NOT_FOUND)
+    public ResponseEntity<StandardError> objectNotFound(ObjectNotFoundException ex, HttpServletRequest request) {
 
-        var error = StandardError.builder()
+        final var error = StandardError.builder()
                 .timestamp(System.currentTimeMillis())
                 .status(NOT_FOUND.value())
                 .error("Not Found")
@@ -86,20 +81,14 @@ public class ExceptionHandlerController {
                 .path(request.getRequestURI())
                 .build();
 
-        return ResponseEntity.status(NOT_FOUND).body(List.of(error));
+        return new ResponseEntity<>(error, NOT_FOUND);
     }
 
-    /**
-     * Operation failure exception response entity.
-     *
-     * @param ex      the ex
-     * @param request the request
-     * @return the response entity
-     */
     @ExceptionHandler(OperationFailureException.class)
-    public ResponseEntity<?> operationFailureException(OperationFailureException ex, HttpServletRequest request) {
+    @ResponseStatus(INTERNAL_SERVER_ERROR)
+    public ResponseEntity<StandardError> operationFailureException(OperationFailureException ex, HttpServletRequest request) {
 
-        var error = StandardError.builder()
+        final var error = StandardError.builder()
                 .timestamp(System.currentTimeMillis())
                 .status(INTERNAL_SERVER_ERROR.value())
                 .error("Internal Server Error")
@@ -107,20 +96,14 @@ public class ExceptionHandlerController {
                 .path(request.getRequestURI())
                 .build();
 
-        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(List.of(error));
+        return new ResponseEntity<>(error, INTERNAL_SERVER_ERROR);
     }
 
-    /**
-     * Validation exception response entity.
-     *
-     * @param ex      the ex
-     * @param request the request
-     * @return the response entity
-     */
     @ExceptionHandler(ValidationException.class)
+    @ResponseStatus(BAD_REQUEST)
     public ResponseEntity<?> validationException(ValidationException ex, HttpServletRequest request) {
 
-        var error = StandardError.builder()
+        final var error = StandardError.builder()
                 .timestamp(System.currentTimeMillis())
                 .status(BAD_REQUEST.value())
                 .error("Bad Request")
@@ -128,6 +111,6 @@ public class ExceptionHandlerController {
                 .path(request.getRequestURI())
                 .build();
 
-        return ResponseEntity.status(BAD_REQUEST).body(List.of(error));
+        return new ResponseEntity<>(error, BAD_REQUEST);
     }
 }

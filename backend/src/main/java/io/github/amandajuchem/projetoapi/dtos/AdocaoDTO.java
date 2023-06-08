@@ -10,9 +10,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-/**
- * The type Adocao dto.
- */
 public record AdocaoDTO(
         UUID id,
         LocalDateTime createdDate,
@@ -27,12 +24,6 @@ public record AdocaoDTO(
         Set<ImagemDTO> termoResponsabilidade
 ) implements Serializable {
 
-    /**
-     * To dto adocao dto.
-     *
-     * @param adocao the adocao
-     * @return the adocao dto
-     */
     public static AdocaoDTO toDTO(Adocao adocao) {
 
         return new AdocaoDTO(

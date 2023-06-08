@@ -1,5 +1,6 @@
 package io.github.amandajuchem.projetoapi.services;
 
+import io.github.amandajuchem.projetoapi.dtos.ExameDTO;
 import io.github.amandajuchem.projetoapi.entities.Exame;
 import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
@@ -15,20 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-/**
- * The type Exame service.
- */
 @Service
 @RequiredArgsConstructor
-public class ExameService implements AbstractService<Exame> {
+public class ExameService implements AbstractService<Exame, ExameDTO> {
 
     private final ExameRepository repository;
 
-    /**
-     * Delete exame.
-     *
-     * @param id the id
-     */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void delete(UUID id) {
@@ -44,41 +37,24 @@ public class ExameService implements AbstractService<Exame> {
         throw new ObjectNotFoundException(MessageUtils.EXAME_NOT_FOUND);
     }
 
-    /**
-     * Find all exame.
-     *
-     * @return the exame list
-     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Page<Exame> findAll(Integer page, Integer size, String sort, String direction) {
-        return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
+    public Page<ExameDTO> findAll(Integer page, Integer size, String sort, String direction) {
+
+        return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)))
+                .map(ExameDTO::toDTO);
     }
 
-    /**
-     * Find exame by id.
-     *
-     * @param id the id
-     * @return the exame
-     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Exame findById(UUID id) {
-
-        return repository.findById(id).orElseThrow(() -> {
-            throw new ObjectNotFoundException(MessageUtils.EXAME_NOT_FOUND);
-        });
+    public ExameDTO findById(UUID id) {
+        final var exame = repository.findById(id).orElseThrow(() -> new ObjectNotFoundException(MessageUtils.EXAME_NOT_FOUND));
+        return ExameDTO.toDTO(exame);
     }
 
-    /**
-     * Save exame.
-     *
-     * @param exame the exame
-     * @return the exame
-     */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public Exame save(Exame exame) {
+    public ExameDTO save(Exame exame) {
 
         if (exame == null) {
             throw new ValidationException(MessageUtils.EXAME_NULL);
@@ -88,35 +64,22 @@ public class ExameService implements AbstractService<Exame> {
             exame = repository.save(exame);
         }
 
-        return exame;
+        return ExameDTO.toDTO(exame);
     }
 
-    /**
-     * Search exame.
-     *
-     * @param value     the nome ou categoria
-     * @param page      the page
-     * @param size      the size
-     * @param sort      the sort
-     * @param direction the direction
-     * @return the exame list
-     */
+    @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Page<Exame> search(String value, Integer page, Integer size, String sort, String direction) {
-        return repository.search(value, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
+    public Page<ExameDTO> search(String value, Integer page, Integer size, String sort, String direction) {
+
+        return repository.search(value, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)))
+                .map(ExameDTO::toDTO);
     }
 
-    /**
-     * Validate exame.
-     *
-     * @param exame the exame
-     * @return the boolean
-     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public boolean validate(Exame exame) {
 
-        var exame_findByNome = repository.findByNomeIgnoreCase(exame.getNome()).orElse(null);
+        final var exame_findByNome = repository.findByNomeIgnoreCase(exame.getNome()).orElse(null);
 
         if (exame_findByNome != null && !exame_findByNome.equals(exame)) {
             throw new ValidationException("Exame já cadastrado!");

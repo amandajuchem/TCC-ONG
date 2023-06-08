@@ -12,9 +12,6 @@ import java.util.Set;
 import java.util.UUID;
 
 
-/**
- * The type Animal dto.
- */
 public record AnimalDTO(
         UUID id,
         LocalDateTime createdDate,
@@ -34,12 +31,6 @@ public record AnimalDTO(
         Set<AdocaoDTO> adocoes
 ) implements Serializable {
 
-    /**
-     * To dto animal dto.
-     *
-     * @param animal the animal
-     * @return the animal dto
-     */
     public static AnimalDTO toDTO(Animal animal) {
 
         return new AnimalDTO(

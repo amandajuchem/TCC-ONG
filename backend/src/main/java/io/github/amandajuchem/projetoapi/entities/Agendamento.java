@@ -12,9 +12,6 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
-/**
- * The type Castracao.
- */
 @Data
 @SuperBuilder
 @NoArgsConstructor

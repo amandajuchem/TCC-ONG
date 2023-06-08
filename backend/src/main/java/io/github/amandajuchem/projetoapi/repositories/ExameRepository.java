@@ -10,29 +10,13 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 import java.util.UUID;
 
-/**
- * The interface Exame repository.
- */
 @Repository
 public interface ExameRepository extends JpaRepository<Exame, UUID> {
 
-    /**
-     * Find by nome.
-     *
-     * @param nome the nome
-     * @return the optional
-     */
     Optional<Exame> findByNomeIgnoreCase(String nome);
 
-    /**
-     * Search.
-     *
-     * @param value the nome ou categoria
-     * @param page  the page
-     * @return the page
-     */
     @Query(value = "SELECT e FROM tb_exames AS e " +
-            "WHERE upper(e.nome) LIKE upper(concat('%', ?1, '%')) " +
-            "OR upper(e.categoria) LIKE upper(concat('%', ?1, '%'))")
+                   "WHERE upper(e.nome) LIKE upper(concat('%', ?1, '%')) " +
+                   "OR upper(e.categoria) LIKE upper(concat('%', ?1, '%'))")
     Page<Exame> search(String value, Pageable page);
 }

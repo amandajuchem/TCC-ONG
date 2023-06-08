@@ -10,18 +10,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
 
-/**
- * The type Auditin configuration.
- */
 @Configuration
 @EnableJpaAuditing
 public class AuditinConfiguration {
 
-    /**
-     * Auditor provider auditor aware.
-     *
-     * @return auditor aware
-     */
     @Bean
     public AuditorAware<String> auditorProvider() {
         return new AuditorAwareImpl();

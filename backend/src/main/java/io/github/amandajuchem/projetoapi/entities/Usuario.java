@@ -10,16 +10,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-/**
- * The type User.
- */
+import java.util.Collection;
+import java.util.List;
+
 @Data
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "tb_usuarios")
-public class Usuario extends AbstractEntity {
+public class Usuario extends AbstractEntity implements UserDetails {
 
     @NotEmpty
     @Column(name = "nome", length = 100)
@@ -45,6 +48,41 @@ public class Usuario extends AbstractEntity {
     @Valid
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Imagem foto;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(setor.name()));
+    }
+
+    @Override
+    public String getPassword() {
+        return senha;
+    }
+
+    @Override
+    public String getUsername() {
+        return cpf;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return status;
+    }
 
     @Override
     public boolean equals(Object o) {

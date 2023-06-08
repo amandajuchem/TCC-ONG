@@ -4,6 +4,7 @@ import io.github.amandajuchem.projetoapi.entities.Usuario;
 import io.github.amandajuchem.projetoapi.enums.Setor;
 import io.github.amandajuchem.projetoapi.services.UsuarioService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -38,11 +39,14 @@ public class ApplicationConfiguration implements CommandLineRunner {
 
     private void checkDefaultUsuario() {
 
+        final var usuario = new Usuario();
+
         try {
-            var usuario = service.findByCpf("03129686550");
+            var usuarioDTO = service.findByCpf("03129686550");
+            BeanUtils.copyProperties(usuarioDTO, usuario);
             saveDefaultUsuario(usuario);
         } catch (Exception ex) {
-            saveDefaultUsuario(new Usuario());
+            saveDefaultUsuario(usuario);
         }
     }
 

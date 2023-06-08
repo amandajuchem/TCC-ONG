@@ -6,9 +6,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-/**
- * The type Agendamento dto.
- */
 public record AgendamentoDTO(
         UUID id,
         LocalDateTime createdDate,
@@ -21,12 +18,6 @@ public record AgendamentoDTO(
         UsuarioDTO veterinario
 ) implements Serializable {
 
-    /**
-     * To agendamento dto.
-     *
-     * @param agendamento the agendamento
-     * @return the agendamento dto
-     */
     public static AgendamentoDTO toDTO(Agendamento agendamento) {
 
         return new AgendamentoDTO(
