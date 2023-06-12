@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Animal } from 'src/app/entities/animal';
-import { User } from 'src/app/entities/user';
+import { Authentication } from 'src/app/entities/authentication';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { AnimalService } from 'src/app/services/animal.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -23,10 +23,10 @@ import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-image
 export class AnimalInformacoesComponent implements OnInit {
 
   animal!: Animal;
+  authentication!: Authentication;
   apiURL!: string;
   form!: FormGroup;
   foto!: any;
-  user!: User;
 
   constructor(
     private _animalService: AnimalService,
@@ -41,7 +41,7 @@ export class AnimalInformacoesComponent implements OnInit {
   ngOnInit(): void {
     
     this.apiURL = environment.apiURL;
-    this.user = this._authService.getCurrentUser();
+    this.authentication = this._authService.getAuthentication();
 
     this._animalService.get().subscribe({
 
@@ -106,7 +106,7 @@ export class AnimalInformacoesComponent implements OnInit {
 
   cancel() {
     this.foto = this.animal?.foto ? { id: this.animal?.foto.id, nome: this.animal?.foto.nome } : null;
-    this.animal ? this.buildForm(this.animal) : this._router.navigate(['/' + this.user.role.toLowerCase() + '/animais']);
+    this.animal ? this.buildForm(this.animal) : this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/animais']);
   }
 
   delete() {
@@ -122,7 +122,7 @@ export class AnimalInformacoesComponent implements OnInit {
       next: (result) => {
         
         if (result) {
-          this._router.navigate([this.user.role.toLowerCase() + '/animais']);
+          this._router.navigate([this.authentication.role.toLowerCase() + '/animais']);
         }
       }
     });
@@ -161,7 +161,7 @@ export class AnimalInformacoesComponent implements OnInit {
 
         next: (animal) => {
           this.foto ? this.foto.file = null : null;
-          this._router.navigate(['/' + this.user.role.toLowerCase() + '/animais/' + animal.id]);
+          this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/animais/' + animal.id]);
           this._notificationService.show(MessageUtils.ANIMAL_SAVE_SUCCESS, NotificationType.SUCCESS);
         },
   

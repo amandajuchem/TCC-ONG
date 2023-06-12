@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Agendamento } from 'src/app/entities/agendamento';
-import { User } from 'src/app/entities/user';
+import { Authentication } from 'src/app/entities/authentication';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { Setor } from 'src/app/enums/setor';
 import { AgendamentoService } from 'src/app/services/agendamento.service';
@@ -12,9 +12,9 @@ import { NotificationService } from 'src/app/services/notification.service';
 import { DateUtils } from 'src/app/utils/date-utils';
 import { MessageUtils } from 'src/app/utils/message-utils';
 
+import { AgendamentoExcluirComponent } from '../agendamento-excluir/agendamento-excluir.component';
 import { SelecionarAnimalComponent } from '../selecionar-animal/selecionar-animal.component';
 import { SelecionarUsuarioComponent } from '../selecionar-usuario/selecionar-usuario.component';
-import { AgendamentoExcluirComponent } from '../agendamento-excluir/agendamento-excluir.component';
 
 @Component({
   selector: 'app-agendamento-cadastro',
@@ -24,8 +24,8 @@ import { AgendamentoExcluirComponent } from '../agendamento-excluir/agendamento-
 export class AgendamentoCadastroComponent implements OnInit {
 
   agendamento!: Agendamento;
+  authentication!: Authentication;
   form!: FormGroup;
-  user!: User;
 
   constructor(
     private _activatedRoute: ActivatedRoute,
@@ -39,7 +39,7 @@ export class AgendamentoCadastroComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.user = this._authService.getCurrentUser();
+    this.authentication = this._authService.getAuthentication();
 
     this._activatedRoute.params.subscribe({
 
@@ -85,7 +85,7 @@ export class AgendamentoCadastroComponent implements OnInit {
   }
 
   cancel() {    
-    this.agendamento ? this.buildForm(this.agendamento) : this._router.navigate(['/' + this.user.role.toLowerCase() + '/agendamentos']);
+    this.agendamento ? this.buildForm(this.agendamento) : this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/agendamentos']);
   }
 
   dateChange() {
@@ -108,7 +108,7 @@ export class AgendamentoCadastroComponent implements OnInit {
       next: (result) => {
           
         if (result && result.status) {
-          this._router.navigate(['/' + this.user.role.toLowerCase() + '/agendamentos']);
+          this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/agendamentos']);
         }
       }
     });
@@ -179,7 +179,7 @@ export class AgendamentoCadastroComponent implements OnInit {
 
         next: (agendamento) => {
           this._notificationService.show(MessageUtils.AGENDAMENTO_SAVE_SUCCESS, NotificationType.SUCCESS);
-          this._router.navigate(['/' + this.user.role.toLowerCase() + '/agendamentos/' + agendamento.id]);
+          this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/agendamentos/' + agendamento.id]);
         },
 
         error: (error) => {

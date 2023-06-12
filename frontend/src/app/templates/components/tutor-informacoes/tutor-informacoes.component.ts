@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { Authentication } from 'src/app/entities/authentication';
 import { Tutor } from 'src/app/entities/tutor';
-import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { AuthService } from 'src/app/services/auth.service';
 import { ImagemService } from 'src/app/services/imagem.service';
@@ -23,10 +23,10 @@ import { TutorExcluirComponent } from '../tutor-excluir/tutor-excluir.component'
 export class TutorInformacoesComponent implements OnInit {
 
   apiURL!: string;
+  authentication!: Authentication;
   form!: FormGroup;
   foto!: any;
   tutor!: Tutor;
-  user!: User;
 
   constructor(
     private _authService: AuthService,
@@ -41,7 +41,7 @@ export class TutorInformacoesComponent implements OnInit {
   ngOnInit(): void {
     
     this.apiURL = environment.apiURL;
-    this.user = this._authService.getCurrentUser();
+    this.authentication = this._authService.getAuthentication();
 
     this._tutorService.get().subscribe({
 
@@ -120,7 +120,7 @@ export class TutorInformacoesComponent implements OnInit {
 
   cancel() {
     this.foto = this.tutor?.foto ? { id: this.tutor?.foto.id, nome: this.tutor?.foto.nome } : null;
-    this.tutor ? this.buildForm(this.tutor) : this._router.navigate(['/' + this.user.role.toLowerCase() + '/tutores']);
+    this.tutor ? this.buildForm(this.tutor) : this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/tutores']);
   }
 
   delete() {
@@ -136,7 +136,7 @@ export class TutorInformacoesComponent implements OnInit {
       next: (result) => {
         
         if (result) {
-          this._router.navigate([this.user.role.toLowerCase() + '/tutores']);
+          this._router.navigate([this.authentication.role.toLowerCase() + '/tutores']);
         }
       }
     });
@@ -183,7 +183,7 @@ export class TutorInformacoesComponent implements OnInit {
 
         next: (tutor) => {
           this.foto ? this.foto.file = null : null;
-          this._router.navigate(['/' + this.user.role.toLowerCase() + '/tutores/' + tutor.id]);
+          this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/tutores/' + tutor.id]);
           this._notificationService.show(MessageUtils.TUTOR_SAVE_SUCCESS, NotificationType.SUCCESS);
         },
   

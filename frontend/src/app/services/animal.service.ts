@@ -37,6 +37,7 @@ export class AnimalService implements AbstractService<Animal> {
   findAll(page: number, size: number, sort: string, direction: string) {
 
     return this._http.get<Page<Animal>>(this._baseURL, {
+
       params: {
         page: page,
         size: size,
@@ -71,7 +72,7 @@ export class AnimalService implements AbstractService<Animal> {
    */
   save(animal: Animal, foto: any) {
 
-    let formData = new FormData();
+    const formData = new FormData();
 
     formData.append('animal', new Blob([JSON.stringify(animal)], { type: 'application/json' }));
 
@@ -94,6 +95,7 @@ export class AnimalService implements AbstractService<Animal> {
   search(value: string, page: number, size: number, sort: string, direction: string) {
 
     return this._http.get<Page<Animal>>(this._baseURL + '/search', {
+
       params: {
         value: value,
         page: page,
@@ -120,7 +122,7 @@ export class AnimalService implements AbstractService<Animal> {
    */
   update(animal: Animal, foto: any) {
 
-    let formData = new FormData();
+    const formData = new FormData();
 
     formData.append('animal', new Blob([JSON.stringify(animal)], { type: 'application/json' }));
 

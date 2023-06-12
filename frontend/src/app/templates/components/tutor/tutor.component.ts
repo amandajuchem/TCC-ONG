@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Authentication } from 'src/app/entities/authentication';
 import { Tutor } from 'src/app/entities/tutor';
-import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { AuthService } from 'src/app/services/auth.service';
 import { NotificationService } from 'src/app/services/notification.service';
@@ -15,7 +15,7 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 })
 export class TutorComponent implements OnInit {
 
-  user!: User;
+  authentication!: Authentication;
   tutor!: Tutor | null;
 
   constructor(
@@ -27,7 +27,7 @@ export class TutorComponent implements OnInit {
 
   ngOnInit(): void {
     
-    this.user = this._authService.getCurrentUser();
+    this.authentication = this._authService.getAuthentication();
 
     this._activatedRoute.params.subscribe({
 

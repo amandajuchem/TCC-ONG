@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
+import { Authentication } from 'src/app/entities/authentication';
 import { Tutor } from 'src/app/entities/tutor';
-import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { AuthService } from 'src/app/services/auth.service';
 import { NotificationService } from 'src/app/services/notification.service';
@@ -19,13 +19,13 @@ import { environment } from 'src/environments/environment';
 export class TutoresComponent implements AfterViewInit {
 
   apiURL!: string;
+  authentication!: Authentication;
   filterString!: string;
   isLoadingResults!: boolean;
   pageIndex!: number;
   pageSize!: number;
   resultsLength!: number;
   tutores!: Array<Tutor>;
-  user!: User;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -36,9 +36,9 @@ export class TutoresComponent implements AfterViewInit {
     private _tutorService: TutorService
   ) {
     this.apiURL = environment.apiURL;
+    this.authentication = this._authService.getAuthentication();
     this.isLoadingResults = true;
     this.resultsLength = 0;
-    this.user = this._authService.getCurrentUser();
   }
 
   ngAfterViewInit(): void {
@@ -46,7 +46,7 @@ export class TutoresComponent implements AfterViewInit {
   }
 
   add() {
-    this._router.navigate(['/' + this.user.role.toLowerCase() + '/tutores/cadastro']);
+    this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/tutores/cadastro']);
   }
 
   async findAll() {

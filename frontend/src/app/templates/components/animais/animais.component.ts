@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { Animal } from 'src/app/entities/animal';
-import { User } from 'src/app/entities/user';
+import { Authentication } from 'src/app/entities/authentication';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { AnimalService } from 'src/app/services/animal.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -20,12 +20,12 @@ export class AnimaisComponent implements AfterViewInit {
 
   animais!: Array<Animal>;
   apiURL!: string;
+  authentication!: Authentication;
   filterString!: string;
   isLoadingResults!: boolean;
   pageIndex!: number;
   pageSize!: number;
   resultsLength!: number;
-  user!: User;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -38,7 +38,7 @@ export class AnimaisComponent implements AfterViewInit {
     this.apiURL = environment.apiURL;
     this.isLoadingResults = true;
     this.resultsLength = 0;
-    this.user = this._authService.getCurrentUser();
+    this.authentication = this._authService.getAuthentication();
   }
 
   ngAfterViewInit(): void {
@@ -46,7 +46,7 @@ export class AnimaisComponent implements AfterViewInit {
   }
 
   add() {
-    this._router.navigate(['/' + this.user.role.toLowerCase() + '/animais/cadastro']);
+    this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/animais/cadastro']);
   }
 
   async findAll() {

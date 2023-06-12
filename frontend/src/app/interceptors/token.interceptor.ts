@@ -11,13 +11,13 @@ export class TokenInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
 
-    let user = this._authService.getCurrentUser();
+    const authentication = this._authService.getAuthentication();
 
-    if (user) {
+    if (authentication) {
 
       request = request.clone({
         setHeaders: {
-          Authorization: 'Bearer ' + user.access_token
+          Authorization: 'Bearer ' + authentication.access_token
         }
       })
     }

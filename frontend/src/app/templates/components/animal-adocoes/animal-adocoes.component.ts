@@ -107,7 +107,7 @@ export class AnimalAdocoesComponent implements AfterViewInit {
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
 
-    this._adocaoService.findAll(page, size, sort, direction, this.animal.id).subscribe({
+    this._adocaoService.search(this.animal.id, page, size, sort, direction).subscribe({
 
       complete: () => {
         this.isLoadingResults = false;

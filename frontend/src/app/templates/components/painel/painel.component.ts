@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from 'src/app/entities/user';
+import { Authentication } from 'src/app/entities/authentication';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -9,13 +9,13 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class PainelComponent implements OnInit {
   
-  user!: User;
+  authentication!: Authentication;
 
   constructor(
     private _authService: AuthService
   ) { }
 
   ngOnInit(): void {
-    this.user = this._authService.getCurrentUser();
+    this.authentication = this._authService.getAuthentication();
   }
 }

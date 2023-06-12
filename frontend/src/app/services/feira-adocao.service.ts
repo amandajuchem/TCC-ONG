@@ -3,11 +3,12 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { FeiraAdocao } from '../entities/feira-adocao';
 import { Page } from '../entities/page';
+import { AbstractService } from './abstract-service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class FeiraAdocaoService {
+export class FeiraAdocaoService implements AbstractService<FeiraAdocao> {
 
   private _baseURL = environment.apiURL + '/feiras-adocao';
 
@@ -73,6 +74,7 @@ export class FeiraAdocaoService {
   search(value: string, page: number, size: number, sort: string, direction: string) {
 
     return this._http.get<Page<FeiraAdocao>>(this._baseURL + '/search', {
+      
       params: {
         value: value,
         page: page,

@@ -15,6 +15,7 @@ export class NotificationService {
   show(message: string, type: NotificationType) {
     
     this._snackBar.openFromComponent(NotificationComponent, {
+      
       data: {
         message: message
       },

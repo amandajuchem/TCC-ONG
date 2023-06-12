@@ -3,7 +3,7 @@
         <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);"
             aria-label="breadcrumb">
             <ol class="breadcrumb m-0">
-                <li class="breadcrumb-item"><a class="text-white" [routerLink]="'/' + user.role.toLowerCase() + '/painel'">Início</a></li>
+                <li class="breadcrumb-item"><a class="text-white" [routerLink]="'/' + authentication.role.toLowerCase() + '/painel'">Início</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Animais</li>
             </ol>
         </nav>
@@ -50,11 +50,11 @@
 
 <div class="row" [hidden]="(animais && animais.length == 0) || isLoadingResults">
     <div class="col-12 col-md-3 mb-3" *ngFor="let animal of animais">
-        <a [routerLink]="'/' + user.role.toLowerCase() + '/animais/' + animal.id" class="text-decoration-none text-dark">
+        <a [routerLink]="'/' + authentication.role.toLowerCase() + '/animais/' + animal.id" class="text-decoration-none text-dark">
             <mat-card>
                 <mat-card-content class="p-3">
                     <div class="mb-3 text-center">
-                        <img [src]="animal.foto ? apiURL + '/imagens/search?nome=' + animal.foto.nome : '/assets/images/animais.png'" height="150px" 
+                        <img [src]="animal.foto ? apiURL + '/imagens/search?value=' + animal.foto.nome : '/assets/images/animais.png'" height="150px" 
                             [ngClass]="animal.foto ? 'rounded-circle' : ''">
                     </div>
                     <div>

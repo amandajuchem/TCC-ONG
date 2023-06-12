@@ -107,7 +107,7 @@ export class TutorObservacoesComponent implements AfterViewInit {
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
 
-    this._observacaoservice.findAll(page, size, sort, direction, this.tutor.id).subscribe({
+    this._observacaoservice.search(this.tutor.id, page, size, sort, direction).subscribe({
 
       complete: () => {
         this.isLoadingResults = false;

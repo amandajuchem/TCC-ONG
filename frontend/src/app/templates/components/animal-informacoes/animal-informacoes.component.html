@@ -27,7 +27,7 @@
                 </div>
 
                 <div *ngIf="foto">
-                    <img [src]="foto.nome ? apiURL + '/imagens/search?nome=' + foto.nome : foto.data" height="150px" class="rounded-circle">
+                    <img [src]="foto.nome ? apiURL + '/imagens/search?value=' + foto.nome : foto.data" height="150px" class="rounded-circle">
                 </div>
             </div>
         </div>

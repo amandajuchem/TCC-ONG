@@ -5,7 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Agendamento } from 'src/app/entities/agendamento';
-import { User } from 'src/app/entities/user';
+import { Authentication } from 'src/app/entities/authentication';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { AgendamentoService } from 'src/app/services/agendamento.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -20,13 +20,13 @@ import { OperatorUtils } from 'src/app/utils/operator-utils';
 })
 export class AgendamentosComponent implements AfterViewInit {
 
+  authentication!: Authentication;
   columns!: Array<string>;
   dataSource!: MatTableDataSource<Agendamento>;
   filterDate!: Date | null;
   filterString!: string;
   isLoadingResults!: boolean;
   resultsLength!: number;
-  user!: User;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -42,7 +42,7 @@ export class AgendamentosComponent implements AfterViewInit {
     this.dataSource = new MatTableDataSource();
     this.isLoadingResults = true;
     this.resultsLength = 0;
-    this.user = this._authService.getCurrentUser();
+    this.authentication = this._authService.getAuthentication();
   }
 
   ngAfterViewInit() {
@@ -50,7 +50,7 @@ export class AgendamentosComponent implements AfterViewInit {
   }
 
   add() {
-    this._router.navigate(['/' + this.user.role.toLowerCase() + '/agendamentos/cadastro']);
+    this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/agendamentos/cadastro']);
   }
 
   async findAll() {
@@ -137,7 +137,7 @@ export class AgendamentosComponent implements AfterViewInit {
   }
 
   show(agendamento: Agendamento) {
-    this._router.navigate(['/' + this.user.role.toLowerCase() + '/agendamentos/' + agendamento.id]);
+    this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/agendamentos/' + agendamento.id]);
   }
 
   sortChange() {

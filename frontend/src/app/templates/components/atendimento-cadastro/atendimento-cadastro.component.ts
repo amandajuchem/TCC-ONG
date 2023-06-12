@@ -4,8 +4,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Agendamento } from 'src/app/entities/agendamento';
 import { Atendimento } from 'src/app/entities/atendimento';
+import { Authentication } from 'src/app/entities/authentication';
 import { Exame } from 'src/app/entities/exame';
-import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { Setor } from 'src/app/enums/setor';
 import { AtendimentoService } from 'src/app/services/atendimento.service';
@@ -16,12 +16,12 @@ import { DateUtils } from 'src/app/utils/date-utils';
 import { MessageUtils } from 'src/app/utils/message-utils';
 import { environment } from 'src/environments/environment';
 
+import { AtendimentoExcluirComponent } from '../atendimento-excluir/atendimento-excluir.component';
 import { SelecionarAgendamentoComponent } from '../selecionar-agendamento/selecionar-agendamento.component';
 import { SelecionarAnimalComponent } from '../selecionar-animal/selecionar-animal.component';
 import { SelecionarExameComponent } from '../selecionar-exame/selecionar-exame.component';
 import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-imagem.component';
 import { SelecionarUsuarioComponent } from '../selecionar-usuario/selecionar-usuario.component';
-import { AtendimentoExcluirComponent } from '../atendimento-excluir/atendimento-excluir.component';
 
 @Component({
   selector: 'app-atendimento-cadastro',
@@ -31,10 +31,10 @@ import { AtendimentoExcluirComponent } from '../atendimento-excluir/atendimento-
 export class AtendimentoCadastroComponent implements OnInit {
 
   apiURL!: string;
+  authentication!: Authentication;
   atendimento!: Atendimento;
   documentos!: Array<any>;
   form!: FormGroup;
-  user!: User;
 
   constructor(
     private _activatedRoute: ActivatedRoute,
@@ -51,7 +51,7 @@ export class AtendimentoCadastroComponent implements OnInit {
 
     this.apiURL = environment.apiURL;
     this.documentos = [];
-    this.user = this._authService.getCurrentUser();
+    this.authentication = this._authService.getAuthentication();
 
     this._activatedRoute.params.subscribe({
       
@@ -157,7 +157,7 @@ export class AtendimentoCadastroComponent implements OnInit {
   }
 
   cancel() {
-    this.atendimento ? this.buildForm(this.atendimento) : this._router.navigate(['/' + this.user.role.toLowerCase() + '/atendimentos']);
+    this.atendimento ? this.buildForm(this.atendimento) : this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/atendimentos']);
   }
 
   dateChange() {
@@ -180,7 +180,7 @@ export class AtendimentoCadastroComponent implements OnInit {
       next: (result) => {
           
         if (result && result.status) {
-          this._router.navigate(['/' + this.user.role.toLowerCase() + '/atendimentos']);
+          this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/atendimentos']);
         }
       }
     });
@@ -303,7 +303,7 @@ export class AtendimentoCadastroComponent implements OnInit {
 
         next: (atendimento) => {
           this._notificationService.show(MessageUtils.ATENDIMENTO_SAVE_SUCCESS, NotificationType.SUCCESS);
-          this._router.navigate(['/' + this.user.role.toLowerCase() + '/atendimentos/' + atendimento.id]);
+          this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/atendimentos/' + atendimento.id]);
         },
 
         error: (error) => {

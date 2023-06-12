@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Authentication } from 'src/app/entities/authentication';
 import { Exame } from 'src/app/entities/exame';
-import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { AuthService } from 'src/app/services/auth.service';
 import { ExameService } from 'src/app/services/exame.service';
@@ -21,7 +21,7 @@ export class ExameCadastroComponent implements OnInit {
 
   exame!: Exame;
   form!: FormGroup;
-  user!: User;
+  authentication!: Authentication;
 
   constructor(
     private _activatedRoute: ActivatedRoute,
@@ -35,7 +35,7 @@ export class ExameCadastroComponent implements OnInit {
 
   ngOnInit(): void {
     
-    this.user = this._authService.getCurrentUser();
+    this.authentication = this._authService.getAuthentication();
     
     this._activatedRoute.params.subscribe({
 
@@ -79,7 +79,7 @@ export class ExameCadastroComponent implements OnInit {
   }
 
   cancel() {
-    this.exame ? this.buildForm(this.exame) : this._router.navigate(['/' + this.user.role.toLowerCase() + '/exames']);
+    this.exame ? this.buildForm(this.exame) : this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/exames']);
   }
 
   delete() {
@@ -95,7 +95,7 @@ export class ExameCadastroComponent implements OnInit {
       next: (result) => {
 
         if (result && result.status) {
-          this._router.navigate(['/' + this.user.role.toLowerCase() + '/exames']);
+          this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/exames']);
         }
       }
     });
@@ -127,7 +127,7 @@ export class ExameCadastroComponent implements OnInit {
         
         next: (exame) => {
           this._notificationService.show(MessageUtils.EXAME_SAVE_SUCCESS, NotificationType.SUCCESS);
-          this._router.navigate(['/' + this.user.role.toLowerCase() + '/exames/' + exame.id]);
+          this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/exames/' + exame.id]);
         },
   
         error: (error) => {
