@@ -1,48 +1,72 @@
-<div class="container-fluid h-100 p-0">
+<div class="bg-default h-100">
+    
+    <div class="container h-100">
+        <div class="d-flex justify-content-center align-items-center flex-column h-100">
+            <div class="row w-100">
+                <div class="col-12 col-md-6">
+                    <div class="mx-5 h-100">
+                        <div class="d-flex justify-content-center align-items-center flex-column h-100">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h1 class="fw-bold text-white">NOME DO PROJETO</h1>
+                                </div>
+                            </div>
 
-    <div class="d-flex align-items-center justify-content-center h-100">
-        <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="form">
-            <mat-card class="p-5">
-                <mat-card-content>
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="text-center mb-5 pe-3">
-                                <img src="assets/images/login.png" width="64px">
+                            <div class="row">
+                                <div class="col-12">
+                                    <p class="text-white-50 mb-md-0 mb-5" style="text-align: justify;">
+                                        Ferramenta para o gerenciamento de animais e do processo de adoção em ONGS.
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="row">
-                        <div class="col-12">
-                            <mat-form-field appearance="outline" class="w-100">
-                                <mat-label>Usuário</mat-label>
-                                <input matInput formControlName="username" mask="CPF_CNPJ">
-                            </mat-form-field>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-12">
-                            <mat-form-field appearance="outline" class="w-100">
-                                <mat-label>Senha</mat-label>
-                                <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
-                                <button mat-icon-button matSuffix type="button" (click)="hide = !hide">
-                                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-                                </button>
-                            </mat-form-field>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col">
-                            <div class="text-center">
-                                <button mat-button class="bg-primary text-white">Entrar</button>
+                <div class="col-12 col-md-6">
+                    <mat-card class="mx-5 px-3 py-5">
+                        <mat-card-header>
+                            <div class="mat-card-header-text text-center">
+                                <h2>Login</h2>
                             </div>
-                        </div>
-                    </div>
-                </mat-card-content>
-            </mat-card>
-        </form>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <form [formGroup]="form" *ngIf="form">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <mat-form-field appearance="outline" class="w-100">
+                                            <mat-label>Usuário</mat-label>
+                                            <input matInput formControlName="username" placeholder="Usuário" (keyup.enter)="submit()" mask="CPF_CNPJ">
+                                            <mat-icon matPrefix>person</mat-icon>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+    
+                                <div class="row">
+                                    <div class="col-12">
+                                        <mat-form-field appearance="outline" class="w-100">
+                                            <mat-label>Senha</mat-label>
+                                            <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" placeholder="Senha" (keyup.enter)="submit()">
+                                            <mat-icon matPrefix>password</mat-icon>
+                                            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                                                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                          </button>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </form>
+                        </mat-card-content>
+                        <mat-card-footer class="pb-3 ps-3 pe-3">
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <button mat-flat-button class="w-100 bg-default text-white" (click)="submit()">Entrar</button>
+                                </div>
+                            </div>
+                        </mat-card-footer>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
     </div>
 
     <app-footer></app-footer>
