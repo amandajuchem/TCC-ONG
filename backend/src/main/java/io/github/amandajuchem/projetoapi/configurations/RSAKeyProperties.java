@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
+/**
+ * RSAKeyProperties class for holding RSA key properties.
+ */
 @Getter
 @Component
 public class RSAKeyProperties {

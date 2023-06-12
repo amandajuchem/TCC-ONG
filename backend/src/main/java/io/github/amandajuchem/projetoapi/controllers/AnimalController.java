@@ -23,21 +23,40 @@ import java.util.UUID;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
+/**
+ * Controller class for managing animals.
+ * Provides endpoints for CRUD operations and searching.
+ */
 @RestController
 @RequestMapping("/animais")
 @RequiredArgsConstructor
-@Tag(name = "Animal", description = "Endpoints para gerenciamento de animais")
+@Tag(name = "Animais", description = "Endpoints for animals management")
 public class AnimalController implements AbstractController<Animal, AnimalDTO> {
 
     private final AnimalService service;
 
+    /**
+     * Delete an animal by ID.
+     *
+     * @param id The ID of the animal to be deleted.
+     * @return A ResponseEntity with the HTTP status of 200 (OK).
+     */
     @Override
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         service.delete(id);
-        return ResponseEntity.status(OK).body(null);
+        return ResponseEntity.status(OK).build();
     }
 
+    /**
+     * Retrieve all animals.
+     *
+     * @param page      The page number for pagination (optional, default: 0).
+     * @param size      The page size for pagination (optional, default: 10).
+     * @param sort      The sorting field (optional, default: "nome").
+     * @param direction The sorting direction (optional, default: "asc").
+     * @return A ResponseEntity containing a page of AnimalDTO objects, with the HTTP status of 200 (OK).
+     */
     @Override
     @GetMapping
     public ResponseEntity<Page<AnimalDTO>> findAll(@RequestParam(required = false, defaultValue = "0") Integer page,
@@ -49,6 +68,12 @@ public class AnimalController implements AbstractController<Animal, AnimalDTO> {
         return ResponseEntity.status(OK).body(animais);
     }
 
+    /**
+     * Retrieve an animal by ID.
+     *
+     * @param id The ID of the animal to be retrieved.
+     * @return A ResponseEntity containing the AnimalDTO object, with the HTTP status of 200 (OK).
+     */
     @Override
     @GetMapping("/{id}")
     public ResponseEntity<AnimalDTO> findById(@PathVariable UUID id) {
@@ -56,7 +81,15 @@ public class AnimalController implements AbstractController<Animal, AnimalDTO> {
         return ResponseEntity.status(OK).body(animal);
     }
 
-    @Operation(summary = "Save", description = "Save an item")
+    /**
+     * Save an animal.
+     *
+     * @param animal The animal object to be saved.
+     * @param foto   The MultipartFile object representing the photo of the animal (optional).
+     * @return A ResponseEntity containing the saved AnimalDTO object, with the HTTP status of 201 (CREATED).
+     * @throws FileNotFoundException if the photo file is not found.
+     */
+    @Operation(summary = "Save", description = "Saves an item")
     @ResponseStatus(CREATED)
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<AnimalDTO> save(@RequestPart @Valid Animal animal,
@@ -64,7 +97,7 @@ public class AnimalController implements AbstractController<Animal, AnimalDTO> {
 
         if (foto != null) {
 
-            var imagem = Imagem.builder()
+            final var imagem = Imagem.builder()
                     .nome(System.currentTimeMillis() + "." + FileUtils.getExtension(foto))
                     .build();
 
@@ -75,12 +108,28 @@ public class AnimalController implements AbstractController<Animal, AnimalDTO> {
         return save(animal);
     }
 
+    /**
+     * Save an animal.
+     *
+     * @param animal The animal object to be saved.
+     * @return A ResponseEntity containing the saved AnimalDTO object, with the HTTP status of 201 (CREATED).
+     */
     @Override
     public ResponseEntity<AnimalDTO> save(Animal animal) {
         final var animalSaved = service.save(animal);
         return ResponseEntity.status(CREATED).body(animalSaved);
     }
 
+    /**
+     * Search for animals by value.
+     *
+     * @param value     The value to search for.
+     * @param page      The page number for pagination (optional, default: 0).
+     * @param size      The page size for pagination (optional, default: 10).
+     * @param sort      The sorting field (optional, default: "nome").
+     * @param direction The sorting direction (optional, default: "asc").
+     * @return A ResponseEntity containing a page of AnimalDTO objects, with the HTTP status of 200 (OK).
+     */
     @Override
     @GetMapping("/search")
     public ResponseEntity<Page<AnimalDTO>> search(@RequestParam String value,
@@ -93,7 +142,17 @@ public class AnimalController implements AbstractController<Animal, AnimalDTO> {
         return ResponseEntity.status(OK).body(animais);
     }
 
-    @Operation(summary = "Update", description = "Update an item")
+    /**
+     * Update an animal.
+     *
+     * @param id     The ID of the animal to be updated.
+     * @param animal The updated animal object.
+     * @param foto   The MultipartFile object representing the updated photo of the Animal (optional).
+     * @return A ResponseEntity containing the updated AnimalDTO object, with HTTP status of 200 (OK).
+     * @throws FileNotFoundException if the photo file is not found.
+     * @throws ValidationException If the provided animal ID does not match the path ID.
+     */
+    @Operation(summary = "Update", description = "Updates an item")
     @ResponseStatus(OK)
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<AnimalDTO> update(@PathVariable UUID id,
@@ -104,7 +163,7 @@ public class AnimalController implements AbstractController<Animal, AnimalDTO> {
 
             if (foto != null) {
 
-                var imagem = Imagem.builder()
+                final var imagem = Imagem.builder()
                         .nome(System.currentTimeMillis() + "." + FileUtils.getExtension(foto))
                         .build();
 
@@ -118,6 +177,13 @@ public class AnimalController implements AbstractController<Animal, AnimalDTO> {
         throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);
     }
 
+    /**
+     * Update an animal.
+     *
+     * @param id     The ID of the animal to be updated.
+     * @param animal The updated animal object.
+     * @return A ResponseEntity containing the updated AnimalDTO object, with HTTP status of 200 (OK).
+     */
     @Override
     public ResponseEntity<AnimalDTO> update(UUID id, Animal animal) {
         final var animalSaved = service.save(animal);

@@ -16,12 +16,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+/**
+ * Service class that implements the AbstractService interface for managing tutor objects.
+ */
 @Service
 @RequiredArgsConstructor
 public class TutorService implements AbstractService<Tutor, TutorDTO> {
 
     private final TutorRepository repository;
 
+    /**
+     * Deletes a tutor by ID.
+     *
+     * @param id the ID of the tutor object to be deleted.
+     * @throws ObjectNotFoundException if the tutor object with the given ID is not found.
+     */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void delete(UUID id) {
@@ -37,6 +46,15 @@ public class TutorService implements AbstractService<Tutor, TutorDTO> {
         throw new ObjectNotFoundException(MessageUtils.TUTOR_NOT_FOUND);
     }
 
+    /**
+     * Retrieves all tutors.
+     *
+     * @param page      the page number for pagination.
+     * @param size      the page size for pagination.
+     * @param sort      the sorting field.
+     * @param direction the sorting direction ("asc" for ascending, "desc" for descending).
+     * @return a page object containing the requested TutorDTO objects.
+     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<TutorDTO> findAll(Integer page, Integer size, String sort, String direction) {
@@ -45,6 +63,13 @@ public class TutorService implements AbstractService<Tutor, TutorDTO> {
                 .map(TutorDTO::toDTO);
     }
 
+    /**
+     * Retrieves a tutor by ID.
+     *
+     * @param id the ID of the tutor object to be retrieved.
+     * @return the TutorDTO representing the requested tutor object.
+     * @throws ObjectNotFoundException if the tutor object with the given ID is not found.
+     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public TutorDTO findById(UUID id) {
@@ -52,6 +77,13 @@ public class TutorService implements AbstractService<Tutor, TutorDTO> {
         return TutorDTO.toDTO(tutor);
     }
 
+    /**
+     * Saves a tutor.
+     *
+     * @param tutor the tutor object to be saved.
+     * @return the TutorDTO representing the saved tutor object.
+     * @throws ValidationException if the tutor object is invalid.
+     */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public TutorDTO save(Tutor tutor) {
@@ -67,6 +99,16 @@ public class TutorService implements AbstractService<Tutor, TutorDTO> {
         return TutorDTO.toDTO(tutor);
     }
 
+    /**
+     * Search for tutors by value.
+     *
+     * @param value     the value to search for (name, CPF, or RG) case-insensitive.
+     * @param page      the page number for pagination.
+     * @param size      the page size for pagination.
+     * @param sort      the sorting field.
+     * @param direction the sorting direction ("asc" for ascending, "desc" for descending).
+     * @return a page object containing the requested TutorDTO objects.
+     */
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<TutorDTO> search(String value, Integer page, Integer size, String sort, String direction) {
 
@@ -74,27 +116,34 @@ public class TutorService implements AbstractService<Tutor, TutorDTO> {
                 .map(TutorDTO::toDTO);
     }
 
+    /**
+     * Validates a tutor.
+     *
+     * @param tutor the tutor object to be validated.
+     * @return true if the tutor object is valid.
+     * @throws ValidationException if the tutor object is invalid.
+     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public boolean validate(Tutor tutor) {
 
-        final var tutor_findByNome = repository.findByNomeIgnoreCase(tutor.getNome()).orElse(null);
+        final var tutorFindByNome = repository.findByNomeIgnoreCase(tutor.getNome()).orElse(null);
 
-        if (tutor_findByNome != null && !tutor_findByNome.equals(tutor)) {
+        if (tutorFindByNome != null && !tutorFindByNome.equals(tutor)) {
             throw new ValidationException("Tutor já cadastrado");
         }
 
-        final var tutor_findByCpf = repository.findByCpf(tutor.getCpf()).orElse(null);
+        final var tutorFindByCpf = repository.findByCpf(tutor.getCpf()).orElse(null);
 
-        if (tutor_findByCpf != null && !tutor_findByCpf.equals(tutor)) {
+        if (tutorFindByCpf != null && !tutorFindByCpf.equals(tutor)) {
             throw new ValidationException("CPF já cadastrado!");
         }
 
         if (tutor.getRg() != null && !tutor.getRg().isEmpty()) {
 
-            final var tutor_findByRg = repository.findByRg(tutor.getRg()).orElse(null);
+            final var tutorFindByRg = repository.findByRg(tutor.getRg()).orElse(null);
 
-            if (tutor_findByRg != null && !tutor_findByRg.equals(tutor)) {
+            if (tutorFindByRg != null && !tutorFindByRg.equals(tutor)) {
                 throw new ValidationException("RG já cadastrado!");
             }
         }

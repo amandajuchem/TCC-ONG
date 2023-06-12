@@ -16,12 +16,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+/**
+ * Service class that implements the AbstractService interface for managing observation objects.
+ */
 @Service
 @RequiredArgsConstructor
 public class ObservacaoService implements AbstractService<Observacao, ObservacaoDTO> {
 
     private final ObservacaoRepository repository;
 
+    /**
+     * Deletes an observation by ID.
+     *
+     * @param id the ID of the observation object to be deleted.
+     * @throws ObjectNotFoundException if the observation object with the given ID is not found.
+     */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void delete(UUID id) {
@@ -37,6 +46,15 @@ public class ObservacaoService implements AbstractService<Observacao, Observacao
         throw new ObjectNotFoundException(MessageUtils.OBSERVACAO_NOT_FOUND);
     }
 
+    /**
+     * Retrieves all observations.
+     *
+     * @param page      the page number for pagination.
+     * @param size      the page size for pagination.
+     * @param sort      the sorting field.
+     * @param direction the sorting direction ("asc" for ascending, "desc" for descending).
+     * @return a page object containing the requested ObservacaoDTO objects.
+     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<ObservacaoDTO> findAll(Integer page, Integer size, String sort, String direction) {
@@ -49,6 +67,13 @@ public class ObservacaoService implements AbstractService<Observacao, Observacao
                 .map(ObservacaoDTO::toDTO);
     }
 
+    /**
+     * Retrieves an observation by ID.
+     *
+     * @param id the ID of the observation object to be retrieved.
+     * @return the ObservacaoDTO representing the requested observation object.
+     * @throws ObjectNotFoundException if the observation object with the given ID is not found.
+     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public ObservacaoDTO findById(UUID id) {
@@ -56,6 +81,13 @@ public class ObservacaoService implements AbstractService<Observacao, Observacao
         return ObservacaoDTO.toDTO(observacao);
     }
 
+    /**
+     * Saves an observation.
+     *
+     * @param observacao the observation object to be saved.
+     * @return the ObservacaoDTO representing the saved observation object.
+     * @throws ValidationException if the observation object is invalid.
+     */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public ObservacaoDTO save(Observacao observacao) {
@@ -71,6 +103,16 @@ public class ObservacaoService implements AbstractService<Observacao, Observacao
         return ObservacaoDTO.toDTO(observacao);
     }
 
+    /**
+     * Search for observations by value.
+     *
+     * @param value     the value to search for (tutor's ID).
+     * @param page      the page number for pagination.
+     * @param size      the page size for pagination.
+     * @param sort      the sorting field.
+     * @param direction the sorting direction ("asc" for ascending, "desc" for descending).
+     * @return a page object containing the requested ObservacaoDTO objects.
+     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<ObservacaoDTO> search(String value, Integer page, Integer size, String sort, String direction) {
@@ -83,6 +125,13 @@ public class ObservacaoService implements AbstractService<Observacao, Observacao
                 .map(ObservacaoDTO::toDTO);
     }
 
+    /**
+     * Validates an observation.
+     *
+     * @param observacao the observation object to be validated.
+     * @return true if the observation object is valid.
+     * @throws ValidationException if the observation object is invalid.
+     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public boolean validate(Observacao observacao) {

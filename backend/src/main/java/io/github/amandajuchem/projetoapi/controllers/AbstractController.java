@@ -1,10 +1,7 @@
 package io.github.amandajuchem.projetoapi.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,29 +13,79 @@ import java.util.UUID;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
+/**
+ * AbstractController interface for defining common CRUD operations.
+ *
+ * @param <T>   the entity type
+ * @param <DTO> the DTO (Data Transfer Object) type
+ */
 public interface AbstractController<T, DTO> {
 
-    @Operation(summary = "Delete", description = "Delete an item by ID")
+    /**
+     * Deletes an item by ID.
+     *
+     * @param id the ID of the item to delete
+     * @return a ResponseEntity with a status code of 200 OK
+     */
+    @Operation(summary = "Delete", description = "Deletes an item by ID")
     @ResponseStatus(OK)
-    ResponseEntity<Void> delete(UUID id);
+    ResponseEntity<Void> delete(@PathVariable UUID id);
 
-    @Operation(summary = "Find all", description = "Find all items")
+    /**
+     * Finds all items.
+     *
+     * @param page       the page number for pagination
+     * @param size       the page size for pagination
+     * @param sort       the sorting field
+     * @param direction  the sorting direction
+     * @return a ResponseEntity with a Page of DTOs
+     */
+    @Operation(summary = "Find all", description = "Finds all items")
     @ResponseStatus(OK)
-    ResponseEntity<Page<DTO>> findAll(Integer page, Integer size, String sort, String direction);
+    ResponseEntity<Page<DTO>> findAll(@RequestParam Integer page, @RequestParam Integer size, @RequestParam String sort, @RequestParam String direction);
 
-    @Operation(summary = "Find by ID", description = "Find an item by ID")
+    /**
+     * Finds an item by ID.
+     *
+     * @param id the ID of the item to be found
+     * @return a ResponseEntity with the DTO of the item
+     */
+    @Operation(summary = "Find by ID", description = "Finds an item by ID")
     @ResponseStatus(OK)
-    ResponseEntity<DTO> findById(UUID id);
+    ResponseEntity<DTO> findById(@PathVariable UUID id);
 
-    @Operation(summary = "Save", description = "Save an item")
+    /**
+     * Saves an item.
+     *
+     * @param object the item to be saved
+     * @return a ResponseEntity with the DTO of the saved item
+     */
+    @Operation(summary = "Save", description = "Saves an item")
     @ResponseStatus(CREATED)
-    ResponseEntity<DTO> save(T object);
+    ResponseEntity<DTO> save(@RequestBody T object);
 
+    /**
+     * Search items by value.
+     *
+     * @param value      the value to search for
+     * @param page       the page number for pagination
+     * @param size       the page size for pagination
+     * @param sort       the sorting field
+     * @param direction  the sorting direction
+     * @return a ResponseEntity with a Page of DTOs matching with the value
+     */
     @Operation(summary = "Search", description = "Search items")
     @ResponseStatus(OK)
-    ResponseEntity<Page<DTO>> search(String value, Integer page, Integer size, String sort, String direction);
+    ResponseEntity<Page<DTO>> search(@RequestParam String value, @RequestParam Integer page, @RequestParam Integer size, @RequestParam String sort, @RequestParam String direction);
 
-    @Operation(summary = "Update", description = "Update an item")
+    /**
+     * Updates an item.
+     *
+     * @param id     the ID of the item to be updated
+     * @param object the updated item
+     * @return a ResponseEntity with the DTO of the updated item
+     */
+    @Operation(summary = "Update", description = "Updates an item")
     @ResponseStatus(OK)
-    ResponseEntity<DTO> update(UUID id, T object);
+    ResponseEntity<DTO> update(@PathVariable UUID id, @RequestBody T object);
 }

@@ -10,6 +10,11 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * The AdocaoDTO class represents a Data Transfer Object (DTO) for Adocao entities.
+ * It provides a simplified view of an Adocao object for use in API responses.
+ * This class implements the Serializable interface.
+ */
 public record AdocaoDTO(
         UUID id,
         LocalDateTime createdDate,
@@ -24,6 +29,12 @@ public record AdocaoDTO(
         Set<ImagemDTO> termoResponsabilidade
 ) implements Serializable {
 
+    /**
+     * Creates a new AdocaoDTO instance based on the provided adoption object.
+     *
+     * @param adocao The adoption object to convert to AdocaoDTO.
+     * @return The AdocaoDTO representing the provided adoption object.
+     */
     public static AdocaoDTO toDTO(Adocao adocao) {
 
         return new AdocaoDTO(

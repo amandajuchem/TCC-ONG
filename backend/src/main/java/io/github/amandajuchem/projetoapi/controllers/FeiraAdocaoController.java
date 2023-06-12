@@ -17,21 +17,40 @@ import java.util.UUID;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
+/**
+ * Controller class for managing adoption fairs.
+ * Provides endpoints for CRUD operations and searching.
+ */
 @RestController
 @RequestMapping("/feiras-adocao")
 @RequiredArgsConstructor
-@Tag(name = "Feira de Adoção", description = "Endpoints para gerenciamento de feiras de adoção")
+@Tag(name = "Feiras de Adoção", description = "Endpoints for adoption fairs management")
 public class FeiraAdocaoController implements AbstractController<FeiraAdocao, FeiraAdocaoDTO> {
 
     private final FeiraAdocaoService service;
 
+    /**
+     * Deletes an adoption fair by ID.
+     *
+     * @param id The ID of the adoption fair to be deleted.
+     * @return A ResponseEntity with the HTTP status of 200 (OK).
+     */
     @Override
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         service.delete(id);
-        return ResponseEntity.status(OK).body(null);
+        return ResponseEntity.status(OK).build();
     }
 
+    /**
+     * Retrieves all adoption fairs.
+     *
+     * @param page      The page number for pagination (optional, default: 0).
+     * @param size      The page size for pagination (optional, default: 10).
+     * @param sort      The sorting field (optional, default: "nome").
+     * @param direction The sorting direction (optional, default: "asc").
+     * @return A ResponseEntity containing a page of FeiraAdocaoDTO objects, with the HTTP status of 200 (OK).
+     */
     @Override
     @GetMapping
     public ResponseEntity<Page<FeiraAdocaoDTO>> findAll(@RequestParam(required = false, defaultValue = "0") Integer page,
@@ -43,6 +62,12 @@ public class FeiraAdocaoController implements AbstractController<FeiraAdocao, Fe
         return ResponseEntity.status(OK).body(feirasAdocao);
     }
 
+    /**
+     * Retrieves an adoption fair by ID.
+     *
+     * @param id The ID of the adoption fair to be retrieved.
+     * @return A ResponseEntity containing the FeiraAdocaoDTO object, with the HTTP status of 200 (OK).
+     */
     @Override
     @GetMapping("/{id}")
     public ResponseEntity<FeiraAdocaoDTO> findById(@PathVariable UUID id) {
@@ -50,6 +75,12 @@ public class FeiraAdocaoController implements AbstractController<FeiraAdocao, Fe
         return ResponseEntity.status(OK).body(feiraAdocao);
     }
 
+    /**
+     * Saves an adoption fair.
+     *
+     * @param feiraAdocao The adoption fair object to be saved.
+     * @return A ResponseEntity containing the saved FeiraAdocaoDTO object, with the HTTP status of 201 (CREATED).
+     */
     @Override
     @PostMapping
     public ResponseEntity<FeiraAdocaoDTO> save(@RequestBody @Valid FeiraAdocao feiraAdocao) {
@@ -57,6 +88,16 @@ public class FeiraAdocaoController implements AbstractController<FeiraAdocao, Fe
         return ResponseEntity.status(CREATED).body(feiraAdocaoSaved);
     }
 
+    /**
+     * Search for adoption fairs by value.
+     *
+     * @param value     The value to search for.
+     * @param page      The page number for pagination (optional, default: 0).
+     * @param size      The page size for pagination (optional, default: 10).
+     * @param sort      The sorting field (optional, default: "nome").
+     * @param direction The sorting direction (optional, default: "asc").
+     * @return A ResponseEntity containing a page of FeiraAdocaoDTO objects, with the HTTP status of 200 (OK).
+     */
     @Override
     @GetMapping("/search")
     public ResponseEntity<Page<FeiraAdocaoDTO>> search(@RequestParam String value,
@@ -69,6 +110,14 @@ public class FeiraAdocaoController implements AbstractController<FeiraAdocao, Fe
         return ResponseEntity.status(OK).body(feirasAdocao);
     }
 
+    /**
+     * Updates an adoption fair.
+     *
+     * @param id           The ID of the adoption fair to be updated.
+     * @param feiraAdocao  The updated adoption fair object.
+     * @return A ResponseEntity containing the updated FeiraAdocaoDTO object, with HTTP status of 200 (OK).
+     * @throws ValidationException If the provided adoption fair ID does not match the path ID.
+     */
     @Override
     @PutMapping("/{id}")
     public ResponseEntity<FeiraAdocaoDTO> update(@PathVariable UUID id, @RequestBody @Valid FeiraAdocao feiraAdocao) {

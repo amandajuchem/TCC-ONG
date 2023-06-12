@@ -16,12 +16,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+/**
+ * Service class that implements the AbstractService interface for managing treatment objects.
+ */
 @Service
 @RequiredArgsConstructor
 public class AtendimentoService implements AbstractService<Atendimento, AtendimentoDTO> {
 
     private final AtendimentoRepository repository;
 
+    /**
+     * Deletes a treatment by ID.
+     *
+     * @param id the ID of the treatment object to be deleted.
+     * @throws ObjectNotFoundException if the treatment object with the given ID is not found.
+     */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void delete(UUID id) {
@@ -37,6 +46,15 @@ public class AtendimentoService implements AbstractService<Atendimento, Atendime
         throw new ObjectNotFoundException(MessageUtils.ATENDIMENTO_NOT_FOUND);
     }
 
+    /**
+     * Retrieves all treatments.
+     *
+     * @param page      the page number for pagination.
+     * @param size      the page size for pagination.
+     * @param sort      the sorting field.
+     * @param direction the sorting direction ("asc" for ascending, "desc" for descending).
+     * @return a Page object containing the requested AtendimentoDTO objects.
+     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<AtendimentoDTO> findAll(Integer page, Integer size, String sort, String direction) {
@@ -53,6 +71,13 @@ public class AtendimentoService implements AbstractService<Atendimento, Atendime
                 .map(AtendimentoDTO::toDTO);
     }
 
+    /**
+     * Retrieves a treatment by ID.
+     *
+     * @param id the ID of the treatment object to be retrieved.
+     * @return the AtendimentoDTO representing the requested treatment object.
+     * @throws ObjectNotFoundException if the treatment object with the given ID is not found.
+     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public AtendimentoDTO findById(UUID id) {
@@ -60,6 +85,13 @@ public class AtendimentoService implements AbstractService<Atendimento, Atendime
         return AtendimentoDTO.toDTO(atendimento);
     }
 
+    /**
+     * Saves a treatment.
+     *
+     * @param atendimento the treatment object to be saved.
+     * @return the AtendimentoDTO representing the saved treatment object.
+     * @throws ValidationException if the treatment object is invalid.
+     */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public AtendimentoDTO save(Atendimento atendimento) {
@@ -75,6 +107,16 @@ public class AtendimentoService implements AbstractService<Atendimento, Atendime
         return AtendimentoDTO.toDTO(atendimento);
     }
 
+    /**
+     * Search for treatments by value.
+     *
+     * @param value     the value to search for (date/time, animal's name, or veterinarian's name) case-insensitive.
+     * @param page      the page number for pagination.
+     * @param size      the page size for pagination.
+     * @param sort      the sorting field.
+     * @param direction the sorting direction ("asc" for ascending, "desc" for descending).
+     * @return a page object containing the requested AtendimentoDTO objects.
+     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<AtendimentoDTO> search(String value, Integer page, Integer size, String sort, String direction) {
@@ -91,14 +133,21 @@ public class AtendimentoService implements AbstractService<Atendimento, Atendime
                 .map(AtendimentoDTO::toDTO);
     }
 
+    /**
+     * Validates a treatment object.
+     *
+     * @param atendimento the treatment object to be validated.
+     * @return true if the treatment object is valid.
+     * @throws ValidationException if the treatment object is invalid.
+     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public boolean validate(Atendimento atendimento) {
 
-        final var atendimento_findByDataHoraAndVeterinario = repository.findByDataHoraAndVeterinario(atendimento.getDataHora(), atendimento.getVeterinario())
+        final var atendimentoFindByDataHoraAndVeterinario = repository.findByDataHoraAndVeterinario(atendimento.getDataHora(), atendimento.getVeterinario())
                 .orElse(null);
 
-        if (atendimento_findByDataHoraAndVeterinario != null && !atendimento_findByDataHoraAndVeterinario.equals(atendimento)) {
+        if (atendimentoFindByDataHoraAndVeterinario != null && !atendimentoFindByDataHoraAndVeterinario.equals(atendimento)) {
             throw new ValidationException("O veterinário já possui um atendimento realizado para esta data e hora!");
         }
 

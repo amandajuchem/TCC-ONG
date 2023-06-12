@@ -1,9 +1,7 @@
 package io.github.amandajuchem.projetoapi.controllers;
 
-import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
 import io.github.amandajuchem.projetoapi.utils.FileUtils;
 import io.github.amandajuchem.projetoapi.utils.MediaTypeUtils;
-import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.ServletContext;
 import lombok.RequiredArgsConstructor;
@@ -20,31 +18,37 @@ import java.io.FileNotFoundException;
 
 import static org.springframework.http.HttpStatus.OK;
 
+/**
+ * Controller class for managing images.
+ * Provides endpoints for searching.
+ */
 @RestController
 @RequestMapping("/imagens")
 @RequiredArgsConstructor
-@Tag(name = "Imagem", description = "Endpoints para gerenciamento de imagens")
+@Tag(name = "Imagens", description = "Endpoints for images management")
 public class ImagemController {
 
     private final ServletContext servletContext;
 
+    /**
+     * Search for image by value.
+     *
+     * @param value The value to search for.
+     * @return The ResponseEntity containing the image file.
+     * @throws FileNotFoundException If the image file is not found.
+     */
     @GetMapping("/search")
-    public ResponseEntity<?> search(@RequestParam(required = false) String nome) throws FileNotFoundException {
+    public ResponseEntity<?> search(@RequestParam String value) throws FileNotFoundException {
 
-        if (nome != null && !nome.isEmpty()) {
+        final var file = FileUtils.find(value, FileUtils.IMAGES_DIRECTORY);
+        final var mediaType = MediaTypeUtils.getMediaTypeForFileName(this.servletContext, file.getName());
+        final var resource = new InputStreamResource(new FileInputStream(file));
 
-            var file = FileUtils.find(nome, FileUtils.IMAGES_DIRECTORY);
-            var mediaType = MediaTypeUtils.getMediaTypeForFileName(this.servletContext, file.getName());
-            var resource = new InputStreamResource(new FileInputStream(file));
-
-            return ResponseEntity
-                    .status(OK)
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName())
-                    .contentType(mediaType)
-                    .contentLength(file.length())
-                    .body(resource);
-        }
-
-        throw new ObjectNotFoundException(MessageUtils.FILE_NOT_FOUND);
+        return ResponseEntity
+                .status(OK)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName())
+                .contentType(mediaType)
+                .contentLength(file.length())
+                .body(resource);
     }
 }

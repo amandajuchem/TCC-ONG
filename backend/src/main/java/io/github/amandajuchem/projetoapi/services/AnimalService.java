@@ -16,12 +16,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+/**
+ * Service class that implements the AbstractService interface for managing animal objects.
+ */
 @Service
 @RequiredArgsConstructor
 public class AnimalService implements AbstractService<Animal, AnimalDTO> {
 
     private final AnimalRepository repository;
 
+    /**
+     * Deletes an animal by ID.
+     *
+     * @param id the ID of the animal object to be deleted.
+     * @throws ObjectNotFoundException if the animal object with the given ID is not found.
+     */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void delete(UUID id) {
@@ -37,6 +46,15 @@ public class AnimalService implements AbstractService<Animal, AnimalDTO> {
         throw new ObjectNotFoundException(MessageUtils.ANIMAL_NOT_FOUND);
     }
 
+    /**
+     * Retrieves all animals.
+     *
+     * @param page      the page number for pagination.
+     * @param size      the page size for pagination.
+     * @param sort      the sorting field.
+     * @param direction the sorting direction ("asc" for ascending, "desc" for descending).
+     * @return a page object containing the requested AnimalDTO objects.
+     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<AnimalDTO> findAll(Integer page, Integer size, String sort, String direction) {
@@ -45,6 +63,13 @@ public class AnimalService implements AbstractService<Animal, AnimalDTO> {
                 .map(AnimalDTO::toDTO);
     }
 
+    /**
+     * Retrieves an animal by ID.
+     *
+     * @param id the ID of the animal object to be retrieved.
+     * @return the AnimalDTO representing the requested animal object.
+     * @throws ObjectNotFoundException if the animal object with the given ID is not found.
+     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public AnimalDTO findById(UUID id) {
@@ -52,6 +77,13 @@ public class AnimalService implements AbstractService<Animal, AnimalDTO> {
         return AnimalDTO.toDTO(animal);
     }
 
+    /**
+     * Saves an animal.
+     *
+     * @param animal the animal object to be saved.
+     * @return the AnimalDTO representing the saved animal object.
+     * @throws ValidationException if the animal object is invalid.
+     */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public AnimalDTO save(Animal animal) {
@@ -67,6 +99,16 @@ public class AnimalService implements AbstractService<Animal, AnimalDTO> {
         return AnimalDTO.toDTO(animal);
     }
 
+    /**
+     * Search for animals by value.
+     *
+     * @param value     the value to search for (animal's name) case-insensitive.
+     * @param page      the page number for pagination.
+     * @param size      the page size for pagination.
+     * @param sort      the sorting field.
+     * @param direction the sorting direction ("asc" for ascending, "desc" for descending).
+     * @return a page object containing the requested AnimalDTO objects.
+     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<AnimalDTO> search(String value, Integer page, Integer size, String sort, String direction) {
@@ -75,6 +117,13 @@ public class AnimalService implements AbstractService<Animal, AnimalDTO> {
                 .map(AnimalDTO::toDTO);
     }
 
+    /**
+     * Validates an animal.
+     *
+     * @param animal the animal object to be validated.
+     * @return true if the animal object is valid.
+     * @throws ValidationException if the animal object is invalid.
+     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public boolean validate(Animal animal) {

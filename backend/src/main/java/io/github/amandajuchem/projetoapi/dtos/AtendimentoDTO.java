@@ -9,6 +9,11 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * The AtendimentoDTO class represents a Data Transfer Object (DTO) for Atendimento entities.
+ * It provides a simplified view of an Atendimento object for use in API responses.
+ * This class implements the Serializable interface.
+ */
 public record AtendimentoDTO(
         UUID id,
         LocalDateTime createdDate,
@@ -25,6 +30,12 @@ public record AtendimentoDTO(
         Set<ExameDTO> exames
 ) implements Serializable {
 
+    /**
+     * Creates a new AtendimentoDTO instance based on the provided Atendimento object.
+     *
+     * @param atendimento The Atendimento object to convert to AtendimentoDTO.
+     * @return The AtendimentoDTO representing the provided Atendimento object.
+     */
     public static AtendimentoDTO toDTO(Atendimento atendimento) {
 
         return new AtendimentoDTO(

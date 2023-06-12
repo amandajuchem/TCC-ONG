@@ -15,15 +15,25 @@ import java.util.Collections;
 
 import static org.springframework.http.HttpStatus.OK;
 
+/**
+ * Controller class for handling authentication.
+ * Provides endpoints for authentication.
+ */
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-@Tag(name = "Autenticação", description = "Endpoint para autenticação")
+@Tag(name = "Autenticação", description = "Endpoints for authentication management")
 public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
     private final JWTTokenUtils jwtTokenUtils;
 
+    /**
+     * Authenticates a user.
+     *
+     * @param user The user object containing the username and password for authentication.
+     * @return A ResponseEntity containing the Authentication object with the generated token, with HTTP status 200 (OK).
+     */
     @Operation(summary = "Authenticate", description = "Authenticate an user")
     @ResponseStatus(OK)
     @PostMapping("/token")

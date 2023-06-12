@@ -16,12 +16,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+/**
+ * Service class that implements the AbstractService interface for managing scheduling objects.
+ */
 @Service
 @RequiredArgsConstructor
 public class AgendamentoService implements AbstractService<Agendamento, AgendamentoDTO> {
 
     private final AgendamentoRepository repository;
 
+    /**
+     * Deletes a scheduling by ID.
+     *
+     * @param id the ID of the scheduling object to be deleted.
+     * @throws ObjectNotFoundException if the scheduling object with the given ID is not found.
+     */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void delete(UUID id) {
@@ -37,6 +46,15 @@ public class AgendamentoService implements AbstractService<Agendamento, Agendame
         throw new ObjectNotFoundException(MessageUtils.AGENDAMENTO_NOT_FOUND);
     }
 
+    /**
+     * Retrieves all schedules.
+     *
+     * @param page      the page number for pagination.
+     * @param size      the page size for pagination.
+     * @param sort      the sorting field.
+     * @param direction the sorting direction ("asc" for ascending, "desc" for descending).
+     * @return a page object containing the requested AgendamentoDTO objects.
+     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<AgendamentoDTO> findAll(Integer page, Integer size, String sort, String direction) {
@@ -53,6 +71,13 @@ public class AgendamentoService implements AbstractService<Agendamento, Agendame
                 .map(AgendamentoDTO::toDTO);
     }
 
+    /**
+     * Retrieves a scheduling by ID.
+     *
+     * @param id the ID of the scheduling object to be retrieved.
+     * @return the AgendamentoDTO representing the requested scheduling object.
+     * @throws ObjectNotFoundException if the scheduling object with the given ID is not found.
+     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public AgendamentoDTO findById(UUID id) {
@@ -60,6 +85,13 @@ public class AgendamentoService implements AbstractService<Agendamento, Agendame
         return AgendamentoDTO.toDTO(agendamento);
     }
 
+    /**
+     * Saves a scheduling.
+     *
+     * @param agendamento the scheduling object to be saved.
+     * @return the AgendamentoDTO representing the saved scheduling object.
+     * @throws ValidationException if the scheduling object is invalid.
+     */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public AgendamentoDTO save(Agendamento agendamento) {
@@ -75,6 +107,16 @@ public class AgendamentoService implements AbstractService<Agendamento, Agendame
         return AgendamentoDTO.toDTO(agendamento);
     }
 
+    /**
+     * Search for schedules by value.
+     *
+     * @param value     the value to search for (date/time, animal's name, or veterinarian's name) case-insensitive.
+     * @param page      the page number for pagination.
+     * @param size      the page size for pagination.
+     * @param sort      the sorting field.
+     * @param direction the sorting direction ("asc" for ascending, "desc" for descending).
+     * @return a page object containing the requested AgendamentoDTO objects.
+     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<AgendamentoDTO> search(String value, Integer page, Integer size, String sort, String direction) {
@@ -91,6 +133,13 @@ public class AgendamentoService implements AbstractService<Agendamento, Agendame
                 .map(AgendamentoDTO::toDTO);
     }
 
+    /**
+     * Validates a scheduling.
+     *
+     * @param agendamento the scheduling object to be validated.
+     * @return true if the scheduling object is valid.
+     * @throws ValidationException if the scheduling object is invalid.
+     */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public boolean validate(Agendamento agendamento) {

@@ -17,21 +17,40 @@ import java.util.UUID;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
+/**
+ * Controller class for managing observations.
+ * Provides endpoints for CRUD operations and searching.
+ */
 @RestController
 @RequestMapping("/observacoes")
 @RequiredArgsConstructor
-@Tag(name = "Observação", description = "Endpoints para gerenciamento de observações")
+@Tag(name = "Observações", description = "Endpoints for observations management")
 public class ObservacaoController implements AbstractController<Observacao, ObservacaoDTO> {
 
     private final ObservacaoService service;
 
+    /**
+     * Deletes an observation by ID.
+     *
+     * @param id The ID of the observation to be deleted.
+     * @return A ResponseEntity with the HTTP status of 200 (OK).
+     */
     @Override
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         service.delete(id);
-        return ResponseEntity.status(OK).body(null);
+        return ResponseEntity.status(OK).build();
     }
 
+    /**
+     * Retrieves all observations.
+     *
+     * @param page       The page number for pagination (optional, default: 0).
+     * @param size       The page size for pagination (optional, default: 10).
+     * @param sort       The sorting field (optional, default: "createdDate").
+     * @param direction  The sorting direction (optional, default: "desc").
+     * @return @return A ResponseEntity containing a page of ObservacaoDTO objects, with the HTTP status of 200 (OK).
+     */
     @Override
     @GetMapping
     public ResponseEntity<Page<ObservacaoDTO>> findAll(@RequestParam(required = false, defaultValue = "0") Integer page,
@@ -43,6 +62,12 @@ public class ObservacaoController implements AbstractController<Observacao, Obse
         return ResponseEntity.status(OK).body(observacoes);
     }
 
+    /**
+     * Retrieves an observation by ID.
+     *
+     * @param id The ID of the observation to be retrieved.
+     * @return A ResponseEntity containing the ObservacaoDTO object, with the HTTP status of 200 (OK).
+     */
     @Override
     @GetMapping("/{id}")
     public ResponseEntity<ObservacaoDTO> findById(@PathVariable UUID id) {
@@ -50,6 +75,12 @@ public class ObservacaoController implements AbstractController<Observacao, Obse
         return ResponseEntity.status(OK).body(observacao);
     }
 
+    /**
+     * Saves an observation.
+     *
+     * @param observacao The observation to be saved.
+     * @return A ResponseEntity containing the saved ObservacaoDTO object, with the HTTP status of 201 (CREATED).
+     */
     @Override
     @PostMapping
     public ResponseEntity<ObservacaoDTO> save(@RequestBody @Valid Observacao observacao) {
@@ -57,6 +88,16 @@ public class ObservacaoController implements AbstractController<Observacao, Obse
         return ResponseEntity.status(CREATED).body(observacaoSaved);
     }
 
+    /**
+     * Search for observations by value.
+     *
+     * @param value      The value to search for.
+     * @param page       The page number for pagination (optional, default: 0).
+     * @param size       The page size for pagination (optional, default: 10).
+     * @param sort       The sorting field (optional, default: "createdDate").
+     * @param direction  The sorting direction (optional, default: "desc").
+     * @return A ResponseEntity containing a page of ObservacaoDTO objects, with the HTTP status of 200 (OK).
+     */
     @Override
     @GetMapping("/search")
     public ResponseEntity<Page<ObservacaoDTO>> search(@RequestParam String value,
@@ -69,6 +110,14 @@ public class ObservacaoController implements AbstractController<Observacao, Obse
         return ResponseEntity.status(OK).body(observacoes);
     }
 
+    /**
+     * Updates an observation.
+     *
+     * @param id          The ID of the observation to be updated.
+     * @param observacao  The updated observation.
+     * @return A ResponseEntity containing the updated ObservacaoDTO object, with HTTP status of 200 (OK).
+     * @throws ValidationException If the provided observation ID does not match the path ID.
+     */
     @Override
     @PutMapping("/{id}")
     public ResponseEntity<ObservacaoDTO> update(@PathVariable UUID id,
