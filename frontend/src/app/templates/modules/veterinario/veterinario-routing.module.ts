@@ -12,12 +12,10 @@ import { ExamesComponent } from '../../components/exames/exames.component';
 import { FeiraAdocaoCadastroComponent } from '../../components/feira-adocao-cadastro/feira-adocao-cadastro.component';
 import { FeirasAdocaoComponent } from '../../components/feiras-adocao/feiras-adocao.component';
 import { LayoutComponent } from '../../components/layout/layout.component';
-import { NotFoundComponent } from '../../components/not-found/not-found.component';
 import { PainelComponent } from '../../components/painel/painel.component';
 import { TutorComponent } from '../../components/tutor/tutor.component';
 import { TutoresComponent } from '../../components/tutores/tutores.component';
-import { UsuarioComponent } from '../../components/usuario/usuario.component';
-import { UsuariosComponent } from '../../components/usuarios/usuarios.component';
+import { NotFoundComponent } from '../../components/not-found/not-found.component';
 
 const routes: Routes = [
   {
@@ -37,8 +35,6 @@ const routes: Routes = [
       { path: 'painel', component: PainelComponent },
       { path: 'tutores', component: TutoresComponent },
       { path: 'tutores/:id', component: TutorComponent },
-      { path: 'usuarios', component: UsuariosComponent },
-      { path: 'usuarios/:id', component: UsuarioComponent },
       { path: '**', component: NotFoundComponent },
     ],
   },
@@ -48,4 +44,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class AdministracaoRoutingModule {}
+export class VeterinarioRoutingModule {}

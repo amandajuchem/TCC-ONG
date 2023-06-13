@@ -43,7 +43,7 @@
         </a>
     </div>
 
-    <div class="col-12 col-md-3 mb-3">
+    <div class="col-12 col-md-3 mb-3" *ngIf="authentication.role === 'ADMINISTRACAO' || authentication.role === 'VETERINARIO'">
         <a [routerLink]="'/' + authentication.role.toLowerCase() +'/atendimentos'">
             <mat-card>
                 <mat-card-content>
@@ -111,7 +111,7 @@
         </a>
     </div>
 
-    <div class="col-12 col-md-3 mb-3">
+    <div class="col-12 col-md-3 mb-3" *ngIf="authentication.role === 'ADMINISTRACAO'">
         <a [routerLink]="'/' + authentication.role.toLowerCase() +'/usuarios'">
             <mat-card>
                 <mat-card-content>

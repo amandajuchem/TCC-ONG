@@ -1,0 +1,26 @@
+<mat-card>
+    <mat-card-content>
+
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="text-center">
+                    <img src="/assets/images/nao-encontrado.png" width="100px">
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="text-center">
+                    <h2 class="m-0">Conteúdo não encontrado!</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-12 text-center">
+                <a [routerLink]="'/' + authentication.role.toLowerCase() + '/painel'" mat-button class="bg-default text-white">Voltar para página inicial</a>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>

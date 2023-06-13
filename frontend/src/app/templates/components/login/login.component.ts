@@ -45,15 +45,8 @@ export class LoginComponent implements OnInit {
   }
 
   redirect() {
-
     const authentication = this._authService.getAuthentication();
-
-    switch (authentication.role) {
-
-      case Setor.ADMINISTRACAO:
-        this._router.navigate(['/administracao/painel']);
-        break;
-    }
+    this._router.navigate(['/' + authentication.role.toLowerCase() + '/painel']);  
   }
 
   submit() {

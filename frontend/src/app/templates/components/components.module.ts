@@ -47,6 +47,7 @@ import { FeirasAdocaoComponent } from './feiras-adocao/feiras-adocao.component';
 import { FooterComponent } from './footer/footer.component';
 import { LayoutComponent } from './layout/layout.component';
 import { LoginComponent } from './login/login.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 import { NotificationComponent } from './notification/notification.component';
 import { PainelComponent } from './painel/painel.component';
 import { SelecionarAgendamentoComponent } from './selecionar-agendamento/selecionar-agendamento.component';
@@ -94,6 +95,7 @@ import { UsuariosComponent } from './usuarios/usuarios.component';
     FooterComponent,
     LayoutComponent,
     LoginComponent,
+    NotFoundComponent,
     NotificationComponent,
     PainelComponent,
     SelecionarAgendamentoComponent,
