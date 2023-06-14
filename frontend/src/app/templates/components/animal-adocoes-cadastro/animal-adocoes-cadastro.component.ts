@@ -140,7 +140,7 @@ export class AnimalAdocoesCadastroComponent implements OnInit {
   submit() {
 
     const adocao: Adocao = Object.assign({}, this.form.getRawValue());
-    const images = this.termoResponsabilidade.map((t: any) => t.file);
+    const images = this.termoResponsabilidade.filter((t: any) => t.file).map((t: any) => t.file);
     adocao.dataHora = DateUtils.addHours(adocao.dataHora, DateUtils.offsetBrasilia);
 
     if (adocao.id) {

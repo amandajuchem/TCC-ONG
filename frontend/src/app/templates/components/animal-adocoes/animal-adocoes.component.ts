@@ -14,7 +14,6 @@ import { OperatorUtils } from 'src/app/utils/operator-utils';
 
 import { AnimalAdocoesCadastroComponent } from '../animal-adocoes-cadastro/animal-adocoes-cadastro.component';
 import { AnimalAdocoesExcluirComponent } from '../animal-adocoes-excluir/animal-adocoes-excluir.component';
-import { DateUtils } from 'src/app/utils/date-utils';
 
 @Component({
   selector: 'app-animal-adocoes',
@@ -124,10 +123,6 @@ export class AnimalAdocoesComponent implements AfterViewInit {
         this._notificationService.show(MessageUtils.ADOCOES_GET_FAIL, NotificationType.FAIL);
       }
     });
-  }
-
-  getDateWithTimeZone(date: any) {
-    return DateUtils.getDateWithTimeZone(date);
   }
 
   pageChange() {

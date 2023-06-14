@@ -119,17 +119,16 @@ public class FileUtils {
         if (object instanceof File) {
 
             final var file = ((File) object);
+            final var fileName = file.getName().replace(".", " ").split(" ");
 
-            if (!file.exists()) {
-                throw new FileNotFoundException("Arquivo não encontrado!");
-            }
-
-            return file.getName().replace(".", " ").split(" ")[1];
+            return fileName[fileName.length - 1];
         }
 
         if (object instanceof MultipartFile) {
+
             final var file = ((MultipartFile) object);
-            final var fileName = file.getOriginalFilename().replace(".", "").split(" ");
+            final var fileName = file.getOriginalFilename().replace(".", " ").split(" ");
+
             return fileName[fileName.length - 1];
         }
 

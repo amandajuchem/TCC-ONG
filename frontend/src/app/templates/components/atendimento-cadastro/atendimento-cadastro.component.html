@@ -30,16 +30,16 @@
                     <div class="row mb-3">
                         <div class="col-12">
                             <div class="text-end">
-                                <button mat-icon-button (click)="form.enable()" *ngIf="form.disabled && atendimento">
+                                <button mat-icon-button title="Editar" (click)="form.enable()" *ngIf="form.disabled && atendimento">
                                     <mat-icon>edit</mat-icon>
                                 </button>
-                                <button mat-icon-button (click)="submit()" *ngIf="form.enabled && form.valid">
+                                <button mat-icon-button title="Salvar" (click)="submit()" *ngIf="form.enabled && form.valid">
                                     <mat-icon>save</mat-icon>
                                 </button>
-                                <button mat-icon-button (click)="cancel()" *ngIf="form.enabled">
+                                <button mat-icon-button title="Cancelar" (click)="cancel()" *ngIf="form.enabled">
                                     <mat-icon>close</mat-icon>
                                 </button>
-                                <button mat-icon-button (click)="delete()" *ngIf="form.disabled && atendimento">
+                                <button mat-icon-button title="Excluir" (click)="delete()" *ngIf="form.disabled && atendimento">
                                     <mat-icon>delete</mat-icon>
                                 </button>
                             </div>
@@ -166,7 +166,7 @@
         
                         <div class="col-1" *ngIf="form.enabled">
                             <div class="d-flex align-items-center justify-content-end h-100">
-                                <button type="button" mat-icon-button (click)="addImagem()">
+                                <button type="button" mat-icon-button title="Adicionar Imagem" (click)="addImagem()">
                                     <mat-icon>add</mat-icon>
                                 </button>
                             </div>
@@ -179,10 +179,10 @@
                                 <img mat-card-image [src]="documento.nome ? apiURL + '/imagens/search?value=' + documento.nome : documento.data">
                                 <mat-card-footer class="p-2">
                                     <div class="text-center">
-                                        <button type="button" mat-icon-button class="me-3" (click)="downloadImagem(documento)" *ngIf="documento.nome">
+                                        <button type="button" mat-icon-button class="me-3" title="Baixar Imagem" (click)="downloadImagem(documento)" *ngIf="documento.nome">
                                             <mat-icon>download</mat-icon>
                                         </button>
-                                        <button type="button" mat-icon-button class="ms-3" (click)="removeImagem(documento)" *ngIf="form.enabled">
+                                        <button type="button" mat-icon-button class="ms-3" title="Excluir Imagem" (click)="removeImagem(documento)" *ngIf="form.enabled">
                                             <mat-icon>delete</mat-icon>
                                         </button>
                                     </div>

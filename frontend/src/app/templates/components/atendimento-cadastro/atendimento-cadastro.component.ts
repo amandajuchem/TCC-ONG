@@ -278,7 +278,7 @@ export class AtendimentoCadastroComponent implements OnInit {
   submit() {
 
     const atendimento: Atendimento = Object.assign({}, this.form.getRawValue());
-    const imagens: Array<File> = this.documentos.map((d: any) => d.file);
+    const imagens: Array<File> = this.documentos.filter((d: any) => d.file).map((d: any) => d.file);
     atendimento.dataHora = DateUtils.addHours(atendimento.dataHora, DateUtils.offsetBrasilia);
 
     if (atendimento.id) {
