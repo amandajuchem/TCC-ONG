@@ -73,7 +73,7 @@ export class AnimaisComponent implements AfterViewInit {
       error: (error) => {
         this.isLoadingResults = false;
         console.error(error);
-        this._notificationService.show(MessageUtils.ANIMAIS_GET_FAIL, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.ANIMAL.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
       }
     });
   }
@@ -113,10 +113,10 @@ export class AnimaisComponent implements AfterViewInit {
         this.resultsLength = animais.totalElements;
       },
 
-      error: (err) => {
+      error: (error) => {
         this.isLoadingResults = false;
-        console.error(err);
-        this._notificationService.show(MessageUtils.ANIMAIS_GET_FAIL, NotificationType.FAIL);
+        console.error(error);
+        this._notificationService.show(MessageUtils.ANIMAL.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
       }
     });
   }

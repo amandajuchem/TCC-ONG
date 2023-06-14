@@ -121,7 +121,7 @@ export class TutorObservacoesComponent implements AfterViewInit {
       error: (error) => {
         this.isLoadingResults = false;
         console.error(error);
-        this._notificationService.show(MessageUtils.OBSERVACOES_GET_FAIL, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.OBSERVACAO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
       }
     });
   }

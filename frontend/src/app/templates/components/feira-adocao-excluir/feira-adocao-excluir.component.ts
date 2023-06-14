@@ -24,13 +24,13 @@ export class FeiraAdocaoExcluirComponent {
     this._feiraAdocaoService.delete(this.data.feiraAdocao.id).subscribe({
 
       complete: () => {
-        this._notificationService.show(MessageUtils.FEIRA_ADOCAO_DELETE_SUCCESS, NotificationType.SUCCESS);
+        this._notificationService.show(MessageUtils.FEIRA_ADOCAO.DELETE_SUCCESS, NotificationType.SUCCESS);
         this._dialogRef.close({status: true});
       },
 
       error: (error) => {
         console.log(error);
-        this._notificationService.show(MessageUtils.FEIRA_ADOCAO_DELETE_FAIL, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.FEIRA_ADOCAO.DELETE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
       }
     });
   }

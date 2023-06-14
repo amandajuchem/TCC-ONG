@@ -62,7 +62,7 @@ export class AgendamentoCadastroComponent implements OnInit {
 
               error: (error) => {
                 console.error(error);
-                this._notificationService.show(MessageUtils.AGENDAMENTO_GET_FAIL + error.error[0].message, NotificationType.FAIL);
+                this._notificationService.show(MessageUtils.AGENDAMENTO.GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
               }
             });
           }
@@ -162,13 +162,13 @@ export class AgendamentoCadastroComponent implements OnInit {
       this._agendamentoService.update(agendamento).subscribe({
 
         complete: () => {
-          this._notificationService.show(MessageUtils.AGENDAMENTO_UPDATE_SUCCESS, NotificationType.SUCCESS);
+          this._notificationService.show(MessageUtils.AGENDAMENTO.UPDATE_SUCCESS, NotificationType.SUCCESS);
           this.ngOnInit();
         },
 
         error: (error) => {
           console.error(error);
-          this._notificationService.show(MessageUtils.AGENDAMENTO_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
+          this._notificationService.show(MessageUtils.AGENDAMENTO.UPDATE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
         }
       });
     }
@@ -178,13 +178,13 @@ export class AgendamentoCadastroComponent implements OnInit {
       this._agendamentoService.save(agendamento).subscribe({
 
         next: (agendamento) => {
-          this._notificationService.show(MessageUtils.AGENDAMENTO_SAVE_SUCCESS, NotificationType.SUCCESS);
+          this._notificationService.show(MessageUtils.AGENDAMENTO.SAVE_SUCCESS, NotificationType.SUCCESS);
           this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/agendamentos/' + agendamento.id]);
         },
 
         error: (error) => {
           console.error(error);
-          this._notificationService.show(MessageUtils.AGENDAMENTO_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
+          this._notificationService.show(MessageUtils.AGENDAMENTO.SAVE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
         }
       });
     }

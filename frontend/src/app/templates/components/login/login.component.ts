@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NotificationType } from 'src/app/enums/notification-type';
-import { Setor } from 'src/app/enums/setor';
 import { AuthService } from 'src/app/services/auth.service';
 import { NotificationService } from 'src/app/services/notification.service';
+import { MessageUtils } from 'src/app/utils/message-utils';
 
 @Component({
   selector: 'app-login',
@@ -62,7 +62,7 @@ export class LoginComponent implements OnInit {
 
       error: (error) => {
         console.error(error);
-        this._notificationService.show(error.error.message, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.getMessage(error), NotificationType.FAIL);
       }
     })
   }

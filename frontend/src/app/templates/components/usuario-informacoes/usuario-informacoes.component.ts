@@ -122,12 +122,12 @@ export class UsuarioInformacoesComponent implements OnInit {
         next: (usuario) => {
           this.foto ? this.foto.file = null : null;
           this._usuarioService.set(usuario);
-          this._notificationService.show(MessageUtils.USUARIO_UPDATE_SUCCESS, NotificationType.SUCCESS);
+          this._notificationService.show(MessageUtils.USUARIO.UPDATE_SUCCESS, NotificationType.SUCCESS);
         },
   
         error: (error) => {
           console.error(error);
-          this._notificationService.show(MessageUtils.USUARIO_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
+          this._notificationService.show(MessageUtils.USUARIO.UPDATE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
         }
       });
     }
@@ -139,12 +139,12 @@ export class UsuarioInformacoesComponent implements OnInit {
         next: (usuario) => {
           this.foto ? this.foto.file = null : null;
           this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/usuarios/' + usuario.id]);
-          this._notificationService.show(MessageUtils.USUARIO_SAVE_SUCCESS, NotificationType.SUCCESS);
+          this._notificationService.show(MessageUtils.USUARIO.SAVE_SUCCESS, NotificationType.SUCCESS);
         },
   
         error: (error) => {
           console.error(error);
-          this._notificationService.show(MessageUtils.USUARIO_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
+          this._notificationService.show(MessageUtils.USUARIO.SAVE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
         }
       });
     }

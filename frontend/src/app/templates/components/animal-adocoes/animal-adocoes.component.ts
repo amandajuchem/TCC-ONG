@@ -120,7 +120,7 @@ export class AnimalAdocoesComponent implements AfterViewInit {
       error: (error) => {
         this.isLoadingResults = false;
         console.error(error);
-        this._notificationService.show(MessageUtils.ADOCOES_GET_FAIL, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.ADOCAO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
       }
     });
   }

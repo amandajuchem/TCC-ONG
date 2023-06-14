@@ -49,7 +49,7 @@ export class AnimalComponent implements OnInit {
   
               error: (error) => {
                 console.error(error);
-                this._notificationService.show(MessageUtils.ANIMAL_GET_FAIL, NotificationType.FAIL); 
+                this._notificationService.show(MessageUtils.ANIMAL.GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL); 
               }
             });
           }

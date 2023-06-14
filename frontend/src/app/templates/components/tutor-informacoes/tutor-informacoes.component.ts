@@ -167,12 +167,12 @@ export class TutorInformacoesComponent implements OnInit {
         next: (tutor) => {
           this.foto ? this.foto.file = null : null;
           this._tutorService.set(tutor);
-          this._notificationService.show(MessageUtils.TUTOR_UPDATE_SUCCESS, NotificationType.SUCCESS);
+          this._notificationService.show(MessageUtils.TUTOR.UPDATE_SUCCESS, NotificationType.SUCCESS);
         },
   
         error: (error) => {
           console.error(error);
-          this._notificationService.show(MessageUtils.TUTOR_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
+          this._notificationService.show(MessageUtils.TUTOR.UPDATE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
         }
       });
     }
@@ -184,12 +184,12 @@ export class TutorInformacoesComponent implements OnInit {
         next: (tutor) => {
           this.foto ? this.foto.file = null : null;
           this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/tutores/' + tutor.id]);
-          this._notificationService.show(MessageUtils.TUTOR_SAVE_SUCCESS, NotificationType.SUCCESS);
+          this._notificationService.show(MessageUtils.TUTOR.SAVE_SUCCESS, NotificationType.SUCCESS);
         },
   
         error: (error) => {
           console.error(error);
-          this._notificationService.show(MessageUtils.TUTOR_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
+          this._notificationService.show(MessageUtils.TUTOR.SAVE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
         }
       });
     }

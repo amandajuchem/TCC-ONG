@@ -82,7 +82,7 @@ export class FeiraAdocaoCadastroComponent implements OnInit {
 
               error: (error) => {
                 console.error(error);
-                this._notificationService.show(MessageUtils.FEIRA_ADOCAO_GET_FAIL + error.error[0].message, NotificationType.FAIL);
+                this._notificationService.show(MessageUtils.FEIRA_ADOCAO.GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
               }
             });
           }
@@ -209,13 +209,13 @@ export class FeiraAdocaoCadastroComponent implements OnInit {
       this._feiraAdocaoService.update(feiraAdocao).subscribe({
 
         complete: () => {
-          this._notificationService.show(MessageUtils.FEIRA_ADOCAO_UPDATE_SUCCESS, NotificationType.SUCCESS);
+          this._notificationService.show(MessageUtils.FEIRA_ADOCAO.UPDATE_SUCCESS, NotificationType.SUCCESS);
           this.ngOnInit();
         },
 
         error: (error) => {
           console.error(error);
-          this._notificationService.show(MessageUtils.FEIRA_ADOCAO_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
+          this._notificationService.show(MessageUtils.FEIRA_ADOCAO.UPDATE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
         }
       });
     }
@@ -225,13 +225,13 @@ export class FeiraAdocaoCadastroComponent implements OnInit {
       this._feiraAdocaoService.save(feiraAdocao).subscribe({
 
         next: (feiraAdocao) => {
-          this._notificationService.show(MessageUtils.FEIRA_ADOCAO_SAVE_SUCCESS, NotificationType.SUCCESS);
+          this._notificationService.show(MessageUtils.FEIRA_ADOCAO.SAVE_SUCCESS, NotificationType.SUCCESS);
           this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/feiras-adocao/' + feiraAdocao.id]);
         },
 
         error: (error) => {
           console.error(error);
-          this._notificationService.show(MessageUtils.FEIRA_ADOCAO_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
+          this._notificationService.show(MessageUtils.FEIRA_ADOCAO.SAVE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
         }
       });
     }

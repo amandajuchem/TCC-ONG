@@ -106,7 +106,7 @@ export class AnimalAdocoesCadastroComponent implements OnInit {
 
     const link = document.createElement('a');
 
-    link.href = this.apiURL + '/imagens/search?nome=' + imagem.nome;
+    link.href = this.apiURL + '/imagens/search?value=' + imagem.nome;
     link.download = imagem.data;
     link.click();
     link.remove();
@@ -147,13 +147,13 @@ export class AnimalAdocoesCadastroComponent implements OnInit {
 
       this._adocaoService.update(adocao, images).subscribe({
         complete: () => {
-          this._notificationService.show(MessageUtils.ADOCAO_UPDATE_SUCCESS, NotificationType.SUCCESS);
+          this._notificationService.show(MessageUtils.ADOCAO.UPDATE_SUCCESS, NotificationType.SUCCESS);
           this._dialogRef.close({ status: true });
         },
   
         error: (error) => {
           console.error(error);
-          this._notificationService.show(MessageUtils.ADOCAO_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
+          this._notificationService.show(MessageUtils.ADOCAO.UPDATE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
         }
       });
     }
@@ -162,13 +162,13 @@ export class AnimalAdocoesCadastroComponent implements OnInit {
 
       this._adocaoService.save(adocao, images).subscribe({
         complete: () => {
-          this._notificationService.show(MessageUtils.ADOCAO_SAVE_SUCCESS, NotificationType.SUCCESS);
+          this._notificationService.show(MessageUtils.ADOCAO.SAVE_SUCCESS, NotificationType.SUCCESS);
           this._dialogRef.close({ status: true });
         },
   
         error: (error) => {
           console.error(error);
-          this._notificationService.show(MessageUtils.ADOCAO_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
+          this._notificationService.show(MessageUtils.ADOCAO.SAVE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
         }
       });
     }

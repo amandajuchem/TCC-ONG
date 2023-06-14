@@ -71,10 +71,10 @@ export class AtendimentosComponent implements AfterViewInit {
         this.resultsLength = atendimentos.totalElements;
       },
 
-      error: (err) => {
+      error: (error) => {
         this.isLoadingResults = false;
-        console.error(err);
-        this._notificationService.show(MessageUtils.ATENDIMENTOS_GET_FAIL, NotificationType.FAIL);    
+        console.error(error);
+        this._notificationService.show(MessageUtils.ATENDIMENTO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);    
       }
     });
   }
@@ -125,10 +125,10 @@ export class AtendimentosComponent implements AfterViewInit {
         this.resultsLength = atendimentos.totalElements;
       },
 
-      error: (err) => {
+      error: (error) => {
         this.isLoadingResults = false;
-        console.error(err);
-        this._notificationService.show(MessageUtils.ATENDIMENTOS_GET_FAIL, NotificationType.FAIL);    
+        console.error(error);
+        this._notificationService.show(MessageUtils.ATENDIMENTO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);    
       }
     });
   }

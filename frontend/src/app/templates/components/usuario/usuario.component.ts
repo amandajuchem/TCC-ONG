@@ -49,7 +49,7 @@ export class UsuarioComponent implements OnInit {
   
               error: (error) => {
                 console.error(error);
-                this._notificationService.show(MessageUtils.USUARIO_GET_FAIL, NotificationType.FAIL); 
+                this._notificationService.show(MessageUtils.USUARIO.GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL); 
               }
             });
           }

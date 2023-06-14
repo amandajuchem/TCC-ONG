@@ -58,7 +58,7 @@ export class ExameCadastroComponent implements OnInit {
 
               error: (error) => {
                 console.error(error);
-                this._notificationService.show(MessageUtils.EXAME_GET_FAIL + error.error[0].message, NotificationType.FAIL);
+                this._notificationService.show(MessageUtils.EXAME.GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
               }
             });
           }
@@ -110,13 +110,13 @@ export class ExameCadastroComponent implements OnInit {
       this._exameService.update(exame).subscribe({
         
         complete: () => {
-          this._notificationService.show(MessageUtils.EXAME_UPDATE_SUCCESS, NotificationType.SUCCESS);
+          this._notificationService.show(MessageUtils.EXAME.UPDATE_SUCCESS, NotificationType.SUCCESS);
           this.ngOnInit();
         },
   
         error: (error) => {
           console.error(error);
-          this._notificationService.show(MessageUtils.EXAME_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
+          this._notificationService.show(MessageUtils.EXAME.UPDATE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
         }
       });
     } 
@@ -126,13 +126,13 @@ export class ExameCadastroComponent implements OnInit {
       this._exameService.save(exame).subscribe({
         
         next: (exame) => {
-          this._notificationService.show(MessageUtils.EXAME_SAVE_SUCCESS, NotificationType.SUCCESS);
+          this._notificationService.show(MessageUtils.EXAME.SAVE_SUCCESS, NotificationType.SUCCESS);
           this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/exames/' + exame.id]);
         },
   
         error: (error) => {
           console.error(error);
-          this._notificationService.show(MessageUtils.EXAME_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
+          this._notificationService.show(MessageUtils.EXAME.SAVE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
         }
       });
     }

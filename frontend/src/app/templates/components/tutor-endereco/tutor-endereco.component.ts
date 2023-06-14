@@ -69,12 +69,12 @@ export class TutorEnderecoComponent implements OnInit {
 
       next: (tutor) => {
         this._tutorService.set(tutor);
-        this._notificationService.show(MessageUtils.TUTOR_UPDATE_SUCCESS, NotificationType.SUCCESS);
+        this._notificationService.show(MessageUtils.TUTOR.UPDATE_SUCCESS, NotificationType.SUCCESS);
       },
 
       error: (error) => {
         console.error(error);
-        this._notificationService.show(MessageUtils.TUTOR_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.TUTOR.UPDATE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
       }
     });
   }

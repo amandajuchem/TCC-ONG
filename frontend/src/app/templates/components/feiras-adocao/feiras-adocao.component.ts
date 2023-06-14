@@ -74,10 +74,10 @@ export class FeirasAdocaoComponent implements AfterViewInit {
         this.resultsLength = feirasAdocao.totalElements;
       },
 
-      error: (err) => {
+      error: (error) => {
         this.isLoadingResults = false;
-        console.error(err);
-        this._notificationService.show(MessageUtils.FEIRAS_ADOCAO_GET_FAIL, NotificationType.FAIL);    
+        console.error(error);
+        this._notificationService.show(MessageUtils.FEIRA_ADOCAO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);    
       }
     });
   }
@@ -128,10 +128,10 @@ export class FeirasAdocaoComponent implements AfterViewInit {
         this.resultsLength = feirasAdocao.totalElements;
       },
 
-      error: (err) => {
+      error: (error) => {
         this.isLoadingResults = false;
-        console.error(err);
-        this._notificationService.show(MessageUtils.FEIRAS_ADOCAO_GET_FAIL, NotificationType.FAIL);    
+        console.error(error);
+        this._notificationService.show(MessageUtils.FEIRA_ADOCAO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);    
       }
     });
   }

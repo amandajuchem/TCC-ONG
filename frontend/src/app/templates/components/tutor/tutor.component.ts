@@ -49,7 +49,7 @@ export class TutorComponent implements OnInit {
   
               error: (error) => {
                 console.error(error);
-                this._notificationService.show(MessageUtils.TUTOR_GET_FAIL, NotificationType.FAIL); 
+                this._notificationService.show(MessageUtils.TUTOR.GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL); 
               }
             });
           }

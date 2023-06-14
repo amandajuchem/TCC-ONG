@@ -73,7 +73,7 @@ export class TutoresComponent implements AfterViewInit {
       error: (error) => {
         this.isLoadingResults = false;
         console.error(error);
-        this._notificationService.show(MessageUtils.TUTORES_GET_FAIL, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.TUTOR.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
       }
     });
   }
@@ -113,10 +113,10 @@ export class TutoresComponent implements AfterViewInit {
         this.resultsLength = tutores.totalElements;
       },
 
-      error: (err) => {
+      error: (error) => {
         this.isLoadingResults = false;
-        console.error(err);
-        this._notificationService.show(MessageUtils.TUTORES_GET_FAIL, NotificationType.FAIL);
+        console.error(error);
+        this._notificationService.show(MessageUtils.TUTOR.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
       }
     });
   }

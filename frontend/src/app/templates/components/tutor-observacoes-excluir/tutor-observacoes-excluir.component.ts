@@ -24,13 +24,13 @@ export class TutorObservacoesExcluirComponent {
     this._observacaoService.delete(this.data.observacao.id).subscribe({
 
       complete: () => {
-        this._notificationService.show(MessageUtils.OBSERVACAO_DELETE_SUCCESS, NotificationType.SUCCESS);
+        this._notificationService.show(MessageUtils.OBSERVACAO.DELETE_SUCCESS, NotificationType.SUCCESS);
         this._dialogRef.close({ status: true });
       },
 
       error: (error) => {
         console.log(error);
-        this._notificationService.show(MessageUtils.OBSERVACAO_DELETE_FAIL, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.OBSERVACAO.DELETE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
       }
     });
   }

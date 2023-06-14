@@ -73,7 +73,7 @@ export class UsuariosComponent implements AfterViewInit {
       error: (error) => {
         this.isLoadingResults = false;
         console.error(error);
-        this._notificationService.show(MessageUtils.USUARIOS_GET_FAIL, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.USUARIO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
       }
     });
   }
@@ -114,10 +114,10 @@ export class UsuariosComponent implements AfterViewInit {
         this.resultsLength = usuarios.totalElements;
       },
 
-      error: (err) => {
+      error: (error) => {
         this.isLoadingResults = false;
-        console.error(err);
-        this._notificationService.show(MessageUtils.USUARIOS_GET_FAIL, NotificationType.FAIL);
+        console.error(error);
+        this._notificationService.show(MessageUtils.USUARIO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
       }
     });
   }

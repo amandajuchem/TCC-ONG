@@ -80,7 +80,7 @@ export class AtendimentoCadastroComponent implements OnInit {
 
               error: (error) => {
                 console.error(error);
-                this._notificationService.show(MessageUtils.ATENDIMENTO_GET_FAIL + error.error[0].message, NotificationType.FAIL);
+                this._notificationService.show(MessageUtils.ATENDIMENTO.GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
               }
             });
           }
@@ -190,7 +190,7 @@ export class AtendimentoCadastroComponent implements OnInit {
 
     const link = document.createElement('a');
 
-    link.href = this.apiURL + '/imagens/search?nome=' + imagem.nome;
+    link.href = this.apiURL + '/imagens/search?value=' + imagem.nome;
     link.download = imagem.nome;
     link.click();
     link.remove();
@@ -286,13 +286,13 @@ export class AtendimentoCadastroComponent implements OnInit {
       this._atendimentoService.update(atendimento, imagens).subscribe({
 
         complete: () => {
-          this._notificationService.show(MessageUtils.ATENDIMENTO_UPDATE_SUCCESS, NotificationType.SUCCESS);
+          this._notificationService.show(MessageUtils.ATENDIMENTO.UPDATE_SUCCESS, NotificationType.SUCCESS);
           this.ngOnInit();
         },
 
         error: (error) => {
           console.error(error);
-          this._notificationService.show(MessageUtils.ATENDIMENTO_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
+          this._notificationService.show(MessageUtils.ATENDIMENTO.UPDATE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
         }
       });
     }
@@ -302,13 +302,13 @@ export class AtendimentoCadastroComponent implements OnInit {
       this._atendimentoService.save(atendimento, imagens).subscribe({
 
         next: (atendimento) => {
-          this._notificationService.show(MessageUtils.ATENDIMENTO_SAVE_SUCCESS, NotificationType.SUCCESS);
+          this._notificationService.show(MessageUtils.ATENDIMENTO.SAVE_SUCCESS, NotificationType.SUCCESS);
           this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/atendimentos/' + atendimento.id]);
         },
 
         error: (error) => {
           console.error(error);
-          this._notificationService.show(MessageUtils.ATENDIMENTO_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
+          this._notificationService.show(MessageUtils.ATENDIMENTO.SAVE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
         }
       });
     }

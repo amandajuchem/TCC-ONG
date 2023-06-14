@@ -16,8 +16,8 @@ public class MessageUtils {
     public static final String ATENDIMENTO_NULL = "Atendimento nulo!";
     public static final String EXAME_NOT_FOUND = "Exame não encontrado!";
     public static final String EXAME_NULL = "Exame nulo!";
-    public static final String FEIRA_ADOCAO_NOT_FOUND = "Exame não encontrado!";
-    public static final String FEIRA_ADOCAO_NULL = "Exame nulo!";
+    public static final String FEIRA_ADOCAO_NOT_FOUND = "Feira de adoção não encontrada!";
+    public static final String FEIRA_ADOCAO_NULL = "Feira de adoção nula!";
     public static final String FILE_NOT_FOUND = "Arquivo não encontrado!";
     public static final String OBSERVACAO_NOT_FOUND = "Observação não encontrada!";
     public static final String OBSERVACAO_NULL = "Observação nula";
