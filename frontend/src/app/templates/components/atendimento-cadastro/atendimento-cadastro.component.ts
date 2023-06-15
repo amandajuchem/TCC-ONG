@@ -144,7 +144,7 @@ export class AtendimentoCadastroComponent implements OnInit {
       id: [atendimento?.id, Validators.nullValidator],
       animal: [atendimento?.animal, Validators.required],
       veterinario: [atendimento?.veterinario, Validators.required],
-      comorbidades: [atendimento?.animal.fichaMedica.comorbidades, Validators.nullValidator],
+      comorbidades: [atendimento?.animal.fichaMedica?.comorbidades, Validators.nullValidator],
       dataHora: [atendimento?.dataHora, Validators.required],
       motivo: [atendimento?.motivo, Validators.required],
       diagnostico: [atendimento?.diagnostico, Validators.required],
@@ -214,7 +214,7 @@ export class AtendimentoCadastroComponent implements OnInit {
 
           this.form.get('animal')?.patchValue(agendamento.animal);
           this.form.get('veterinario')?.patchValue(agendamento.veterinario);
-          this.form.get('comorbidades')?.patchValue(agendamento.animal.fichaMedica.comorbidades);
+          this.form.get('comorbidades')?.patchValue(agendamento.animal.fichaMedica ? agendamento.animal.fichaMedica.comorbidades : '');
           this.form.get('dataHora')?.patchValue(agendamento.dataHora);
         }
       }
@@ -250,7 +250,7 @@ export class AtendimentoCadastroComponent implements OnInit {
 
         if (result && result.status) {
           this.form.get('animal')?.patchValue(result.animal);
-          this.form.get('comorbidades')?.patchValue(result.animal.fichaMedica.comorbidades);
+          this.form.get('comorbidades')?.patchValue(result.animal.fichaMedica ? result.animal.fichaMedica.comorbidades : '');
         }
       },
     });
