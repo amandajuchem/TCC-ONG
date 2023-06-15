@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from 'src/app/guards/auth.guard';
 
 import { AgendamentoCadastroComponent } from '../../components/agendamento-cadastro/agendamento-cadastro.component';
 import { AgendamentosComponent } from '../../components/agendamentos/agendamentos.component';
@@ -13,6 +12,7 @@ import { ExamesComponent } from '../../components/exames/exames.component';
 import { FeiraAdocaoCadastroComponent } from '../../components/feira-adocao-cadastro/feira-adocao-cadastro.component';
 import { FeirasAdocaoComponent } from '../../components/feiras-adocao/feiras-adocao.component';
 import { LayoutComponent } from '../../components/layout/layout.component';
+import { NotFoundComponent } from '../../components/not-found/not-found.component';
 import { PainelComponent } from '../../components/painel/painel.component';
 import { TutorComponent } from '../../components/tutor/tutor.component';
 import { TutoresComponent } from '../../components/tutores/tutores.component';
@@ -21,28 +21,31 @@ import { UsuariosComponent } from '../../components/usuarios/usuarios.component'
 
 const routes: Routes = [
   {
-    path: '', component: LayoutComponent, children: [
-      { path: 'agendamentos', component: AgendamentosComponent, canActivate: [AuthGuard] },
-      { path: 'agendamentos/:id', component: AgendamentoCadastroComponent, canActivate: [AuthGuard] },
-      { path: 'animais', component: AnimaisComponent, canActivate: [AuthGuard] },
-      { path: 'animais/:id', component: AnimalComponent, canActivate: [AuthGuard] },
-      { path: 'atendimentos', component: AtendimentosComponent, canActivate: [AuthGuard] },
-      { path: 'atendimentos/:id', component: AtendimentoCadastroComponent, canActivate: [AuthGuard] },
-      { path: 'exames', component: ExamesComponent, canActivate: [AuthGuard] },
-      { path: 'exames/:id', component: ExameCadastroComponent, canActivate: [AuthGuard] },
-      { path: 'feiras-adocao', component: FeirasAdocaoComponent, canActivate: [AuthGuard] },
-      { path: 'feiras-adocao/:id', component: FeiraAdocaoCadastroComponent, canActivate: [AuthGuard] },
-      { path: 'painel', component: PainelComponent, canActivate: [AuthGuard] },
-      { path: 'tutores', component: TutoresComponent, canActivate: [AuthGuard] },
-      { path: 'tutores/:id', component: TutorComponent, canActivate: [AuthGuard] },
-      { path: 'usuarios', component: UsuariosComponent, canActivate: [AuthGuard] },
-      { path: 'usuarios/:id', component: UsuarioComponent, canActivate: [AuthGuard] }
-    ]
-  }
+    path: '',
+    component: LayoutComponent,
+    children: [
+      { path: 'agendamentos', component: AgendamentosComponent },
+      { path: 'agendamentos/:id', component: AgendamentoCadastroComponent },
+      { path: 'animais', component: AnimaisComponent },
+      { path: 'animais/:id', component: AnimalComponent },
+      { path: 'atendimentos', component: AtendimentosComponent },
+      { path: 'atendimentos/:id', component: AtendimentoCadastroComponent },
+      { path: 'exames', component: ExamesComponent },
+      { path: 'exames/:id', component: ExameCadastroComponent },
+      { path: 'feiras-adocao', component: FeirasAdocaoComponent },
+      { path: 'feiras-adocao/:id', component: FeiraAdocaoCadastroComponent },
+      { path: 'painel', component: PainelComponent },
+      { path: 'tutores', component: TutoresComponent },
+      { path: 'tutores/:id', component: TutorComponent },
+      { path: 'usuarios', component: UsuariosComponent },
+      { path: 'usuarios/:id', component: UsuarioComponent },
+      { path: '**', component: NotFoundComponent },
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AdministracaoRoutingModule { }
+export class AdministracaoRoutingModule {}

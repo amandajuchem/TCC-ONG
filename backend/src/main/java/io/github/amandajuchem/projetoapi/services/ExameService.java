@@ -1,5 +1,6 @@
 package io.github.amandajuchem.projetoapi.services;
 
+import io.github.amandajuchem.projetoapi.dtos.ExameDTO;
 import io.github.amandajuchem.projetoapi.entities.Exame;
 import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
@@ -16,18 +17,19 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 /**
- * The type Exame service.
+ * Service class that implements the AbstractService interface for managing exam objects.
  */
 @Service
 @RequiredArgsConstructor
-public class ExameService implements AbstractService<Exame> {
+public class ExameService implements AbstractService<Exame, ExameDTO> {
 
     private final ExameRepository repository;
 
     /**
-     * Delete exame.
+     * Deletes an exam by ID.
      *
-     * @param id the id
+     * @param id the ID of the exam object to be deleted.
+     * @throws ObjectNotFoundException if the exam object with the given ID is not found.
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
@@ -45,40 +47,46 @@ public class ExameService implements AbstractService<Exame> {
     }
 
     /**
-     * Find all exame.
+     * Retrieves all exams.
      *
-     * @return the exame list
+     * @param page      the page number for pagination.
+     * @param size      the page size for pagination.
+     * @param sort      the sorting field.
+     * @param direction the sorting direction ("asc" for ascending, "desc" for descending).
+     * @return a page object containing the requested ExameDTO objects.
      */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Page<Exame> findAll(Integer page, Integer size, String sort, String direction) {
-        return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
+    public Page<ExameDTO> findAll(Integer page, Integer size, String sort, String direction) {
+
+        return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)))
+                .map(ExameDTO::toDTO);
     }
 
     /**
-     * Find exame by id.
+     * Retrieves an exam by ID.
      *
-     * @param id the id
-     * @return the exame
+     * @param id the ID of the exam object to be retrieved.
+     * @return the ExameDTO representing the requested exam object.
+     * @throws ObjectNotFoundException if the exam object with the given ID is not found.
      */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Exame findById(UUID id) {
-
-        return repository.findById(id).orElseThrow(() -> {
-            throw new ObjectNotFoundException(MessageUtils.EXAME_NOT_FOUND);
-        });
+    public ExameDTO findById(UUID id) {
+        final var exame = repository.findById(id).orElseThrow(() -> new ObjectNotFoundException(MessageUtils.EXAME_NOT_FOUND));
+        return ExameDTO.toDTO(exame);
     }
 
     /**
-     * Save exame.
+     * Saves an exam.
      *
-     * @param exame the exame
-     * @return the exame
+     * @param exame the exam object to be saved.
+     * @return the ExameDTO representing the saved exam object.
+     * @throws ValidationException if the exam object is invalid.
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public Exame save(Exame exame) {
+    public ExameDTO save(Exame exame) {
 
         if (exame == null) {
             throw new ValidationException(MessageUtils.EXAME_NULL);
@@ -88,37 +96,41 @@ public class ExameService implements AbstractService<Exame> {
             exame = repository.save(exame);
         }
 
-        return exame;
+        return ExameDTO.toDTO(exame);
     }
 
     /**
-     * Search exame.
+     * Search for exams by value.
      *
-     * @param value     the nome ou categoria
-     * @param page      the page
-     * @param size      the size
-     * @param sort      the sort
-     * @param direction the direction
-     * @return the exame list
+     * @param value     the value to search for (name or category) case-insensitive.
+     * @param page      the page number for pagination.
+     * @param size      the page size for pagination.
+     * @param sort      the sorting field.
+     * @param direction the sorting direction ("asc" for ascending, "desc" for descending).
+     * @return a page object containing the requested ExameDTO objects.
      */
+    @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Page<Exame> search(String value, Integer page, Integer size, String sort, String direction) {
-        return repository.search(value, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
+    public Page<ExameDTO> search(String value, Integer page, Integer size, String sort, String direction) {
+
+        return repository.search(value, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)))
+                .map(ExameDTO::toDTO);
     }
 
     /**
-     * Validate exame.
+     * Validates an exam.
      *
-     * @param exame the exame
-     * @return the boolean
+     * @param exame the exam object to be validated.
+     * @return true if the exam object is valid.
+     * @throws ValidationException if the exam object is invalid.
      */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public boolean validate(Exame exame) {
 
-        var exame_findByNome = repository.findByNomeIgnoreCase(exame.getNome()).orElse(null);
+        final var exameFindByNome = repository.findByNomeIgnoreCase(exame.getNome()).orElse(null);
 
-        if (exame_findByNome != null && !exame_findByNome.equals(exame)) {
+        if (exameFindByNome != null && !exameFindByNome.equals(exame)) {
             throw new ValidationException("Exame já cadastrado!");
         }
 

@@ -1,14 +1,11 @@
 package io.github.amandajuchem.projetoapi.exceptions;
 
-/**
- * The type Operation failure exception.
- */
 public class OperationFailureException extends RuntimeException {
 
     /**
-     * Instantiates a new Operation failure exception.
+     * Constructs a new OperationFailureException with the specified detail message.
      *
-     * @param message the message
+     * @param message the detail message
      */
     public OperationFailureException(String message) {
         super(message);

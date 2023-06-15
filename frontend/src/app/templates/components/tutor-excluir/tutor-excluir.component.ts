@@ -24,13 +24,13 @@ export class TutorExcluirComponent {
     this._tutorService.delete(this.data.tutor.id).subscribe({
       
       complete: () => {
-        this._notificationService.show(MessageUtils.TUTOR_DELETE_SUCCESS, NotificationType.SUCCESS);
+        this._notificationService.show(MessageUtils.TUTOR.DELETE_SUCCESS, NotificationType.SUCCESS);
         this._dialogRef.close({ status: true });
       },
 
       error: (error) => {
         console.log(error);
-        this._notificationService.show(MessageUtils.TUTOR_DELETE_FAIL, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.TUTOR.DELETE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
       }
     });
   }

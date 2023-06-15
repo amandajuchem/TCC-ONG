@@ -10,7 +10,9 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
- * The type Atendimento dto.
+ * The AtendimentoDTO class represents a Data Transfer Object (DTO) for Atendimento entities.
+ * It provides a simplified view of an Atendimento object for use in API responses.
+ * This class implements the Serializable interface.
  */
 public record AtendimentoDTO(
         UUID id,
@@ -29,10 +31,10 @@ public record AtendimentoDTO(
 ) implements Serializable {
 
     /**
-     * To atendimento dto.
+     * Creates a new AtendimentoDTO instance based on the provided Atendimento object.
      *
-     * @param atendimento the atendimento
-     * @return the atendimento dto
+     * @param atendimento The Atendimento object to convert to AtendimentoDTO.
+     * @return The AtendimentoDTO representing the provided Atendimento object.
      */
     public static AtendimentoDTO toDTO(Atendimento atendimento) {
 

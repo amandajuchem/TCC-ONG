@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Animal } from 'src/app/entities/animal';
-import { User } from 'src/app/entities/user';
+import { Authentication } from 'src/app/entities/authentication';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { AnimalService } from 'src/app/services/animal.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -16,7 +16,7 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 export class AnimalComponent implements OnInit {
 
   animal!: Animal | null;
-  user!: User;
+  authentication!: Authentication;
 
   constructor(
     private _activatedRoute: ActivatedRoute,
@@ -27,7 +27,7 @@ export class AnimalComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.user = this._authService.getCurrentUser();
+    this.authentication = this._authService.getAuthentication();
 
     this._activatedRoute.params.subscribe({
 
@@ -49,7 +49,7 @@ export class AnimalComponent implements OnInit {
   
               error: (error) => {
                 console.error(error);
-                this._notificationService.show(MessageUtils.ANIMAL_GET_FAIL, NotificationType.FAIL); 
+                this._notificationService.show(MessageUtils.ANIMAL.GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL); 
               }
             });
           }

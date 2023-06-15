@@ -7,7 +7,9 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
- * The type Telefone dto.
+ * The TelefoneDTO class represents a Data Transfer Object (DTO) for Telefone entities.
+ * It provides a simplified view of a Telefone object for use in API responses.
+ * This class implements the Serializable interface.
  */
 public record TelefoneDTO(
         UUID id,
@@ -19,10 +21,10 @@ public record TelefoneDTO(
 ) implements Serializable {
 
     /**
-     * To dto telefone dto.
+     * Creates a new TelefoneDTO instance based on the provided Telefone object.
      *
-     * @param telefone the telefone
-     * @return the telefone dto
+     * @param telefone The Telefone object to convert to TelefoneDTO.
+     * @return The TelefoneDTO representing the provided Telefone object.
      */
     public static TelefoneDTO toDTO(Telefone telefone) {
 

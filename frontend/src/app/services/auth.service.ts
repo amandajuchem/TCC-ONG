@@ -1,16 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { environment } from 'src/environments/environment';
+import { environment } from 'src/environments/environment.development';
 
-import { User } from '../entities/user';
+import { Authentication } from '../entities/authentication';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private _jwtHelper!: JwtHelperService;
+  private _baseURL: string = environment.apiURL + '/auth';
+  private _jwtHelper: JwtHelperService;
 
   constructor(
     private _http: HttpClient, 
@@ -18,32 +19,19 @@ export class AuthService {
     this._jwtHelper = new JwtHelperService();
   }
 
-  getCurrentUser(): User {
-    
-    let user!: User;
-
-    try {
-      
-      let currentUser: any = localStorage.getItem("user");
-      currentUser = JSON.parse(currentUser);
-
-      user = {
-        username: this._jwtHelper.decodeToken(currentUser.token).sub,
-        access_token: currentUser.token,
-        role: currentUser.role
-      };
-
-    } catch (error) { }
-
-    return user;
+  getAuthentication(): Authentication {
+    const authenticationString = localStorage.getItem("authentication");
+    const authentication: Authentication =  authenticationString ? JSON.parse(authenticationString) : null;
+    return authentication;
   }
 
   isAuthenticated() {
-    const user = this.getCurrentUser();
 
-    if (user) {
+    const authentication = this.getAuthentication();
 
-      const token = user.access_token.substring(7);
+    if (authentication) {
+
+      const token = authentication.access_token.substring(7);
 
       if (token) {
         return !this._jwtHelper.isTokenExpired(token);
@@ -54,19 +42,22 @@ export class AuthService {
   }
 
   login(user: any) {
-    return this._http.post<any>(environment.apiURL + '/login', user);
+    return this._http.post<Authentication>(this._baseURL + '/token', user);
   }
 
   logout() {
-    localStorage.removeItem("user");
+    localStorage.removeItem("authentication");
   }
 
-  setCurrentUser(user: any) {
+  setAuthentication(authentication: Authentication) {
 
-    if (localStorage.getItem("user")) {
-      localStorage.removeItem("user");
+    if (localStorage.getItem("authentication")) {
+      localStorage.removeItem("authentication");
     }
 
-    localStorage.setItem("user", JSON.stringify(user));
+    authentication.username = this._jwtHelper.decodeToken(authentication.access_token).sub;
+    authentication.role = this._jwtHelper.decodeToken(authentication.access_token).scope;
+    
+    localStorage.setItem("authentication", JSON.stringify(authentication));
   }
 }

@@ -7,7 +7,9 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
- * The type Imagem dto.
+ * The ImagemDTO class represents a Data Transfer Object (DTO) for Imagem entities.
+ * It provides a simplified view of an Imagem object for use in API responses.
+ * This class implements the Serializable interface.
  */
 public record ImagemDTO(
         UUID id,
@@ -19,10 +21,10 @@ public record ImagemDTO(
 ) implements Serializable {
 
     /**
-     * To dto imagem dto.
+     * Creates a new ImagemDTO instance based on the provided Imagem object.
      *
-     * @param imagem the imagem
-     * @return the imagem dto
+     * @param imagem The Imagem object to convert to ImagemDTO.
+     * @return The ImagemDTO representing the provided Imagem object.
      */
     public static ImagemDTO toDTO(Imagem imagem) {
 

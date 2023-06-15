@@ -69,10 +69,10 @@ export class SelecionarAgendamentoComponent implements AfterViewInit {
         this.resultsLength = agendamentos.totalElements;
       },
 
-      error: (err) => {
+      error: (error) => {
         this.isLoadingResults = false;
-        console.error(err);
-        this._notificationService.show(MessageUtils.AGENDAMENTOS_GET_FAIL, NotificationType.FAIL);
+        console.error(error);
+        this._notificationService.show(MessageUtils.AGENDAMENTO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
       }
     });
   }
@@ -123,10 +123,10 @@ export class SelecionarAgendamentoComponent implements AfterViewInit {
         this.resultsLength = agendamentos.totalElements;
       },
 
-      error: (err) => {
+      error: (error) => {
         this.isLoadingResults = false;
-        console.error(err);
-        this._notificationService.show(MessageUtils.AGENDAMENTOS_GET_FAIL, NotificationType.FAIL);    
+        console.error(error);
+        this._notificationService.show(MessageUtils.AGENDAMENTO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);    
       }
     });
   }

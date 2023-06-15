@@ -15,7 +15,8 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,6 +26,9 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+/**
+ * Security configuration class for setting up authentication and authorization.
+ */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -35,6 +39,11 @@ public class SecurityConfiguration {
     private final RSAKeyProperties rsaKeyProperties;
     private final UserDetailsService userDetailsService;
 
+    /**
+     * Creates an AuthenticationProvider using the DaoAuthenticationProvider.
+     *
+     * @return the AuthenticationProvider instance
+     */
     @Bean
     AuthenticationProvider authenticationProvider() {
 
@@ -46,11 +55,25 @@ public class SecurityConfiguration {
         return authenticationProvider;
     }
 
+    /**
+     * Retrieves the AuthenticationManager from the AuthenticationConfiguration.
+     *
+     * @param authenticationConfiguration the AuthenticationConfiguration instance
+     * @return the AuthenticationManager instance
+     * @throws Exception if an error occurs while retrieving the AuthenticationManager
+     */
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    /**
+     * Creates the SecurityFilterChain with the configured HTTP security settings.
+     *
+     * @param http the HttpSecurity instance
+     * @return the SecurityFilterChain instance
+     * @throws Exception if an error occurs while configuring the HttpSecurity
+     */
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -60,21 +83,30 @@ public class SecurityConfiguration {
                     requests.requestMatchers(HttpMethod.POST, "/auth/token").permitAll();
                     requests.anyRequest().authenticated();
                 })
-                .cors()
-                .and()
-                .csrf(csrf -> csrf.disable())
+                .cors(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
-                .headers(headers -> headers.frameOptions().sameOrigin())
-                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
+                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
+                .oauth2ResourceServer(resourceServer -> resourceServer.jwt(Customizer.withDefaults()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
 
+    /**
+     * Creates a JwtDecoder using the RSA public key.
+     *
+     * @return the JwtDecoder instance
+     */
     @Bean
     JwtDecoder jwtDecoder() {
         return NimbusJwtDecoder.withPublicKey(rsaKeyProperties.getPublicKey()).build();
     }
 
+    /**
+     * Creates a JwtEncoder using the RSA key pair.
+     *
+     * @return the JwtEncoder instance
+     */
     @Bean
     JwtEncoder jwtEncoder() {
         final var jwk = new RSAKey.Builder(rsaKeyProperties.getPublicKey()).privateKey(rsaKeyProperties.getPrivateKey()).build();

@@ -1,4 +1,4 @@
-export interface User {
+export interface Authentication {
     username: string;
     access_token: string;
     role: string;

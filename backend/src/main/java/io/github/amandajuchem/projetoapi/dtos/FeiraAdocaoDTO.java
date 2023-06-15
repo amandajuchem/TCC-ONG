@@ -9,7 +9,9 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
- * The type Feira adocao dto.
+ * The FeiraAdocaoDTO class represents a Data Transfer Object (DTO) for FeiraAdocao entities.
+ * It provides a simplified view of a FeiraAdocao object for use in API responses.
+ * This class implements the Serializable interface.
  */
 public record FeiraAdocaoDTO(
         UUID id,
@@ -24,10 +26,10 @@ public record FeiraAdocaoDTO(
 ) implements Serializable {
 
     /**
-     * To dto feira adocao dto.
+     * Creates a new FeiraAdocaoDTO instance based on the provided FeiraAdocao object.
      *
-     * @param feiraAdocao the feira adocao
-     * @return the feira adocao dto
+     * @param feiraAdocao The FeiraAdocao object to convert to FeiraAdocaoDTO.
+     * @return The FeiraAdocaoDTO representing the provided FeiraAdocao object.
      */
     public static FeiraAdocaoDTO toDTO(FeiraAdocao feiraAdocao) {
 

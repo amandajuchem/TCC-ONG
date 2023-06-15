@@ -7,42 +7,32 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The type File utils.
+ * Utility class for file operations.
  */
 public class FileUtils {
 
-    /**
-     * The constant FILES.
-     */
     public static final Map<String, MultipartFile> FILES = new HashMap<>();
 
-    /**
-     * The constant DOCUMENTS_DIRECTORY.
-     */
     public static final String DOCUMENTS_DIRECTORY = File.separator + "data" + File.separator + "files" + File.separator + "documents";
 
-    /**
-     * The constant IMAGES_DIRECTORY.
-     */
     public static final String IMAGES_DIRECTORY = File.separator + "data" + File.separator + "files" + File.separator + "images";
 
     /**
-     * Find file.
+     * Finds a file by its filename and path.
      *
-     * @param filename the filename
-     * @param path     the path
-     * @return the file
-     * @throws FileNotFoundException the file not found exception
+     * @param filename the name of the file to find.
+     * @param path     the path where the file is located.
+     * @return the File object representing the found file.
+     * @throws FileNotFoundException if the file is not found.
      */
     public static File find(String filename, String path) throws FileNotFoundException {
 
-        File file = new File(System.getProperty("user.dir") + path + File.separator + filename);
+        final var file = new File(System.getProperty("user.dir") + path + File.separator + filename);
 
         if (!file.exists()) {
             throw new FileNotFoundException(MessageUtils.FILE_NOT_FOUND);
@@ -52,32 +42,22 @@ public class FileUtils {
     }
 
     /**
-     * Exists boolean.
+     * Saves a MultipartFile to the specified path.
      *
-     * @param path the path
-     * @return the boolean
-     */
-    public static boolean exists(String path) {
-        return new File(System.getProperty("user.dir") + path + "/" + path).exists();
-    }
-
-    /**
-     * Save file.
-     *
-     * @param file the file
-     * @param path the path
-     * @return the file
-     * @throws IOException the io exception
+     * @param file the MultipartFile to save.
+     * @param path the path to save the file to.
+     * @return the saved File object.
+     * @throws IOException if an I/O error occurs.
      */
     public static File save(MultipartFile file, String path) throws IOException {
 
         if (checkPathDestination(path)) {
-            String[] strFileName = file.getOriginalFilename().replace(".", " ").split(" ");
-            String extension = strFileName[strFileName.length - 1];
 
-            String filename = System.currentTimeMillis() + "." + extension;
+            final var strFileName = file.getOriginalFilename().replace(".", " ").split(" ");
+            final var extension = strFileName[strFileName.length - 1];
+            final var filename = System.currentTimeMillis() + "." + extension;
+            final var filePath = Paths.get(System.getProperty("user.dir") + path, filename);
 
-            Path filePath = Paths.get(System.getProperty("user.dir") + path, filename);
             Files.write(filePath, file.getBytes());
 
             return find(filename, path);
@@ -87,19 +67,19 @@ public class FileUtils {
     }
 
     /**
-     * Save file.
+     * Saves a MultipartFile with a specified filename to the specified path.
      *
-     * @param filename the filename
-     * @param file     the file
-     * @param path     the path
-     * @return the file
-     * @throws IOException the io exception
+     * @param filename the desired filename for the saved file.
+     * @param file     the MultipartFile to save.
+     * @param path     the path to save the file to.
+     * @return the saved File object.
+     * @throws IOException if an I/O error occurs.
      */
     public static File save(String filename, MultipartFile file, String path) throws IOException {
 
-
         if (checkPathDestination(path)) {
-            Path filePath = Paths.get(System.getProperty("user.dir") + path, filename);
+
+            final var filePath = Paths.get(System.getProperty("user.dir") + path, filename);
             Files.write(filePath, file.getBytes());
 
             return find(filename, path);
@@ -109,14 +89,15 @@ public class FileUtils {
     }
 
     /**
-     * Delete boolean.
+     * Deletes a file at the specified path.
      *
-     * @param filename the filename
-     * @param path     the path
-     * @return the boolean
+     * @param filename the name of the file to delete.
+     * @param path     the path where the file is located.
+     * @return true if the file is deleted successfully, false otherwise.
      */
     public static boolean delete(String filename, String path) {
-        File file = new File(System.getProperty("user.dir") + path + "/" + filename);
+
+        final var file = new File(System.getProperty("user.dir") + path + "/" + filename);
 
         if (file.exists() && file.isFile()) {
             return file.delete();
@@ -126,44 +107,43 @@ public class FileUtils {
     }
 
     /**
-     * Gets extension.
+     * Gets the file extension of the provided object.
      *
-     * @param object the object
-     * @return the extension
-     * @throws FileNotFoundException the file not found exception
+     * @param object the object (File or MultipartFile) to get the extension from.
+     * @return the file extension.
+     * @throws FileNotFoundException     if the file is not found.
+     * @throws OperationFailureException if the object is not an instance of File or MultipartFile.
      */
-    public static String getExtension(Object object) throws FileNotFoundException {
+    public static String getExtension(Object object) throws FileNotFoundException, OperationFailureException {
 
         if (object instanceof File) {
 
-            var file = ((File) object);
+            final var file = ((File) object);
+            final var fileName = file.getName().replace(".", " ").split(" ");
 
-            if (!file.exists()) {
-                throw new FileNotFoundException("Arquivo não encontrado!");
-            }
-
-            return file.getName().replace(".", " ").split(" ")[1];
+            return fileName[fileName.length - 1];
         }
 
         if (object instanceof MultipartFile) {
 
-            var file = ((MultipartFile) object);
+            final var file = ((MultipartFile) object);
+            final var fileName = file.getOriginalFilename().replace(".", " ").split(" ");
 
-            return file.getOriginalFilename().replace(".", " ").split(" ")[1];
+            return fileName[fileName.length - 1];
         }
 
         throw new OperationFailureException(MessageUtils.OPERATION_FAILURE);
     }
 
     /**
-     * Check path destination boolean.
+     * Checks if the destination path exists and creates it if it doesn't.
      *
-     * @param path the path
-     * @return the boolean
+     * @param path the path to check and create.
+     * @return true if the path exists or is created successfully, false otherwise.
      */
     public static boolean checkPathDestination(String path) {
 
-        File directory = new File(System.getProperty("user.dir") + path);
+        final var directory = new File(System.getProperty("user.dir") + path);
 
         if (!directory.exists()) {
             return directory.mkdir();

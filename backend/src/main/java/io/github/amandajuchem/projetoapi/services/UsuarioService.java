@@ -1,5 +1,6 @@
 package io.github.amandajuchem.projetoapi.services;
 
+import io.github.amandajuchem.projetoapi.dtos.UsuarioDTO;
 import io.github.amandajuchem.projetoapi.entities.Usuario;
 import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
@@ -9,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -17,19 +21,20 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 /**
- * The type Usuario service.
+ * Service class that implements the AbstractService interface and UserDetailsService interface for managing user objects.
  */
 @Service
 @RequiredArgsConstructor
-public class UsuarioService implements AbstractService<Usuario> {
+public class UsuarioService implements AbstractService<Usuario, UsuarioDTO>, UserDetailsService {
 
     private final PasswordEncoder encoder;
     private final UsuarioRepository repository;
 
     /**
-     * Delete usuário.
+     * Deletes a user by ID.
      *
-     * @param id the id
+     * @param id the ID of the user object to be deleted.
+     * @throws ObjectNotFoundException if the user object with the given ID is not found.
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
@@ -47,19 +52,19 @@ public class UsuarioService implements AbstractService<Usuario> {
     }
 
     /**
-     * Encode usuário password.
+     * Encodes the password of the user object.
      *
-     * @param usuario the usuário
-     * @return the usuário
+     * @param usuario the user object to encode the password for.
+     * @return the user object with the encoded password.
      */
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Usuario encodePassword(Usuario usuario) {
 
         if (usuario.getId() != null) {
 
-            var usuario_old = repository.findById(usuario.getId()).get();
+            final var usuarioOld = repository.findById(usuario.getId()).get();
 
-            if (!usuario.getSenha().equals(usuario_old.getSenha())) {
+            if (!usuario.getSenha().equals(usuarioOld.getSenha())) {
                 usuario.setSenha(encoder.encode(usuario.getSenha()));
             }
         } else {
@@ -70,54 +75,72 @@ public class UsuarioService implements AbstractService<Usuario> {
     }
 
     /**
-     * Find all usuário.
+     * Retrieves all users.
      *
-     * @return the usuário list
+     * @param page      the page number for pagination.
+     * @param size      the page size for pagination.
+     * @param sort      the sorting field.
+     * @param direction the sorting direction ("asc" for ascending, "desc" for descending).
+     * @return a page object containing the requested UsuarioDTO objects.
      */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Page<Usuario> findAll(Integer page, Integer size, String sort, String direction) {
-        return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
+    public Page<UsuarioDTO> findAll(Integer page, Integer size, String sort, String direction) {
+
+        return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)))
+                .map(UsuarioDTO::toDTO);
     }
 
     /**
-     * Find usuário by CPF.
+     * Retrieves a user by CPF.
      *
-     * @param cpf the cpf
-     * @return the usuário
+     * @param cpf the CPF of the user object to be retrieved.
+     * @return the UsuarioDTO representing the requested user object.
+     * @throws ObjectNotFoundException if the user object with the given CPF is not found.
      */
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Usuario findByCpf(String cpf) {
-
-        return repository.findByCpf(cpf).orElseThrow(() -> {
-            throw new ObjectNotFoundException(MessageUtils.USUARIO_NOT_FOUND);
-        });
+    public UsuarioDTO findByCpf(String cpf) {
+        final var usuario = repository.findByCpf(cpf).orElseThrow(() -> new ObjectNotFoundException(MessageUtils.USUARIO_NOT_FOUND));
+        return UsuarioDTO.toDTO(usuario);
     }
 
     /**
-     * Find usuário by id.
+     * Retrieves a user by ID.
      *
-     * @param id the id
-     * @return the usuário
+     * @param id the ID of the user object to be retrieved.
+     * @return the UsuarioDTO representing the requested user object.
+     * @throws ObjectNotFoundException if the user object with the given ID is not found.
      */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Usuario findById(UUID id) {
-
-        return repository.findById(id).orElseThrow(() -> {
-            throw new ObjectNotFoundException(MessageUtils.USUARIO_NOT_FOUND);
-        });
+    public UsuarioDTO findById(UUID id) {
+        final var usuario = repository.findById(id).orElseThrow(() -> new ObjectNotFoundException(MessageUtils.USUARIO_NOT_FOUND));
+        return UsuarioDTO.toDTO(usuario);
     }
 
     /**
-     * Save usuário.
+     * Loads a UserDetails object by username (in this case, the username is the CPF).
      *
-     * @param usuario the usuário
-     * @return the usuário
+     * @param username the username (CPF) of the user object to load.
+     * @return the UserDetails object representing the requested user object.
+     * @throws UsernameNotFoundException if the user object with the given CPF is not found.
+     */
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return repository.findByCpf(username).orElseThrow(() -> new UsernameNotFoundException(MessageUtils.AUTHENTICATION_FAIL));
+    }
+
+    /**
+     * Saves a user.
+     *
+     * @param usuario the user object to be saved.
+     * @return the saved UsuarioDTO object.
+     * @throws ValidationException if the user object is invalid.
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public Usuario save(Usuario usuario) {
+    public UsuarioDTO save(Usuario usuario) {
 
         if (usuario == null) {
             throw new ValidationException(MessageUtils.USUARIO_NULL);
@@ -128,37 +151,41 @@ public class UsuarioService implements AbstractService<Usuario> {
             usuario = repository.save(usuario);
         }
 
-        return usuario;
+        return UsuarioDTO.toDTO(usuario);
     }
 
     /**
-     * Search usuário.
+     * Search for users by value.
      *
-     * @param value     the nome ou CPF
-     * @param page      the page
-     * @param size      the size
-     * @param sort      the sort
-     * @param direction the direction
-     * @return the usuario list
+     * @param value     the value to search for (name, CPF, or setor) case-insensitive.
+     * @param page      the page number for pagination.
+     * @param size      the page size for pagination.
+     * @param sort      the sorting field.
+     * @param direction the sorting direction ("asc" for ascending, "desc" for descending).
+     * @return a page object containing the requested UsuarioDTO objects.
      */
+    @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Page<Usuario> search(String value, Integer page, Integer size, String sort, String direction) {
-        return repository.search(value, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
+    public Page<UsuarioDTO> search(String value, Integer page, Integer size, String sort, String direction) {
+
+        return repository.search(value, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)))
+                .map(UsuarioDTO::toDTO);
     }
 
     /**
-     * Validate usuário.
+     * Validates a user.
      *
-     * @param usuario the usuário
-     * @return the boolean
+     * @param usuario the user object to be validated.
+     * @return true if the user object is valid.
+     * @throws ValidationException if the user object is invalid.
      */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public boolean validate(Usuario usuario) {
 
-        var usuario_findByCPF = repository.findByCpf(usuario.getCpf()).orElse(null);
+        final var usuarioFindByCPF = repository.findByCpf(usuario.getCpf()).orElse(null);
 
-        if (usuario_findByCPF != null && !usuario.equals(usuario_findByCPF)) {
+        if (usuarioFindByCPF != null && !usuario.equals(usuarioFindByCPF)) {
             throw new ValidationException("Usuário já cadastrado!");
         }
 

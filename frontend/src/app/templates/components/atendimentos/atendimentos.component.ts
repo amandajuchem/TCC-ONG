@@ -1,12 +1,11 @@
 import { DatePipe } from '@angular/common';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Atendimento } from 'src/app/entities/atendimento';
-import { User } from 'src/app/entities/user';
+import { Authentication } from 'src/app/entities/authentication';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { AtendimentoService } from 'src/app/services/atendimento.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -21,13 +20,13 @@ import { OperatorUtils } from 'src/app/utils/operator-utils';
 })
 export class AtendimentosComponent implements AfterViewInit {
   
+  authentication!: Authentication;
   columns!: Array<string>;
   dataSource!: MatTableDataSource<Atendimento>;
   filterDate!: Date | null;
   filterString!: string;
   isLoadingResults!: boolean;
   resultsLength!: number;
-  user!: User;
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -36,15 +35,14 @@ export class AtendimentosComponent implements AfterViewInit {
     private _atendimentoService: AtendimentoService,
     private _authService: AuthService,
     private _datePipe: DatePipe,
-    private _dialog: MatDialog,
     private _notificationService: NotificationService,
     private _router: Router
   ) {
+    this.authentication = this._authService.getAuthentication();
     this.columns = ['index', 'dataHora', 'animal', 'veterinario', 'acao'];
     this.dataSource = new MatTableDataSource();
     this.isLoadingResults = true;
     this.resultsLength = 0;
-    this.user = this._authService.getCurrentUser();
   }
 
   ngAfterViewInit(): void {
@@ -52,7 +50,7 @@ export class AtendimentosComponent implements AfterViewInit {
   }
 
   add() {
-    this._router.navigate(['/' + this.user.role.toLowerCase() + '/atendimentos/cadastro']);
+    this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/atendimentos/cadastro']);
   }
 
   async findAll() {
@@ -67,19 +65,16 @@ export class AtendimentosComponent implements AfterViewInit {
 
     this._atendimentoService.findAll(page, size, sort, direction).subscribe({
 
-      complete: () => {
-        this.isLoadingResults = false;
-      },
-
       next: (atendimentos) => {
+        this.isLoadingResults = false;
         this.dataSource.data = atendimentos.content;
         this.resultsLength = atendimentos.totalElements;
       },
 
-      error: (err) => {
+      error: (error) => {
         this.isLoadingResults = false;
-        console.error(err);
-        this._notificationService.show(MessageUtils.ATENDIMENTOS_GET_FAIL, NotificationType.FAIL);    
+        console.error(error);
+        this._notificationService.show(MessageUtils.ATENDIMENTO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);    
       }
     });
   }
@@ -130,16 +125,16 @@ export class AtendimentosComponent implements AfterViewInit {
         this.resultsLength = atendimentos.totalElements;
       },
 
-      error: (err) => {
+      error: (error) => {
         this.isLoadingResults = false;
-        console.error(err);
-        this._notificationService.show(MessageUtils.ATENDIMENTOS_GET_FAIL, NotificationType.FAIL);    
+        console.error(error);
+        this._notificationService.show(MessageUtils.ATENDIMENTO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);    
       }
     });
   }
 
   show(atendimento: Atendimento) {
-    this._router.navigate(['/' + this.user.role.toLowerCase() + '/atendimentos/' + atendimento.id]);
+    this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/atendimentos/' + atendimento.id]);
   }
 
   sortChange() {

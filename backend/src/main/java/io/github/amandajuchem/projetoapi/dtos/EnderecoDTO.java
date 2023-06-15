@@ -8,7 +8,9 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
- * The type Endereco dto.
+ * The EnderecoDTO class represents a Data Transfer Object (DTO) for Endereco entities.
+ * It provides a simplified view of an Endereco object for use in API responses.
+ * This class implements the Serializable interface.
  */
 public record EnderecoDTO(
         UUID id,
@@ -26,10 +28,10 @@ public record EnderecoDTO(
 ) implements Serializable {
 
     /**
-     * To dto endereco dto.
+     * Creates a new EnderecoDTO instance based on the provided Endereco object.
      *
-     * @param endereco the endereco
-     * @return the endereco dto
+     * @param endereco The Endereco object to convert to EnderecoDTO.
+     * @return The EnderecoDTO representing the provided Endereco object.
      */
     public static EnderecoDTO toDTO(Endereco endereco) {
 

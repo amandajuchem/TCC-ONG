@@ -24,13 +24,13 @@ export class ExameExcluirComponent {
     this._exameService.delete(this.data.exame.id).subscribe({
 
       complete: () => {
-        this._notificationService.show(MessageUtils.EXAME_DELETE_SUCCESS, NotificationType.SUCCESS);
+        this._notificationService.show(MessageUtils.EXAME.DELETE_SUCCESS, NotificationType.SUCCESS);
         this._dialogRef.close({status: true});
       },
 
       error: (error) => {
         console.log(error);
-        this._notificationService.show(MessageUtils.EXAME_DELETE_FAIL, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.EXAME.DELETE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
       }
     });
   }

@@ -1,22 +1,17 @@
 import { DatePipe } from '@angular/common';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
+import { Authentication } from 'src/app/entities/authentication';
 import { FeiraAdocao } from 'src/app/entities/feira-adocao';
-import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { AuthService } from 'src/app/services/auth.service';
 import { FeiraAdocaoService } from 'src/app/services/feira-adocao.service';
 import { NotificationService } from 'src/app/services/notification.service';
-import { DateUtils } from 'src/app/utils/date-utils';
 import { MessageUtils } from 'src/app/utils/message-utils';
 import { OperatorUtils } from 'src/app/utils/operator-utils';
-
-import { FeiraAdocaoCadastroComponent } from '../feira-adocao-cadastro/feira-adocao-cadastro.component';
-import { FeiraAdocaoExcluirComponent } from '../feira-adocao-excluir/feira-adocao-excluir.component';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-feiras-adocao',
@@ -25,13 +20,13 @@ import { Router } from '@angular/router';
 })
 export class FeirasAdocaoComponent implements AfterViewInit {
 
+  authentication!: Authentication;
   columns!: Array<string>;
   dataSource!: MatTableDataSource<FeiraAdocao>;
   filterDate!: Date | null;
   filterString!: string;
   isLoadingResults!: boolean;
   resultsLength!: number;
-  user!: User;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -43,11 +38,11 @@ export class FeirasAdocaoComponent implements AfterViewInit {
     private _notificationService: NotificationService,
     private _router: Router
   ) {
+    this.authentication = this._authService.getAuthentication();
     this.columns = ['index', 'dataHora', 'nome', 'totalAnimais', 'totalUsuarios', 'acao'];
     this.dataSource = new MatTableDataSource();
     this.isLoadingResults = true;
     this.resultsLength = 0;
-    this.user = this._authService.getCurrentUser();
   }
 
   ngAfterViewInit(): void {
@@ -55,7 +50,7 @@ export class FeirasAdocaoComponent implements AfterViewInit {
   }
 
   add() {
-    this._router.navigate(['/' + this.user.role.toLowerCase() + '/feiras-adocao/cadastro']);
+    this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/feiras-adocao/cadastro']);
   }
 
   async findAll() {
@@ -79,10 +74,10 @@ export class FeirasAdocaoComponent implements AfterViewInit {
         this.resultsLength = feirasAdocao.totalElements;
       },
 
-      error: (err) => {
+      error: (error) => {
         this.isLoadingResults = false;
-        console.error(err);
-        this._notificationService.show(MessageUtils.FEIRAS_ADOCAO_GET_FAIL, NotificationType.FAIL);    
+        console.error(error);
+        this._notificationService.show(MessageUtils.FEIRA_ADOCAO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);    
       }
     });
   }
@@ -133,16 +128,16 @@ export class FeirasAdocaoComponent implements AfterViewInit {
         this.resultsLength = feirasAdocao.totalElements;
       },
 
-      error: (err) => {
+      error: (error) => {
         this.isLoadingResults = false;
-        console.error(err);
-        this._notificationService.show(MessageUtils.FEIRAS_ADOCAO_GET_FAIL, NotificationType.FAIL);    
+        console.error(error);
+        this._notificationService.show(MessageUtils.FEIRA_ADOCAO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);    
       }
     });
   }
 
   show(feiraAdocao: FeiraAdocao) {
-    this._router.navigate(['/' + this.user.role.toLowerCase() + '/feiras-adocao/' + feiraAdocao.id]);
+    this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/feiras-adocao/' + feiraAdocao.id]);
   }
 
   sortChange() {

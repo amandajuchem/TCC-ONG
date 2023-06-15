@@ -5,118 +5,126 @@ import io.github.amandajuchem.projetoapi.entities.FeiraAdocao;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.FeiraAdocaoService;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 /**
- * The type Feira Adocao controller.
+ * Controller class for managing adoption fairs.
+ * Provides endpoints for CRUD operations and searching.
  */
 @RestController
 @RequestMapping("/feiras-adocao")
 @RequiredArgsConstructor
-public class FeiraAdocaoController {
+@Tag(name = "Feiras de Adoção", description = "Endpoints for adoption fairs management")
+public class FeiraAdocaoController implements AbstractController<FeiraAdocao, FeiraAdocaoDTO> {
 
     private final FeiraAdocaoService service;
 
     /**
-     * Delete.
+     * Deletes an adoption fair by ID.
      *
-     * @param id the id
-     * @return the response entity
+     * @param id The ID of the adoption fair to be deleted.
+     * @return A ResponseEntity with the HTTP status of 200 (OK).
      */
+    @Override
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable UUID id) {
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
         service.delete(id);
-        return ResponseEntity.status(OK).body(null);
+        return ResponseEntity.status(OK).build();
     }
 
     /**
-     * Find all.
+     * Retrieves all adoption fairs.
      *
-     * @param page      the page
-     * @param size      the size
-     * @param sort      the sort
-     * @param direction the direction
-     * @return the response entity
+     * @param page      The page number for pagination (optional, default: 0).
+     * @param size      The page size for pagination (optional, default: 10).
+     * @param sort      The sorting field (optional, default: "nome").
+     * @param direction The sorting direction (optional, default: "asc").
+     * @return A ResponseEntity containing a page of FeiraAdocaoDTO objects, with the HTTP status of 200 (OK).
      */
+    @Override
     @GetMapping
-    public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") Integer page,
-                                     @RequestParam(required = false, defaultValue = "10") Integer size,
-                                     @RequestParam(required = false, defaultValue = "nome") String sort,
-                                     @RequestParam(required = false, defaultValue = "asc") String direction) {
+    public ResponseEntity<Page<FeiraAdocaoDTO>> findAll(@RequestParam(required = false, defaultValue = "0") Integer page,
+                                                        @RequestParam(required = false, defaultValue = "10") Integer size,
+                                                        @RequestParam(required = false, defaultValue = "nome") String sort,
+                                                        @RequestParam(required = false, defaultValue = "asc") String direction) {
 
-        var exames = service.findAll(page, size, sort, direction).map(FeiraAdocaoDTO::toDTO);
-        return ResponseEntity.status(OK).body(exames);
+        final var feirasAdocao = service.findAll(page, size, sort, direction);
+        return ResponseEntity.status(OK).body(feirasAdocao);
     }
 
     /**
-     * Find Feira Adoção by id.
+     * Retrieves an adoption fair by ID.
      *
-     * @param id the id
-     * @return the response entity
+     * @param id The ID of the adoption fair to be retrieved.
+     * @return A ResponseEntity containing the FeiraAdocaoDTO object, with the HTTP status of 200 (OK).
      */
+    @Override
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable UUID id) {
-        var feiraAdocao = service.findById(id);
-        return ResponseEntity.status(OK).body(FeiraAdocaoDTO.toDTO(feiraAdocao));
+    public ResponseEntity<FeiraAdocaoDTO> findById(@PathVariable UUID id) {
+        final var feiraAdocao = service.findById(id);
+        return ResponseEntity.status(OK).body(feiraAdocao);
     }
 
     /**
-     * Save.
+     * Saves an adoption fair.
      *
-     * @param feiraAdocao the feira adocao
-     * @return the response entity
+     * @param feiraAdocao The adoption fair object to be saved.
+     * @return A ResponseEntity containing the saved FeiraAdocaoDTO object, with the HTTP status of 201 (CREATED).
      */
+    @Override
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody @Valid FeiraAdocao feiraAdocao) {
-        feiraAdocao = service.save(feiraAdocao);
-        return ResponseEntity.status(CREATED).body(FeiraAdocaoDTO.toDTO(feiraAdocao));
+    public ResponseEntity<FeiraAdocaoDTO> save(@RequestBody @Valid FeiraAdocao feiraAdocao) {
+        final var feiraAdocaoSaved = service.save(feiraAdocao);
+        return ResponseEntity.status(CREATED).body(feiraAdocaoSaved);
     }
 
     /**
-     * Search.
+     * Search for adoption fairs by value.
      *
-     * @param value     the value
-     * @param page      the page
-     * @param size      the size
-     * @param sort      the sort
-     * @param direction the direction
-     * @return the response entity
+     * @param value     The value to search for.
+     * @param page      The page number for pagination (optional, default: 0).
+     * @param size      The page size for pagination (optional, default: 10).
+     * @param sort      The sorting field (optional, default: "nome").
+     * @param direction The sorting direction (optional, default: "asc").
+     * @return A ResponseEntity containing a page of FeiraAdocaoDTO objects, with the HTTP status of 200 (OK).
      */
+    @Override
     @GetMapping("/search")
-    public ResponseEntity<?> search(@RequestParam(required = false) String value,
-                                    @RequestParam(required = false, defaultValue = "0") Integer page,
-                                    @RequestParam(required = false, defaultValue = "10") Integer size,
-                                    @RequestParam(required = false, defaultValue = "nome") String sort,
-                                    @RequestParam(required = false, defaultValue = "asc") String direction) {
+    public ResponseEntity<Page<FeiraAdocaoDTO>> search(@RequestParam String value,
+                                                       @RequestParam(required = false, defaultValue = "0") Integer page,
+                                                       @RequestParam(required = false, defaultValue = "10") Integer size,
+                                                       @RequestParam(required = false, defaultValue = "nome") String sort,
+                                                       @RequestParam(required = false, defaultValue = "asc") String direction) {
 
-        if (value != null) {
-            var feirasAdocao = service.search(value, page, size, sort, direction).map(FeiraAdocaoDTO::toDTO);
-            return ResponseEntity.status(OK).body(feirasAdocao);
-        }
-
-        return ResponseEntity.status(NOT_FOUND).body(null);
+        final var feirasAdocao = service.search(value, page, size, sort, direction);
+        return ResponseEntity.status(OK).body(feirasAdocao);
     }
 
     /**
-     * Update.
+     * Updates an adoption fair.
      *
-     * @param id          the id
-     * @param feiraAdocao the feira adocao
-     * @return the response entity
+     * @param id           The ID of the adoption fair to be updated.
+     * @param feiraAdocao  The updated adoption fair object.
+     * @return A ResponseEntity containing the updated FeiraAdocaoDTO object, with HTTP status of 200 (OK).
+     * @throws ValidationException If the provided adoption fair ID does not match the path ID.
      */
+    @Override
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody @Valid FeiraAdocao feiraAdocao) {
+    public ResponseEntity<FeiraAdocaoDTO> update(@PathVariable UUID id, @RequestBody @Valid FeiraAdocao feiraAdocao) {
 
         if (feiraAdocao.getId().equals(id)) {
-            feiraAdocao = service.save(feiraAdocao);
-            return ResponseEntity.status(OK).body(FeiraAdocaoDTO.toDTO(feiraAdocao));
+            final var feiraAdocaoSaved = service.save(feiraAdocao);
+            return ResponseEntity.status(OK).body(feiraAdocaoSaved);
         }
 
         throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);

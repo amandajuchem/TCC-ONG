@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 import { Observacao } from '../entities/observacao';
@@ -32,18 +33,17 @@ export class ObservacaoService implements AbstractService<Observacao> {
    * @param direction 
    * @returns 
    */
-  findAll(page: number, size: number, sort: string, direction: string, tutorId: string) {
+  findAll(page: number, size: number, sort: string, direction: string) {
 
     return this._http.get<Page<Observacao>>(this._baseURL, {
       
       params: {
-        tutorId: tutorId,
         page: page,
         size: size,
         sort: sort,
         direction: direction
       }
-    })
+    });
   }
 
   /**
@@ -62,6 +62,29 @@ export class ObservacaoService implements AbstractService<Observacao> {
    */
   save(observacao: Observacao) {
     return this._http.post<Observacao>(this._baseURL, observacao);
+  }
+
+  /**
+   * 
+   * @param value 
+   * @param page 
+   * @param size 
+   * @param sort 
+   * @param direction 
+   * @returns 
+   */
+  search(value: string, page: number, size: number, sort: string, direction: string): Observable<Page<Observacao>> {
+      
+    return this._http.get<Page<Observacao>>(this._baseURL + '/search', {
+      
+      params: {
+        value: value,
+        page: page,
+        size: size,
+        sort: sort,
+        direction: direction
+      }
+    });
   }
 
   /**

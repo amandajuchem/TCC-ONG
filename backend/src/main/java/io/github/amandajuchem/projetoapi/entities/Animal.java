@@ -16,9 +16,6 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.Set;
 
-/**
- * The type Animal.
- */
 @Data
 @SuperBuilder
 @NoArgsConstructor

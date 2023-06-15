@@ -7,8 +7,11 @@ import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.UsuarioService;
 import io.github.amandajuchem.projetoapi.utils.FileUtils;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,57 +23,76 @@ import java.util.UUID;
 import static org.springframework.http.HttpStatus.*;
 
 /**
- * The type Usuario controller.
+ * Controller class for managing users.
+ * Provides endpoints for CRUD operations and searching.
  */
 @RestController
 @RequestMapping("/usuarios")
 @RequiredArgsConstructor
-public class UsuarioController {
+@Tag(name = "Usuários", description = "Endpoints for users management")
+public class UsuarioController implements AbstractController<Usuario, UsuarioDTO> {
 
     private final UsuarioService service;
 
     /**
-     * Find all usuários.
+     * Deletes a user by ID.
      *
-     * @param page      the page
-     * @param size      the size
-     * @param sort      the sort
-     * @param direction the direction
-     * @return the list of usuários
+     * @param id The ID of the user to be deleted.
+     * @return A ResponseEntity with the HTTP status of 200 (OK).
      */
-    @GetMapping
-    public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") Integer page,
-                                     @RequestParam(required = false, defaultValue = "10") Integer size,
-                                     @RequestParam(required = false, defaultValue = "nome") String sort,
-                                     @RequestParam(required = false, defaultValue = "asc") String direction) {
+    @Override
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        service.delete(id);
+        return ResponseEntity.status(OK).build();
+    }
 
-        var usuarios = service.findAll(page, size, sort, direction).map(UsuarioDTO::toDTO);
+    /**
+     * Retrieves all users.
+     *
+     * @param page      The page number for pagination (optional, default: 0).
+     * @param size      The page size for pagination (optional, default: 10).
+     * @param sort      The sorting field (optional, default: "nome").
+     * @param direction The sorting direction (optional, default: "asc").
+     * @return A ResponseEntity containing a page of UsuarioDTO objects, with the HTTP status of 200 (OK).
+     */
+    @Override
+    @GetMapping
+    public ResponseEntity<Page<UsuarioDTO>> findAll(@RequestParam(required = false, defaultValue = "0") Integer page,
+                                                    @RequestParam(required = false, defaultValue = "10") Integer size,
+                                                    @RequestParam(required = false, defaultValue = "nome") String sort,
+                                                    @RequestParam(required = false, defaultValue = "asc") String direction) {
+
+        final var usuarios = service.findAll(page, size, sort, direction);
         return ResponseEntity.status(OK).body(usuarios);
     }
 
     /**
-     * Find by id response entity.
+     * Retrieves a user by ID.
      *
-     * @param id the id
-     * @return the response entity
+     * @param id The ID of the user to be retrieved.
+     * @return A ResponseEntity containing the UsuarioDTO object, with HTTP status of 200 (OK).
      */
+    @Override
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable UUID id) {
-        var usuario = service.findById(id);
-        return ResponseEntity.status(OK).body(UsuarioDTO.toDTO(usuario));
+    public ResponseEntity<UsuarioDTO> findById(@PathVariable UUID id) {
+        final var usuario = service.findById(id);
+        return ResponseEntity.status(OK).body(usuario);
     }
 
     /**
-     * Save response entity.
+     * Saves a user.
      *
-     * @param usuario the usuario
-     * @param foto    the foto
-     * @return the response entity
-     * @throws FileNotFoundException the file not found exception
+     * @param usuario The user to be saved.
+     * @param foto    The profile picture of the user (optional).
+     * @return A ResponseEntity containing the saved UsuarioDTO object, with HTTP status of 201 (CREATED).
+     * @throws FileNotFoundException If the file for the profile picture is not found.
      */
+    @Operation(summary = "Save", description = "Save an item")
+    @ResponseStatus(CREATED)
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> save(@RequestPart @Valid Usuario usuario,
-                                  @RequestPart(required = false) MultipartFile foto) throws FileNotFoundException {
+    public ResponseEntity<UsuarioDTO> save(@RequestPart @Valid Usuario usuario,
+                                           @RequestPart(required = false) MultipartFile foto) throws FileNotFoundException {
 
         if (foto != null) {
 
@@ -82,48 +104,59 @@ public class UsuarioController {
             FileUtils.FILES.put(imagem.getNome(), foto);
         }
 
-        usuario = service.save(usuario);
-        return ResponseEntity.status(CREATED).body(UsuarioDTO.toDTO(usuario));
+        return save(usuario);
     }
 
     /**
-     * Search usuários.
+     * Saves a user.
      *
-     * @param value     the nome ou CPF
-     * @param page      the page
-     * @param size      the size
-     * @param sort      the sort
-     * @param direction the direction
-     * @return the response entity
+     * @param usuario The user to be saved.
+     * @return A ResponseEntity containing the saved UsuarioDTO object, with HTTP status of 201 (CREATED).
      */
+    @Override
+    public ResponseEntity<UsuarioDTO> save(Usuario usuario) {
+        final var usuarioSaved = service.save(usuario);
+        return ResponseEntity.status(CREATED).body(usuarioSaved);
+    }
+
+    /**
+     * Search for users by value.
+     *
+     * @param value     The value to search for.
+     * @param page      The page number for pagination (optional, default: 0).
+     * @param size      The page size for pagination (optional, default: 10).
+     * @param sort      The sorting field (optional, default: "nome").
+     * @param direction The sorting direction (optional, default: "asc").
+     * @return A ResponseEntity containing a page of UsuarioDTO objects, with the HTTP status of 200 (OK).
+     */
+    @Override
     @GetMapping("/search")
-    public ResponseEntity<?> search(@RequestParam(required = false) String value,
-                                    @RequestParam(required = false, defaultValue = "0") Integer page,
-                                    @RequestParam(required = false, defaultValue = "10") Integer size,
-                                    @RequestParam(required = false, defaultValue = "nome") String sort,
-                                    @RequestParam(required = false, defaultValue = "asc") String direction) {
+    public ResponseEntity<Page<UsuarioDTO>> search(@RequestParam String value,
+                                                   @RequestParam(required = false, defaultValue = "0") Integer page,
+                                                   @RequestParam(required = false, defaultValue = "10") Integer size,
+                                                   @RequestParam(required = false, defaultValue = "nome") String sort,
+                                                   @RequestParam(required = false, defaultValue = "asc") String direction) {
 
-        if (value != null) {
-            var usuarios = service.search(value, page, size, sort, direction).map(UsuarioDTO::toDTO);
-            return ResponseEntity.status(OK).body(usuarios);
-        }
-
-        return ResponseEntity.status(NOT_FOUND).body(null);
+        final var usuarios = service.search(value, page, size, sort, direction);
+        return ResponseEntity.status(OK).body(usuarios);
     }
 
     /**
-     * Update response entity.
+     * Updates a user.
      *
-     * @param id      the id
-     * @param usuario the usuario
-     * @param foto    the foto
-     * @return the response entity
-     * @throws FileNotFoundException the file not found exception
+     * @param id       The ID of the user to be updated.
+     * @param usuario  The updated user object.
+     * @param foto     The updated profile picture of the user (optional).
+     * @return A ResponseEntity containing the updated UsuarioDTO object, with HTTP status of 200 (OK).
+     * @throws FileNotFoundException If the file for the updated profile picture is not found.
+     * @throws ValidationException If the provided user ID does not match the path ID.
      */
+    @Operation(summary = "Update", description = "Update an item")
+    @ResponseStatus(OK)
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> update(@PathVariable UUID id,
-                                    @RequestPart @Valid Usuario usuario,
-                                    @RequestPart(required = false) MultipartFile foto) throws FileNotFoundException {
+    public ResponseEntity<UsuarioDTO> update(@PathVariable UUID id,
+                                             @RequestPart @Valid Usuario usuario,
+                                             @RequestPart(required = false) MultipartFile foto) throws FileNotFoundException {
 
         if (usuario.getId().equals(id)) {
 
@@ -137,10 +170,22 @@ public class UsuarioController {
                 FileUtils.FILES.put(imagem.getNome(), foto);
             }
 
-            usuario = service.save(usuario);
-            return ResponseEntity.status(OK).body(UsuarioDTO.toDTO(usuario));
+            return update(id, usuario);
         }
 
         throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);
+    }
+
+    /**
+     * Updates a user.
+     *
+     * @param id      The ID of the user to be updated.
+     * @param usuario The updated user object.
+     * @return A ResponseEntity containing the updated UsuarioDTO object, with HTTP status of 200 (OK).
+     */
+    @Override
+    public ResponseEntity<UsuarioDTO> update(UUID id, Usuario usuario) {
+        final var usuarioSaved = service.save(usuario);
+        return ResponseEntity.status(OK).body(usuarioSaved);
     }
 }

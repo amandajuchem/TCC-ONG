@@ -1,16 +1,11 @@
 package io.github.amandajuchem.projetoapi.exceptions;
 
-/**
- * The type Validation exception.
- *
- * @author Edson Isaac
- */
 public class ValidationException extends RuntimeException {
 
     /**
-     * Instantiates a new Validation exception.
+     * Constructs a new ValidationException with the specified detail message.
      *
-     * @param message the message
+     * @param message the detail message
      */
     public ValidationException(String message) {
         super(message);

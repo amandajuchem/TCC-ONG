@@ -12,9 +12,6 @@ import lombok.experimental.SuperBuilder;
 
 import java.io.IOException;
 
-/**
- * The type Imagem.
- */
 @Data
 @SuperBuilder
 @NoArgsConstructor
@@ -31,6 +28,9 @@ public class Imagem extends AbstractEntity {
         return super.equals(o);
     }
 
+    /**
+     * Handles post-persist and post-update events to save the image file.
+     */
     @PostPersist
     @PostUpdate
     private void postSave() {
@@ -47,6 +47,9 @@ public class Imagem extends AbstractEntity {
         FileUtils.FILES.clear();
     }
 
+    /**
+     * Handles post-remove event to delete the image file.
+     */
     @PostRemove
     private void postDelete() {
         FileUtils.delete(nome, FileUtils.IMAGES_DIRECTORY);

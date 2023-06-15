@@ -10,26 +10,23 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 import java.util.UUID;
 
-/**
- * The interface Feira adocao repository.
- */
 @Repository
 public interface FeiraAdocaoRepository extends JpaRepository<FeiraAdocao, UUID> {
 
     /**
-     * Find by nome.
+     * Retrieves an adoption fair by name case-insensitive.
      *
-     * @param nome the nome
-     * @return the optional
+     * @param nome The name of the feira de adoção.
+     * @return An Optional containing the adoption fair entity if found, or an empty Optional if not found.
      */
     Optional<FeiraAdocao> findByNomeIgnoreCase(String nome);
 
     /**
-     * Search.
+     * Search for adoption fairs by value.
      *
-     * @param value the value
-     * @param page  the page
-     * @return the page
+     * @param value The value to search for (name or date/time) case-insensitive.
+     * @param page  The pageable object specifying the page information.
+     * @return A page of adoption fair entities matching the search criteria.
      */
     @Query("SELECT f FROM tb_feiras_adocao AS f " +
             "WHERE upper(f.nome) LIKE upper(concat('%', ?1, '%')) " +

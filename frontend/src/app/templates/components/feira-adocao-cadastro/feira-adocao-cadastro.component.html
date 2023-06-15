@@ -1,10 +1,10 @@
-<div class="row mb-3" *ngIf="user">
+<div class="row mb-3" *ngIf="authentication">
     <div class="col-12">
         <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);"
             aria-label="breadcrumb">
             <ol class="breadcrumb m-0">
-                <li class="breadcrumb-item"><a class="text-white" [routerLink]="'/' + user.role.toLowerCase() + '/painel'">Início</a></li>
-                <li class="breadcrumb-item"><a class="text-white" [routerLink]="'/' + user.role.toLowerCase() + '/feiras-adocao'">Feiras de Adoção</a></li>
+                <li class="breadcrumb-item"><a class="text-white" [routerLink]="'/' + authentication.role.toLowerCase() + '/painel'">Início</a></li>
+                <li class="breadcrumb-item"><a class="text-white" [routerLink]="'/' + authentication.role.toLowerCase() + '/feiras-adocao'">Feiras de Adoção</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{feiraAdocao ? feiraAdocao.nome : 'Cadastro'}}</li>
             </ol>
         </nav>
@@ -30,16 +30,16 @@
                     <div class="row mb-3">
                         <div class="col-12">
                             <div class="text-end">
-                                <button mat-icon-button (click)="form.enable()" *ngIf="form.disabled && feiraAdocao">
+                                <button mat-icon-button title="Editar" (click)="form.enable()" *ngIf="form.disabled && feiraAdocao">
                                     <mat-icon>edit</mat-icon>
                                 </button>
-                                <button mat-icon-button (click)="submit()" *ngIf="form.enabled && form.valid">
+                                <button mat-icon-button title="Salvar" (click)="submit()" *ngIf="form.enabled && form.valid">
                                     <mat-icon>save</mat-icon>
                                 </button>
-                                <button mat-icon-button (click)="cancel()" *ngIf="form.enabled">
+                                <button mat-icon-button title="Cancelar" (click)="cancel()" *ngIf="form.enabled">
                                     <mat-icon>close</mat-icon>
                                 </button>
-                                <button mat-icon-button (click)="delete()" *ngIf="form.disabled && feiraAdocao">
+                                <button mat-icon-button title="Excluir" (click)="delete()" *ngIf="form.disabled && feiraAdocao">
                                     <mat-icon>delete</mat-icon>
                                 </button>
                             </div>
@@ -119,7 +119,7 @@
                                     <ng-container matColumnDef="acao">
                                         <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-acao">&nbsp;</th>
                                         <td mat-cell *matCellDef="let animal" class="text-end">
-                                            <button mat-icon-button (click)="removeAnimal(animal)" *ngIf="form.enabled">
+                                            <button mat-icon-button title="Excluir Animal" (click)="removeAnimal(animal)" *ngIf="form.enabled">
                                                 <mat-icon>delete</mat-icon>
                                             </button>
                                         </td>
@@ -177,7 +177,7 @@
                                     <ng-container matColumnDef="acao">
                                         <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-acao">&nbsp;</th>
                                         <td mat-cell *matCellDef="let usuario" class="text-end">
-                                            <button mat-icon-button (click)="removeUsuario(usuario)" *ngIf="form.enabled">
+                                            <button mat-icon-button title="Excluir Usuário" (click)="removeUsuario(usuario)" *ngIf="form.enabled">
                                                 <mat-icon>delete</mat-icon>
                                             </button>
                                         </td>

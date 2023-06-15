@@ -31,6 +31,7 @@ export class AgendamentoService implements AbstractService<Agendamento> {
   findAll(page: number, size: number, sort: string, direction: string) {
 
     return this._http.get<Page<Agendamento>>(this._baseURL, {
+      
       params: {
         page: page,
         size: size, 

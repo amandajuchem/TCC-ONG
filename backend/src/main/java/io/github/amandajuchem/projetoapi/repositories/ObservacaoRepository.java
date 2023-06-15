@@ -9,19 +9,18 @@ import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
-/**
- * The interface Observacao repository.
- */
 @Repository
 public interface ObservacaoRepository extends JpaRepository<Observacao, UUID> {
 
     /**
-     * Find all.
+     * Search for observations by value.
      *
-     * @param tutorId
-     * @param page
-     * @return
+     * @param value The value to search for (tutor's ID).
+     * @param page  The pageable object specifying the page information.
+     * @return A page of observation entities matching the search criteria.
      */
-    @Query("SELECT o FROM tb_observacoes AS o INNER JOIN o.tutor AS t ON t.id = ?1")
-    Page<Observacao> findAll(UUID tutorId, Pageable page);
+    @Query("SELECT o FROM tb_observacoes AS o " +
+            "INNER JOIN o.tutor AS t " +
+            "ON cast(t.id as string) = ?1")
+    Page<Observacao> search(String value, Pageable page);
 }

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { User } from 'src/app/entities/user';
+import { Authentication } from 'src/app/entities/authentication';
 import { Usuario } from 'src/app/entities/usuario';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { AuthService } from 'src/app/services/auth.service';
@@ -22,10 +22,10 @@ import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-image
 export class UsuarioInformacoesComponent implements OnInit {
 
   apiURL!: string;
+  authentication!: Authentication;
   form!: FormGroup;
   foto!: any;
   hide!: boolean;
-  user!: User;
   usuario!: Usuario;
 
   constructor(
@@ -41,8 +41,8 @@ export class UsuarioInformacoesComponent implements OnInit {
   ngOnInit(): void {
     
     this.apiURL = environment.apiURL;
+    this.authentication = this._authService.getAuthentication();
     this.hide = true;
-    this.user = this._authService.getCurrentUser();
 
     this._usuarioService.get().subscribe({
 
@@ -102,7 +102,7 @@ export class UsuarioInformacoesComponent implements OnInit {
 
   cancel() {
     this.foto = this.usuario?.foto ? { id: this.usuario?.foto.id, nome: this.usuario?.foto.nome } : null;
-    this.usuario ? this.buildForm(this.usuario) : this._router.navigate(['/' + this.user.role.toLowerCase() + '/usuarios']);
+    this.usuario ? this.buildForm(this.usuario) : this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/usuarios']);
   }
 
   removeFoto() {
@@ -122,12 +122,12 @@ export class UsuarioInformacoesComponent implements OnInit {
         next: (usuario) => {
           this.foto ? this.foto.file = null : null;
           this._usuarioService.set(usuario);
-          this._notificationService.show(MessageUtils.USUARIO_UPDATE_SUCCESS, NotificationType.SUCCESS);
+          this._notificationService.show(MessageUtils.USUARIO.UPDATE_SUCCESS, NotificationType.SUCCESS);
         },
   
         error: (error) => {
           console.error(error);
-          this._notificationService.show(MessageUtils.USUARIO_UPDATE_FAIL + error.error[0].message, NotificationType.FAIL);
+          this._notificationService.show(MessageUtils.USUARIO.UPDATE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
         }
       });
     }
@@ -138,13 +138,13 @@ export class UsuarioInformacoesComponent implements OnInit {
 
         next: (usuario) => {
           this.foto ? this.foto.file = null : null;
-          this._router.navigate(['/' + this.user.role.toLowerCase() + '/usuarios/' + usuario.id]);
-          this._notificationService.show(MessageUtils.USUARIO_SAVE_SUCCESS, NotificationType.SUCCESS);
+          this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/usuarios/' + usuario.id]);
+          this._notificationService.show(MessageUtils.USUARIO.SAVE_SUCCESS, NotificationType.SUCCESS);
         },
   
         error: (error) => {
           console.error(error);
-          this._notificationService.show(MessageUtils.USUARIO_SAVE_FAIL + error.error[0].message, NotificationType.FAIL);
+          this._notificationService.show(MessageUtils.USUARIO.SAVE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
         }
       });
     }
@@ -154,7 +154,7 @@ export class UsuarioInformacoesComponent implements OnInit {
 
     this.form.enable();
 
-    if (this.usuario.cpf === this.user.username) {
+    if (this.usuario.cpf === this.authentication.username) {
       this.form.get('cpf')?.disable();
       this.form.get('setor')?.disable();
       this.form.get('status')?.disable();

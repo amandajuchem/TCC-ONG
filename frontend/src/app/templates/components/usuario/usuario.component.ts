@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { User } from 'src/app/entities/user';
+import { Authentication } from 'src/app/entities/authentication';
 import { Usuario } from 'src/app/entities/usuario';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { AuthService } from 'src/app/services/auth.service';
@@ -15,7 +15,7 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 })
 export class UsuarioComponent implements OnInit {
 
-  user!: User;
+  authentication!: Authentication;
   usuario!: Usuario;
 
   constructor(
@@ -27,7 +27,7 @@ export class UsuarioComponent implements OnInit {
 
   ngOnInit(): void {
     
-    this.user = this._authService.getCurrentUser();
+    this.authentication = this._authService.getAuthentication();
 
     this._activatedRoute.params.subscribe({
 
@@ -49,7 +49,7 @@ export class UsuarioComponent implements OnInit {
   
               error: (error) => {
                 console.error(error);
-                this._notificationService.show(MessageUtils.USUARIO_GET_FAIL, NotificationType.FAIL); 
+                this._notificationService.show(MessageUtils.USUARIO.GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL); 
               }
             });
           }

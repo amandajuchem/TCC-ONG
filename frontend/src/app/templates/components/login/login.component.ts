@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
-import { Setor } from 'src/app/enums/setor';
 import { AuthService } from 'src/app/services/auth.service';
 import { NotificationService } from 'src/app/services/notification.service';
+import { MessageUtils } from 'src/app/utils/message-utils';
 
 @Component({
   selector: 'app-login',
@@ -29,15 +28,7 @@ export class LoginComponent implements OnInit {
     this.hide = true;
 
     if (this._authService.isAuthenticated()) {
-
-      let user: User = this._authService.getCurrentUser();
-
-      switch (user.role) {
-
-        case Setor.ADMINISTRACAO:
-          this._router.navigate(['/administracao/painel']);
-          break;
-      }
+      this.redirect();      
     }
 
     else {
@@ -53,6 +44,11 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  redirect() {
+    const authentication = this._authService.getAuthentication();
+    this._router.navigate(['/' + authentication.role.toLowerCase() + '/painel']);  
+  }
+
   submit() {
     
     const user = Object.assign({}, this.form.value);
@@ -60,28 +56,13 @@ export class LoginComponent implements OnInit {
     this._authService.login(user).subscribe({
 
       next: (authentication) => {
-        
-        this._authService.setCurrentUser({
-          token: authentication.access_token,
-          role: authentication.role
-        })
-      },
-
-      complete: () => {
-
-        let user: User = this._authService.getCurrentUser();
-
-        switch (user.role) {
-
-          case Setor.ADMINISTRACAO:
-            this._router.navigate(['/administracao/painel']);
-            break;
-        }
+        this._authService.setAuthentication(authentication);
+        this.redirect();
       },
 
       error: (error) => {
         console.error(error);
-        this._notificationService.show(error.error.message, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.getMessage(error), NotificationType.FAIL);
       }
     })
   }

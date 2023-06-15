@@ -35,6 +35,7 @@ export class AtendimentoService implements AbstractService<Atendimento> {
   findAll(page: number, size: number, sort: string, direction: string) {
 
     return this._http.get<Page<Atendimento>>(this._baseURL, {
+
       params: {
         page: page,
         size: size, 
@@ -61,7 +62,7 @@ export class AtendimentoService implements AbstractService<Atendimento> {
    */
   save(atendimento: Atendimento, documentos: Array<File> | null) {
 
-    let formData: FormData = new FormData();
+    const formData: FormData = new FormData();
 
     formData.append('atendimento', new Blob([JSON.stringify(atendimento)], { type: 'application/json' }));
 
@@ -102,7 +103,7 @@ export class AtendimentoService implements AbstractService<Atendimento> {
    */
   update(atendimento: Atendimento, documentos: Array<File> | null) {
 
-    let formData: FormData = new FormData();
+    const formData: FormData = new FormData();
 
     formData.append('atendimento', new Blob([JSON.stringify(atendimento)], { type: 'application/json' }));
 

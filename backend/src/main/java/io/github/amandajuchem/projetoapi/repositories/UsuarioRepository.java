@@ -10,26 +10,23 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 import java.util.UUID;
 
-/**
- * The interface Usuario repository.
- */
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
 
     /**
-     * Find usuário by cpf.
+     * Retrieves a user by CPF.
      *
-     * @param cpf the cpf
-     * @return the usuário optional
+     * @param cpf The CPF of the user.
+     * @return An Optional containing the user entity if found, or an empty Optional if not found.
      */
     Optional<Usuario> findByCpf(String cpf);
 
     /**
-     * Search usuário.
+     * Search for users by value.
      *
-     * @param value the nome ou CPF
-     * @param page  the page
-     * @return the usuário list
+     * @param value The value to search for (name, CPF, or setor) case-insensitive.
+     * @param page  The pageable object specifying the page information.
+     * @return A page of user entities matching the search criteria.
      */
     @Query(value = "SELECT u FROM tb_usuarios AS u " +
             "WHERE upper(u.nome) LIKE upper(concat('%', ?1, '%')) " +

@@ -1,9 +1,9 @@
 <div class="overflow-hidden">
 
-  <div class="row mb-3">
+  <div class="row my-3">
     <div class="col-12">
       <div class="text-end">
-        <button mat-icon-button (click)="add()">
+        <button mat-icon-button title="Cadastrar" (click)="add()">
           <mat-icon>add</mat-icon>
         </button>
       </div>
@@ -24,13 +24,13 @@
           <!-- Data Hora Column -->
           <ng-container matColumnDef="dataHora">
             <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-dataHora">Data</th>
-            <td mat-cell *matCellDef="let adocao" class="text-center">{{getDateWithTimeZone(adocao.dataHora) | date: 'dd/MM/yyyy HH:mm'}}</td>
+            <td mat-cell *matCellDef="let adocao" class="text-center">{{adocao.dataHora | date: 'dd/MM/yyyy HH:mm'}}</td>
           </ng-container>
 
           <!-- Local Column -->
           <ng-container matColumnDef="localAdocao">
             <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-localAdocao">Local de Adoção</th>
-            <td mat-cell *matCellDef="let adocao" class="text-center">{{adocao.localAdocao | titlecase}}</td>
+            <td mat-cell *matCellDef="let adocao" class="text-center">{{adocao.localAdocao}}</td>
           </ng-container>
 
           <!-- Tutor Column -->
@@ -44,11 +44,11 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-acao">&nbsp;</th>
             <td mat-cell *matCellDef="let adocao">
               <div class="text-end">
-                <button mat-icon-button (click)="update(adocao)">
+                <button mat-icon-button title="Editar" (click)="update(adocao)">
                   <mat-icon>edit</mat-icon>
                 </button>
 
-                <button mat-icon-button (click)="delete(adocao)">
+                <button mat-icon-button title="Excluir" (click)="delete(adocao)">
                   <mat-icon>delete</mat-icon>
                 </button>
               </div>

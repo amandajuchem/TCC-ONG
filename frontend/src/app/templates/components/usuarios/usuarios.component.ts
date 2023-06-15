@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-import { User } from 'src/app/entities/user';
+import { Router } from '@angular/router';
+import { Authentication } from 'src/app/entities/authentication';
 import { Usuario } from 'src/app/entities/usuario';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { AuthService } from 'src/app/services/auth.service';
@@ -11,9 +11,6 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 import { OperatorUtils } from 'src/app/utils/operator-utils';
 import { environment } from 'src/environments/environment';
 
-import { UsuarioCadastroComponent } from '../usuario-cadastro/usuario-cadastro.component';
-import { Router } from '@angular/router';
-
 @Component({
   selector: 'app-usuarios',
   templateUrl: './usuarios.component.html',
@@ -22,12 +19,12 @@ import { Router } from '@angular/router';
 export class UsuariosComponent implements AfterViewInit {
 
   apiURL!: string;
+  authentication!: Authentication;
   filterString!: string;
   isLoadingResults!: boolean;
   pageIndex!: number;
   pageSize!: number;
   resultsLength!: number;
-  user!: User;
   usuarios!: Array<Usuario>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -39,9 +36,9 @@ export class UsuariosComponent implements AfterViewInit {
     private _usuarioService: UsuarioService
   ) {
     this.apiURL = environment.apiURL;
+    this.authentication = this._authService.getAuthentication();
     this.isLoadingResults = true;
     this.resultsLength = 0;
-    this.user = this._authService.getCurrentUser();
   }
 
   ngAfterViewInit(): void {
@@ -49,7 +46,7 @@ export class UsuariosComponent implements AfterViewInit {
   }
 
   add() {
-    this._router.navigate(['/' + this.user.role.toLowerCase() + '/usuarios/cadastro']);
+    this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/usuarios/cadastro']);
   }
 
   async findAll() {
@@ -76,7 +73,7 @@ export class UsuariosComponent implements AfterViewInit {
       error: (error) => {
         this.isLoadingResults = false;
         console.error(error);
-        this._notificationService.show(MessageUtils.USUARIOS_GET_FAIL, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.USUARIO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
       }
     });
   }
@@ -95,7 +92,7 @@ export class UsuariosComponent implements AfterViewInit {
   }
 
   show(usuario: Usuario) {
-    this._router.navigate(['/' + this.user.role.toLowerCase() + '/usuarios/' + usuario.id]);
+    this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/usuarios/' + usuario.id]);
   }
 
   async search() {
@@ -111,19 +108,16 @@ export class UsuariosComponent implements AfterViewInit {
 
     this._usuarioService.search(this.filterString, page, size, sort, direction).subscribe({
 
-      complete: () => {
-        this.isLoadingResults = false;
-      },
-
       next: (usuarios) => {
+        this.isLoadingResults = false;
         this.usuarios = usuarios.content;
         this.resultsLength = usuarios.totalElements;
       },
 
-      error: (err) => {
+      error: (error) => {
         this.isLoadingResults = false;
-        console.error(err);
-        this._notificationService.show(MessageUtils.USUARIOS_GET_FAIL, NotificationType.FAIL);
+        console.error(error);
+        this._notificationService.show(MessageUtils.USUARIO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
       }
     });
   }

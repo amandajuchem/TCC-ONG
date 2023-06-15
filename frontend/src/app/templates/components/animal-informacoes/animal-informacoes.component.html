@@ -3,16 +3,16 @@
     <div class="row my-3">
         <div class="col-12">
             <div class="text-end">
-                <button mat-icon-button (click)="form.enable()" *ngIf="form.disabled">
+                <button mat-icon-button title="Editar" (click)="form.enable()" *ngIf="form.disabled">
                     <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-icon-button (click)="submit()" *ngIf="form.enabled && form.valid">
+                <button mat-icon-button title="Salvar" (click)="submit()" *ngIf="form.enabled && form.valid">
                     <mat-icon>save</mat-icon>
                 </button>
-                <button mat-icon-button (click)="cancel()" *ngIf="form.enabled">
+                <button mat-icon-button title="Cancelar" (click)="cancel()" *ngIf="form.enabled">
                     <mat-icon>close</mat-icon>
                 </button>
-                <button mat-icon-button (click)="delete()" *ngIf="form.disabled">
+                <button mat-icon-button title="Excluir" (click)="delete()" *ngIf="form.disabled">
                     <mat-icon>delete</mat-icon>
                 </button>
             </div>
@@ -27,7 +27,7 @@
                 </div>
 
                 <div *ngIf="foto">
-                    <img [src]="foto.nome ? apiURL + '/imagens/search?nome=' + foto.nome : foto.data" height="150px" class="rounded-circle">
+                    <img [src]="foto.nome ? apiURL + '/imagens/search?value=' + foto.nome : foto.data" height="150px" class="rounded-circle">
                 </div>
             </div>
         </div>

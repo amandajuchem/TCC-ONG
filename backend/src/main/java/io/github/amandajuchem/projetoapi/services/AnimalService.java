@@ -1,5 +1,6 @@
 package io.github.amandajuchem.projetoapi.services;
 
+import io.github.amandajuchem.projetoapi.dtos.AnimalDTO;
 import io.github.amandajuchem.projetoapi.entities.Animal;
 import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
@@ -16,18 +17,19 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 /**
- * The type Animal service.
+ * Service class that implements the AbstractService interface for managing animal objects.
  */
 @Service
 @RequiredArgsConstructor
-public class AnimalService implements AbstractService<Animal> {
+public class AnimalService implements AbstractService<Animal, AnimalDTO> {
 
     private final AnimalRepository repository;
 
     /**
-     * Delete.
+     * Deletes an animal by ID.
      *
-     * @param id the id
+     * @param id the ID of the animal object to be deleted.
+     * @throws ObjectNotFoundException if the animal object with the given ID is not found.
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
@@ -45,40 +47,46 @@ public class AnimalService implements AbstractService<Animal> {
     }
 
     /**
-     * Find all animal.
+     * Retrieves all animals.
      *
-     * @return the animal list
+     * @param page      the page number for pagination.
+     * @param size      the page size for pagination.
+     * @param sort      the sorting field.
+     * @param direction the sorting direction ("asc" for ascending, "desc" for descending).
+     * @return a page object containing the requested AnimalDTO objects.
      */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Page<Animal> findAll(Integer page, Integer size, String sort, String direction) {
-        return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
+    public Page<AnimalDTO> findAll(Integer page, Integer size, String sort, String direction) {
+
+        return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)))
+                .map(AnimalDTO::toDTO);
     }
 
     /**
-     * Find animal by id.
+     * Retrieves an animal by ID.
      *
-     * @param id the id
-     * @return the animal
+     * @param id the ID of the animal object to be retrieved.
+     * @return the AnimalDTO representing the requested animal object.
+     * @throws ObjectNotFoundException if the animal object with the given ID is not found.
      */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Animal findById(UUID id) {
-
-        return repository.findById(id).orElseThrow(() -> {
-            throw new ObjectNotFoundException(MessageUtils.ANIMAL_NOT_FOUND);
-        });
+    public AnimalDTO findById(UUID id) {
+        final var animal = repository.findById(id).orElseThrow(() -> new ObjectNotFoundException(MessageUtils.ANIMAL_NOT_FOUND));
+        return AnimalDTO.toDTO(animal);
     }
 
     /**
-     * Save animal.
+     * Saves an animal.
      *
-     * @param animal the animal
-     * @return the animal
+     * @param animal the animal object to be saved.
+     * @return the AnimalDTO representing the saved animal object.
+     * @throws ValidationException if the animal object is invalid.
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public Animal save(Animal animal) {
+    public AnimalDTO save(Animal animal) {
 
         if (animal == null) {
             throw new ValidationException(MessageUtils.ANIMAL_NULL);
@@ -88,34 +96,37 @@ public class AnimalService implements AbstractService<Animal> {
             animal = repository.save(animal);
         }
 
-        return animal;
+        return AnimalDTO.toDTO(animal);
     }
 
     /**
-     * Search animal.
+     * Search for animals by value.
      *
-     * @param value     the nome
-     * @param page      the page
-     * @param size      the size
-     * @param sort      the sort
-     * @param direction the direction
-     * @return the animal list
+     * @param value     the value to search for (animal's name) case-insensitive.
+     * @param page      the page number for pagination.
+     * @param size      the page size for pagination.
+     * @param sort      the sorting field.
+     * @param direction the sorting direction ("asc" for ascending, "desc" for descending).
+     * @return a page object containing the requested AnimalDTO objects.
      */
+    @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Page<Animal> search(String value, Integer page, Integer size, String sort, String direction) {
-        return repository.search(value, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
+    public Page<AnimalDTO> search(String value, Integer page, Integer size, String sort, String direction) {
+
+        return repository.search(value, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)))
+                .map(AnimalDTO::toDTO);
     }
 
     /**
-     * Validate animal.
+     * Validates an animal.
      *
-     * @param animal the animal
-     * @return the boolean
+     * @param animal the animal object to be validated.
+     * @return true if the animal object is valid.
+     * @throws ValidationException if the animal object is invalid.
      */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public boolean validate(Animal animal) {
-
         return true;
     }
 }

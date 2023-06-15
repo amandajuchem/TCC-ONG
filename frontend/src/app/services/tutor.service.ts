@@ -37,6 +37,7 @@ export class TutorService implements AbstractService<Tutor> {
   findAll(page: number, size: number, sort: string, direction: string) {
     
     return this._http.get<Page<Tutor>>(this._baseURL, {
+
       params: {
         page: page,
         size: size,
@@ -71,7 +72,7 @@ export class TutorService implements AbstractService<Tutor> {
    */
   save(tutor: Tutor, foto: any) {
 
-    let formData = new FormData();
+    const formData = new FormData();
 
     formData.append('tutor', new Blob([JSON.stringify(tutor)], { type: 'application/json' }));
 
@@ -94,6 +95,7 @@ export class TutorService implements AbstractService<Tutor> {
   search(value: string, page: number, size: number, sort: string, direction: string) {
 
     return this._http.get<Page<Tutor>>(this._baseURL + '/search', {
+
       params: {
         value: value,
         page: page,
@@ -120,7 +122,7 @@ export class TutorService implements AbstractService<Tutor> {
    */
   update(tutor: Tutor, foto: any) {
     
-    let formData = new FormData();
+    const formData = new FormData();
 
     formData.append('tutor', new Blob([JSON.stringify(tutor)], { type: 'application/json' }));
 

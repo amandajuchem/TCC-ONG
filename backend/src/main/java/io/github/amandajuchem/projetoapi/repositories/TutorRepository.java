@@ -10,42 +10,39 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 import java.util.UUID;
 
-/**
- * The interface Tutor repository.
- */
 @Repository
 public interface TutorRepository extends JpaRepository<Tutor, UUID> {
 
     /**
-     * Find tutor by cpf.
+     * Retrieves a tutor by CPF.
      *
-     * @param cpf the cpf
-     * @return the tutor optional
+     * @param cpf The CPF of the tutor.
+     * @return An Optional containing the tutor entity if found, or an empty Optional if not found.
      */
     Optional<Tutor> findByCpf(String cpf);
 
     /**
-     * Find tutor by nome.
+     * Retrieves a tutor by name case-insensitive.
      *
-     * @param nome the nome
-     * @return the tutor optional
+     * @param nome The name of the tutor.
+     * @return An Optional containing the tutor entity if found, or an empty Optional if not found.
      */
     Optional<Tutor> findByNomeIgnoreCase(String nome);
 
     /**
-     * Find tutor by rg.
+     * Retrieves a tutor by RG.
      *
-     * @param rg the rg
-     * @return the tutor optional
+     * @param rg The RG of the tutor.
+     * @return An Optional containing the tutor entity if found, or an empty Optional if not found.
      */
     Optional<Tutor> findByRg(String rg);
 
     /**
-     * Search tutor.
+     * Search for tutors by value.
      *
-     * @param value the nome, CPF ou RG
-     * @param page  the page
-     * @return the tutor list
+     * @param value The value to search for (name, CPF, or RG) case-insensitive.
+     * @param page  The pageable object specifying the page information.
+     * @return A page of tutor entities matching the search criteria.
      */
     @Query(value = "SELECT t FROM tb_tutores AS t " +
             "WHERE upper(t.nome) LIKE upper(concat('%', ?1, '%')) " +

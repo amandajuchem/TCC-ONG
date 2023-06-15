@@ -1,20 +1,16 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
+import { Authentication } from 'src/app/entities/authentication';
 import { Exame } from 'src/app/entities/exame';
-import { User } from 'src/app/entities/user';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { AuthService } from 'src/app/services/auth.service';
 import { ExameService } from 'src/app/services/exame.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
 import { OperatorUtils } from 'src/app/utils/operator-utils';
-
-import { ExameCadastroComponent } from '../exame-cadastro/exame-cadastro.component';
-import { ExameExcluirComponent } from '../exame-excluir/exame-excluir.component';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-exames',
@@ -23,28 +19,27 @@ import { Router } from '@angular/router';
 })
 export class ExamesComponent implements AfterViewInit {
 
+  authentication!: Authentication;
   columns!: Array<string>;
   dataSource!: MatTableDataSource<Exame>;
   filterString!: string;
   isLoadingResults!: boolean;
   resultsLength!: number;
-  user!: User;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private _authService: AuthService,
-    private _dialog: MatDialog,
     private _exameService: ExameService,
     private _notificationService: NotificationService,
     private _router: Router
   ) {
+    this.authentication = this._authService.getAuthentication();
     this.columns = ['index', 'nome', 'categoria', 'acao'];
     this.dataSource = new MatTableDataSource();
     this.isLoadingResults = true;
     this.resultsLength = 0;
-    this.user = this._authService.getCurrentUser();
   }
 
   ngAfterViewInit(): void {
@@ -52,7 +47,7 @@ export class ExamesComponent implements AfterViewInit {
   }
 
   add() {
-    this._router.navigate(['/' + this.user.role.toLowerCase() + '/exames/cadastro']);
+    this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/exames/cadastro']);
   }
 
   async findAll() {
@@ -79,7 +74,7 @@ export class ExamesComponent implements AfterViewInit {
       error: (error) => {
         this.isLoadingResults = false;
         console.error(error);
-        this._notificationService.show(MessageUtils.EXAMES_GET_FAIL, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.EXAME.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
       }
     });
   }
@@ -116,16 +111,16 @@ export class ExamesComponent implements AfterViewInit {
         this.resultsLength = exames.totalElements;
       },
 
-      error: (err) => {
+      error: (error) => {
         this.isLoadingResults = false;
-        console.error(err);
-        this._notificationService.show(MessageUtils.EXAMES_GET_FAIL, NotificationType.FAIL);
+        console.error(error);
+        this._notificationService.show(MessageUtils.EXAME.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
       }
     });
   }
 
   show(exame: Exame) {
-    this._router.navigate(['/' + this.user.role.toLowerCase() + '/exames/' + exame.id]);
+    this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/exames/' + exame.id]);
   }
 
   sortChange() {

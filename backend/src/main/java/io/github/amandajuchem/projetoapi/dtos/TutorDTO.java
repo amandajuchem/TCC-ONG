@@ -10,7 +10,9 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
- * The type Tutor dto.
+ * The TutorDTO class represents a Data Transfer Object (DTO) for Tutor entities.
+ * It provides a simplified view of a Tutor object for use in API responses.
+ * This class implements the Serializable interface.
  */
 public record TutorDTO(
         UUID id,
@@ -30,10 +32,10 @@ public record TutorDTO(
 ) implements Serializable {
 
     /**
-     * To dto tutor dto.
+     * Creates a new TutorDTO instance based on the provided Tutor object.
      *
-     * @param tutor the tutor
-     * @return the tutor dto
+     * @param tutor The Tutor object to convert to TutorDTO.
+     * @return The TutorDTO representing the provided Tutor object.
      */
     public static TutorDTO toDTO(Tutor tutor) {
 
@@ -48,7 +50,7 @@ public record TutorDTO(
                 tutor.getRg(),
                 tutor.getSituacao(),
                 tutor.getFoto() != null ? ImagemDTO.toDTO(tutor.getFoto()) : null,
-                tutor.getTelefones() != null ? tutor.getTelefones().stream().map(t -> TelefoneDTO.toDTO(t)).collect(Collectors.toSet()) : null,
+                tutor.getTelefones() != null ? tutor.getTelefones().stream().map(TelefoneDTO::toDTO).collect(Collectors.toSet()) : null,
                 tutor.getEndereco() != null ? EnderecoDTO.toDTO(tutor.getEndereco()) : null,
                 null,
                 null

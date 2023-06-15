@@ -47,8 +47,10 @@ import { FeirasAdocaoComponent } from './feiras-adocao/feiras-adocao.component';
 import { FooterComponent } from './footer/footer.component';
 import { LayoutComponent } from './layout/layout.component';
 import { LoginComponent } from './login/login.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 import { NotificationComponent } from './notification/notification.component';
 import { PainelComponent } from './painel/painel.component';
+import { SelecionarAgendamentoComponent } from './selecionar-agendamento/selecionar-agendamento.component';
 import { SelecionarAnimalComponent } from './selecionar-animal/selecionar-animal.component';
 import { SelecionarExameComponent } from './selecionar-exame/selecionar-exame.component';
 import { SelecionarImagemComponent } from './selecionar-imagem/selecionar-imagem.component';
@@ -64,11 +66,9 @@ import { TutorObservacoesExcluirComponent } from './tutor-observacoes-excluir/tu
 import { TutorObservacoesComponent } from './tutor-observacoes/tutor-observacoes.component';
 import { TutorComponent } from './tutor/tutor.component';
 import { TutoresComponent } from './tutores/tutores.component';
-import { UsuarioCadastroComponent } from './usuario-cadastro/usuario-cadastro.component';
 import { UsuarioInformacoesComponent } from './usuario-informacoes/usuario-informacoes.component';
 import { UsuarioComponent } from './usuario/usuario.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
-import { SelecionarAgendamentoComponent } from './selecionar-agendamento/selecionar-agendamento.component';
 
 @NgModule({
   declarations: [
@@ -89,11 +89,16 @@ import { SelecionarAgendamentoComponent } from './selecionar-agendamento/selecio
     ExameCadastroComponent,
     ExameExcluirComponent,
     ExamesComponent,
+    FeirasAdocaoComponent,
+    FeiraAdocaoCadastroComponent,
+    FeiraAdocaoExcluirComponent,
     FooterComponent,
     LayoutComponent,
     LoginComponent,
+    NotFoundComponent,
     NotificationComponent,
     PainelComponent,
+    SelecionarAgendamentoComponent,
     SelecionarAnimalComponent,
     SelecionarExameComponent,
     SelecionarImagemComponent,
@@ -110,13 +115,8 @@ import { SelecionarAgendamentoComponent } from './selecionar-agendamento/selecio
     TutorComponent,
     TutoresComponent,
     UsuarioComponent,
-    UsuarioCadastroComponent,
     UsuarioInformacoesComponent,
     UsuariosComponent,
-    FeirasAdocaoComponent,
-    FeiraAdocaoCadastroComponent,
-    FeiraAdocaoExcluirComponent,
-    SelecionarAgendamentoComponent,
   ],
   imports: [
     CommonModule,

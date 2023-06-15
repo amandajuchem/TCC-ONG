@@ -51,13 +51,13 @@ export class TutorObservacoesCadastroComponent implements OnInit {
       this._observacaoService.update(observacao).subscribe({
 
         complete: () => {
-          this._notificationService.show(MessageUtils.OBSERVACAO_UPDATE_SUCCESS, NotificationType.SUCCESS);
+          this._notificationService.show(MessageUtils.OBSERVACAO.UPDATE_SUCCESS, NotificationType.SUCCESS);
           this._dialogRef.close({status: true});
         },
 
-        error: (err) => {
-          console.error(err);
-          this._notificationService.show(MessageUtils.OBSERVACAO_UPDATE_FAIL, NotificationType.FAIL);
+        error: (error) => {
+          console.error(error);
+          this._notificationService.show(MessageUtils.OBSERVACAO.UPDATE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
         }
       });
     }
@@ -67,13 +67,13 @@ export class TutorObservacoesCadastroComponent implements OnInit {
       this._observacaoService.save(observacao).subscribe({
 
         complete: () => {
-          this._notificationService.show(MessageUtils.OBSERVACAO_SAVE_SUCCESS, NotificationType.SUCCESS);
+          this._notificationService.show(MessageUtils.OBSERVACAO.SAVE_SUCCESS, NotificationType.SUCCESS);
           this._dialogRef.close({ status: true });
         },
 
-        error: (err) => {
-          console.error(err);
-          this._notificationService.show(MessageUtils.OBSERVACAO_SAVE_FAIL, NotificationType.FAIL);
+        error: (error) => {
+          console.error(error);
+          this._notificationService.show(MessageUtils.OBSERVACAO.SAVE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
         }
       });
     }

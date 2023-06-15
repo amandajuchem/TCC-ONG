@@ -6,15 +6,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
- * The type Encode configuration.
+ * Configuration class for PasswordEncoder.
  */
 @Configuration
 public class PasswordEncoderConfiguration {
 
     /**
-     * Bcrypt password encoder b crypt password encoder.
+     * Creates a PasswordEncoder bean using BCryptPasswordEncoder.
      *
-     * @return the b crypt password encoder
+     * @return the PasswordEncoder instance
      */
     @Bean
     public PasswordEncoder passwordEncoder() {

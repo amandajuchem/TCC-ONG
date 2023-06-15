@@ -7,7 +7,9 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
- * The type Observacao dto.
+ * The ObservacaoDTO class represents a Data Transfer Object (DTO) for Observacao entities.
+ * It provides a simplified view of an Observacao object for use in API responses.
+ * This class implements the Serializable interface.
  */
 public record ObservacaoDTO(
         UUID id,
@@ -19,10 +21,10 @@ public record ObservacaoDTO(
 ) implements Serializable {
 
     /**
-     * To dto observacao dto.
+     * Creates a new ObservacaoDTO instance based on the provided Observacao object.
      *
-     * @param observacao the observacao
-     * @return the observacao dto
+     * @param observacao The Observacao object to convert to ObservacaoDTO.
+     * @return The ObservacaoDTO representing the provided Observacao object.
      */
     public static ObservacaoDTO toDTO(Observacao observacao) {
 

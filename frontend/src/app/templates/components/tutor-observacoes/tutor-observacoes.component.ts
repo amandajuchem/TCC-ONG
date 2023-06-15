@@ -107,7 +107,7 @@ export class TutorObservacoesComponent implements AfterViewInit {
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
 
-    this._observacaoservice.findAll(page, size, sort, direction, this.tutor.id).subscribe({
+    this._observacaoservice.search(this.tutor.id, page, size, sort, direction).subscribe({
 
       complete: () => {
         this.isLoadingResults = false;
@@ -121,7 +121,7 @@ export class TutorObservacoesComponent implements AfterViewInit {
       error: (error) => {
         this.isLoadingResults = false;
         console.error(error);
-        this._notificationService.show(MessageUtils.OBSERVACOES_GET_FAIL, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.OBSERVACAO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
       }
     });
   }

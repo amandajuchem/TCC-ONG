@@ -1,5 +1,6 @@
 package io.github.amandajuchem.projetoapi.services;
 
+import io.github.amandajuchem.projetoapi.dtos.ObservacaoDTO;
 import io.github.amandajuchem.projetoapi.entities.Observacao;
 import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
@@ -16,18 +17,19 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 /**
- * The type Observacao service.
+ * Service class that implements the AbstractService interface for managing observation objects.
  */
 @Service
 @RequiredArgsConstructor
-public class ObservacaoService implements AbstractService<Observacao> {
+public class ObservacaoService implements AbstractService<Observacao, ObservacaoDTO> {
 
     private final ObservacaoRepository repository;
 
     /**
-     * Delete.
+     * Deletes an observation by ID.
      *
-     * @param id the id
+     * @param id the ID of the observation object to be deleted.
+     * @throws ObjectNotFoundException if the observation object with the given ID is not found.
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
@@ -45,69 +47,50 @@ public class ObservacaoService implements AbstractService<Observacao> {
     }
 
     /**
-     * Find all.
+     * Retrieves all observations.
      *
-     * @param page      the page
-     * @param size      the size
-     * @param sort      the sort
-     * @param direction the direction
-     * @return
+     * @param page      the page number for pagination.
+     * @param size      the page size for pagination.
+     * @param sort      the sorting field.
+     * @param direction the sorting direction ("asc" for ascending, "desc" for descending).
+     * @return a page object containing the requested ObservacaoDTO objects.
      */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Page<Observacao> findAll(Integer page, Integer size, String sort, String direction) {
+    public Page<ObservacaoDTO> findAll(Integer page, Integer size, String sort, String direction) {
 
         if (sort.equalsIgnoreCase("tutor")) {
             sort = "tutor.nome";
         }
 
-        return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
+        return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)))
+                .map(ObservacaoDTO::toDTO);
     }
 
     /**
-     * Find all.
+     * Retrieves an observation by ID.
      *
-     * @param tutorId
-     * @param page
-     * @param size
-     * @param sort
-     * @param direction
-     * @return
-     */
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Page<Observacao> findAll(UUID tutorId, Integer page, Integer size, String sort, String direction) {
-
-        if (sort.equalsIgnoreCase("tutor")) {
-            sort = "tutor.nome";
-        }
-
-        return repository.findAll(tutorId, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)));
-    }
-
-    /**
-     * Find by id.
-     *
-     * @param id the id
-     * @return
+     * @param id the ID of the observation object to be retrieved.
+     * @return the ObservacaoDTO representing the requested observation object.
+     * @throws ObjectNotFoundException if the observation object with the given ID is not found.
      */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Observacao findById(UUID id) {
-
-        return repository.findById(id).orElseThrow(() -> {
-            throw new ObjectNotFoundException(MessageUtils.OBSERVACAO_NOT_FOUND);
-        });
+    public ObservacaoDTO findById(UUID id) {
+        final var observacao = repository.findById(id).orElseThrow(() -> new ObjectNotFoundException(MessageUtils.OBSERVACAO_NOT_FOUND));
+        return ObservacaoDTO.toDTO(observacao);
     }
 
     /**
-     * Save.
+     * Saves an observation.
      *
-     * @param observacao the object
-     * @return
+     * @param observacao the observation object to be saved.
+     * @return the ObservacaoDTO representing the saved observation object.
+     * @throws ValidationException if the observation object is invalid.
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public Observacao save(Observacao observacao) {
+    public ObservacaoDTO save(Observacao observacao) {
 
         if (observacao == null) {
             throw new ValidationException(MessageUtils.ADOCAO_NULL);
@@ -117,19 +100,41 @@ public class ObservacaoService implements AbstractService<Observacao> {
             observacao = repository.save(observacao);
         }
 
-        return observacao;
+        return ObservacaoDTO.toDTO(observacao);
     }
 
     /**
-     * Validate.
+     * Search for observations by value.
      *
-     * @param observacao the object
-     * @return
+     * @param value     the value to search for (tutor's ID).
+     * @param page      the page number for pagination.
+     * @param size      the page size for pagination.
+     * @param sort      the sorting field.
+     * @param direction the sorting direction ("asc" for ascending, "desc" for descending).
+     * @return a page object containing the requested ObservacaoDTO objects.
+     */
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public Page<ObservacaoDTO> search(String value, Integer page, Integer size, String sort, String direction) {
+
+        if (sort.equalsIgnoreCase("tutor")) {
+            sort = "tutor.nome";
+        }
+
+        return repository.search(value, PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort)))
+                .map(ObservacaoDTO::toDTO);
+    }
+
+    /**
+     * Validates an observation.
+     *
+     * @param observacao the observation object to be validated.
+     * @return true if the observation object is valid.
+     * @throws ValidationException if the observation object is invalid.
      */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public boolean validate(Observacao observacao) {
-
         return true;
     }
 }

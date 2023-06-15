@@ -9,18 +9,15 @@ import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
-/**
- * The interface Animal repository.
- */
 @Repository
 public interface AnimalRepository extends JpaRepository<Animal, UUID> {
 
     /**
-     * Search animal.
+     * Search for animals by value.
      *
-     * @param value the nome
-     * @param page  the page
-     * @return the animal list
+     * @param value The value to search for (animal's name) case-insensitive.
+     * @param page  The pageable object specifying the page information.
+     * @return A page of animal entities matching the search criteria.
      */
     @Query(value = "SELECT a FROM tb_animais AS a WHERE upper(a.nome) LIKE upper(concat('%', ?1, '%'))")
     Page<Animal> search(String value, Pageable page);

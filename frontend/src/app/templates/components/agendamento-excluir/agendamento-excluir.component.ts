@@ -24,13 +24,13 @@ export class AgendamentoExcluirComponent {
     this._agendamentoService.delete(this.data.agendamento.id).subscribe({
 
       complete: () => {
-        this._notificationService.show(MessageUtils.AGENDAMENTO_DELETE_SUCCESS, NotificationType.SUCCESS);
+        this._notificationService.show(MessageUtils.AGENDAMENTO.DELETE_SUCCESS, NotificationType.SUCCESS);
         this._dialogRef.close({status: true});
       },
 
       error: (error) => {
         console.log(error);
-        this._notificationService.show(MessageUtils.AGENDAMENTO_DELETE_FAIL, NotificationType.FAIL);
+        this._notificationService.show(MessageUtils.AGENDAMENTO.DELETE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
       }
     });
   }

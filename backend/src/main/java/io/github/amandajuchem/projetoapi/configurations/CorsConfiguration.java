@@ -5,25 +5,30 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.List;
+import java.util.Collections;
 
 /**
- * The type Cors configuration.
+ * Configuration class for Cross-Origin Resource Sharing (CORS).
  */
 @Configuration
 public class CorsConfiguration {
 
     /**
-     * Cors configuration source cors configuration source.
+     * Creates a CorsConfigurationSource bean with configured CORS settings.
      *
-     * @return cors configuration source
+     * @return the CorsConfigurationSource instance
      */
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
-        final var source = new UrlBasedCorsConfigurationSource();
+
         final var corsConfiguration = new org.springframework.web.cors.CorsConfiguration().applyPermitDefaultValues();
-        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+        final var source = new UrlBasedCorsConfigurationSource();
+
+        corsConfiguration.setAllowedOrigins(Collections.singletonList("*"));
+        corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
+        corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
         source.registerCorsConfiguration("/**", corsConfiguration);
+
         return source;
     }
 }

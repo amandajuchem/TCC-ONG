@@ -11,7 +11,9 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
- * The type Adocao dto.
+ * The AdocaoDTO class represents a Data Transfer Object (DTO) for Adocao entities.
+ * It provides a simplified view of an Adocao object for use in API responses.
+ * This class implements the Serializable interface.
  */
 public record AdocaoDTO(
         UUID id,
@@ -23,15 +25,16 @@ public record AdocaoDTO(
         Local local,
         LocalAdocao localAdocao,
         Boolean valeCastracao,
+        AnimalDTO animal,
         TutorDTO tutor,
         Set<ImagemDTO> termoResponsabilidade
 ) implements Serializable {
 
     /**
-     * To dto adocao dto.
+     * Creates a new AdocaoDTO instance based on the provided adoption object.
      *
-     * @param adocao the adocao
-     * @return the adocao dto
+     * @param adocao The adoption object to convert to AdocaoDTO.
+     * @return The AdocaoDTO representing the provided adoption object.
      */
     public static AdocaoDTO toDTO(Adocao adocao) {
 
@@ -45,6 +48,7 @@ public record AdocaoDTO(
                 adocao.getLocal(),
                 adocao.getLocalAdocao(),
                 adocao.getValeCastracao(),
+                adocao.getAnimal() != null ? AnimalDTO.toDTO(adocao.getAnimal()) : null,
                 adocao.getTutor() != null ? TutorDTO.toDTO(adocao.getTutor()) : null,
                 adocao.getTermoResponsabilidade() != null ? adocao.getTermoResponsabilidade().stream().map(ImagemDTO::toDTO).collect(Collectors.toSet()) : null
         );
