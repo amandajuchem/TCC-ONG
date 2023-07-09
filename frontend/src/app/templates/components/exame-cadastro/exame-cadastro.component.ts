@@ -8,6 +8,7 @@ import { NotificationType } from 'src/app/enums/notification-type';
 import { AuthService } from 'src/app/services/auth.service';
 import { ExameService } from 'src/app/services/exame.service';
 import { NotificationService } from 'src/app/services/notification.service';
+import { FormUtils } from 'src/app/utils/form-utils';
 import { MessageUtils } from 'src/app/utils/message-utils';
 
 import { ExameExcluirComponent } from '../exame-excluir/exame-excluir.component';
@@ -71,8 +72,8 @@ export class ExameCadastroComponent implements OnInit {
 
     this.form = this._formBuilder.group({
       id: [exame?.id, Validators.nullValidator],
-      nome: [exame?.nome, Validators.required],
-      categoria: [exame?.categoria, Validators.required]
+      nome: [exame?.nome, [Validators.required, Validators.maxLength(100)]],
+      categoria: [exame?.categoria, [Validators.required, Validators.maxLength(25)]]
     });
 
     exame ? this.form.disable() : this.form.enable();
@@ -101,40 +102,51 @@ export class ExameCadastroComponent implements OnInit {
     });
   }
 
+  getErrorMessage(controlName: string) {
+    return FormUtils.getErrorMessage(this.form, controlName);
+  }
+
+  hasError(controlName: string) {
+    return FormUtils.hasError(this.form, controlName);
+  }
+
   submit() {
 
-    const exame: Exame = Object.assign({}, this.form.getRawValue());
+    if (this.form.valid) {
 
-    if (exame.id) {
+      const exame: Exame = Object.assign({}, this.form.getRawValue());
 
-      this._exameService.update(exame).subscribe({
-        
-        complete: () => {
-          this._notificationService.show(MessageUtils.EXAME.UPDATE_SUCCESS, NotificationType.SUCCESS);
-          this.ngOnInit();
-        },
-  
-        error: (error) => {
-          console.error(error);
-          this._notificationService.show(MessageUtils.EXAME.UPDATE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-        }
-      });
-    } 
+      if (exame.id) {
+
+        this._exameService.update(exame).subscribe({
+          
+          complete: () => {
+            this._notificationService.show(MessageUtils.EXAME.UPDATE_SUCCESS, NotificationType.SUCCESS);
+            this.ngOnInit();
+          },
     
-    else {
+          error: (error) => {
+            console.error(error);
+            this._notificationService.show(MessageUtils.EXAME.UPDATE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
+          }
+        });
+      } 
+      
+      else {
 
-      this._exameService.save(exame).subscribe({
-        
-        next: (exame) => {
-          this._notificationService.show(MessageUtils.EXAME.SAVE_SUCCESS, NotificationType.SUCCESS);
-          this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/exames/' + exame.id]);
-        },
-  
-        error: (error) => {
-          console.error(error);
-          this._notificationService.show(MessageUtils.EXAME.SAVE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-        }
-      });
+        this._exameService.save(exame).subscribe({
+          
+          next: (exame) => {
+            this._notificationService.show(MessageUtils.EXAME.SAVE_SUCCESS, NotificationType.SUCCESS);
+            this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/exames/' + exame.id]);
+          },
+    
+          error: (error) => {
+            console.error(error);
+            this._notificationService.show(MessageUtils.EXAME.SAVE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
+          }
+        });
+      }
     }
   }
 }

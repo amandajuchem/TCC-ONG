@@ -7,6 +7,7 @@ import { AdocaoService } from 'src/app/services/adocao.service';
 import { ImagemService } from 'src/app/services/imagem.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { DateUtils } from 'src/app/utils/date-utils';
+import { FormUtils } from 'src/app/utils/form-utils';
 import { MessageUtils } from 'src/app/utils/message-utils';
 import { environment } from 'src/environments/environment';
 
@@ -83,8 +84,8 @@ export class AnimalAdocoesCadastroComponent implements OnInit {
     this.form = this._formBuilder.group({
       id: [adocao?.id, Validators.nullValidator],
       dataHora: [adocao?.dataHora, Validators.required],
-      local: [adocao?.local, Validators.required],
-      localAdocao: [adocao?.localAdocao, Validators.required],
+      local: [adocao?.local, [Validators.required, Validators.maxLength(10)]],
+      localAdocao: [adocao?.localAdocao, [Validators.required, Validators.maxLength(10)]],
       valeCastracao: [adocao?.valeCastracao, Validators.required],
       animal: [this.data.animal, Validators.required],
       tutor: [adocao?.tutor, Validators.required],
@@ -110,6 +111,14 @@ export class AnimalAdocoesCadastroComponent implements OnInit {
     link.download = imagem.data;
     link.click();
     link.remove();
+  }
+
+  getErrorMessage(controlName: string) {
+    return FormUtils.getErrorMessage(this.form, controlName);
+  }
+
+  hasError(controlName: string) {
+    return FormUtils.hasError(this.form, controlName);
   }
 
   removeImagem(imagem: any) {
@@ -139,38 +148,41 @@ export class AnimalAdocoesCadastroComponent implements OnInit {
 
   submit() {
 
-    const adocao: Adocao = Object.assign({}, this.form.getRawValue());
-    const images = this.termoResponsabilidade.filter((t: any) => t.file).map((t: any) => t.file);
-    adocao.dataHora = DateUtils.addHours(adocao.dataHora, DateUtils.offsetBrasilia);
+    if (this.form.valid) {
+    
+      const adocao: Adocao = Object.assign({}, this.form.getRawValue());
+      const images = this.termoResponsabilidade.filter((t: any) => t.file).map((t: any) => t.file);
+      adocao.dataHora = DateUtils.addHours(adocao.dataHora, DateUtils.offsetBrasilia);
 
-    if (adocao.id) {
+      if (adocao.id) {
 
-      this._adocaoService.update(adocao, images).subscribe({
-        complete: () => {
-          this._notificationService.show(MessageUtils.ADOCAO.UPDATE_SUCCESS, NotificationType.SUCCESS);
-          this._dialogRef.close({ status: true });
-        },
-  
-        error: (error) => {
-          console.error(error);
-          this._notificationService.show(MessageUtils.ADOCAO.UPDATE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-        }
-      });
-    }
+        this._adocaoService.update(adocao, images).subscribe({
+          complete: () => {
+            this._notificationService.show(MessageUtils.ADOCAO.UPDATE_SUCCESS, NotificationType.SUCCESS);
+            this._dialogRef.close({ status: true });
+          },
+    
+          error: (error) => {
+            console.error(error);
+            this._notificationService.show(MessageUtils.ADOCAO.UPDATE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
+          }
+        });
+      }
 
-    else {
+      else {
 
-      this._adocaoService.save(adocao, images).subscribe({
-        complete: () => {
-          this._notificationService.show(MessageUtils.ADOCAO.SAVE_SUCCESS, NotificationType.SUCCESS);
-          this._dialogRef.close({ status: true });
-        },
-  
-        error: (error) => {
-          console.error(error);
-          this._notificationService.show(MessageUtils.ADOCAO.SAVE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-        }
-      });
+        this._adocaoService.save(adocao, images).subscribe({
+          complete: () => {
+            this._notificationService.show(MessageUtils.ADOCAO.SAVE_SUCCESS, NotificationType.SUCCESS);
+            this._dialogRef.close({ status: true });
+          },
+    
+          error: (error) => {
+            console.error(error);
+            this._notificationService.show(MessageUtils.ADOCAO.SAVE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
+          }
+        });
+      }
     }
   }
 }

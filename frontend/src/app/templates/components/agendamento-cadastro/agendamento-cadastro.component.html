@@ -33,7 +33,7 @@
                                 <button mat-icon-button title="Editar" (click)="form.enable()" *ngIf="form.disabled && agendamento">
                                     <mat-icon>edit</mat-icon>
                                 </button>
-                                <button mat-icon-button title="Salvar" (click)="submit()" *ngIf="form.enabled && form.valid">
+                                <button mat-icon-button title="Salvar" (click)="submit()" *ngIf="form.enabled">
                                     <mat-icon>save</mat-icon>
                                 </button>
                                 <button mat-icon-button title="Cancelar" (click)="cancel()" *ngIf="form.enabled">
@@ -53,6 +53,7 @@
                                 <input matInput [ngxMatDatetimePicker]="pickerDataHoraAgendamento" formControlName="dataHora" readonly>
                                 <mat-datepicker-toggle matIconSuffix [for]="$any(pickerDataHoraAgendamento)"></mat-datepicker-toggle>
                                 <ngx-mat-datetime-picker #pickerDataHoraAgendamento (closed)="dateChange()"></ngx-mat-datetime-picker>
+                                <mat-error *ngIf="hasError('dataHora')">{{getErrorMessage('dataHora')}}</mat-error>
                             </mat-form-field>
                         </div>
     
@@ -63,6 +64,7 @@
                                 <button type="button" matSuffix mat-icon-button (click)="selectAnimal()" [disabled]="form.disabled">
                                     <mat-icon>search</mat-icon>
                                 </button>
+                                <mat-error *ngIf="hasError('animal')">{{getErrorMessage('animal')}}</mat-error>
                             </mat-form-field>
                         </div>
     
@@ -73,6 +75,7 @@
                                 <button type="button" matSuffix mat-icon-button (click)="selectVeterinario()" [disabled]="form.disabled">
                                     <mat-icon>search</mat-icon>
                                 </button>
+                                <mat-error *ngIf="hasError('veterinario')">{{getErrorMessage('veterinario')}}</mat-error>
                             </mat-form-field>
                         </div>
                     </div>
@@ -82,6 +85,7 @@
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Descrição</mat-label>
                                 <textarea matInput formControlName="descricao"></textarea>
+                                <mat-error *ngIf="hasError('descricao')">{{getErrorMessage('descricao')}}</mat-error>
                             </mat-form-field>
                         </div>
                     </div>

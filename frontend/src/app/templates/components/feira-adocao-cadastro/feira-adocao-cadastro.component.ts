@@ -14,6 +14,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { FeiraAdocaoService } from 'src/app/services/feira-adocao.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { DateUtils } from 'src/app/utils/date-utils';
+import { FormUtils } from 'src/app/utils/form-utils';
 import { MessageUtils } from 'src/app/utils/message-utils';
 
 import { FeiraAdocaoExcluirComponent } from '../feira-adocao-excluir/feira-adocao-excluir.component';
@@ -148,7 +149,7 @@ export class FeiraAdocaoCadastroComponent implements OnInit {
     this.form = this._formBuilder.group({
       id: [feiraAdocao?.id, Validators.nullValidator],
       dataHora: [feiraAdocao?.dataHora, Validators.required],
-      nome: [feiraAdocao?.nome, Validators.required],
+      nome: [feiraAdocao?.nome, [Validators.required, Validators.maxLength(100)]],
       animais: [feiraAdocao?.animais, Validators.nullValidator],
       usuarios: [feiraAdocao?.usuarios, Validators.nullValidator]
     });
@@ -186,6 +187,14 @@ export class FeiraAdocaoCadastroComponent implements OnInit {
     });
   }
 
+  getErrorMessage(controlName: string) {
+    return FormUtils.getErrorMessage(this.form, controlName);
+  }
+
+  hasError(controlName: string) {
+    return FormUtils.hasError(this.form, controlName);
+  }
+
   removeAnimal(animal: Animal) {
     this.dataSourceAnimais.data = this.dataSourceAnimais.data.filter(a => a.id !== animal.id);
     this.dataSourceAnimais._updateChangeSubscription();
@@ -198,42 +207,45 @@ export class FeiraAdocaoCadastroComponent implements OnInit {
 
   submit() {
 
-    const feiraAdocao: FeiraAdocao = Object.assign({}, this.form.getRawValue());
+    if (this.form.valid) {
 
-    feiraAdocao.dataHora = DateUtils.addHours(feiraAdocao.dataHora, DateUtils.offsetBrasilia);
-    feiraAdocao.animais = this.dataSourceAnimais.data;
-    feiraAdocao.usuarios = this.dataSourceUsuarios.data;
+      const feiraAdocao: FeiraAdocao = Object.assign({}, this.form.getRawValue());
 
-    if (feiraAdocao.id) {
+      feiraAdocao.dataHora = DateUtils.addHours(feiraAdocao.dataHora, DateUtils.offsetBrasilia);
+      feiraAdocao.animais = this.dataSourceAnimais.data;
+      feiraAdocao.usuarios = this.dataSourceUsuarios.data;
 
-      this._feiraAdocaoService.update(feiraAdocao).subscribe({
+      if (feiraAdocao.id) {
 
-        complete: () => {
-          this._notificationService.show(MessageUtils.FEIRA_ADOCAO.UPDATE_SUCCESS, NotificationType.SUCCESS);
-          this.ngOnInit();
-        },
+        this._feiraAdocaoService.update(feiraAdocao).subscribe({
 
-        error: (error) => {
-          console.error(error);
-          this._notificationService.show(MessageUtils.FEIRA_ADOCAO.UPDATE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-        }
-      });
-    }
+          complete: () => {
+            this._notificationService.show(MessageUtils.FEIRA_ADOCAO.UPDATE_SUCCESS, NotificationType.SUCCESS);
+            this.ngOnInit();
+          },
 
-    else {
+          error: (error) => {
+            console.error(error);
+            this._notificationService.show(MessageUtils.FEIRA_ADOCAO.UPDATE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
+          }
+        });
+      }
 
-      this._feiraAdocaoService.save(feiraAdocao).subscribe({
+      else {
 
-        next: (feiraAdocao) => {
-          this._notificationService.show(MessageUtils.FEIRA_ADOCAO.SAVE_SUCCESS, NotificationType.SUCCESS);
-          this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/feiras-adocao/' + feiraAdocao.id]);
-        },
+        this._feiraAdocaoService.save(feiraAdocao).subscribe({
 
-        error: (error) => {
-          console.error(error);
-          this._notificationService.show(MessageUtils.FEIRA_ADOCAO.SAVE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-        }
-      });
+          next: (feiraAdocao) => {
+            this._notificationService.show(MessageUtils.FEIRA_ADOCAO.SAVE_SUCCESS, NotificationType.SUCCESS);
+            this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/feiras-adocao/' + feiraAdocao.id]);
+          },
+
+          error: (error) => {
+            console.error(error);
+            this._notificationService.show(MessageUtils.FEIRA_ADOCAO.SAVE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
+          }
+        });
+      }
     }
   }
 }

@@ -13,6 +13,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ImagemService } from 'src/app/services/imagem.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { DateUtils } from 'src/app/utils/date-utils';
+import { FormUtils } from 'src/app/utils/form-utils';
 import { MessageUtils } from 'src/app/utils/message-utils';
 import { environment } from 'src/environments/environment';
 
@@ -146,7 +147,7 @@ export class AtendimentoCadastroComponent implements OnInit {
       veterinario: [atendimento?.veterinario, Validators.required],
       comorbidades: [atendimento?.animal.fichaMedica?.comorbidades, Validators.nullValidator],
       dataHora: [atendimento?.dataHora, Validators.required],
-      motivo: [atendimento?.motivo, Validators.required],
+      motivo: [atendimento?.motivo, [Validators.required, Validators.maxLength(25)]],
       diagnostico: [atendimento?.diagnostico, Validators.required],
       posologia: [atendimento?.posologia, Validators.required],
       exames: [atendimento?.exames, Validators.required],
@@ -194,6 +195,14 @@ export class AtendimentoCadastroComponent implements OnInit {
     link.download = imagem.nome;
     link.click();
     link.remove();
+  }
+  
+  getErrorMessage(controlName: string) {
+    return FormUtils.getErrorMessage(this.form, controlName);
+  }
+
+  hasError(controlName: string) {
+    return FormUtils.hasError(this.form, controlName);
   }
 
   importFromAgendamento() {
@@ -277,40 +286,43 @@ export class AtendimentoCadastroComponent implements OnInit {
 
   submit() {
 
-    const atendimento: Atendimento = Object.assign({}, this.form.getRawValue());
-    const imagens: Array<File> = this.documentos.filter((d: any) => d.file).map((d: any) => d.file);
-    atendimento.dataHora = DateUtils.addHours(atendimento.dataHora, DateUtils.offsetBrasilia);
+    if (this.form.valid) {
 
-    if (atendimento.id) {
+      const atendimento: Atendimento = Object.assign({}, this.form.getRawValue());
+      const imagens: Array<File> = this.documentos.filter((d: any) => d.file).map((d: any) => d.file);
+      atendimento.dataHora = DateUtils.addHours(atendimento.dataHora, DateUtils.offsetBrasilia);
 
-      this._atendimentoService.update(atendimento, imagens).subscribe({
+      if (atendimento.id) {
 
-        complete: () => {
-          this._notificationService.show(MessageUtils.ATENDIMENTO.UPDATE_SUCCESS, NotificationType.SUCCESS);
-          this.ngOnInit();
-        },
+        this._atendimentoService.update(atendimento, imagens).subscribe({
 
-        error: (error) => {
-          console.error(error);
-          this._notificationService.show(MessageUtils.ATENDIMENTO.UPDATE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-        }
-      });
-    }
+          complete: () => {
+            this._notificationService.show(MessageUtils.ATENDIMENTO.UPDATE_SUCCESS, NotificationType.SUCCESS);
+            this.ngOnInit();
+          },
 
-    else {
+          error: (error) => {
+            console.error(error);
+            this._notificationService.show(MessageUtils.ATENDIMENTO.UPDATE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
+          }
+        });
+      }
 
-      this._atendimentoService.save(atendimento, imagens).subscribe({
+      else {
 
-        next: (atendimento) => {
-          this._notificationService.show(MessageUtils.ATENDIMENTO.SAVE_SUCCESS, NotificationType.SUCCESS);
-          this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/atendimentos/' + atendimento.id]);
-        },
+        this._atendimentoService.save(atendimento, imagens).subscribe({
 
-        error: (error) => {
-          console.error(error);
-          this._notificationService.show(MessageUtils.ATENDIMENTO.SAVE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-        }
-      });
+          next: (atendimento) => {
+            this._notificationService.show(MessageUtils.ATENDIMENTO.SAVE_SUCCESS, NotificationType.SUCCESS);
+            this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/atendimentos/' + atendimento.id]);
+          },
+
+          error: (error) => {
+            console.error(error);
+            this._notificationService.show(MessageUtils.ATENDIMENTO.SAVE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
+          }
+        });
+      }
     }
   }
 }

@@ -5,6 +5,7 @@ import { FichaMedica } from 'src/app/entities/ficha-medica';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { AnimalService } from 'src/app/services/animal.service';
 import { NotificationService } from 'src/app/services/notification.service';
+import { FormUtils } from 'src/app/utils/form-utils';
 import { MessageUtils } from 'src/app/utils/message-utils';
 
 @Component({
@@ -52,24 +53,35 @@ export class AnimalFichaMedicaComponent implements OnInit {
     this.buildForm(this.animal);
   }
 
+  getErrorMessage(controlName: string) {
+    return FormUtils.getErrorMessage(this.form, controlName);
+  }
+
+  hasError(controlName: string) {
+    return FormUtils.hasError(this.form, controlName);
+  }
+
   submit() {
 
-    const fichaMedica: FichaMedica = Object.assign({}, this.form.getRawValue());
+    if (this.form.valid) {
 
-    this.animal.fichaMedica = fichaMedica;
-    this.animal.adocoes = [];
+      const fichaMedica: FichaMedica = Object.assign({}, this.form.getRawValue());
 
-    this._animalService.update(this.animal, null).subscribe({
+      this.animal.fichaMedica = fichaMedica;
+      this.animal.adocoes = [];
 
-      next: (animal) => {
-        this._animalService.set(animal);
-        this._notificationService.show(MessageUtils.ANIMAL.UPDATE_SUCCESS, NotificationType.SUCCESS);
-      },
+      this._animalService.update(this.animal, null).subscribe({
 
-      error: (error) => {
-        console.error(error);
-        this._notificationService.show(MessageUtils.ANIMAL.UPDATE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-      }
-    });
+        next: (animal) => {
+          this._animalService.set(animal);
+          this._notificationService.show(MessageUtils.ANIMAL.UPDATE_SUCCESS, NotificationType.SUCCESS);
+        },
+
+        error: (error) => {
+          console.error(error);
+          this._notificationService.show(MessageUtils.ANIMAL.UPDATE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
+        }
+      });
+    }
   }
 }

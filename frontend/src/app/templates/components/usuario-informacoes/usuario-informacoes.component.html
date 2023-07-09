@@ -6,7 +6,7 @@
                 <button mat-icon-button title="Editar" (click)="update()" *ngIf="form.disabled">
                     <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-icon-button title="Salvar" (click)="submit()" *ngIf="form.enabled && form.valid">
+                <button mat-icon-button title="Salvar" (click)="submit()" *ngIf="form.enabled">
                     <mat-icon>save</mat-icon>
                 </button>
                 <button mat-icon-button title="Cancelar" (click)="cancel()" *ngIf="form.enabled">
@@ -55,6 +55,7 @@
             <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Nome</mat-label>
                 <input matInput formControlName="nome">
+                <mat-error *ngIf="hasError('nome')">{{getErrorMessage('nome')}}</mat-error>
             </mat-form-field>
         </div>
     </div>
@@ -64,6 +65,7 @@
             <mat-form-field appearance="outline" class="w-100">
                 <mat-label>CPF</mat-label>
                 <input matInput formControlName="cpf" mask="CPF_CNPJ">
+                <mat-error *ngIf="hasError('cpf')">{{getErrorMessage('cpf')}}</mat-error>
             </mat-form-field>
         </div>
 
@@ -74,6 +76,7 @@
                 <button mat-icon-button matSuffix type="button" (click)="hide = !hide">
                     <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </button>
+                <mat-error *ngIf="hasError('senha')">{{getErrorMessage('senha')}}</mat-error>
             </mat-form-field>
         </div>
 
@@ -85,6 +88,7 @@
                     <mat-option value="FUNCIONARIO">Funcionário</mat-option>
                     <mat-option value="VETERINARIO">Veterinário</mat-option>
                 </mat-select>
+                <mat-error *ngIf="hasError('setor')">{{getErrorMessage('setor')}}</mat-error>
             </mat-form-field>
         </div>
 
@@ -95,6 +99,7 @@
                     <mat-option [value]="true">Ativo</mat-option>
                     <mat-option [value]="false">Inativo</mat-option>
                 </mat-select>
+                <mat-error *ngIf="hasError('status')">{{getErrorMessage('status')}}</mat-error>
             </mat-form-field>
         </div>
     </div>

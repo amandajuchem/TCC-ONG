@@ -10,6 +10,7 @@ import { AgendamentoService } from 'src/app/services/agendamento.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { DateUtils } from 'src/app/utils/date-utils';
+import { FormUtils } from 'src/app/utils/form-utils';
 import { MessageUtils } from 'src/app/utils/message-utils';
 
 import { AgendamentoExcluirComponent } from '../agendamento-excluir/agendamento-excluir.component';
@@ -114,6 +115,14 @@ export class AgendamentoCadastroComponent implements OnInit {
     });
   }
 
+  getErrorMessage(controlName: string) {
+    return FormUtils.getErrorMessage(this.form, controlName);
+  }
+
+  hasError(controlName: string) {
+    return FormUtils.hasError(this.form, controlName);
+  }
+
   selectAnimal() {
 
     this._dialog.open(SelecionarAnimalComponent, {
@@ -154,39 +163,42 @@ export class AgendamentoCadastroComponent implements OnInit {
 
   submit() {
 
-    const agendamento: Agendamento = Object.assign({}, this.form.getRawValue());
-    agendamento.dataHora = DateUtils.addHours(agendamento.dataHora, DateUtils.offsetBrasilia);
+    if (this.form.valid) {
 
-    if (agendamento.id) {
+      const agendamento: Agendamento = Object.assign({}, this.form.getRawValue());
+      agendamento.dataHora = DateUtils.addHours(agendamento.dataHora, DateUtils.offsetBrasilia);
 
-      this._agendamentoService.update(agendamento).subscribe({
+      if (agendamento.id) {
 
-        complete: () => {
-          this._notificationService.show(MessageUtils.AGENDAMENTO.UPDATE_SUCCESS, NotificationType.SUCCESS);
-          this.ngOnInit();
-        },
+        this._agendamentoService.update(agendamento).subscribe({
 
-        error: (error) => {
-          console.error(error);
-          this._notificationService.show(MessageUtils.AGENDAMENTO.UPDATE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-        }
-      });
-    }
+          complete: () => {
+            this._notificationService.show(MessageUtils.AGENDAMENTO.UPDATE_SUCCESS, NotificationType.SUCCESS);
+            this.ngOnInit();
+          },
 
-    else {
+          error: (error) => {
+            console.error(error);
+            this._notificationService.show(MessageUtils.AGENDAMENTO.UPDATE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
+          }
+        });
+      }
 
-      this._agendamentoService.save(agendamento).subscribe({
+      else {
 
-        next: (agendamento) => {
-          this._notificationService.show(MessageUtils.AGENDAMENTO.SAVE_SUCCESS, NotificationType.SUCCESS);
-          this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/agendamentos/' + agendamento.id]);
-        },
+        this._agendamentoService.save(agendamento).subscribe({
 
-        error: (error) => {
-          console.error(error);
-          this._notificationService.show(MessageUtils.AGENDAMENTO.SAVE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-        }
-      });
+          next: (agendamento) => {
+            this._notificationService.show(MessageUtils.AGENDAMENTO.SAVE_SUCCESS, NotificationType.SUCCESS);
+            this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/agendamentos/' + agendamento.id]);
+          },
+
+          error: (error) => {
+            console.error(error);
+            this._notificationService.show(MessageUtils.AGENDAMENTO.SAVE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
+          }
+        });
+      }
     }
   }
 }

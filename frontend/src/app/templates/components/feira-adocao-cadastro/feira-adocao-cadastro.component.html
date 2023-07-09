@@ -33,7 +33,7 @@
                                 <button mat-icon-button title="Editar" (click)="form.enable()" *ngIf="form.disabled && feiraAdocao">
                                     <mat-icon>edit</mat-icon>
                                 </button>
-                                <button mat-icon-button title="Salvar" (click)="submit()" *ngIf="form.enabled && form.valid">
+                                <button mat-icon-button title="Salvar" (click)="submit()" *ngIf="form.enabled">
                                     <mat-icon>save</mat-icon>
                                 </button>
                                 <button mat-icon-button title="Cancelar" (click)="cancel()" *ngIf="form.enabled">
@@ -53,6 +53,7 @@
                                 <input matInput [ngxMatDatetimePicker]="pickerDataHora" formControlName="dataHora" readonly>
                                 <mat-datepicker-toggle matIconSuffix [for]="$any(pickerDataHora)"></mat-datepicker-toggle>
                                 <ngx-mat-datetime-picker #pickerDataHora (closed)="dateChange()"></ngx-mat-datetime-picker>
+                                <mat-error *ngIf="hasError('dataHora')">{{getErrorMessage('dataHora')}}</mat-error>
                             </mat-form-field>
                         </div>
         
@@ -60,6 +61,7 @@
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Nome</mat-label>
                                 <input matInput formControlName="nome">
+                                <mat-error *ngIf="hasError('nome')">{{getErrorMessage('nome')}}</mat-error>
                             </mat-form-field>
                         </div>
                     </div>

@@ -36,13 +36,13 @@ public class ApplicationConfiguration implements CommandLineRunner {
      */
     private void createFolders() {
 
-        var data = new File("data");
+        final var data = new File("data");
 
         if (!data.exists()) {
             data.mkdir();
         }
 
-        var files = new File("data/files");
+        final var files = new File("data/files");
 
         if (!files.exists()) {
             files.mkdir();
@@ -58,7 +58,7 @@ public class ApplicationConfiguration implements CommandLineRunner {
         final var usuario = new Usuario();
 
         try {
-            var usuarioDTO = service.findByCpf("03129686550");
+            final var usuarioDTO = service.findByCpf("03129686550");
             BeanUtils.copyProperties(usuarioDTO, usuario);
             saveDefaultUsuario(usuario);
         } catch (Exception ex) {
