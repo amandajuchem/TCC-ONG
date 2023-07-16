@@ -8,30 +8,33 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 @Component({
   selector: 'app-exame-excluir',
   templateUrl: './exame-excluir.component.html',
-  styleUrls: ['./exame-excluir.component.sass']
+  styleUrls: ['./exame-excluir.component.sass'],
 })
 export class ExameExcluirComponent {
-
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _dialogRef: MatDialogRef<ExameExcluirComponent>,
     private _exameService: ExameService,
     private _notificationService: NotificationService
-  ) { }
+  ) {}
 
   submit() {
-
     this._exameService.delete(this.data.exame.id).subscribe({
-
       complete: () => {
-        this._notificationService.show(MessageUtils.EXAME.DELETE_SUCCESS, NotificationType.SUCCESS);
-        this._dialogRef.close({status: true});
+        this._notificationService.show(
+          MessageUtils.EXAME.DELETE_SUCCESS,
+          NotificationType.SUCCESS
+        );
+        this._dialogRef.close({ status: true });
       },
 
       error: (error) => {
         console.log(error);
-        this._notificationService.show(MessageUtils.EXAME.DELETE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-      }
+        this._notificationService.show(
+          MessageUtils.EXAME.DELETE_FAIL + MessageUtils.getMessage(error),
+          NotificationType.FAIL
+        );
+      },
     });
   }
 }

@@ -5,9 +5,6 @@ import { AdministracaoRoutingModule } from './administracao-routing.module';
 
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule,
-    AdministracaoRoutingModule
-  ]
+  imports: [CommonModule, AdministracaoRoutingModule],
 })
-export class AdministracaoModule { }
+export class AdministracaoModule {}

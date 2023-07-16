@@ -13,10 +13,9 @@ import { OperatorUtils } from 'src/app/utils/operator-utils';
 @Component({
   selector: 'app-selecionar-tutor',
   templateUrl: './selecionar-tutor.component.html',
-  styleUrls: ['./selecionar-tutor.component.sass']
+  styleUrls: ['./selecionar-tutor.component.sass'],
 })
 export class SelecionarTutorComponent implements AfterViewInit {
-
   columns!: Array<string>;
   dataSource!: MatTableDataSource<Tutor>;
   filterString!: string;
@@ -43,7 +42,6 @@ export class SelecionarTutorComponent implements AfterViewInit {
   }
 
   async findAll() {
-    
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
     const sort = this.sort.active;
@@ -53,7 +51,6 @@ export class SelecionarTutorComponent implements AfterViewInit {
     await OperatorUtils.delay(1000);
 
     this._tutorService.findAll(page, size, sort, direction).subscribe({
-
       complete: () => {
         this.isLoadingResults = false;
       },
@@ -66,23 +63,24 @@ export class SelecionarTutorComponent implements AfterViewInit {
       error: (error) => {
         this.isLoadingResults = false;
         console.error(error);
-        this._notificationService.show(MessageUtils.TUTOR.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-      }
+        this._notificationService.show(
+          MessageUtils.TUTOR.LIST_GET_FAIL + MessageUtils.getMessage(error),
+          NotificationType.FAIL
+        );
+      },
     });
   }
 
   pageChange() {
-    
     if (this.filterString) {
       this.search();
       return;
-    }    
+    }
 
     this.findAll();
   }
 
   async search() {
-
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
     const sort = this.sort.active;
@@ -92,23 +90,27 @@ export class SelecionarTutorComponent implements AfterViewInit {
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
 
-    this._tutorService.search(this.filterString, page, size, sort, direction).subscribe({
+    this._tutorService
+      .search(this.filterString, page, size, sort, direction)
+      .subscribe({
+        complete: () => {
+          this.isLoadingResults = false;
+        },
 
-      complete: () => {
-        this.isLoadingResults = false;
-      },
+        next: (animais) => {
+          this.dataSource.data = animais.content;
+          this.resultsLength = animais.totalElements;
+        },
 
-      next: (animais) => {
-        this.dataSource.data = animais.content;
-        this.resultsLength = animais.totalElements;
-      },
-
-      error: (error) => {
-        this.isLoadingResults = false;
-        console.error(error);
-        this._notificationService.show(MessageUtils.TUTOR.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-      }
-    });
+        error: (error) => {
+          this.isLoadingResults = false;
+          console.error(error);
+          this._notificationService.show(
+            MessageUtils.TUTOR.LIST_GET_FAIL + MessageUtils.getMessage(error),
+            NotificationType.FAIL
+          );
+        },
+      });
   }
 
   select(tutor: Tutor) {
@@ -116,9 +118,8 @@ export class SelecionarTutorComponent implements AfterViewInit {
   }
 
   sortChange() {
-
     this.paginator.pageIndex = 0;
-    
+
     if (this.filterString) {
       this.search();
       return;

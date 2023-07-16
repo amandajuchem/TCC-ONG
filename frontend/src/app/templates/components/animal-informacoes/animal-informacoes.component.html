@@ -1,134 +1,161 @@
 <form [formGroup]="form" *ngIf="form" class="overflow-hidden">
+  <div class="row my-3">
+    <div class="col-12">
+      <div class="text-end">
+        <button
+          mat-icon-button
+          title="Editar"
+          (click)="form.enable()"
+          *ngIf="form.disabled"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          title="Salvar"
+          (click)="submit()"
+          *ngIf="form.enabled && form.valid"
+        >
+          <mat-icon>save</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          title="Cancelar"
+          (click)="cancel()"
+          *ngIf="form.enabled"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          title="Excluir"
+          (click)="delete()"
+          *ngIf="form.disabled"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
 
-    <div class="row my-3">
-        <div class="col-12">
-            <div class="text-end">
-                <button mat-icon-button title="Editar" (click)="form.enable()" *ngIf="form.disabled">
-                    <mat-icon>edit</mat-icon>
-                </button>
-                <button mat-icon-button title="Salvar" (click)="submit()" *ngIf="form.enabled && form.valid">
-                    <mat-icon>save</mat-icon>
-                </button>
-                <button mat-icon-button title="Cancelar" (click)="cancel()" *ngIf="form.enabled">
-                    <mat-icon>close</mat-icon>
-                </button>
-                <button mat-icon-button title="Excluir" (click)="delete()" *ngIf="form.disabled">
-                    <mat-icon>delete</mat-icon>
-                </button>
-            </div>
+  <div class="row mb-3">
+    <div class="col-12">
+      <div class="text-center">
+        <div *ngIf="!foto">
+          <img src="assets/images/animais.png" height="150px" />
         </div>
+
+        <div *ngIf="foto">
+          <img
+            [src]="
+              foto.nome
+                ? apiURL + '/imagens/search?value=' + foto.nome
+                : foto.data
+            "
+            height="150px"
+            class="rounded-circle"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-3" *ngIf="form.enabled">
+    <div class="col-12">
+      <div class="text-center">
+        <button mat-icon-button type="button" [matMenuTriggerFor]="menuFoto">
+          <mat-icon>camera_alt</mat-icon>
+        </button>
+        <mat-menu #menuFoto="matMenu">
+          <button mat-menu-item (click)="addFoto()">
+            <mat-icon>search</mat-icon>
+            <span>Selecionar Foto</span>
+          </button>
+          <button mat-menu-item (click)="removeFoto()" *ngIf="foto">
+            <mat-icon>delete</mat-icon>
+            <span>Remover Foto</span>
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="nome" />
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12 col-md-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>idade</mat-label>
+        <input matInput formControlName="idade" mask="990" />
+      </mat-form-field>
     </div>
 
-    <div class="row mb-3">
-        <div class="col-12">
-            <div class="text-center">
-                <div *ngIf="!foto">
-                    <img src="assets/images/animais.png" height="150px">
-                </div>
-
-                <div *ngIf="foto">
-                    <img [src]="foto.nome ? apiURL + '/imagens/search?value=' + foto.nome : foto.data" height="150px" class="rounded-circle">
-                </div>
-            </div>
-        </div>
+    <div class="col-12 col-md-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Sexo</mat-label>
+        <mat-select formControlName="sexo">
+          <mat-option value="FEMEA">Fêmea</mat-option>
+          <mat-option value="MACHO">Macho</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
 
-    <div class="row mb-3" *ngIf="form.enabled">
-        <div class="col-12">
-            <div class="text-center">
-                <button mat-icon-button type="button" [matMenuTriggerFor]="menuFoto">
-                    <mat-icon>camera_alt</mat-icon>
-                </button>
-                <mat-menu #menuFoto="matMenu">
-                    <button mat-menu-item (click)="addFoto()">
-                        <mat-icon>search</mat-icon>
-                        <span>Selecionar Foto</span>
-                    </button>
-                    <button mat-menu-item (click)="removeFoto()" *ngIf="foto">
-                        <mat-icon>delete</mat-icon>
-                        <span>Remover Foto</span>
-                    </button>
-                </mat-menu>
-            </div>
-        </div>
+    <div class="col-12 col-md-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Cor</mat-label>
+        <input matInput formControlName="cor" />
+      </mat-form-field>
     </div>
 
-    <div class="row">
-        <div class="col-12">
-            <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Nome</mat-label>
-                <input matInput formControlName="nome">
-            </mat-form-field>
-        </div>
+    <div class="col-12 col-md-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Raça</mat-label>
+        <input matInput formControlName="raca" />
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12 col-md-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Espécie</mat-label>
+        <mat-select formControlName="especie">
+          <mat-option value="CAO">Cão</mat-option>
+          <mat-option value="GATO">Gato</mat-option>
+          <mat-option value="OUTRO">Outro</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
 
-    <div class="row">
-        <div class="col-12 col-md-3">
-            <mat-form-field appearance="outline" class="w-100">
-                <mat-label>idade</mat-label>
-                <input matInput formControlName="idade" mask="990">
-            </mat-form-field>
-        </div>
-
-        <div class="col-12 col-md-3">
-            <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Sexo</mat-label>
-                <mat-select formControlName="sexo">
-                    <mat-option value="FEMEA">Fêmea</mat-option>
-                    <mat-option value="MACHO">Macho</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-
-        <div class="col-12 col-md-3">
-            <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Cor</mat-label>
-                <input matInput formControlName="cor">
-            </mat-form-field>
-        </div>
-
-        <div class="col-12 col-md-3">
-            <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Raça</mat-label>
-                <input matInput formControlName="raca">
-            </mat-form-field>
-        </div>
+    <div class="col-12 col-md-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Porte</mat-label>
+        <mat-select formControlName="porte">
+          <mat-option value="MINI">Mini</mat-option>
+          <mat-option value="PEQUENO">Pequeno</mat-option>
+          <mat-option value="MEDIO">Medio</mat-option>
+          <mat-option value="GRANDE">Grande</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
 
-    <div class="row">
-        <div class="col-12 col-md-3">
-            <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Espécie</mat-label>
-                <mat-select formControlName="especie">
-                    <mat-option value="CAO">Cão</mat-option>
-                    <mat-option value="GATO">Gato</mat-option>
-                    <mat-option value="OUTRO">Outro</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-
-        <div class="col-12 col-md-3">
-            <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Porte</mat-label>
-                <mat-select formControlName="porte">
-                    <mat-option value="MINI">Mini</mat-option>
-                    <mat-option value="PEQUENO">Pequeno</mat-option>
-                    <mat-option value="MEDIO">Medio</mat-option>
-                    <mat-option value="GRANDE">Grande</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-
-        <div class="col-12 col-md-3">
-            <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Situação</mat-label>
-                <mat-select formControlName="situacao">
-                    <mat-option value="ADOTADO">Adotado</mat-option>
-                    <mat-option value="DEVOLVIDO">Devolvido</mat-option>
-                    <mat-option value="ESPERANDO">Esperando</mat-option>
-                    <mat-option value="FALECIDO">Falecido</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
+    <div class="col-12 col-md-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Situação</mat-label>
+        <mat-select formControlName="situacao">
+          <mat-option value="ADOTADO">Adotado</mat-option>
+          <mat-option value="DEVOLVIDO">Devolvido</mat-option>
+          <mat-option value="ESPERANDO">Esperando</mat-option>
+          <mat-option value="FALECIDO">Falecido</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
+  </div>
 </form>

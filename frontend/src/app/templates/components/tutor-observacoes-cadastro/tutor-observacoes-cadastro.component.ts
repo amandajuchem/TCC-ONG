@@ -10,10 +10,9 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 @Component({
   selector: 'app-tutor-observacoes-cadastro',
   templateUrl: './tutor-observacoes-cadastro.component.html',
-  styleUrls: ['./tutor-observacoes-cadastro.component.sass']
+  styleUrls: ['./tutor-observacoes-cadastro.component.sass'],
 })
 export class TutorObservacoesCadastroComponent implements OnInit {
-
   form!: FormGroup;
 
   constructor(
@@ -21,11 +20,10 @@ export class TutorObservacoesCadastroComponent implements OnInit {
     private _dialogRef: MatDialogRef<TutorObservacoesCadastroComponent>,
     private _formBuilder: FormBuilder,
     private _notificationService: NotificationService,
-    private _observacaoService: ObservacaoService,
-  ) { }
+    private _observacaoService: ObservacaoService
+  ) {}
 
   ngOnInit(): void {
-    
     if (this.data.observacao) {
       this.buildForm(this.data.observacao);
     } else {
@@ -34,47 +32,52 @@ export class TutorObservacoesCadastroComponent implements OnInit {
   }
 
   buildForm(observacao: Observacao | null) {
-
     this.form = this._formBuilder.group({
       id: [observacao?.id, Validators.nullValidator],
       conteudo: [observacao?.conteudo, Validators.required],
-      tutor: [this.data.tutor, Validators.required]
+      tutor: [this.data.tutor, Validators.required],
     });
   }
 
   submit() {
-
     const observacao: Observacao = Object.assign({}, this.form.getRawValue());
 
     if (observacao.id) {
-
       this._observacaoService.update(observacao).subscribe({
-
         complete: () => {
-          this._notificationService.show(MessageUtils.OBSERVACAO.UPDATE_SUCCESS, NotificationType.SUCCESS);
-          this._dialogRef.close({status: true});
-        },
-
-        error: (error) => {
-          console.error(error);
-          this._notificationService.show(MessageUtils.OBSERVACAO.UPDATE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-        }
-      });
-    }
-
-    else {
-
-      this._observacaoService.save(observacao).subscribe({
-
-        complete: () => {
-          this._notificationService.show(MessageUtils.OBSERVACAO.SAVE_SUCCESS, NotificationType.SUCCESS);
+          this._notificationService.show(
+            MessageUtils.OBSERVACAO.UPDATE_SUCCESS,
+            NotificationType.SUCCESS
+          );
           this._dialogRef.close({ status: true });
         },
 
         error: (error) => {
           console.error(error);
-          this._notificationService.show(MessageUtils.OBSERVACAO.SAVE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-        }
+          this._notificationService.show(
+            MessageUtils.OBSERVACAO.UPDATE_FAIL +
+              MessageUtils.getMessage(error),
+            NotificationType.FAIL
+          );
+        },
+      });
+    } else {
+      this._observacaoService.save(observacao).subscribe({
+        complete: () => {
+          this._notificationService.show(
+            MessageUtils.OBSERVACAO.SAVE_SUCCESS,
+            NotificationType.SUCCESS
+          );
+          this._dialogRef.close({ status: true });
+        },
+
+        error: (error) => {
+          console.error(error);
+          this._notificationService.show(
+            MessageUtils.OBSERVACAO.SAVE_FAIL + MessageUtils.getMessage(error),
+            NotificationType.FAIL
+          );
+        },
       });
     }
   }

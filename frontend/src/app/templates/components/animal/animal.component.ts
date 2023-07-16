@@ -11,10 +11,9 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 @Component({
   selector: 'app-animal',
   templateUrl: './animal.component.html',
-  styleUrls: ['./animal.component.sass']
+  styleUrls: ['./animal.component.sass'],
 })
 export class AnimalComponent implements OnInit {
-
   animal!: Animal | null;
   authentication!: Authentication;
 
@@ -23,45 +22,39 @@ export class AnimalComponent implements OnInit {
     private _animalService: AnimalService,
     private _authService: AuthService,
     private _notificationService: NotificationService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-
     this.authentication = this._authService.getAuthentication();
 
     this._activatedRoute.params.subscribe({
-
       next: (params: any) => {
-        
         if (params && params.id) {
-          
           if (params.id.includes('cadastro')) {
             this._animalService.set(null);
-          }
-
-          else {
-
+          } else {
             this._animalService.findById(params.id).subscribe({
-            
               next: (animal) => {
                 this._animalService.set(animal);
               },
-  
+
               error: (error) => {
                 console.error(error);
-                this._notificationService.show(MessageUtils.ANIMAL.GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL); 
-              }
+                this._notificationService.show(
+                  MessageUtils.ANIMAL.GET_FAIL + MessageUtils.getMessage(error),
+                  NotificationType.FAIL
+                );
+              },
             });
           }
         }
-      }
+      },
     });
 
     this._animalService.get().subscribe({
-
       next: (animal) => {
         this.animal = animal;
-      }
+      },
     });
   }
 }

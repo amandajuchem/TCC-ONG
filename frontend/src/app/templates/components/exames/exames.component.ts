@@ -15,10 +15,9 @@ import { OperatorUtils } from 'src/app/utils/operator-utils';
 @Component({
   selector: 'app-exames',
   templateUrl: './exames.component.html',
-  styleUrls: ['./exames.component.sass']
+  styleUrls: ['./exames.component.sass'],
 })
 export class ExamesComponent implements AfterViewInit {
-
   authentication!: Authentication;
   columns!: Array<string>;
   dataSource!: MatTableDataSource<Exame>;
@@ -47,11 +46,12 @@ export class ExamesComponent implements AfterViewInit {
   }
 
   add() {
-    this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/exames/cadastro']);
+    this._router.navigate([
+      '/' + this.authentication.role.toLowerCase() + '/exames/cadastro',
+    ]);
   }
 
   async findAll() {
-
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
     const sort = this.sort.active;
@@ -61,7 +61,6 @@ export class ExamesComponent implements AfterViewInit {
     await OperatorUtils.delay(1000);
 
     this._exameService.findAll(page, size, sort, direction).subscribe({
-
       complete: () => {
         this.isLoadingResults = false;
       },
@@ -74,13 +73,15 @@ export class ExamesComponent implements AfterViewInit {
       error: (error) => {
         this.isLoadingResults = false;
         console.error(error);
-        this._notificationService.show(MessageUtils.EXAME.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-      }
+        this._notificationService.show(
+          MessageUtils.EXAME.LIST_GET_FAIL + MessageUtils.getMessage(error),
+          NotificationType.FAIL
+        );
+      },
     });
   }
 
   pageChange() {
-    
     if (this.filterString) {
       this.search();
       return;
@@ -90,7 +91,6 @@ export class ExamesComponent implements AfterViewInit {
   }
 
   async search() {
-
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
     const sort = this.sort.active;
@@ -100,38 +100,43 @@ export class ExamesComponent implements AfterViewInit {
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
 
-    this._exameService.search(this.filterString, page, size, sort, direction).subscribe({
+    this._exameService
+      .search(this.filterString, page, size, sort, direction)
+      .subscribe({
+        complete: () => {
+          this.isLoadingResults = false;
+        },
 
-      complete: () => {
-        this.isLoadingResults = false;
-      },
+        next: (exames) => {
+          this.dataSource.data = exames.content;
+          this.resultsLength = exames.totalElements;
+        },
 
-      next: (exames) => {
-        this.dataSource.data = exames.content;
-        this.resultsLength = exames.totalElements;
-      },
-
-      error: (error) => {
-        this.isLoadingResults = false;
-        console.error(error);
-        this._notificationService.show(MessageUtils.EXAME.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-      }
-    });
+        error: (error) => {
+          this.isLoadingResults = false;
+          console.error(error);
+          this._notificationService.show(
+            MessageUtils.EXAME.LIST_GET_FAIL + MessageUtils.getMessage(error),
+            NotificationType.FAIL
+          );
+        },
+      });
   }
 
   show(exame: Exame) {
-    this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/exames/' + exame.id]);
+    this._router.navigate([
+      '/' + this.authentication.role.toLowerCase() + '/exames/' + exame.id,
+    ]);
   }
 
   sortChange() {
-
     this.paginator.pageIndex = 0;
-    
+
     if (this.filterString) {
       this.search();
       return;
     }
-    
+
     this.findAll();
   }
 }

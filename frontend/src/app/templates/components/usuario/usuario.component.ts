@@ -11,10 +11,9 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 @Component({
   selector: 'app-usuario',
   templateUrl: './usuario.component.html',
-  styleUrls: ['./usuario.component.sass']
+  styleUrls: ['./usuario.component.sass'],
 })
 export class UsuarioComponent implements OnInit {
-
   authentication!: Authentication;
   usuario!: Usuario;
 
@@ -23,34 +22,30 @@ export class UsuarioComponent implements OnInit {
     private _authService: AuthService,
     private _notificationService: NotificationService,
     private _usuarioService: UsuarioService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    
     this.authentication = this._authService.getAuthentication();
 
     this._activatedRoute.params.subscribe({
-
       next: (params: any) => {
-          
         if (params && params.id) {
-          
           if (params.id.includes('cadastro')) {
             this._usuarioService.set(null);
-          }
-
-          else {
-
+          } else {
             this._usuarioService.findById(params.id).subscribe({
-            
               next: (usuario) => {
                 this._usuarioService.set(usuario);
               },
-  
+
               error: (error) => {
                 console.error(error);
-                this._notificationService.show(MessageUtils.USUARIO.GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL); 
-              }
+                this._notificationService.show(
+                  MessageUtils.USUARIO.GET_FAIL +
+                    MessageUtils.getMessage(error),
+                  NotificationType.FAIL
+                );
+              },
             });
           }
         }
@@ -58,9 +53,7 @@ export class UsuarioComponent implements OnInit {
     });
 
     this._usuarioService.get().subscribe({
-
       next: (usuario) => {
-        
         if (usuario) {
           this.usuario = usuario;
         }

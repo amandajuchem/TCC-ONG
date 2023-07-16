@@ -1,4 +1,7 @@
-import { NgxMatDatetimePickerModule, NgxMatNativeDateModule } from '@angular-material-components/datetime-picker';
+import {
+  NgxMatDatetimePickerModule,
+  NgxMatNativeDateModule,
+} from '@angular-material-components/datetime-picker';
 import { CommonModule, DatePipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -12,7 +15,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
+import {
+  MatPaginatorIntl,
+  MatPaginatorModule,
+} from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -69,6 +75,7 @@ import { TutoresComponent } from './tutores/tutores.component';
 import { UsuarioInformacoesComponent } from './usuario-informacoes/usuario-informacoes.component';
 import { UsuarioComponent } from './usuario/usuario.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
+import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
 
 @NgModule({
   declarations: [
@@ -117,6 +124,7 @@ import { UsuariosComponent } from './usuarios/usuarios.component';
     UsuarioComponent,
     UsuarioInformacoesComponent,
     UsuariosComponent,
+    BreadcrumbsComponent,
   ],
   imports: [
     CommonModule,
@@ -148,7 +156,7 @@ import { UsuariosComponent } from './usuarios/usuarios.component';
   providers: [
     { provide: DatePipe },
     { provide: MatPaginatorIntl, useValue: getDutchPaginatorIntl() },
-    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }
-  ]
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
+  ],
 })
-export class ComponentsModule { }
+export class ComponentsModule {}

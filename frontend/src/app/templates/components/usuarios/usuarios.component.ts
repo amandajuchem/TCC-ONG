@@ -14,10 +14,9 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-usuarios',
   templateUrl: './usuarios.component.html',
-  styleUrls: ['./usuarios.component.sass']
+  styleUrls: ['./usuarios.component.sass'],
 })
 export class UsuariosComponent implements AfterViewInit {
-
   apiURL!: string;
   authentication!: Authentication;
   filterString!: string;
@@ -46,11 +45,12 @@ export class UsuariosComponent implements AfterViewInit {
   }
 
   add() {
-    this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/usuarios/cadastro']);
+    this._router.navigate([
+      '/' + this.authentication.role.toLowerCase() + '/usuarios/cadastro',
+    ]);
   }
 
   async findAll() {
-
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
     const sort = 'nome';
@@ -60,26 +60,27 @@ export class UsuariosComponent implements AfterViewInit {
     await OperatorUtils.delay(1000);
 
     this._usuarioService.findAll(page, size, sort, direction).subscribe({
-
       complete: () => {
         this.isLoadingResults = false;
       },
 
       next: (usuarios) => {
-        this.usuarios= usuarios.content;
+        this.usuarios = usuarios.content;
         this.resultsLength = usuarios.totalElements;
       },
 
       error: (error) => {
         this.isLoadingResults = false;
         console.error(error);
-        this._notificationService.show(MessageUtils.USUARIO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-      }
+        this._notificationService.show(
+          MessageUtils.USUARIO.LIST_GET_FAIL + MessageUtils.getMessage(error),
+          NotificationType.FAIL
+        );
+      },
     });
   }
 
   pageChange(event: any) {
-
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
 
@@ -92,11 +93,12 @@ export class UsuariosComponent implements AfterViewInit {
   }
 
   show(usuario: Usuario) {
-    this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/usuarios/' + usuario.id]);
+    this._router.navigate([
+      '/' + this.authentication.role.toLowerCase() + '/usuarios/' + usuario.id,
+    ]);
   }
 
   async search() {
-
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
     const sort = 'nome';
@@ -106,19 +108,23 @@ export class UsuariosComponent implements AfterViewInit {
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
 
-    this._usuarioService.search(this.filterString, page, size, sort, direction).subscribe({
+    this._usuarioService
+      .search(this.filterString, page, size, sort, direction)
+      .subscribe({
+        next: (usuarios) => {
+          this.isLoadingResults = false;
+          this.usuarios = usuarios.content;
+          this.resultsLength = usuarios.totalElements;
+        },
 
-      next: (usuarios) => {
-        this.isLoadingResults = false;
-        this.usuarios = usuarios.content;
-        this.resultsLength = usuarios.totalElements;
-      },
-
-      error: (error) => {
-        this.isLoadingResults = false;
-        console.error(error);
-        this._notificationService.show(MessageUtils.USUARIO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-      }
-    });
+        error: (error) => {
+          this.isLoadingResults = false;
+          console.error(error);
+          this._notificationService.show(
+            MessageUtils.USUARIO.LIST_GET_FAIL + MessageUtils.getMessage(error),
+            NotificationType.FAIL
+          );
+        },
+      });
   }
 }

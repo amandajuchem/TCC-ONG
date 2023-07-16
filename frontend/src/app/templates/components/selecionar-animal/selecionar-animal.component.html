@@ -1,95 +1,175 @@
 <div class="mat-dialog">
-    <h2 class="m-0" mat-dialog-title>Selecionar Animal</h2>
+  <h2 class="m-0" mat-dialog-title>Selecionar Animal</h2>
 
-    <div mat-dialog-content class="py-3">
-        <div class="row">
-            <div class="col-12">
-                <mat-form-field appearance="outline" class="w-100">
-                    <mat-label>Animal</mat-label>
-                    <input matInput placeholder="Nome" [(ngModel)]="filterString" (keyup.enter)="search()">
-                    <button matSuffix mat-icon-button (click)="search()">
-                        <mat-icon>search</mat-icon>
-                    </button>
-                </mat-form-field>
-            </div>
-        </div>
-
-        <div [hidden]="(dataSource && dataSource.data.length == 0) || isLoadingResults">
-            <div class="row">
-                <div class="col-12">
-                    <div class="table-responsive">
-                        <table mat-table [dataSource]="dataSource" class="w-100 border" matSort matSortActive="nome" matSortDisableClear matSortDirection="asc" (matSortChange)="sortChange()">
-    
-                            <!-- Index Column -->
-                            <ng-container matColumnDef="index">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-index">#</th>
-                                <td mat-cell *matCellDef="let animal; let i = index">{{i+1}}</td>
-                            </ng-container>
-    
-                            <!-- Nome Column -->
-                            <ng-container matColumnDef="nome">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-nome">Nome</th>
-                                <td mat-cell *matCellDef="let animal" class="text-center">{{animal.nome}}</td>
-                            </ng-container>
-    
-                            <!-- Espécie Column -->
-                            <ng-container matColumnDef="especie">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-especie">Espécie</th>
-                                <td mat-cell *matCellDef="let animal" class="text-center">{{animal.especie | titlecase}}</td>
-                            </ng-container>
-    
-                            <!-- Porte Column -->
-                            <ng-container matColumnDef="porte">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-porte">Porte</th>
-                                <td mat-cell *matCellDef="let animal" class="text-center">{{animal.porte | titlecase}}</td>
-                            </ng-container>
-    
-                            <!-- Idade Column -->
-                            <ng-container matColumnDef="idade">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-idade">Idade</th>
-                                <td mat-cell *matCellDef="let animal" class="text-center">{{animal.idade + ' Anos'}}</td>
-                            </ng-container>
-    
-                            <tr mat-header-row *matHeaderRowDef="columns"></tr>
-                            <tr mat-row *matRowDef="let row; columns: columns;" [ngClass]="selected(row) ? 'selected-row' : ''" (click)="select(row)"></tr>
-                        </table>
-    
-                        <mat-paginator [length]="resultsLength" [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons class="w-100" (page)="pageChange()"></mat-paginator>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div [hidden]="!isLoadingResults">
-            <div class="row">
-                <div class="col-12">
-                    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-                    <p class="text-center pt-3">Obtendo dados</p>
-                </div>
-            </div>
-        </div>
-        
-        <div [hidden]="(dataSource && dataSource.data.length > 0) || isLoadingResults">
-            <div class="row">
-                <div class="col-12">
-                    <div class="text-center">
-                        <img src="/assets/images/nao-encontrado.png" width="100px">
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-12">
-                    <div class="text-center">
-                        <h2 class="m-0">Não há dados a serem exibidos!</h2>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div mat-dialog-content class="py-3">
+    <div class="row">
+      <div class="col-12">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Animal</mat-label>
+          <input
+            matInput
+            placeholder="Nome"
+            [(ngModel)]="filterString"
+            (keyup.enter)="search()"
+          />
+          <button matSuffix mat-icon-button (click)="search()">
+            <mat-icon>search</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
     </div>
 
-    <div mat-dialog-actions layout="row" class="d-flex justify-content-end">
-        <button mat-button mat-dialog-close>Cancelar</button>
-        <button mat-button [ngClass]="animal || animais.length > 0 ? 'bg-success text-white' : ''" (click)="submit()" [disabled]="!animal && animais.length === 0">OK</button>
+    <div
+      [hidden]="(dataSource && dataSource.data.length == 0) || isLoadingResults"
+    >
+      <div class="row">
+        <div class="col-12">
+          <div class="table-responsive">
+            <table
+              mat-table
+              [dataSource]="dataSource"
+              class="w-100 border"
+              matSort
+              matSortActive="nome"
+              matSortDisableClear
+              matSortDirection="asc"
+              (matSortChange)="sortChange()"
+            >
+              <!-- Index Column -->
+              <ng-container matColumnDef="index">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header
+                  class="col-index"
+                >
+                  #
+                </th>
+                <td mat-cell *matCellDef="let animal; let i = index">
+                  {{ i + 1 }}
+                </td>
+              </ng-container>
+
+              <!-- Nome Column -->
+              <ng-container matColumnDef="nome">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header
+                  class="col-nome"
+                >
+                  Nome
+                </th>
+                <td mat-cell *matCellDef="let animal" class="text-center">
+                  {{ animal.nome }}
+                </td>
+              </ng-container>
+
+              <!-- Espécie Column -->
+              <ng-container matColumnDef="especie">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header
+                  class="col-especie"
+                >
+                  Espécie
+                </th>
+                <td mat-cell *matCellDef="let animal" class="text-center">
+                  {{ animal.especie | titlecase }}
+                </td>
+              </ng-container>
+
+              <!-- Porte Column -->
+              <ng-container matColumnDef="porte">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header
+                  class="col-porte"
+                >
+                  Porte
+                </th>
+                <td mat-cell *matCellDef="let animal" class="text-center">
+                  {{ animal.porte | titlecase }}
+                </td>
+              </ng-container>
+
+              <!-- Idade Column -->
+              <ng-container matColumnDef="idade">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header
+                  class="col-idade"
+                >
+                  Idade
+                </th>
+                <td mat-cell *matCellDef="let animal" class="text-center">
+                  {{ animal.idade + " Anos" }}
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="columns"></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; columns: columns"
+                [ngClass]="selected(row) ? 'selected-row' : ''"
+                (click)="select(row)"
+              ></tr>
+            </table>
+
+            <mat-paginator
+              [length]="resultsLength"
+              [pageSizeOptions]="[10, 25, 50, 100]"
+              showFirstLastButtons
+              class="w-100"
+              (page)="pageChange()"
+            ></mat-paginator>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <div [hidden]="!isLoadingResults">
+      <div class="row">
+        <div class="col-12">
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+          <p class="text-center pt-3">Obtendo dados</p>
+        </div>
+      </div>
+    </div>
+
+    <div
+      [hidden]="(dataSource && dataSource.data.length > 0) || isLoadingResults"
+    >
+      <div class="row">
+        <div class="col-12">
+          <div class="text-center">
+            <img src="/assets/images/nao-encontrado.png" width="100px" />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="text-center">
+            <h2 class="m-0">Não há dados a serem exibidos!</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div mat-dialog-actions layout="row" class="d-flex justify-content-end">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button
+      mat-button
+      [ngClass]="animal || animais.length > 0 ? 'bg-success text-white' : ''"
+      (click)="submit()"
+      [disabled]="!animal && animais.length === 0"
+    >
+      OK
+    </button>
+  </div>
 </div>

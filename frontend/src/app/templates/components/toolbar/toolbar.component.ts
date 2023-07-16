@@ -11,10 +11,9 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 @Component({
   selector: 'app-toolbar',
   templateUrl: './toolbar.component.html',
-  styleUrls: ['./toolbar.component.sass']
+  styleUrls: ['./toolbar.component.sass'],
 })
 export class ToolbarComponent implements OnInit {
-
   authentication!: Authentication;
   usuario!: Usuario;
 
@@ -23,23 +22,26 @@ export class ToolbarComponent implements OnInit {
     private _router: Router,
     private _notificationService: NotificationService,
     private _usuarioService: UsuarioService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    
     this.authentication = this._authService.getAuthentication();
-    
-    this._usuarioService.search(this.authentication.username, 0, 1 , 'nome', 'asc').subscribe({
 
-      next: (usuarios) => {
-        this.usuario = usuarios.content[0];
-      },
+    this._usuarioService
+      .search(this.authentication.username, 0, 1, 'nome', 'asc')
+      .subscribe({
+        next: (usuarios) => {
+          this.usuario = usuarios.content[0];
+        },
 
-      error: (error) => {
-        console.error(error);
-        this._notificationService.show(MessageUtils.USUARIO.GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL); 
-      }
-    });
+        error: (error) => {
+          console.error(error);
+          this._notificationService.show(
+            MessageUtils.USUARIO.GET_FAIL + MessageUtils.getMessage(error),
+            NotificationType.FAIL
+          );
+        },
+      });
   }
 
   logout() {

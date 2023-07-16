@@ -17,10 +17,9 @@ import { OperatorUtils } from 'src/app/utils/operator-utils';
 @Component({
   selector: 'app-tutor-adocoes',
   templateUrl: './tutor-adocoes.component.html',
-  styleUrls: ['./tutor-adocoes.component.sass']
+  styleUrls: ['./tutor-adocoes.component.sass'],
 })
 export class TutorAdocoesComponent implements AfterViewInit {
-
   authentication!: Authentication;
   columns!: Array<string>;
   dataSource!: MatTableDataSource<Adocao>;
@@ -46,21 +45,17 @@ export class TutorAdocoesComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    
     this._tutorService.get().subscribe({
-
       next: (tutor) => {
-        
         if (tutor) {
           this.tutor = tutor;
           this.findAll();
         }
-      }
+      },
     });
   }
 
   async findAll() {
-
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
     const sort = this.sort.active;
@@ -69,23 +64,27 @@ export class TutorAdocoesComponent implements AfterViewInit {
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
 
-    this._adocaoService.search(this.tutor.id, page, size, sort, direction).subscribe({
+    this._adocaoService
+      .search(this.tutor.id, page, size, sort, direction)
+      .subscribe({
+        complete: () => {
+          this.isLoadingResults = false;
+        },
 
-      complete: () => {
-        this.isLoadingResults = false;
-      },
+        next: (adocoes) => {
+          this.dataSource.data = adocoes.content;
+          this.resultsLength = adocoes.totalElements;
+        },
 
-      next: (adocoes) => {
-        this.dataSource.data = adocoes.content;
-        this.resultsLength = adocoes.totalElements;
-      },
-
-      error: (error) => {
-        this.isLoadingResults = false;
-        console.error(error);
-        this._notificationService.show(MessageUtils.ADOCAO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-      }
-    });
+        error: (error) => {
+          this.isLoadingResults = false;
+          console.error(error);
+          this._notificationService.show(
+            MessageUtils.ADOCAO.LIST_GET_FAIL + MessageUtils.getMessage(error),
+            NotificationType.FAIL
+          );
+        },
+      });
   }
 
   pageChange() {
@@ -93,7 +92,12 @@ export class TutorAdocoesComponent implements AfterViewInit {
   }
 
   show(adocao: Adocao) {
-    this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/animais/' + adocao.animal.id]);
+    this._router.navigate([
+      '/' +
+        this.authentication.role.toLowerCase() +
+        '/animais/' +
+        adocao.animal.id,
+    ]);
   }
 
   sortChange() {

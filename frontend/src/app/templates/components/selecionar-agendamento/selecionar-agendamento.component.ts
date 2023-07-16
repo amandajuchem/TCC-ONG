@@ -14,10 +14,9 @@ import { OperatorUtils } from 'src/app/utils/operator-utils';
 @Component({
   selector: 'app-selecionar-agendamento',
   templateUrl: './selecionar-agendamento.component.html',
-  styleUrls: ['./selecionar-agendamento.component.sass']
+  styleUrls: ['./selecionar-agendamento.component.sass'],
 })
 export class SelecionarAgendamentoComponent implements AfterViewInit {
-  
   agendamento!: Agendamento;
   agendamentos!: Array<Agendamento>;
   columns!: Array<string>;
@@ -49,7 +48,6 @@ export class SelecionarAgendamentoComponent implements AfterViewInit {
   }
 
   async findAll() {
-    
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
     const sort = this.sort.active;
@@ -59,7 +57,6 @@ export class SelecionarAgendamentoComponent implements AfterViewInit {
     await OperatorUtils.delay(1000);
 
     this._agendamentoService.findAll(page, size, sort, direction).subscribe({
-
       complete: () => {
         this.isLoadingResults = false;
       },
@@ -72,13 +69,16 @@ export class SelecionarAgendamentoComponent implements AfterViewInit {
       error: (error) => {
         this.isLoadingResults = false;
         console.error(error);
-        this._notificationService.show(MessageUtils.AGENDAMENTO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-      }
+        this._notificationService.show(
+          MessageUtils.AGENDAMENTO.LIST_GET_FAIL +
+            MessageUtils.getMessage(error),
+          NotificationType.FAIL
+        );
+      },
     });
   }
 
   pageChange() {
-    
     if (this.filterDate) {
       this.search('date');
       return;
@@ -93,7 +93,6 @@ export class SelecionarAgendamentoComponent implements AfterViewInit {
   }
 
   async search(by: string) {
-
     let value: any = null;
 
     if (by === 'date') {
@@ -112,35 +111,43 @@ export class SelecionarAgendamentoComponent implements AfterViewInit {
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
 
-    this._agendamentoService.search(value, page, size, sort, direction).subscribe({
+    this._agendamentoService
+      .search(value, page, size, sort, direction)
+      .subscribe({
+        complete: () => {
+          this.isLoadingResults = false;
+        },
 
-      complete: () => {
-        this.isLoadingResults = false;
-      },
+        next: (agendamentos) => {
+          this.dataSource.data = agendamentos.content;
+          this.resultsLength = agendamentos.totalElements;
+        },
 
-      next: (agendamentos) => {
-        this.dataSource.data = agendamentos.content;
-        this.resultsLength = agendamentos.totalElements;
-      },
-
-      error: (error) => {
-        this.isLoadingResults = false;
-        console.error(error);
-        this._notificationService.show(MessageUtils.AGENDAMENTO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);    
-      }
-    });
+        error: (error) => {
+          this.isLoadingResults = false;
+          console.error(error);
+          this._notificationService.show(
+            MessageUtils.AGENDAMENTO.LIST_GET_FAIL +
+              MessageUtils.getMessage(error),
+            NotificationType.FAIL
+          );
+        },
+      });
   }
 
   select(agendamento: Agendamento) {
-    this._data.multiplus ? this.agendamentos.push(agendamento) : this.agendamento = agendamento;
+    this._data.multiplus
+      ? this.agendamentos.push(agendamento)
+      : (this.agendamento = agendamento);
   }
-  
+
   isSelected(agendamento: Agendamento) {
-    return this._data.multiplus ? this.agendamentos?.some(a => a.id === agendamento.id) : this.agendamento?.id === agendamento.id;
+    return this._data.multiplus
+      ? this.agendamentos?.some((a) => a.id === agendamento.id)
+      : this.agendamento?.id === agendamento.id;
   }
 
   sortChange() {
-    
     this.paginator.pageIndex = 0;
 
     if (this.filterDate) {
@@ -157,6 +164,10 @@ export class SelecionarAgendamentoComponent implements AfterViewInit {
   }
 
   submit() {
-    this._dialogRef.close({ status: true, agendamento: this.agendamento, agendamentos: this.agendamentos });
+    this._dialogRef.close({
+      status: true,
+      agendamento: this.agendamento,
+      agendamentos: this.agendamentos,
+    });
   }
 }

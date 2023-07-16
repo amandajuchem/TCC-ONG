@@ -1,39 +1,53 @@
 <form [formGroup]="form" *ngIf="form" class="overflow-hidden">
-    
-    <div class="row my-3">
-        <div class="col-12">
-            <div class="text-end">
-                <button mat-icon-button title="Editar" (click)="form.enable()" *ngIf="form.disabled">
-                    <mat-icon>edit</mat-icon>
-                </button>
-                <button mat-icon-button title="Salvar" (click)="submit()" *ngIf="form.enabled">
-                    <mat-icon>save</mat-icon>
-                </button>
-                <button mat-icon-button title="Cancelar" (click)="cancel()" *ngIf="form.enabled">
-                    <mat-icon>close</mat-icon>
-                </button>
-            </div>
-        </div>
+  <div class="row my-3">
+    <div class="col-12">
+      <div class="text-end">
+        <button
+          mat-icon-button
+          title="Editar"
+          (click)="form.enable()"
+          *ngIf="form.disabled"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          title="Salvar"
+          (click)="submit()"
+          *ngIf="form.enabled"
+        >
+          <mat-icon>save</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          title="Cancelar"
+          (click)="cancel()"
+          *ngIf="form.enabled"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
     </div>
+  </div>
 
-    <div class="row">
-        <div class="col-12">
-            <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Comorbidades</mat-label>
-                <textarea matInput formControlName="comorbidades"></textarea>
-            </mat-form-field>
-        </div>
+  <div class="row">
+    <div class="col-12">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Comorbidades</mat-label>
+        <textarea matInput formControlName="comorbidades"></textarea>
+      </mat-form-field>
     </div>
+  </div>
 
-    <div class="row">
-        <div class="col-12 col-md-3">
-            <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Castrado</mat-label>
-                <mat-select formControlName="castrado">
-                    <mat-option [value]="true">Sim</mat-option>
-                    <mat-option [value]="false">Não</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
+  <div class="row">
+    <div class="col-12 col-md-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Castrado</mat-label>
+        <mat-select formControlName="castrado">
+          <mat-option [value]="true">Sim</mat-option>
+          <mat-option [value]="false">Não</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
+  </div>
 </form>

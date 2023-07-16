@@ -1,92 +1,137 @@
-<div class="row mb-3" *ngIf="authentication">
-    <div class="col-12">
-        <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);"
-            aria-label="breadcrumb">
-            <ol class="breadcrumb m-0">
-                <li class="breadcrumb-item"><a class="text-white" [routerLink]="'/' + authentication.role.toLowerCase() + '/painel'">Início</a></li>
-                <li class="breadcrumb-item"><a class="text-white" [routerLink]="'/' + authentication.role.toLowerCase() + '/agendamentos'">Agendamentos</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Cadastro</li>
-            </ol>
-        </nav>
-    </div>
-</div>
+<app-breadcrumbs></app-breadcrumbs>
 
 <div class="row mb-3">
-    <div class="col-12">
-        <form [formGroup]="form" *ngIf="form">
-            <mat-card>
-                <mat-card-header class="pb-2">
-                    <div class="mat-card-header-text">
-                        <div class="row">
-                            <div class="col px-0">
-                                <h2 class="m-0 text-center">{{agendamento ? 'Agendamento' : 'Cadastrar Agendamento'}}</h2>
-                            </div>
-                        </div>
-                    </div>
-                </mat-card-header>
-    
-                <mat-card-content class="pb-0">
-                    
-                    <div class="row mb-3">
-                        <div class="col-12">
-                            <div class="text-end">
-                                <button mat-icon-button title="Editar" (click)="form.enable()" *ngIf="form.disabled && agendamento">
-                                    <mat-icon>edit</mat-icon>
-                                </button>
-                                <button mat-icon-button title="Salvar" (click)="submit()" *ngIf="form.enabled && form.valid">
-                                    <mat-icon>save</mat-icon>
-                                </button>
-                                <button mat-icon-button title="Cancelar" (click)="cancel()" *ngIf="form.enabled">
-                                    <mat-icon>close</mat-icon>
-                                </button>
-                                <button mat-icon-button title="Excluir" (click)="delete()" *ngIf="form.disabled && agendamento">
-                                    <mat-icon>delete</mat-icon>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+  <div class="col-12">
+    <form [formGroup]="form" *ngIf="form">
+      <mat-card>
+        <mat-card-header class="pb-2">
+          <div class="mat-card-header-text">
+            <div class="row">
+              <div class="col px-0">
+                <h2 class="m-0 text-center">
+                  {{ agendamento ? "Agendamento" : "Cadastrar Agendamento" }}
+                </h2>
+              </div>
+            </div>
+          </div>
+        </mat-card-header>
 
-                    <div class="row">
-                        <div class="col-12 col-md-3">
-                            <mat-form-field appearance="outline" class="w-100">
-                                <mat-label>Data</mat-label>
-                                <input matInput [ngxMatDatetimePicker]="pickerDataHoraAgendamento" formControlName="dataHora" readonly>
-                                <mat-datepicker-toggle matIconSuffix [for]="$any(pickerDataHoraAgendamento)"></mat-datepicker-toggle>
-                                <ngx-mat-datetime-picker #pickerDataHoraAgendamento (closed)="dateChange()"></ngx-mat-datetime-picker>
-                            </mat-form-field>
-                        </div>
-    
-                        <div class="col-12 col-md-4">
-                            <mat-form-field appearance="outline" class="w-100">
-                                <mat-label>Animal</mat-label>
-                                <input matInput [value]="form.get('animal')?.value?.nome" readonly required [disabled]="form.disabled">
-                                <button type="button" matSuffix mat-icon-button (click)="selectAnimal()" [disabled]="form.disabled">
-                                    <mat-icon>search</mat-icon>
-                                </button>
-                            </mat-form-field>
-                        </div>
-    
-                        <div class="col-12 col-md-5">
-                            <mat-form-field appearance="outline" class="w-100">
-                                <mat-label>Veterinário</mat-label>
-                                <input matInput [value]="form.get('veterinario')?.value?.nome" readonly required [disabled]="form.disabled">
-                                <button type="button" matSuffix mat-icon-button (click)="selectVeterinario()" [disabled]="form.disabled">
-                                    <mat-icon>search</mat-icon>
-                                </button>
-                            </mat-form-field>
-                        </div>
-                    </div>
-    
-                    <div class="row">
-                        <div class="col-12">
-                            <mat-form-field appearance="outline" class="w-100">
-                                <mat-label>Descrição</mat-label>
-                                <textarea matInput formControlName="descricao"></textarea>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                </mat-card-content>
-            </mat-card>
-        </form>
-    </div>
+        <mat-card-content class="pb-0">
+          <div class="row mb-3">
+            <div class="col-12">
+              <div class="text-end">
+                <button
+                  mat-icon-button
+                  title="Editar"
+                  (click)="form.enable()"
+                  *ngIf="form.disabled && agendamento"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  title="Salvar"
+                  (click)="submit()"
+                  *ngIf="form.enabled && form.valid"
+                >
+                  <mat-icon>save</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  title="Cancelar"
+                  (click)="cancel()"
+                  *ngIf="form.enabled"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  title="Excluir"
+                  (click)="delete()"
+                  *ngIf="form.disabled && agendamento"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12 col-md-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Data</mat-label>
+                <input
+                  matInput
+                  [ngxMatDatetimePicker]="pickerDataHoraAgendamento"
+                  formControlName="dataHora"
+                  readonly
+                />
+                <mat-datepicker-toggle
+                  matIconSuffix
+                  [for]="$any(pickerDataHoraAgendamento)"
+                ></mat-datepicker-toggle>
+                <ngx-mat-datetime-picker
+                  #pickerDataHoraAgendamento
+                  (closed)="dateChange()"
+                ></ngx-mat-datetime-picker>
+              </mat-form-field>
+            </div>
+
+            <div class="col-12 col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Animal</mat-label>
+                <input
+                  matInput
+                  [value]="form.get('animal')?.value?.nome"
+                  readonly
+                  required
+                  [disabled]="form.disabled"
+                />
+                <button
+                  type="button"
+                  matSuffix
+                  mat-icon-button
+                  (click)="selectAnimal()"
+                  [disabled]="form.disabled"
+                >
+                  <mat-icon>search</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+
+            <div class="col-12 col-md-5">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Veterinário</mat-label>
+                <input
+                  matInput
+                  [value]="form.get('veterinario')?.value?.nome"
+                  readonly
+                  required
+                  [disabled]="form.disabled"
+                />
+                <button
+                  type="button"
+                  matSuffix
+                  mat-icon-button
+                  (click)="selectVeterinario()"
+                  [disabled]="form.disabled"
+                >
+                  <mat-icon>search</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Descrição</mat-label>
+                <textarea matInput formControlName="descricao"></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </form>
+  </div>
 </div>

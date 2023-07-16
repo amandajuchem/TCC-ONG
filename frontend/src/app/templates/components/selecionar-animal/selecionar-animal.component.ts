@@ -13,10 +13,9 @@ import { OperatorUtils } from 'src/app/utils/operator-utils';
 @Component({
   selector: 'app-selecionar-animal',
   templateUrl: './selecionar-animal.component.html',
-  styleUrls: ['./selecionar-animal.component.sass']
+  styleUrls: ['./selecionar-animal.component.sass'],
 })
 export class SelecionarAnimalComponent implements AfterViewInit {
-
   animal!: Animal;
   animais!: Array<Animal>;
   columns!: Array<string>;
@@ -32,7 +31,7 @@ export class SelecionarAnimalComponent implements AfterViewInit {
     @Inject(MAT_DIALOG_DATA) private _data: any,
     private _animalService: AnimalService,
     private _dialogRef: MatDialogRef<SelecionarAnimalComponent>,
-    private _notificationService: NotificationService  
+    private _notificationService: NotificationService
   ) {
     this.animais = [];
     this.columns = ['index', 'nome', 'especie', 'porte', 'idade'];
@@ -46,7 +45,6 @@ export class SelecionarAnimalComponent implements AfterViewInit {
   }
 
   async findAll() {
-    
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
     const sort = this.sort.active;
@@ -56,7 +54,6 @@ export class SelecionarAnimalComponent implements AfterViewInit {
     await OperatorUtils.delay(1000);
 
     this._animalService.findAll(page, size, sort, direction).subscribe({
-
       complete: () => {
         this.isLoadingResults = false;
       },
@@ -69,23 +66,24 @@ export class SelecionarAnimalComponent implements AfterViewInit {
       error: (error) => {
         this.isLoadingResults = false;
         console.error(error);
-        this._notificationService.show(MessageUtils.ANIMAL.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-      }
+        this._notificationService.show(
+          MessageUtils.ANIMAL.LIST_GET_FAIL + MessageUtils.getMessage(error),
+          NotificationType.FAIL
+        );
+      },
     });
   }
 
   pageChange() {
-    
     if (this.filterString) {
       this.search();
       return;
-    }    
+    }
 
     this.findAll();
   }
 
   async search() {
-
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
     const sort = this.sort.active;
@@ -95,37 +93,42 @@ export class SelecionarAnimalComponent implements AfterViewInit {
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
 
-    this._animalService.search(this.filterString, page, size, sort, direction).subscribe({
+    this._animalService
+      .search(this.filterString, page, size, sort, direction)
+      .subscribe({
+        complete: () => {
+          this.isLoadingResults = false;
+        },
 
-      complete: () => {
-        this.isLoadingResults = false;
-      },
+        next: (animais) => {
+          this.dataSource.data = animais.content;
+          this.resultsLength = animais.totalElements;
+        },
 
-      next: (animais) => {
-        this.dataSource.data = animais.content;
-        this.resultsLength = animais.totalElements;
-      },
-
-      error: (error) => {
-        this.isLoadingResults = false;
-        console.error(error);
-        this._notificationService.show(MessageUtils.ANIMAL.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-      }
-    });
+        error: (error) => {
+          this.isLoadingResults = false;
+          console.error(error);
+          this._notificationService.show(
+            MessageUtils.ANIMAL.LIST_GET_FAIL + MessageUtils.getMessage(error),
+            NotificationType.FAIL
+          );
+        },
+      });
   }
 
   select(animal: Animal) {
-    this._data.multiplus ? this.animais.push(animal) : this.animal = animal;
+    this._data.multiplus ? this.animais.push(animal) : (this.animal = animal);
   }
-  
+
   selected(animal: Animal) {
-    return this._data.multiplus ? this.animais?.some(a => a.id === animal.id) : this.animal?.id === animal.id;
+    return this._data.multiplus
+      ? this.animais?.some((a) => a.id === animal.id)
+      : this.animal?.id === animal.id;
   }
 
   sortChange() {
-
     this.paginator.pageIndex = 0;
-    
+
     if (this.filterString) {
       this.search();
       return;
@@ -135,6 +138,10 @@ export class SelecionarAnimalComponent implements AfterViewInit {
   }
 
   submit() {
-    this._dialogRef.close({ status: true, animal: this.animal, animais: this.animais });
+    this._dialogRef.close({
+      status: true,
+      animal: this.animal,
+      animais: this.animais,
+    });
   }
 }

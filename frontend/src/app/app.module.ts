@@ -9,18 +9,16 @@ import { InterceptorsModule } from './interceptors/interceptors.module';
 import { TemplatesModule } from './templates/templates.module';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
     TemplatesModule,
-    InterceptorsModule
+    InterceptorsModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
