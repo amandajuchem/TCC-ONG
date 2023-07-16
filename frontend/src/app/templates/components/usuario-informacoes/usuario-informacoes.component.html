@@ -1,106 +1,142 @@
 <form [formGroup]="form" *ngIf="form" class="overflow-hidden">
-    
-    <div class="row my-3">
-        <div class="col-12">
-            <div class="text-end">
-                <button mat-icon-button title="Editar" (click)="update()" *ngIf="form.disabled">
-                    <mat-icon>edit</mat-icon>
-                </button>
-                <button mat-icon-button title="Salvar" (click)="submit()" *ngIf="form.enabled">
-                    <mat-icon>save</mat-icon>
-                </button>
-                <button mat-icon-button title="Cancelar" (click)="cancel()" *ngIf="form.enabled">
-                    <mat-icon>close</mat-icon>
-                </button>
-            </div>
+  <div class="row my-3">
+    <div class="col-12">
+      <div class="text-end">
+        <button
+          mat-icon-button
+          title="Editar"
+          (click)="update()"
+          *ngIf="form.disabled"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          title="Salvar"
+          (click)="submit()"
+          *ngIf="form.enabled"
+        >
+          <mat-icon>save</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          title="Cancelar"
+          (click)="cancel()"
+          *ngIf="form.enabled"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-12">
+      <div class="text-center">
+        <div *ngIf="!foto">
+          <img src="assets/images/usuarios.png" height="150px" />
         </div>
+
+        <div *ngIf="foto">
+          <img
+            [src]="
+              foto.nome
+                ? apiURL + '/imagens/search?value=' + foto.nome
+                : foto.data
+            "
+            height="150px"
+            class="rounded-circle"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-3" *ngIf="form.enabled">
+    <div class="col-12">
+      <div class="text-center">
+        <button mat-icon-button type="button" [matMenuTriggerFor]="menuFoto">
+          <mat-icon>camera_alt</mat-icon>
+        </button>
+        <mat-menu #menuFoto="matMenu">
+          <button mat-menu-item (click)="addFoto()">
+            <mat-icon>search</mat-icon>
+            <span>Selecionar Foto</span>
+          </button>
+          <button mat-menu-item (click)="removeFoto()" *ngIf="foto">
+            <mat-icon>delete</mat-icon>
+            <span>Remover Foto</span>
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="nome" />
+        <mat-error *ngIf="hasError('nome')">{{
+          getErrorMessage("nome")
+        }}</mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12 col-md-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>CPF</mat-label>
+        <input matInput formControlName="cpf" mask="CPF_CNPJ" />
+        <mat-error *ngIf="hasError('cpf')">{{
+          getErrorMessage("cpf")
+        }}</mat-error>
+      </mat-form-field>
     </div>
 
-    <div class="row mb-3">
-        <div class="col-12">
-            <div class="text-center">
-                <div *ngIf="!foto">
-                    <img src="assets/images/usuarios.png" height="150px">
-                </div>
-
-                <div *ngIf="foto">
-                    <img [src]="foto.nome ? apiURL + '/imagens/search?value=' + foto.nome : foto.data" height="150px" class="rounded-circle">
-                </div>
-            </div>
-        </div>
+    <div class="col-12 col-md-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Senha</mat-label>
+        <input
+          matInput
+          formControlName="senha"
+          [type]="hide ? 'password' : 'text'"
+        />
+        <button mat-icon-button matSuffix type="button" (click)="hide = !hide">
+          <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+        </button>
+        <mat-error *ngIf="hasError('senha')">{{
+          getErrorMessage("senha")
+        }}</mat-error>
+      </mat-form-field>
     </div>
 
-    <div class="row mb-3" *ngIf="form.enabled">
-        <div class="col-12">
-            <div class="text-center">
-                <button mat-icon-button type="button" [matMenuTriggerFor]="menuFoto">
-                    <mat-icon>camera_alt</mat-icon>
-                </button>
-                <mat-menu #menuFoto="matMenu">
-                    <button mat-menu-item (click)="addFoto()">
-                        <mat-icon>search</mat-icon>
-                        <span>Selecionar Foto</span>
-                    </button>
-                    <button mat-menu-item (click)="removeFoto()" *ngIf="foto">
-                        <mat-icon>delete</mat-icon>
-                        <span>Remover Foto</span>
-                    </button>
-                </mat-menu>
-            </div>
-        </div>
+    <div class="col-12 col-md-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Setor</mat-label>
+        <mat-select formControlName="setor">
+          <mat-option value="ADMINISTRACAO">Administração</mat-option>
+          <mat-option value="FUNCIONARIO">Funcionário</mat-option>
+          <mat-option value="VETERINARIO">Veterinário</mat-option>
+        </mat-select>
+        <mat-error *ngIf="hasError('setor')">{{
+          getErrorMessage("setor")
+        }}</mat-error>
+      </mat-form-field>
     </div>
 
-    <div class="row">
-        <div class="col-12">
-            <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Nome</mat-label>
-                <input matInput formControlName="nome">
-                <mat-error *ngIf="hasError('nome')">{{getErrorMessage('nome')}}</mat-error>
-            </mat-form-field>
-        </div>
+    <div class="col-12 col-md-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Situação</mat-label>
+        <mat-select formControlName="status">
+          <mat-option [value]="true">Ativo</mat-option>
+          <mat-option [value]="false">Inativo</mat-option>
+        </mat-select>
+        <mat-error *ngIf="hasError('status')">{{
+          getErrorMessage("status")
+        }}</mat-error>
+      </mat-form-field>
     </div>
-
-    <div class="row">
-        <div class="col-12 col-md-3">
-            <mat-form-field appearance="outline" class="w-100">
-                <mat-label>CPF</mat-label>
-                <input matInput formControlName="cpf" mask="CPF_CNPJ">
-                <mat-error *ngIf="hasError('cpf')">{{getErrorMessage('cpf')}}</mat-error>
-            </mat-form-field>
-        </div>
-
-        <div class="col-12 col-md-3">
-            <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Senha</mat-label>
-                <input matInput formControlName="senha" [type]="hide ? 'password' : 'text'">
-                <button mat-icon-button matSuffix type="button" (click)="hide = !hide">
-                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-                </button>
-                <mat-error *ngIf="hasError('senha')">{{getErrorMessage('senha')}}</mat-error>
-            </mat-form-field>
-        </div>
-
-        <div class="col-12 col-md-3">
-            <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Setor</mat-label>
-                <mat-select formControlName="setor">
-                    <mat-option value="ADMINISTRACAO">Administração</mat-option>
-                    <mat-option value="FUNCIONARIO">Funcionário</mat-option>
-                    <mat-option value="VETERINARIO">Veterinário</mat-option>
-                </mat-select>
-                <mat-error *ngIf="hasError('setor')">{{getErrorMessage('setor')}}</mat-error>
-            </mat-form-field>
-        </div>
-
-        <div class="col-12 col-md-3">
-            <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Situação</mat-label>
-                <mat-select formControlName="status">
-                    <mat-option [value]="true">Ativo</mat-option>
-                    <mat-option [value]="false">Inativo</mat-option>
-                </mat-select>
-                <mat-error *ngIf="hasError('status')">{{getErrorMessage('status')}}</mat-error>
-            </mat-form-field>
-        </div>
-    </div>
+  </div>
 </form>

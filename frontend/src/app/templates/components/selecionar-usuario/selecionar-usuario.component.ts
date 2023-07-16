@@ -13,10 +13,9 @@ import { OperatorUtils } from 'src/app/utils/operator-utils';
 @Component({
   selector: 'app-selecionar-usuario',
   templateUrl: './selecionar-usuario.component.html',
-  styleUrls: ['./selecionar-usuario.component.sass']
+  styleUrls: ['./selecionar-usuario.component.sass'],
 })
 export class SelecionarUsuarioComponent implements AfterViewInit {
-
   columns!: Array<string>;
   dataSource!: MatTableDataSource<Usuario>;
   filterString!: string;
@@ -46,7 +45,6 @@ export class SelecionarUsuarioComponent implements AfterViewInit {
   }
 
   async findAll() {
-    
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
     const sort = this.sort.active;
@@ -56,7 +54,6 @@ export class SelecionarUsuarioComponent implements AfterViewInit {
     await OperatorUtils.delay(1000);
 
     this._usuarioService.findAll(page, size, sort, direction).subscribe({
-
       complete: () => {
         this.isLoadingResults = false;
       },
@@ -69,23 +66,24 @@ export class SelecionarUsuarioComponent implements AfterViewInit {
       error: (error) => {
         this.isLoadingResults = false;
         console.error(error);
-        this._notificationService.show(MessageUtils.USUARIO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-      }
+        this._notificationService.show(
+          MessageUtils.USUARIO.LIST_GET_FAIL + MessageUtils.getMessage(error),
+          NotificationType.FAIL
+        );
+      },
     });
   }
 
   pageChange() {
-    
     if (this.filterString) {
       this.search();
       return;
-    }    
+    }
 
     this.findAll();
   }
 
   async search() {
-
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
     const sort = this.sort.active;
@@ -95,40 +93,46 @@ export class SelecionarUsuarioComponent implements AfterViewInit {
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
 
-    this._usuarioService.search(this.filterString, page, size, sort, direction).subscribe({
+    this._usuarioService
+      .search(this.filterString, page, size, sort, direction)
+      .subscribe({
+        complete: () => {
+          this.isLoadingResults = false;
+        },
 
-      complete: () => {
-        this.isLoadingResults = false;
-      },
+        next: (animais) => {
+          this.dataSource.data = animais.content;
+          this.resultsLength = animais.totalElements;
+        },
 
-      next: (animais) => {
-        this.dataSource.data = animais.content;
-        this.resultsLength = animais.totalElements;
-      },
-
-      error: (error) => {
-        this.isLoadingResults = false;
-        console.error(error);
-        this._notificationService.show(MessageUtils.USUARIO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-      }
-    });
+        error: (error) => {
+          this.isLoadingResults = false;
+          console.error(error);
+          this._notificationService.show(
+            MessageUtils.USUARIO.LIST_GET_FAIL + MessageUtils.getMessage(error),
+            NotificationType.FAIL
+          );
+        },
+      });
   }
 
   select(usuario: Usuario) {
-    
     if (!this._data.setor || this._data.setor === usuario.setor) {
-      this._data.multiplus ? this.usuarios.push(usuario) : this.usuario = usuario;
+      this._data.multiplus
+        ? this.usuarios.push(usuario)
+        : (this.usuario = usuario);
     }
   }
 
   selected(usuario: Usuario) {
-    return this._data.multiplus ? this.usuarios?.some(u => u.id === usuario.id) : this.usuario?.id === usuario.id;
+    return this._data.multiplus
+      ? this.usuarios?.some((u) => u.id === usuario.id)
+      : this.usuario?.id === usuario.id;
   }
 
   sortChange() {
-
     this.paginator.pageIndex = 0;
-    
+
     if (this.filterString) {
       this.search();
       return;
@@ -138,6 +142,10 @@ export class SelecionarUsuarioComponent implements AfterViewInit {
   }
 
   submit() {
-    this._dialogRef.close({ status: true, usuario: this.usuario, usuarios: this.usuarios });
+    this._dialogRef.close({
+      status: true,
+      usuario: this.usuario,
+      usuarios: this.usuarios,
+    });
   }
 }

@@ -5,10 +5,6 @@ import { ModulesModule } from './modules/modules.module';
 
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule,
-    ComponentsModule,
-    ModulesModule
-  ]
+  imports: [CommonModule, ComponentsModule, ModulesModule],
 })
-export class TemplatesModule { }
+export class TemplatesModule {}

@@ -16,10 +16,9 @@ import { ExameExcluirComponent } from '../exame-excluir/exame-excluir.component'
 @Component({
   selector: 'app-exame-cadastro',
   templateUrl: './exame-cadastro.component.html',
-  styleUrls: ['./exame-cadastro.component.sass']
+  styleUrls: ['./exame-cadastro.component.sass'],
 })
 export class ExameCadastroComponent implements OnInit {
-
   exame!: Exame;
   form!: FormGroup;
   authentication!: Authentication;
@@ -32,26 +31,18 @@ export class ExameCadastroComponent implements OnInit {
     private _formBuilder: FormBuilder,
     private _notificationService: NotificationService,
     private _router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    
     this.authentication = this._authService.getAuthentication();
-    
+
     this._activatedRoute.params.subscribe({
-
       next: (params: any) => {
-        
         if (params && params.id) {
-
           if (params.id.includes('cadastro')) {
             this.buildForm(null);
-          }
-
-          else {
-
+          } else {
             this._exameService.findById(params.id).subscribe({
-
               next: (exame) => {
                 this.exame = exame;
                 this.buildForm(exame);
@@ -59,47 +50,57 @@ export class ExameCadastroComponent implements OnInit {
 
               error: (error) => {
                 console.error(error);
-                this._notificationService.show(MessageUtils.EXAME.GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-              }
+                this._notificationService.show(
+                  MessageUtils.EXAME.GET_FAIL + MessageUtils.getMessage(error),
+                  NotificationType.FAIL
+                );
+              },
             });
           }
         }
-      }
+      },
     });
   }
-  
-  buildForm(exame: Exame | null) {
 
+  buildForm(exame: Exame | null) {
     this.form = this._formBuilder.group({
       id: [exame?.id, Validators.nullValidator],
       nome: [exame?.nome, [Validators.required, Validators.maxLength(100)]],
-      categoria: [exame?.categoria, [Validators.required, Validators.maxLength(25)]]
+      categoria: [
+        exame?.categoria,
+        [Validators.required, Validators.maxLength(25)],
+      ],
     });
 
     exame ? this.form.disable() : this.form.enable();
   }
 
   cancel() {
-    this.exame ? this.buildForm(this.exame) : this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/exames']);
+    this.exame
+      ? this.buildForm(this.exame)
+      : this._router.navigate([
+          '/' + this.authentication.role.toLowerCase() + '/exames',
+        ]);
   }
 
   delete() {
-
-    this._dialog.open(ExameExcluirComponent, {
-      data: {
-        exame: this.exame
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-
-      next: (result) => {
-
-        if (result && result.status) {
-          this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/exames']);
-        }
-      }
-    });
+    this._dialog
+      .open(ExameExcluirComponent, {
+        data: {
+          exame: this.exame,
+        },
+        width: '100%',
+      })
+      .afterClosed()
+      .subscribe({
+        next: (result) => {
+          if (result && result.status) {
+            this._router.navigate([
+              '/' + this.authentication.role.toLowerCase() + '/exames',
+            ]);
+          }
+        },
+      });
   }
 
   getErrorMessage(controlName: string) {
@@ -111,40 +112,49 @@ export class ExameCadastroComponent implements OnInit {
   }
 
   submit() {
-
     if (this.form.valid) {
-
       const exame: Exame = Object.assign({}, this.form.getRawValue());
 
       if (exame.id) {
-
         this._exameService.update(exame).subscribe({
-          
           complete: () => {
-            this._notificationService.show(MessageUtils.EXAME.UPDATE_SUCCESS, NotificationType.SUCCESS);
+            this._notificationService.show(
+              MessageUtils.EXAME.UPDATE_SUCCESS,
+              NotificationType.SUCCESS
+            );
             this.ngOnInit();
           },
-    
-          error: (error) => {
-            console.error(error);
-            this._notificationService.show(MessageUtils.EXAME.UPDATE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-          }
-        });
-      } 
-      
-      else {
 
-        this._exameService.save(exame).subscribe({
-          
-          next: (exame) => {
-            this._notificationService.show(MessageUtils.EXAME.SAVE_SUCCESS, NotificationType.SUCCESS);
-            this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/exames/' + exame.id]);
-          },
-    
           error: (error) => {
             console.error(error);
-            this._notificationService.show(MessageUtils.EXAME.SAVE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-          }
+            this._notificationService.show(
+              MessageUtils.EXAME.UPDATE_FAIL + MessageUtils.getMessage(error),
+              NotificationType.FAIL
+            );
+          },
+        });
+      } else {
+        this._exameService.save(exame).subscribe({
+          next: (exame) => {
+            this._notificationService.show(
+              MessageUtils.EXAME.SAVE_SUCCESS,
+              NotificationType.SUCCESS
+            );
+            this._router.navigate([
+              '/' +
+                this.authentication.role.toLowerCase() +
+                '/exames/' +
+                exame.id,
+            ]);
+          },
+
+          error: (error) => {
+            console.error(error);
+            this._notificationService.show(
+              MessageUtils.EXAME.SAVE_FAIL + MessageUtils.getMessage(error),
+              NotificationType.FAIL
+            );
+          },
         });
       }
     }

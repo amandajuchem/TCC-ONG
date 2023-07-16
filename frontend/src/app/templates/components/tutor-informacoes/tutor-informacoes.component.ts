@@ -19,10 +19,9 @@ import { TutorExcluirComponent } from '../tutor-excluir/tutor-excluir.component'
 @Component({
   selector: 'app-tutor-informacoes',
   templateUrl: './tutor-informacoes.component.html',
-  styleUrls: ['./tutor-informacoes.component.sass']
+  styleUrls: ['./tutor-informacoes.component.sass'],
 })
 export class TutorInformacoesComponent implements OnInit {
-
   apiURL!: string;
   authentication!: Authentication;
   form!: FormGroup;
@@ -37,17 +36,14 @@ export class TutorInformacoesComponent implements OnInit {
     private _notificationService: NotificationService,
     private _router: Router,
     private _tutorService: TutorService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    
     this.apiURL = environment.apiURL;
     this.authentication = this._authService.getAuthentication();
 
     this._tutorService.get().subscribe({
-
       next: (tutor) => {
-          
         if (tutor) {
           this.tutor = tutor;
           this.buildForm(tutor);
@@ -57,90 +53,107 @@ export class TutorInformacoesComponent implements OnInit {
           } else {
             this.foto = null;
           }
-        }
-
-        else {
+        } else {
           this.buildForm(null);
         }
-      }
+      },
     });
   }
 
   addFoto() {
-
-    this._dialog.open(SelecionarImagemComponent, {
-      data: {
-        multiple: false
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe(result => {
-
-      if (result && result.status) {
-
-        this._imagemService.toBase64(result.images[0])?.then(data => {
-          this.foto = { id: new Date().getTime(), data: data, file: result.images[0] };
-        });
-      }
-    });
+    this._dialog
+      .open(SelecionarImagemComponent, {
+        data: {
+          multiple: false,
+        },
+        width: '100%',
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result && result.status) {
+          this._imagemService.toBase64(result.images[0])?.then((data) => {
+            this.foto = {
+              id: new Date().getTime(),
+              data: data,
+              file: result.images[0],
+            };
+          });
+        }
+      });
   }
 
   addTelefone() {
-
-    this.telefones.push(this._formBuilder.group({
-      id: [null, Validators.nullValidator],
-      numero: [null, Validators.nullValidator]
-    }));
+    this.telefones.push(
+      this._formBuilder.group({
+        id: [null, Validators.nullValidator],
+        numero: [null, Validators.nullValidator],
+      })
+    );
   }
 
   buildForm(tutor: Tutor | null) {
-
     this.form = this._formBuilder.group({
       id: [tutor?.id, Validators.nullValidator],
       nome: [tutor?.nome, [Validators.required, Validators.maxLength(100)]],
       cpf: [tutor?.cpf, [Validators.required, Validators.maxLength(11)]],
       rg: [tutor?.rg, [Validators.maxLength(13)]],
-      situacao: [tutor?.situacao, [Validators.required, Validators.maxLength(10)]],
+      situacao: [
+        tutor?.situacao,
+        [Validators.required, Validators.maxLength(10)],
+      ],
       foto: [tutor?.foto, Validators.nullValidator],
 
       telefones: this._formBuilder.array(
-        
-        tutor?.telefones ? tutor.telefones.map(telefone => this._formBuilder.group({
-          id: [telefone.id, Validators.nullValidator],
-          numero: [telefone.numero, [Validators.required, Validators.maxLength(11)]]
-        })) : []
+        tutor?.telefones
+          ? tutor.telefones.map((telefone) =>
+              this._formBuilder.group({
+                id: [telefone.id, Validators.nullValidator],
+                numero: [
+                  telefone.numero,
+                  [Validators.required, Validators.maxLength(11)],
+                ],
+              })
+            )
+          : []
       ),
 
       endereco: [tutor?.endereco, Validators.nullValidator],
       adocoes: [[], Validators.nullValidator],
-      observacoes: [[], Validators.nullValidator]
+      observacoes: [[], Validators.nullValidator],
     });
 
     tutor ? this.form.disable() : this.form.enable();
   }
 
   cancel() {
-    this.foto = this.tutor?.foto ? { id: this.tutor?.foto.id, nome: this.tutor?.foto.nome } : null;
-    this.tutor ? this.buildForm(this.tutor) : this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/tutores']);
+    this.foto = this.tutor?.foto
+      ? { id: this.tutor?.foto.id, nome: this.tutor?.foto.nome }
+      : null;
+    this.tutor
+      ? this.buildForm(this.tutor)
+      : this._router.navigate([
+          '/' + this.authentication.role.toLowerCase() + '/tutores',
+        ]);
   }
 
   delete() {
-
-    this._dialog.open(TutorExcluirComponent, {
-      data: {
-        tutor: this.tutor
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-
-      next: (result) => {
-        
-        if (result) {
-          this._router.navigate([this.authentication.role.toLowerCase() + '/tutores']);
-        }
-      }
-    });
+    this._dialog
+      .open(TutorExcluirComponent, {
+        data: {
+          tutor: this.tutor,
+        },
+        width: '100%',
+      })
+      .afterClosed()
+      .subscribe({
+        next: (result) => {
+          if (result) {
+            this._router.navigate([
+              this.authentication.role.toLowerCase() + '/tutores',
+            ]);
+          }
+        },
+      });
   }
 
   getErrorMessage(controlName: string) {
@@ -165,43 +178,52 @@ export class TutorInformacoesComponent implements OnInit {
   }
 
   submit() {
-
     if (this.form.valid) {
-
       const tutor: Tutor = Object.assign({}, this.form.getRawValue());
       const imagem: File = this.foto?.file;
 
       if (tutor.id) {
-
         this._tutorService.update(tutor, imagem).subscribe({
-
           next: (tutor) => {
-            this.foto ? this.foto.file = null : null;
+            this.foto ? (this.foto.file = null) : null;
             this._tutorService.set(tutor);
-            this._notificationService.show(MessageUtils.TUTOR.UPDATE_SUCCESS, NotificationType.SUCCESS);
+            this._notificationService.show(
+              MessageUtils.TUTOR.UPDATE_SUCCESS,
+              NotificationType.SUCCESS
+            );
           },
-    
+
           error: (error) => {
             console.error(error);
-            this._notificationService.show(MessageUtils.TUTOR.UPDATE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-          }
+            this._notificationService.show(
+              MessageUtils.TUTOR.UPDATE_FAIL + MessageUtils.getMessage(error),
+              NotificationType.FAIL
+            );
+          },
         });
-      }
-
-      else {
-
+      } else {
         this._tutorService.save(tutor, imagem).subscribe({
-
           next: (tutor) => {
-            this.foto ? this.foto.file = null : null;
-            this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/tutores/' + tutor.id]);
-            this._notificationService.show(MessageUtils.TUTOR.SAVE_SUCCESS, NotificationType.SUCCESS);
+            this.foto ? (this.foto.file = null) : null;
+            this._router.navigate([
+              '/' +
+                this.authentication.role.toLowerCase() +
+                '/tutores/' +
+                tutor.id,
+            ]);
+            this._notificationService.show(
+              MessageUtils.TUTOR.SAVE_SUCCESS,
+              NotificationType.SUCCESS
+            );
           },
-    
+
           error: (error) => {
             console.error(error);
-            this._notificationService.show(MessageUtils.TUTOR.SAVE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-          }
+            this._notificationService.show(
+              MessageUtils.TUTOR.SAVE_FAIL + MessageUtils.getMessage(error),
+              NotificationType.FAIL
+            );
+          },
         });
       }
     }

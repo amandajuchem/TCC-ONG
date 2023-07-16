@@ -16,10 +16,9 @@ import { OperatorUtils } from 'src/app/utils/operator-utils';
 @Component({
   selector: 'app-agendamentos',
   templateUrl: './agendamentos.component.html',
-  styleUrls: ['./agendamentos.component.sass']
+  styleUrls: ['./agendamentos.component.sass'],
 })
 export class AgendamentosComponent implements AfterViewInit {
-
   authentication!: Authentication;
   columns!: Array<string>;
   dataSource!: MatTableDataSource<Agendamento>;
@@ -36,7 +35,7 @@ export class AgendamentosComponent implements AfterViewInit {
     private _authService: AuthService,
     private _datePipe: DatePipe,
     private _notificationService: NotificationService,
-    private _router: Router,
+    private _router: Router
   ) {
     this.columns = ['index', 'dataHora', 'animal', 'veterinario', 'acao'];
     this.dataSource = new MatTableDataSource();
@@ -50,11 +49,12 @@ export class AgendamentosComponent implements AfterViewInit {
   }
 
   add() {
-    this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/agendamentos/cadastro']);
+    this._router.navigate([
+      '/' + this.authentication.role.toLowerCase() + '/agendamentos/cadastro',
+    ]);
   }
 
   async findAll() {
-
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
     const sort = this.sort.active;
@@ -64,7 +64,6 @@ export class AgendamentosComponent implements AfterViewInit {
     await OperatorUtils.delay(1000);
 
     this._agendamentoService.findAll(page, size, sort, direction).subscribe({
-
       complete: () => {
         this.isLoadingResults = false;
       },
@@ -77,13 +76,16 @@ export class AgendamentosComponent implements AfterViewInit {
       error: (error) => {
         this.isLoadingResults = false;
         console.error(error);
-        this._notificationService.show(MessageUtils.AGENDAMENTO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);    
-      }
+        this._notificationService.show(
+          MessageUtils.AGENDAMENTO.LIST_GET_FAIL +
+            MessageUtils.getMessage(error),
+          NotificationType.FAIL
+        );
+      },
     });
   }
 
   pageChange() {
-    
     if (this.filterDate) {
       this.search('date');
       return;
@@ -98,7 +100,6 @@ export class AgendamentosComponent implements AfterViewInit {
   }
 
   async search(by: string) {
-
     let value: any = null;
 
     if (by === 'date') {
@@ -117,31 +118,40 @@ export class AgendamentosComponent implements AfterViewInit {
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
 
-    this._agendamentoService.search(value, page, size, sort, direction).subscribe({
+    this._agendamentoService
+      .search(value, page, size, sort, direction)
+      .subscribe({
+        complete: () => {
+          this.isLoadingResults = false;
+        },
 
-      complete: () => {
-        this.isLoadingResults = false;
-      },
+        next: (agendamentos) => {
+          this.dataSource.data = agendamentos.content;
+          this.resultsLength = agendamentos.totalElements;
+        },
 
-      next: (agendamentos) => {
-        this.dataSource.data = agendamentos.content;
-        this.resultsLength = agendamentos.totalElements;
-      },
-
-      error: (error) => {
-        this.isLoadingResults = false;
-        console.error(error);
-        this._notificationService.show(MessageUtils.AGENDAMENTO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);    
-      }
-    });
+        error: (error) => {
+          this.isLoadingResults = false;
+          console.error(error);
+          this._notificationService.show(
+            MessageUtils.AGENDAMENTO.LIST_GET_FAIL +
+              MessageUtils.getMessage(error),
+            NotificationType.FAIL
+          );
+        },
+      });
   }
 
   show(agendamento: Agendamento) {
-    this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/agendamentos/' + agendamento.id]);
+    this._router.navigate([
+      '/' +
+        this.authentication.role.toLowerCase() +
+        '/agendamentos/' +
+        agendamento.id,
+    ]);
   }
 
   sortChange() {
-    
     this.paginator.pageIndex = 0;
 
     if (this.filterDate) {

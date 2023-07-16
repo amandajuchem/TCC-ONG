@@ -19,10 +19,9 @@ import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-image
 @Component({
   selector: 'app-animal-informacoes',
   templateUrl: './animal-informacoes.component.html',
-  styleUrls: ['./animal-informacoes.component.sass']
+  styleUrls: ['./animal-informacoes.component.sass'],
 })
 export class AnimalInformacoesComponent implements OnInit {
-
   animal!: Animal;
   authentication!: Authentication;
   apiURL!: string;
@@ -37,17 +36,14 @@ export class AnimalInformacoesComponent implements OnInit {
     private _imagemService: ImagemService,
     private _notificationService: NotificationService,
     private _router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    
     this.apiURL = environment.apiURL;
     this.authentication = this._authService.getAuthentication();
 
     this._animalService.get().subscribe({
-
       next: (animal) => {
-          
         if (animal) {
           this.animal = animal;
           this.buildForm(animal);
@@ -57,36 +53,36 @@ export class AnimalInformacoesComponent implements OnInit {
           } else {
             this.foto = null;
           }
-        }
-
-        else {
+        } else {
           this.buildForm(null);
         }
-      }
+      },
     });
   }
 
   addFoto() {
-
-    this._dialog.open(SelecionarImagemComponent, {
-      data: {
-        multiple: false
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe(result => {
-
-      if (result && result.status) {
-
-        this._imagemService.toBase64(result.images[0])?.then(data => {
-          this.foto = { id: new Date().getTime(), data: data, file: result.images[0] };
-        });
-      }
-    });
+    this._dialog
+      .open(SelecionarImagemComponent, {
+        data: {
+          multiple: false,
+        },
+        width: '100%',
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result && result.status) {
+          this._imagemService.toBase64(result.images[0])?.then((data) => {
+            this.foto = {
+              id: new Date().getTime(),
+              data: data,
+              file: result.images[0],
+            };
+          });
+        }
+      });
   }
 
   buildForm(animal: Animal | null) {
-
     this.form = this._formBuilder.group({
       id: [animal?.id, Validators.nullValidator],
       nome: [animal?.nome, [Validators.required, Validators.maxLength(50)]],
@@ -94,39 +90,52 @@ export class AnimalInformacoesComponent implements OnInit {
       sexo: [animal?.sexo, [Validators.required, Validators.maxLength(5)]],
       cor: [animal?.cor, Validators.maxLength(50)],
       raca: [animal?.raca, Validators.maxLength(50)],
-      especie: [animal?.especie, [Validators.required, Validators.maxLength(10)]],
+      especie: [
+        animal?.especie,
+        [Validators.required, Validators.maxLength(10)],
+      ],
       porte: [animal?.porte, Validators.maxLength(10)],
-      situacao: [animal?.situacao, [Validators.required, Validators.maxLength(10)]],
+      situacao: [
+        animal?.situacao,
+        [Validators.required, Validators.maxLength(10)],
+      ],
       foto: [animal?.foto, Validators.nullValidator],
       fichaMedica: [animal?.fichaMedica, Validators.nullValidator],
-      adocoes: [[], Validators.nullValidator]
+      adocoes: [[], Validators.nullValidator],
     });
 
     animal ? this.form.disable() : this.form.enable();
   }
 
   cancel() {
-    this.foto = this.animal?.foto ? { id: this.animal?.foto.id, nome: this.animal?.foto.nome } : null;
-    this.animal ? this.buildForm(this.animal) : this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/animais']);
+    this.foto = this.animal?.foto
+      ? { id: this.animal?.foto.id, nome: this.animal?.foto.nome }
+      : null;
+    this.animal
+      ? this.buildForm(this.animal)
+      : this._router.navigate([
+          '/' + this.authentication.role.toLowerCase() + '/animais',
+        ]);
   }
 
   delete() {
-
-    this._dialog.open(AnimalExcluirComponent, {
-      data: {
-        animal: this.animal
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-
-      next: (result) => {
-        
-        if (result) {
-          this._router.navigate([this.authentication.role.toLowerCase() + '/animais']);
-        }
-      }
-    });
+    this._dialog
+      .open(AnimalExcluirComponent, {
+        data: {
+          animal: this.animal,
+        },
+        width: '100%',
+      })
+      .afterClosed()
+      .subscribe({
+        next: (result) => {
+          if (result) {
+            this._router.navigate([
+              this.authentication.role.toLowerCase() + '/animais',
+            ]);
+          }
+        },
+      });
   }
 
   getErrorMessage(controlName: string) {
@@ -143,43 +152,52 @@ export class AnimalInformacoesComponent implements OnInit {
   }
 
   submit() {
-
     if (this.form.valid) {
-
       const animal: Animal = Object.assign({}, this.form.getRawValue());
       const imagem: File = this.foto?.file;
 
       if (animal.id) {
-
         this._animalService.update(animal, imagem).subscribe({
-
           next: (animal) => {
-            this.foto ? this.foto.file = null : null;
+            this.foto ? (this.foto.file = null) : null;
             this._animalService.set(animal);
-            this._notificationService.show(MessageUtils.ANIMAL.UPDATE_SUCCESS, NotificationType.SUCCESS);
+            this._notificationService.show(
+              MessageUtils.ANIMAL.UPDATE_SUCCESS,
+              NotificationType.SUCCESS
+            );
           },
-    
+
           error: (error) => {
             console.error(error);
-            this._notificationService.show(MessageUtils.ANIMAL.UPDATE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-          }
+            this._notificationService.show(
+              MessageUtils.ANIMAL.UPDATE_FAIL + MessageUtils.getMessage(error),
+              NotificationType.FAIL
+            );
+          },
         });
-      }
-
-      else {
-
+      } else {
         this._animalService.save(animal, imagem).subscribe({
-
           next: (animal) => {
-            this.foto ? this.foto.file = null : null;
-            this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/animais/' + animal.id]);
-            this._notificationService.show(MessageUtils.ANIMAL.SAVE_SUCCESS, NotificationType.SUCCESS);
+            this.foto ? (this.foto.file = null) : null;
+            this._router.navigate([
+              '/' +
+                this.authentication.role.toLowerCase() +
+                '/animais/' +
+                animal.id,
+            ]);
+            this._notificationService.show(
+              MessageUtils.ANIMAL.SAVE_SUCCESS,
+              NotificationType.SUCCESS
+            );
           },
-    
+
           error: (error) => {
             console.error(error);
-            this._notificationService.show(MessageUtils.ANIMAL.SAVE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-          }
+            this._notificationService.show(
+              MessageUtils.ANIMAL.SAVE_FAIL + MessageUtils.getMessage(error),
+              NotificationType.FAIL
+            );
+          },
         });
       }
     }

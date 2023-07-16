@@ -16,10 +16,9 @@ import { OperatorUtils } from 'src/app/utils/operator-utils';
 @Component({
   selector: 'app-atendimentos',
   templateUrl: './atendimentos.component.html',
-  styleUrls: ['./atendimentos.component.sass']
+  styleUrls: ['./atendimentos.component.sass'],
 })
 export class AtendimentosComponent implements AfterViewInit {
-  
   authentication!: Authentication;
   columns!: Array<string>;
   dataSource!: MatTableDataSource<Atendimento>;
@@ -27,7 +26,7 @@ export class AtendimentosComponent implements AfterViewInit {
   filterString!: string;
   isLoadingResults!: boolean;
   resultsLength!: number;
-  
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -50,11 +49,12 @@ export class AtendimentosComponent implements AfterViewInit {
   }
 
   add() {
-    this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/atendimentos/cadastro']);
+    this._router.navigate([
+      '/' + this.authentication.role.toLowerCase() + '/atendimentos/cadastro',
+    ]);
   }
 
   async findAll() {
-
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
     const sort = this.sort.active;
@@ -64,7 +64,6 @@ export class AtendimentosComponent implements AfterViewInit {
     await OperatorUtils.delay(1000);
 
     this._atendimentoService.findAll(page, size, sort, direction).subscribe({
-
       next: (atendimentos) => {
         this.isLoadingResults = false;
         this.dataSource.data = atendimentos.content;
@@ -74,13 +73,16 @@ export class AtendimentosComponent implements AfterViewInit {
       error: (error) => {
         this.isLoadingResults = false;
         console.error(error);
-        this._notificationService.show(MessageUtils.ATENDIMENTO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);    
-      }
+        this._notificationService.show(
+          MessageUtils.ATENDIMENTO.LIST_GET_FAIL +
+            MessageUtils.getMessage(error),
+          NotificationType.FAIL
+        );
+      },
     });
   }
 
   pageChange() {
-    
     if (this.filterDate) {
       this.search('date');
       return;
@@ -95,7 +97,6 @@ export class AtendimentosComponent implements AfterViewInit {
   }
 
   async search(by: string) {
-    
     let value: any = null;
 
     if (by === 'date') {
@@ -114,31 +115,40 @@ export class AtendimentosComponent implements AfterViewInit {
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
 
-    this._atendimentoService.search(value, page, size, sort, direction).subscribe({
+    this._atendimentoService
+      .search(value, page, size, sort, direction)
+      .subscribe({
+        complete: () => {
+          this.isLoadingResults = false;
+        },
 
-      complete: () => {
-        this.isLoadingResults = false;
-      },
+        next: (atendimentos) => {
+          this.dataSource.data = atendimentos.content;
+          this.resultsLength = atendimentos.totalElements;
+        },
 
-      next: (atendimentos) => {
-        this.dataSource.data = atendimentos.content;
-        this.resultsLength = atendimentos.totalElements;
-      },
-
-      error: (error) => {
-        this.isLoadingResults = false;
-        console.error(error);
-        this._notificationService.show(MessageUtils.ATENDIMENTO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);    
-      }
-    });
+        error: (error) => {
+          this.isLoadingResults = false;
+          console.error(error);
+          this._notificationService.show(
+            MessageUtils.ATENDIMENTO.LIST_GET_FAIL +
+              MessageUtils.getMessage(error),
+            NotificationType.FAIL
+          );
+        },
+      });
   }
 
   show(atendimento: Atendimento) {
-    this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/atendimentos/' + atendimento.id]);
+    this._router.navigate([
+      '/' +
+        this.authentication.role.toLowerCase() +
+        '/atendimentos/' +
+        atendimento.id,
+    ]);
   }
 
   sortChange() {
-    
     this.paginator.pageIndex = 0;
 
     if (this.filterDate) {

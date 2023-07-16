@@ -8,30 +8,33 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 @Component({
   selector: 'app-atendimento-excluir',
   templateUrl: './atendimento-excluir.component.html',
-  styleUrls: ['./atendimento-excluir.component.sass']
+  styleUrls: ['./atendimento-excluir.component.sass'],
 })
 export class AtendimentoExcluirComponent {
-
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _atendimentoService: AtendimentoService,
     private _dialogRef: MatDialogRef<AtendimentoExcluirComponent>,
     private _notificationService: NotificationService
-  ) { }
+  ) {}
 
   submit() {
-
     this._atendimentoService.delete(this.data.atendimento.id).subscribe({
-
       complete: () => {
-        this._notificationService.show(MessageUtils.ATENDIMENTO.DELETE_SUCCESS, NotificationType.SUCCESS);
+        this._notificationService.show(
+          MessageUtils.ATENDIMENTO.DELETE_SUCCESS,
+          NotificationType.SUCCESS
+        );
         this._dialogRef.close({ status: true });
       },
 
       error: (error) => {
         console.log(error);
-        this._notificationService.show(MessageUtils.ATENDIMENTO.DELETE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-      }
+        this._notificationService.show(
+          MessageUtils.ATENDIMENTO.DELETE_FAIL + MessageUtils.getMessage(error),
+          NotificationType.FAIL
+        );
+      },
     });
   }
 }

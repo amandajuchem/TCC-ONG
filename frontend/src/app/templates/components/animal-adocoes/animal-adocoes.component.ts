@@ -18,10 +18,9 @@ import { AnimalAdocoesExcluirComponent } from '../animal-adocoes-excluir/animal-
 @Component({
   selector: 'app-animal-adocoes',
   templateUrl: './animal-adocoes.component.html',
-  styleUrls: ['./animal-adocoes.component.sass']
+  styleUrls: ['./animal-adocoes.component.sass'],
 })
 export class AnimalAdocoesComponent implements AfterViewInit {
-
   animal!: Animal;
   columns!: Array<string>;
   dataSource!: MatTableDataSource<Adocao>;
@@ -44,60 +43,54 @@ export class AnimalAdocoesComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-
     this._animalService.get().subscribe({
-
       next: (animal) => {
-
         if (animal) {
           this.animal = animal;
           this.findAll();
         }
-      }
+      },
     });
   }
 
   add() {
-
-    this._dialog.open(AnimalAdocoesCadastroComponent, {
-      data: {
-        adocao: null,
-        animal: this.animal
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-
-      next: (result) => {
-
-        if (result && result.status) {
-          this.findAll();
-        }
-      }
-    });
+    this._dialog
+      .open(AnimalAdocoesCadastroComponent, {
+        data: {
+          adocao: null,
+          animal: this.animal,
+        },
+        width: '100%',
+      })
+      .afterClosed()
+      .subscribe({
+        next: (result) => {
+          if (result && result.status) {
+            this.findAll();
+          }
+        },
+      });
   }
 
   delete(adocao: Adocao) {
-
-    this._dialog.open(AnimalAdocoesExcluirComponent, {
-      data: {
-        adocao: adocao
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-
-      next: (result) => {
-
-        if (result && result.status) {
-          this.findAll();
-        }
-      }
-    });
+    this._dialog
+      .open(AnimalAdocoesExcluirComponent, {
+        data: {
+          adocao: adocao,
+        },
+        width: '100%',
+      })
+      .afterClosed()
+      .subscribe({
+        next: (result) => {
+          if (result && result.status) {
+            this.findAll();
+          }
+        },
+      });
   }
 
   async findAll() {
-
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
     const sort = this.sort.active;
@@ -106,23 +99,27 @@ export class AnimalAdocoesComponent implements AfterViewInit {
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
 
-    this._adocaoService.search(this.animal.id, page, size, sort, direction).subscribe({
+    this._adocaoService
+      .search(this.animal.id, page, size, sort, direction)
+      .subscribe({
+        complete: () => {
+          this.isLoadingResults = false;
+        },
 
-      complete: () => {
-        this.isLoadingResults = false;
-      },
+        next: (adocoes) => {
+          this.dataSource.data = adocoes.content;
+          this.resultsLength = adocoes.totalElements;
+        },
 
-      next: (adocoes) => {
-        this.dataSource.data = adocoes.content;
-        this.resultsLength = adocoes.totalElements;
-      },
-
-      error: (error) => {
-        this.isLoadingResults = false;
-        console.error(error);
-        this._notificationService.show(MessageUtils.ADOCAO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-      }
-    });
+        error: (error) => {
+          this.isLoadingResults = false;
+          console.error(error);
+          this._notificationService.show(
+            MessageUtils.ADOCAO.LIST_GET_FAIL + MessageUtils.getMessage(error),
+            NotificationType.FAIL
+          );
+        },
+      });
   }
 
   pageChange() {
@@ -135,22 +132,21 @@ export class AnimalAdocoesComponent implements AfterViewInit {
   }
 
   update(adocao: Adocao) {
-
-    this._dialog.open(AnimalAdocoesCadastroComponent, {
-      data: {
-        adocao: adocao,
-        animal: this.animal
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-
-      next: (result) => {
-
-        if (result && result.status) {
-          this.findAll();
-        }
-      }
-    });
+    this._dialog
+      .open(AnimalAdocoesCadastroComponent, {
+        data: {
+          adocao: adocao,
+          animal: this.animal,
+        },
+        width: '100%',
+      })
+      .afterClosed()
+      .subscribe({
+        next: (result) => {
+          if (result && result.status) {
+            this.findAll();
+          }
+        },
+      });
   }
 }

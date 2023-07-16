@@ -9,10 +9,9 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.sass']
+  styleUrls: ['./login.component.sass'],
 })
 export class LoginComponent implements OnInit {
-
   form!: FormGroup;
   hide!: boolean;
 
@@ -21,40 +20,36 @@ export class LoginComponent implements OnInit {
     private _formBuilder: FormBuilder,
     private _notificationService: NotificationService,
     private _router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-
     this.hide = true;
 
     if (this._authService.isAuthenticated()) {
-      this.redirect();      
-    }
-
-    else {
+      this.redirect();
+    } else {
       this.buildForm();
     }
   }
 
   buildForm() {
-
     this.form = this._formBuilder.group({
       username: [null, Validators.required],
-      password: [null, Validators.required]
+      password: [null, Validators.required],
     });
   }
 
   redirect() {
     const authentication = this._authService.getAuthentication();
-    this._router.navigate(['/' + authentication.role.toLowerCase() + '/painel']);  
+    this._router.navigate([
+      '/' + authentication.role.toLowerCase() + '/painel',
+    ]);
   }
 
   submit() {
-    
     const user = Object.assign({}, this.form.value);
 
     this._authService.login(user).subscribe({
-
       next: (authentication) => {
         this._authService.setAuthentication(authentication);
         this.redirect();
@@ -62,8 +57,11 @@ export class LoginComponent implements OnInit {
 
       error: (error) => {
         console.error(error);
-        this._notificationService.show(MessageUtils.getMessage(error), NotificationType.FAIL);
-      }
-    })
+        this._notificationService.show(
+          MessageUtils.getMessage(error),
+          NotificationType.FAIL
+        );
+      },
+    });
   }
 }

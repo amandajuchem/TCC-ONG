@@ -8,30 +8,33 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 @Component({
   selector: 'app-tutor-excluir',
   templateUrl: './tutor-excluir.component.html',
-  styleUrls: ['./tutor-excluir.component.sass']
+  styleUrls: ['./tutor-excluir.component.sass'],
 })
 export class TutorExcluirComponent {
-
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _dialogRef: MatDialogRef<TutorExcluirComponent>,
     private _notificationService: NotificationService,
     private _tutorService: TutorService
-  ) { }
+  ) {}
 
   submit() {
-
     this._tutorService.delete(this.data.tutor.id).subscribe({
-      
       complete: () => {
-        this._notificationService.show(MessageUtils.TUTOR.DELETE_SUCCESS, NotificationType.SUCCESS);
+        this._notificationService.show(
+          MessageUtils.TUTOR.DELETE_SUCCESS,
+          NotificationType.SUCCESS
+        );
         this._dialogRef.close({ status: true });
       },
 
       error: (error) => {
         console.log(error);
-        this._notificationService.show(MessageUtils.TUTOR.DELETE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-      }
+        this._notificationService.show(
+          MessageUtils.TUTOR.DELETE_FAIL + MessageUtils.getMessage(error),
+          NotificationType.FAIL
+        );
+      },
     });
   }
 }

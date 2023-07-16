@@ -9,34 +9,37 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 @Component({
   selector: 'app-animal-adocoes-excluir',
   templateUrl: './animal-adocoes-excluir.component.html',
-  styleUrls: ['./animal-adocoes-excluir.component.sass']
+  styleUrls: ['./animal-adocoes-excluir.component.sass'],
 })
 export class AnimalAdocoesExcluirComponent {
-
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _adocaoService: AdocaoService,
     private _dialogRef: MatDialogRef<AnimalAdocoesExcluirComponent>,
     private _notificationService: NotificationService
-  ) { }
+  ) {}
 
   getDateWithTimeZone(date: any) {
     return DateUtils.getDateWithTimeZone(date);
   }
 
   submit() {
-
     this._adocaoService.delete(this.data.adocao.id).subscribe({
-
       complete: () => {
-        this._notificationService.show(MessageUtils.ADOCAO.DELETE_SUCCESS, NotificationType.SUCCESS);
-        this._dialogRef.close({status: true});
+        this._notificationService.show(
+          MessageUtils.ADOCAO.DELETE_SUCCESS,
+          NotificationType.SUCCESS
+        );
+        this._dialogRef.close({ status: true });
       },
 
       error: (error) => {
         console.log(error);
-        this._notificationService.show(MessageUtils.ADOCAO.DELETE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-      }
+        this._notificationService.show(
+          MessageUtils.ADOCAO.DELETE_FAIL + MessageUtils.getMessage(error),
+          NotificationType.FAIL
+        );
+      },
     });
   }
 }

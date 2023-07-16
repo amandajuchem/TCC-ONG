@@ -18,10 +18,9 @@ import { FormUtils } from 'src/app/utils/form-utils';
 @Component({
   selector: 'app-usuario-informacoes',
   templateUrl: './usuario-informacoes.component.html',
-  styleUrls: ['./usuario-informacoes.component.sass']
+  styleUrls: ['./usuario-informacoes.component.sass'],
 })
 export class UsuarioInformacoesComponent implements OnInit {
-
   apiURL!: string;
   authentication!: Authentication;
   form!: FormGroup;
@@ -37,18 +36,15 @@ export class UsuarioInformacoesComponent implements OnInit {
     private _notificationService: NotificationService,
     private _router: Router,
     private _usuarioService: UsuarioService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    
     this.apiURL = environment.apiURL;
     this.authentication = this._authService.getAuthentication();
     this.hide = true;
 
     this._usuarioService.get().subscribe({
-
       next: (usuario) => {
-          
         if (usuario) {
           this.usuario = usuario;
           this.buildForm(usuario);
@@ -58,36 +54,36 @@ export class UsuarioInformacoesComponent implements OnInit {
           } else {
             this.foto = null;
           }
-        }
-
-        else {
+        } else {
           this.buildForm(null);
         }
-      }
+      },
     });
   }
 
   addFoto() {
-
-    this._dialog.open(SelecionarImagemComponent, {
-      data: {
-        multiple: false
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe(result => {
-
-      if (result && result.status) {
-
-        this._imagemService.toBase64(result.images[0])?.then(data => {
-          this.foto = { id: new Date().getTime(), data: data, file: result.images[0] };;
-        });
-      }
-    });
+    this._dialog
+      .open(SelecionarImagemComponent, {
+        data: {
+          multiple: false,
+        },
+        width: '100%',
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result && result.status) {
+          this._imagemService.toBase64(result.images[0])?.then((data) => {
+            this.foto = {
+              id: new Date().getTime(),
+              data: data,
+              file: result.images[0],
+            };
+          });
+        }
+      });
   }
 
   buildForm(usuario: Usuario | null) {
-
     this.form = this._formBuilder.group({
       id: [usuario?.id, Validators.nullValidator],
       nome: [usuario?.nome, [Validators.required, Validators.maxLength(100)]],
@@ -95,15 +91,21 @@ export class UsuarioInformacoesComponent implements OnInit {
       senha: [usuario?.senha, [Validators.required, Validators.maxLength(255)]],
       setor: [usuario?.setor, [Validators.required, Validators.maxLength(20)]],
       status: [usuario?.status, Validators.required],
-      foto: [usuario?.foto, Validators.nullValidator]
+      foto: [usuario?.foto, Validators.nullValidator],
     });
 
     usuario ? this.form.disable() : this.form.enable();
   }
 
   cancel() {
-    this.foto = this.usuario?.foto ? { id: this.usuario?.foto.id, nome: this.usuario?.foto.nome } : null;
-    this.usuario ? this.buildForm(this.usuario) : this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/usuarios']);
+    this.foto = this.usuario?.foto
+      ? { id: this.usuario?.foto.id, nome: this.usuario?.foto.nome }
+      : null;
+    this.usuario
+      ? this.buildForm(this.usuario)
+      : this._router.navigate([
+          '/' + this.authentication.role.toLowerCase() + '/usuarios',
+        ]);
   }
 
   getErrorMessage(controlName: string) {
@@ -120,50 +122,58 @@ export class UsuarioInformacoesComponent implements OnInit {
   }
 
   submit() {
-
     if (this.form.valid) {
-
       const usuario: Usuario = Object.assign({}, this.form.getRawValue());
       const imagem: File = this.foto?.file;
 
       if (usuario.id) {
-
         this._usuarioService.update(usuario, imagem).subscribe({
-
           next: (usuario) => {
-            this.foto ? this.foto.file = null : null;
+            this.foto ? (this.foto.file = null) : null;
             this._usuarioService.set(usuario);
-            this._notificationService.show(MessageUtils.USUARIO.UPDATE_SUCCESS, NotificationType.SUCCESS);
+            this._notificationService.show(
+              MessageUtils.USUARIO.UPDATE_SUCCESS,
+              NotificationType.SUCCESS
+            );
           },
-    
+
           error: (error) => {
             console.error(error);
-            this._notificationService.show(MessageUtils.USUARIO.UPDATE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-          }
+            this._notificationService.show(
+              MessageUtils.USUARIO.UPDATE_FAIL + MessageUtils.getMessage(error),
+              NotificationType.FAIL
+            );
+          },
         });
-      }
-
-      else {
-
+      } else {
         this._usuarioService.save(usuario, imagem).subscribe({
-
           next: (usuario) => {
-            this.foto ? this.foto.file = null : null;
-            this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/usuarios/' + usuario.id]);
-            this._notificationService.show(MessageUtils.USUARIO.SAVE_SUCCESS, NotificationType.SUCCESS);
+            this.foto ? (this.foto.file = null) : null;
+            this._router.navigate([
+              '/' +
+                this.authentication.role.toLowerCase() +
+                '/usuarios/' +
+                usuario.id,
+            ]);
+            this._notificationService.show(
+              MessageUtils.USUARIO.SAVE_SUCCESS,
+              NotificationType.SUCCESS
+            );
           },
-    
+
           error: (error) => {
             console.error(error);
-            this._notificationService.show(MessageUtils.USUARIO.SAVE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-          }
+            this._notificationService.show(
+              MessageUtils.USUARIO.SAVE_FAIL + MessageUtils.getMessage(error),
+              NotificationType.FAIL
+            );
+          },
         });
       }
     }
   }
 
   update() {
-
     this.form.enable();
 
     if (this.usuario.cpf === this.authentication.username) {

@@ -20,10 +20,9 @@ import { SelecionarUsuarioComponent } from '../selecionar-usuario/selecionar-usu
 @Component({
   selector: 'app-agendamento-cadastro',
   templateUrl: './agendamento-cadastro.component.html',
-  styleUrls: ['./agendamento-cadastro.component.sass']
+  styleUrls: ['./agendamento-cadastro.component.sass'],
 })
 export class AgendamentoCadastroComponent implements OnInit {
-
   agendamento!: Agendamento;
   authentication!: Authentication;
   form!: FormGroup;
@@ -36,26 +35,18 @@ export class AgendamentoCadastroComponent implements OnInit {
     private _formBuilder: FormBuilder,
     private _notificationService: NotificationService,
     private _router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-
     this.authentication = this._authService.getAuthentication();
 
     this._activatedRoute.params.subscribe({
-
       next: (params: any) => {
-          
         if (params && params.id) {
-          
           if (params.id.includes('cadastro')) {
             this.buildForm(null);
-          }
-          
-          else {
-            
+          } else {
             this._agendamentoService.findById(params.id).subscribe({
-
               next: (agendamento) => {
                 this.agendamento = agendamento;
                 this.buildForm(agendamento);
@@ -63,56 +54,69 @@ export class AgendamentoCadastroComponent implements OnInit {
 
               error: (error) => {
                 console.error(error);
-                this._notificationService.show(MessageUtils.AGENDAMENTO.GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-              }
+                this._notificationService.show(
+                  MessageUtils.AGENDAMENTO.GET_FAIL +
+                    MessageUtils.getMessage(error),
+                  NotificationType.FAIL
+                );
+              },
             });
           }
-        }  
-      }
+        }
+      },
     });
   }
 
   buildForm(agendamento: Agendamento | null) {
-
     this.form = this._formBuilder.group({
       id: [agendamento?.id, Validators.nullValidator],
       dataHora: [agendamento?.dataHora, Validators.required],
       animal: [agendamento?.animal, Validators.required],
       veterinario: [agendamento?.veterinario, Validators.required],
-      descricao: [agendamento?.descricao, Validators.required]
+      descricao: [agendamento?.descricao, Validators.required],
     });
 
     agendamento ? this.form.disable() : this.form.enable();
   }
 
-  cancel() {    
-    this.agendamento ? this.buildForm(this.agendamento) : this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/agendamentos']);
+  cancel() {
+    this.agendamento
+      ? this.buildForm(this.agendamento)
+      : this._router.navigate([
+          '/' + this.authentication.role.toLowerCase() + '/agendamentos',
+        ]);
   }
 
   dateChange() {
-
     if (this.form.get('dataHora')?.value) {
-      this.form.get('dataHora')?.patchValue(DateUtils.getDateTimeWithoutSecondsAndMilliseconds(this.form.get('dataHora')?.value));
+      this.form
+        .get('dataHora')
+        ?.patchValue(
+          DateUtils.getDateTimeWithoutSecondsAndMilliseconds(
+            this.form.get('dataHora')?.value
+          )
+        );
     }
   }
 
   delete() {
-
-    this._dialog.open(AgendamentoExcluirComponent, {
-      data: {
-        agendamento: this.agendamento
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-
-      next: (result) => {
-          
-        if (result && result.status) {
-          this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/agendamentos']);
-        }
-      }
-    });
+    this._dialog
+      .open(AgendamentoExcluirComponent, {
+        data: {
+          agendamento: this.agendamento,
+        },
+        width: '100%',
+      })
+      .afterClosed()
+      .subscribe({
+        next: (result) => {
+          if (result && result.status) {
+            this._router.navigate([
+              '/' + this.authentication.role.toLowerCase() + '/agendamentos',
+            ]);
+          }
+        },
+      });
   }
 
   getErrorMessage(controlName: string) {
@@ -124,79 +128,94 @@ export class AgendamentoCadastroComponent implements OnInit {
   }
 
   selectAnimal() {
-
-    this._dialog.open(SelecionarAnimalComponent, {
-      data: {
-        multiplus: false
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-
-      next: (result) => {
-
-        if (result && result.status) {
-          this.form.get('animal')?.patchValue(result.animal);
-        }
-      },
-    });
+    this._dialog
+      .open(SelecionarAnimalComponent, {
+        data: {
+          multiplus: false,
+        },
+        width: '100%',
+      })
+      .afterClosed()
+      .subscribe({
+        next: (result) => {
+          if (result && result.status) {
+            this.form.get('animal')?.patchValue(result.animal);
+          }
+        },
+      });
   }
 
   selectVeterinario() {
-
-    this._dialog.open(SelecionarUsuarioComponent, {
-      data: {
-        setor: Setor.VETERINARIO
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-
-      next: (result) => {
-
-        if (result && result.status) {
-          this.form.get('veterinario')?.patchValue(result.usuario);
-        }
-      }
-    });
+    this._dialog
+      .open(SelecionarUsuarioComponent, {
+        data: {
+          setor: Setor.VETERINARIO,
+        },
+        width: '100%',
+      })
+      .afterClosed()
+      .subscribe({
+        next: (result) => {
+          if (result && result.status) {
+            this.form.get('veterinario')?.patchValue(result.usuario);
+          }
+        },
+      });
   }
 
   submit() {
-
     if (this.form.valid) {
-
-      const agendamento: Agendamento = Object.assign({}, this.form.getRawValue());
-      agendamento.dataHora = DateUtils.addHours(agendamento.dataHora, DateUtils.offsetBrasilia);
+      const agendamento: Agendamento = Object.assign(
+        {},
+        this.form.getRawValue()
+      );
+      agendamento.dataHora = DateUtils.addHours(
+        agendamento.dataHora,
+        DateUtils.offsetBrasilia
+      );
 
       if (agendamento.id) {
-
         this._agendamentoService.update(agendamento).subscribe({
-
           complete: () => {
-            this._notificationService.show(MessageUtils.AGENDAMENTO.UPDATE_SUCCESS, NotificationType.SUCCESS);
+            this._notificationService.show(
+              MessageUtils.AGENDAMENTO.UPDATE_SUCCESS,
+              NotificationType.SUCCESS
+            );
             this.ngOnInit();
           },
 
           error: (error) => {
             console.error(error);
-            this._notificationService.show(MessageUtils.AGENDAMENTO.UPDATE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-          }
+            this._notificationService.show(
+              MessageUtils.AGENDAMENTO.UPDATE_FAIL +
+                MessageUtils.getMessage(error),
+              NotificationType.FAIL
+            );
+          },
         });
-      }
-
-      else {
-
+      } else {
         this._agendamentoService.save(agendamento).subscribe({
-
           next: (agendamento) => {
-            this._notificationService.show(MessageUtils.AGENDAMENTO.SAVE_SUCCESS, NotificationType.SUCCESS);
-            this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/agendamentos/' + agendamento.id]);
+            this._notificationService.show(
+              MessageUtils.AGENDAMENTO.SAVE_SUCCESS,
+              NotificationType.SUCCESS
+            );
+            this._router.navigate([
+              '/' +
+                this.authentication.role.toLowerCase() +
+                '/agendamentos/' +
+                agendamento.id,
+            ]);
           },
 
           error: (error) => {
             console.error(error);
-            this._notificationService.show(MessageUtils.AGENDAMENTO.SAVE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-          }
+            this._notificationService.show(
+              MessageUtils.AGENDAMENTO.SAVE_FAIL +
+                MessageUtils.getMessage(error),
+              NotificationType.FAIL
+            );
+          },
         });
       }
     }

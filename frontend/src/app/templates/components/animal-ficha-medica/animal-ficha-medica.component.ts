@@ -11,10 +11,9 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 @Component({
   selector: 'app-animal-ficha-medica',
   templateUrl: './animal-ficha-medica.component.html',
-  styleUrls: ['./animal-ficha-medica.component.sass']
+  styleUrls: ['./animal-ficha-medica.component.sass'],
 })
 export class AnimalFichaMedicaComponent implements OnInit {
-
   animal!: Animal;
   form!: FormGroup;
 
@@ -22,28 +21,24 @@ export class AnimalFichaMedicaComponent implements OnInit {
     private _animalService: AnimalService,
     private _formBuilder: FormBuilder,
     private _notificationService: NotificationService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    
     this._animalService.get().subscribe({
-
       next: (animal) => {
-          
         if (animal) {
           this.animal = animal;
           this.buildForm(animal);
         }
-      }
+      },
     });
   }
 
   buildForm(animal: Animal) {
-
     this.form = this._formBuilder.group({
       id: [animal.fichaMedica?.id, Validators.nullValidator],
       comorbidades: [animal.fichaMedica?.comorbidades, Validators.required],
-      castrado: [animal.fichaMedica?.castrado, Validators.required]
+      castrado: [animal.fichaMedica?.castrado, Validators.required],
     });
 
     this.form.disable();
@@ -62,25 +57,31 @@ export class AnimalFichaMedicaComponent implements OnInit {
   }
 
   submit() {
-
     if (this.form.valid) {
-
-      const fichaMedica: FichaMedica = Object.assign({}, this.form.getRawValue());
+      const fichaMedica: FichaMedica = Object.assign(
+        {},
+        this.form.getRawValue()
+      );
 
       this.animal.fichaMedica = fichaMedica;
       this.animal.adocoes = [];
 
       this._animalService.update(this.animal, null).subscribe({
-
         next: (animal) => {
           this._animalService.set(animal);
-          this._notificationService.show(MessageUtils.ANIMAL.UPDATE_SUCCESS, NotificationType.SUCCESS);
+          this._notificationService.show(
+            MessageUtils.ANIMAL.UPDATE_SUCCESS,
+            NotificationType.SUCCESS
+          );
         },
 
         error: (error) => {
           console.error(error);
-          this._notificationService.show(MessageUtils.ANIMAL.UPDATE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-        }
+          this._notificationService.show(
+            MessageUtils.ANIMAL.UPDATE_FAIL + MessageUtils.getMessage(error),
+            NotificationType.FAIL
+          );
+        },
       });
     }
   }

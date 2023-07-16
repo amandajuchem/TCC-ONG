@@ -16,10 +16,9 @@ import { OperatorUtils } from 'src/app/utils/operator-utils';
 @Component({
   selector: 'app-feiras-adocao',
   templateUrl: './feiras-adocao.component.html',
-  styleUrls: ['./feiras-adocao.component.sass']
+  styleUrls: ['./feiras-adocao.component.sass'],
 })
 export class FeirasAdocaoComponent implements AfterViewInit {
-
   authentication!: Authentication;
   columns!: Array<string>;
   dataSource!: MatTableDataSource<FeiraAdocao>;
@@ -39,7 +38,14 @@ export class FeirasAdocaoComponent implements AfterViewInit {
     private _router: Router
   ) {
     this.authentication = this._authService.getAuthentication();
-    this.columns = ['index', 'dataHora', 'nome', 'totalAnimais', 'totalUsuarios', 'acao'];
+    this.columns = [
+      'index',
+      'dataHora',
+      'nome',
+      'totalAnimais',
+      'totalUsuarios',
+      'acao',
+    ];
     this.dataSource = new MatTableDataSource();
     this.isLoadingResults = true;
     this.resultsLength = 0;
@@ -50,11 +56,12 @@ export class FeirasAdocaoComponent implements AfterViewInit {
   }
 
   add() {
-    this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/feiras-adocao/cadastro']);
+    this._router.navigate([
+      '/' + this.authentication.role.toLowerCase() + '/feiras-adocao/cadastro',
+    ]);
   }
 
   async findAll() {
-
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
     const sort = this.sort.active;
@@ -64,7 +71,6 @@ export class FeirasAdocaoComponent implements AfterViewInit {
     await OperatorUtils.delay(1000);
 
     this._feiraAdocaoService.findAll(page, size, sort, direction).subscribe({
-
       complete: () => {
         this.isLoadingResults = false;
       },
@@ -77,13 +83,16 @@ export class FeirasAdocaoComponent implements AfterViewInit {
       error: (error) => {
         this.isLoadingResults = false;
         console.error(error);
-        this._notificationService.show(MessageUtils.FEIRA_ADOCAO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);    
-      }
+        this._notificationService.show(
+          MessageUtils.FEIRA_ADOCAO.LIST_GET_FAIL +
+            MessageUtils.getMessage(error),
+          NotificationType.FAIL
+        );
+      },
     });
   }
 
   pageChange() {
-    
     if (this.filterDate) {
       this.search('date');
       return;
@@ -98,7 +107,6 @@ export class FeirasAdocaoComponent implements AfterViewInit {
   }
 
   async search(by: string) {
-
     let value: any = null;
 
     if (by === 'date') {
@@ -117,31 +125,40 @@ export class FeirasAdocaoComponent implements AfterViewInit {
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
 
-    this._feiraAdocaoService.search(value, page, size, sort, direction).subscribe({
+    this._feiraAdocaoService
+      .search(value, page, size, sort, direction)
+      .subscribe({
+        complete: () => {
+          this.isLoadingResults = false;
+        },
 
-      complete: () => {
-        this.isLoadingResults = false;
-      },
+        next: (feirasAdocao) => {
+          this.dataSource.data = feirasAdocao.content;
+          this.resultsLength = feirasAdocao.totalElements;
+        },
 
-      next: (feirasAdocao) => {
-        this.dataSource.data = feirasAdocao.content;
-        this.resultsLength = feirasAdocao.totalElements;
-      },
-
-      error: (error) => {
-        this.isLoadingResults = false;
-        console.error(error);
-        this._notificationService.show(MessageUtils.FEIRA_ADOCAO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);    
-      }
-    });
+        error: (error) => {
+          this.isLoadingResults = false;
+          console.error(error);
+          this._notificationService.show(
+            MessageUtils.FEIRA_ADOCAO.LIST_GET_FAIL +
+              MessageUtils.getMessage(error),
+            NotificationType.FAIL
+          );
+        },
+      });
   }
 
   show(feiraAdocao: FeiraAdocao) {
-    this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/feiras-adocao/' + feiraAdocao.id]);
+    this._router.navigate([
+      '/' +
+        this.authentication.role.toLowerCase() +
+        '/feiras-adocao/' +
+        feiraAdocao.id,
+    ]);
   }
 
   sortChange() {
-    
     this.paginator.pageIndex = 0;
 
     if (this.filterDate) {

@@ -8,30 +8,33 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 @Component({
   selector: 'app-animal-excluir',
   templateUrl: './animal-excluir.component.html',
-  styleUrls: ['./animal-excluir.component.sass']
+  styleUrls: ['./animal-excluir.component.sass'],
 })
 export class AnimalExcluirComponent {
-
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _animalService: AnimalService,
     private _dialogRef: MatDialogRef<AnimalExcluirComponent>,
     private _notificationService: NotificationService
-  ) { }
+  ) {}
 
   submit() {
-
     this._animalService.delete(this.data.animal.id).subscribe({
-
       complete: () => {
-        this._notificationService.show(MessageUtils.ANIMAL.DELETE_SUCCESS, NotificationType.SUCCESS);
-        this._dialogRef.close({status: true});
+        this._notificationService.show(
+          MessageUtils.ANIMAL.DELETE_SUCCESS,
+          NotificationType.SUCCESS
+        );
+        this._dialogRef.close({ status: true });
       },
 
       error: (error) => {
         console.log(error);
-        this._notificationService.show(MessageUtils.ANIMAL.DELETE_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-      }
+        this._notificationService.show(
+          MessageUtils.ANIMAL.DELETE_FAIL + MessageUtils.getMessage(error),
+          NotificationType.FAIL
+        );
+      },
     });
   }
 }

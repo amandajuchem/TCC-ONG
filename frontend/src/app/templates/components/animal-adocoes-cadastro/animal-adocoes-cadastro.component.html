@@ -1,119 +1,281 @@
 <div class="mat-dialog">
-    <h2 class="m-0" mat-dialog-title *ngIf="!data.observacao">Cadastrar Adoção</h2>
-    <h2 class="m-0" mat-dialog-title *ngIf="data.observacao">Editar Dados da Adoção</h2>
+  <h2 class="m-0" mat-dialog-title *ngIf="!data.observacao">
+    Cadastrar Adoção
+  </h2>
+  <h2 class="m-0" mat-dialog-title *ngIf="data.observacao">
+    Editar Dados da Adoção
+  </h2>
 
-    <div mat-dialog-content class="py-3">
+  <div mat-dialog-content class="py-3">
+    <form [formGroup]="form" *ngIf="form">
+      <div class="row">
+        <div class="col-12 col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Data</mat-label>
+            <input
+              matInput
+              [ngxMatDatetimePicker]="pickerDataHora"
+              formControlName="dataHora"
+              readonly
+            />
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="$any(pickerDataHora)"
+            ></mat-datepicker-toggle>
+            <ngx-mat-datetime-picker
+              #pickerDataHora
+              (closed)="dateChange()"
+            ></ngx-mat-datetime-picker>
+          </mat-form-field>
+        </div>
 
-        <form [formGroup]="form" *ngIf="form">
+        <div class="col-12 col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Local</mat-label>
+            <mat-select formControlName="local">
+              <mat-option value="EXTERNO">Externo</mat-option>
+              <mat-option value="INTERNO">Interno</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
 
-            <div class="row">
-                <div class="col-12 col-md-3">
-                    <mat-form-field appearance="outline" class="w-100">
-                        <mat-label>Data</mat-label>
-                        <input matInput [ngxMatDatetimePicker]="pickerDataHora" formControlName="dataHora" readonly>
-                        <mat-datepicker-toggle matIconSuffix [for]="$any(pickerDataHora)"></mat-datepicker-toggle>
-                        <ngx-mat-datetime-picker #pickerDataHora (closed)="dateChange()"></ngx-mat-datetime-picker>
-                        <mat-error *ngIf="hasError('dataHora')">{{getErrorMessage('dataHora')}}</mat-error>
-                    </mat-form-field>
-                </div>
+        <div class="col-12 col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Local de Adoção</mat-label>
+            <mat-select formControlName="localAdocao">
+              <mat-option value="FEIRA">Feira</mat-option>
+              <mat-option value="ONG">ONG</mat-option>
+              <mat-option value="PET_SHOP">Pet Shop</mat-option>
+              <mat-option value="RESGATE">Resgate</mat-option>
+              <mat-option value="RUA">Rua</mat-option>
+              <mat-option value="OUTRO">Outro</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
 
-                <div class="col-12 col-md-3">
-                    <mat-form-field appearance="outline" class="w-100">
-                        <mat-label>Local</mat-label>
-                        <mat-select formControlName="local">
-                            <mat-option value="EXTERNO">Externo</mat-option>
-                            <mat-option value="INTERNO">Interno</mat-option>
-                        </mat-select>
-                        <mat-error *ngIf="hasError('local')">{{getErrorMessage('local')}}</mat-error>
-                    </mat-form-field>
-                </div>
+        <div class="col-12 col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Vale Castração</mat-label>
+            <mat-select formControlName="valeCastracao">
+              <mat-option [value]="true">Sim</mat-option>
+              <mat-option [value]="false">Não</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
 
-                <div class="col-12 col-md-3">
-                    <mat-form-field appearance="outline" class="w-100">
-                        <mat-label>Local de Adoção</mat-label>
-                        <mat-select formControlName="localAdocao">
-                            <mat-option value="FEIRA">Feira</mat-option>
-                            <mat-option value="ONG">ONG</mat-option>
-                            <mat-option value="PET_SHOP">Pet Shop</mat-option>
-                            <mat-option value="RESGATE">Resgate</mat-option>
-                            <mat-option value="RUA">Rua</mat-option>
-                            <mat-option value="OUTRO">Outro</mat-option>
-                        </mat-select>
-                        <mat-error *ngIf="hasError('localAdocao')">{{getErrorMessage('localAdocao')}}</mat-error>
-                    </mat-form-field>
-                </div>
+      <div class="row">
+        <div class="col-12 col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Animal</mat-label>
+            <input
+              matInput
+              [value]="form.get('animal')?.value?.nome"
+              readonly
+              required
+            />
+          </mat-form-field>
+        </div>
 
-                <div class="col-12 col-md-3">
-                    <mat-form-field appearance="outline" class="w-100">
-                        <mat-label>Vale Castração</mat-label>
-                        <mat-select formControlName="valeCastracao">
-                            <mat-option [value]="true">Sim</mat-option>
-                            <mat-option [value]="false">Não</mat-option>
-                        </mat-select>
-                        <mat-error *ngIf="hasError('valeCastracao')">{{getErrorMessage('valeCastracao')}}</mat-error>
-                    </mat-form-field>
-                </div>
-            </div>
+        <div class="col-12 col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Tutor</mat-label>
+            <input
+              matInput
+              [value]="form.get('tutor')?.value?.nome"
+              readonly
+              required
+            />
+            <button
+              type="button"
+              matSuffix
+              mat-icon-button
+              (click)="selectTutor()"
+            >
+              <mat-icon>search</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+      </div>
 
-            <div class="row">
-                <div class="col-12 col-md-6">
-                    <mat-form-field appearance="outline" class="w-100">
-                        <mat-label>Animal</mat-label>
-                        <input matInput [value]="form.get('animal')?.value?.nome" readonly required>
-                        <mat-error *ngIf="hasError('animal')">{{getErrorMessage('animal')}}</mat-error>
-                    </mat-form-field>
-                </div>
+      <div class="row mb-3">
+        <div class="col-11">
+          <div class="d-flex align-items-center justify-content-start h-100">
+            <h3 class="m-0 text-dark">Termo de Responsabilidade</h3>
+          </div>
+        </div>
 
-                <div class="col-12 col-md-6">
-                    <mat-form-field appearance="outline" class="w-100">
-                        <mat-label>Tutor</mat-label>
-                        <input matInput [value]="form.get('tutor')?.value?.nome" readonly required>
-                        <button type="button" matSuffix mat-icon-button (click)="selectTutor()">
-                            <mat-icon>search</mat-icon>
-                        </button>
-                        <mat-error *ngIf="hasError('tutor')">{{getErrorMessage('tutor')}}</mat-error>
-                    </mat-form-field>
-                </div>
-            </div>
+        <div class="col-1">
+          <div class="d-flex align-items-center justify-content-end h-100">
+            <button type="button" mat-icon-button (click)="addImagem()">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Data</mat-label>
+            <input
+              matInput
+              [ngxMatDatetimePicker]="pickerDataHora"
+              formControlName="dataHora"
+              readonly
+            />
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="$any(pickerDataHora)"
+            ></mat-datepicker-toggle>
+            <ngx-mat-datetime-picker
+              #pickerDataHora
+              (closed)="dateChange()"
+            ></ngx-mat-datetime-picker>
+            <mat-error *ngIf="hasError('dataHora')">{{
+              getErrorMessage("dataHora")
+            }}</mat-error>
+          </mat-form-field>
+        </div>
 
-            <div class="row mb-3">
-                <div class="col-11">
-                    <div class="d-flex align-items-center justify-content-start h-100">
-                        <h3 class="m-0 text-dark">Termo de Responsabilidade</h3>
-                    </div>
-                </div>
+        <div class="col-12 col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Local</mat-label>
+            <mat-select formControlName="local">
+              <mat-option value="EXTERNO">Externo</mat-option>
+              <mat-option value="INTERNO">Interno</mat-option>
+            </mat-select>
+            <mat-error *ngIf="hasError('local')">{{
+              getErrorMessage("local")
+            }}</mat-error>
+          </mat-form-field>
+        </div>
 
-                <div class="col-1">
-                    <div class="d-flex align-items-center justify-content-end h-100">
-                        <button type="button" mat-icon-button (click)="addImagem()">
-                            <mat-icon>add</mat-icon>
-                        </button>
-                    </div>
-                </div>
-            </div>
+        <div class="col-12 col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Local de Adoção</mat-label>
+            <mat-select formControlName="localAdocao">
+              <mat-option value="FEIRA">Feira</mat-option>
+              <mat-option value="ONG">ONG</mat-option>
+              <mat-option value="PET_SHOP">Pet Shop</mat-option>
+              <mat-option value="RESGATE">Resgate</mat-option>
+              <mat-option value="RUA">Rua</mat-option>
+              <mat-option value="OUTRO">Outro</mat-option>
+            </mat-select>
+            <mat-error *ngIf="hasError('localAdocao')">{{
+              getErrorMessage("localAdocao")
+            }}</mat-error>
+          </mat-form-field>
+        </div>
 
-            <div class="row">
-                <div class="col-12 col-md-3 mb-3" *ngFor="let termo of termoResponsabilidade">
-                    <mat-card>
-                        <img mat-card-image [src]="termo.nome ? apiURL + '/imagens/search?value=' + termo.nome : termo.data">
-                        <mat-card-footer class="p-2">
-                            <div class="text-center">
-                                <button type="button" mat-icon-button class="me-3" (click)="downloadImagem(termo)" *ngIf="termo.nome">
-                                    <mat-icon>download</mat-icon>
-                                </button>
-                                <button type="button" mat-icon-button class="ms-3" (click)="removeImagem(termo)">
-                                    <mat-icon>delete</mat-icon>
-                                </button>
-                            </div>
-                        </mat-card-footer>
-                    </mat-card>
-                </div>
-            </div>
-        </form>
-    </div>
+        <div class="col-12 col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Vale Castração</mat-label>
+            <mat-select formControlName="valeCastracao">
+              <mat-option [value]="true">Sim</mat-option>
+              <mat-option [value]="false">Não</mat-option>
+            </mat-select>
+            <mat-error *ngIf="hasError('valeCastracao')">{{
+              getErrorMessage("valeCastracao")
+            }}</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
 
-    <div mat-dialog-actions layout="row" class="d-flex justify-content-end" *ngIf="form">
-        <button mat-button mat-dialog-close>Cancelar</button>
-        <button mat-button [ngClass]="form.valid ? 'bg-success text-white' : ''" (click)="submit()" [disabled]="!form.valid">OK</button>
-    </div>
+      <div class="row">
+        <div class="col-12 col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Animal</mat-label>
+            <input
+              matInput
+              [value]="form.get('animal')?.value?.nome"
+              readonly
+              required
+            />
+            <mat-error *ngIf="hasError('animal')">{{
+              getErrorMessage("animal")
+            }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Tutor</mat-label>
+            <input
+              matInput
+              [value]="form.get('tutor')?.value?.nome"
+              readonly
+              required
+            />
+            <button
+              type="button"
+              matSuffix
+              mat-icon-button
+              (click)="selectTutor()"
+            >
+              <mat-icon>search</mat-icon>
+            </button>
+            <mat-error *ngIf="hasError('tutor')">{{
+              getErrorMessage("tutor")
+            }}</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div
+          class="col-12 col-md-3 mb-3"
+          *ngFor="let termo of termoResponsabilidade"
+        >
+          <mat-card>
+            <img
+              mat-card-image
+              [src]="
+                termo.nome
+                  ? apiURL + '/imagens/search?value=' + termo.nome
+                  : termo.data
+              "
+            />
+            <mat-card-footer class="p-2">
+              <div class="text-center">
+                <button
+                  type="button"
+                  mat-icon-button
+                  class="me-3"
+                  (click)="downloadImagem(termo)"
+                  *ngIf="termo.nome"
+                >
+                  <mat-icon>download</mat-icon>
+                </button>
+                <button
+                  type="button"
+                  mat-icon-button
+                  class="ms-3"
+                  (click)="removeImagem(termo)"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </mat-card-footer>
+          </mat-card>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div
+    mat-dialog-actions
+    layout="row"
+    class="d-flex justify-content-end"
+    *ngIf="form"
+  >
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button
+      mat-button
+      [ngClass]="form.valid ? 'bg-success text-white' : ''"
+      (click)="submit()"
+      [disabled]="!form.valid"
+    >
+      OK
+    </button>
+  </div>
 </div>

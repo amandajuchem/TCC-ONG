@@ -14,10 +14,9 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-animais',
   templateUrl: './animais.component.html',
-  styleUrls: ['./animais.component.sass']
+  styleUrls: ['./animais.component.sass'],
 })
 export class AnimaisComponent implements AfterViewInit {
-
   animais!: Array<Animal>;
   apiURL!: string;
   authentication!: Authentication;
@@ -46,11 +45,12 @@ export class AnimaisComponent implements AfterViewInit {
   }
 
   add() {
-    this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/animais/cadastro']);
+    this._router.navigate([
+      '/' + this.authentication.role.toLowerCase() + '/animais/cadastro',
+    ]);
   }
 
   async findAll() {
-
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
     const sort = 'nome';
@@ -60,7 +60,6 @@ export class AnimaisComponent implements AfterViewInit {
     await OperatorUtils.delay(1000);
 
     this._animalService.findAll(page, size, sort, direction).subscribe({
-
       complete: () => {
         this.isLoadingResults = false;
       },
@@ -73,13 +72,15 @@ export class AnimaisComponent implements AfterViewInit {
       error: (error) => {
         this.isLoadingResults = false;
         console.error(error);
-        this._notificationService.show(MessageUtils.ANIMAL.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-      }
+        this._notificationService.show(
+          MessageUtils.ANIMAL.LIST_GET_FAIL + MessageUtils.getMessage(error),
+          NotificationType.FAIL
+        );
+      },
     });
   }
 
   pageChange(event: any) {
-
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
 
@@ -92,7 +93,6 @@ export class AnimaisComponent implements AfterViewInit {
   }
 
   async search() {
-
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
     const sort = 'nome';
@@ -102,22 +102,26 @@ export class AnimaisComponent implements AfterViewInit {
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
 
-    this._animalService.search(this.filterString, page, size, sort, direction).subscribe({
+    this._animalService
+      .search(this.filterString, page, size, sort, direction)
+      .subscribe({
+        complete: () => {
+          this.isLoadingResults = false;
+        },
 
-      complete: () => {
-        this.isLoadingResults = false;
-      },
+        next: (animais) => {
+          this.animais = animais.content;
+          this.resultsLength = animais.totalElements;
+        },
 
-      next: (animais) => {
-        this.animais = animais.content;
-        this.resultsLength = animais.totalElements;
-      },
-
-      error: (error) => {
-        this.isLoadingResults = false;
-        console.error(error);
-        this._notificationService.show(MessageUtils.ANIMAL.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-      }
-    });
+        error: (error) => {
+          this.isLoadingResults = false;
+          console.error(error);
+          this._notificationService.show(
+            MessageUtils.ANIMAL.LIST_GET_FAIL + MessageUtils.getMessage(error),
+            NotificationType.FAIL
+          );
+        },
+      });
   }
 }

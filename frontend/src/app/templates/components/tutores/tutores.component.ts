@@ -14,10 +14,9 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-tutores',
   templateUrl: './tutores.component.html',
-  styleUrls: ['./tutores.component.sass']
+  styleUrls: ['./tutores.component.sass'],
 })
 export class TutoresComponent implements AfterViewInit {
-
   apiURL!: string;
   authentication!: Authentication;
   filterString!: string;
@@ -46,11 +45,12 @@ export class TutoresComponent implements AfterViewInit {
   }
 
   add() {
-    this._router.navigate(['/' + this.authentication.role.toLowerCase() + '/tutores/cadastro']);
+    this._router.navigate([
+      '/' + this.authentication.role.toLowerCase() + '/tutores/cadastro',
+    ]);
   }
 
   async findAll() {
-
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
     const sort = 'nome';
@@ -60,7 +60,6 @@ export class TutoresComponent implements AfterViewInit {
     await OperatorUtils.delay(1000);
 
     this._tutorService.findAll(page, size, sort, direction).subscribe({
-
       complete: () => {
         this.isLoadingResults = false;
       },
@@ -73,13 +72,15 @@ export class TutoresComponent implements AfterViewInit {
       error: (error) => {
         this.isLoadingResults = false;
         console.error(error);
-        this._notificationService.show(MessageUtils.TUTOR.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-      }
+        this._notificationService.show(
+          MessageUtils.TUTOR.LIST_GET_FAIL + MessageUtils.getMessage(error),
+          NotificationType.FAIL
+        );
+      },
     });
   }
 
   pageChange(event: any) {
-
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
 
@@ -92,7 +93,6 @@ export class TutoresComponent implements AfterViewInit {
   }
 
   async search() {
-
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
     const sort = 'nome';
@@ -102,22 +102,26 @@ export class TutoresComponent implements AfterViewInit {
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
 
-    this._tutorService.search(this.filterString, page, size, sort, direction).subscribe({
+    this._tutorService
+      .search(this.filterString, page, size, sort, direction)
+      .subscribe({
+        complete: () => {
+          this.isLoadingResults = false;
+        },
 
-      complete: () => {
-        this.isLoadingResults = false;
-      },
+        next: (tutores) => {
+          this.tutores = tutores.content;
+          this.resultsLength = tutores.totalElements;
+        },
 
-      next: (tutores) => {
-        this.tutores = tutores.content;
-        this.resultsLength = tutores.totalElements;
-      },
-
-      error: (error) => {
-        this.isLoadingResults = false;
-        console.error(error);
-        this._notificationService.show(MessageUtils.TUTOR.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-      }
-    });
+        error: (error) => {
+          this.isLoadingResults = false;
+          console.error(error);
+          this._notificationService.show(
+            MessageUtils.TUTOR.LIST_GET_FAIL + MessageUtils.getMessage(error),
+            NotificationType.FAIL
+          );
+        },
+      });
   }
 }

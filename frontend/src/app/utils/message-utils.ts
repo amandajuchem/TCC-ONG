@@ -1,5 +1,4 @@
 export class MessageUtils {
-  
   static ERROR_PREFIX = 'Erro! Não foi possível';
 
   static ADOCAO = {

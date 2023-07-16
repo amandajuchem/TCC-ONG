@@ -18,10 +18,9 @@ import { TutorObservacoesExcluirComponent } from '../tutor-observacoes-excluir/t
 @Component({
   selector: 'app-tutor-observacoes',
   templateUrl: './tutor-observacoes.component.html',
-  styleUrls: ['./tutor-observacoes.component.sass']
+  styleUrls: ['./tutor-observacoes.component.sass'],
 })
 export class TutorObservacoesComponent implements AfterViewInit {
-
   columns!: Array<string>;
   dataSource!: MatTableDataSource<Observacao>;
   isLoadingResults!: boolean;
@@ -35,7 +34,7 @@ export class TutorObservacoesComponent implements AfterViewInit {
     private _dialog: MatDialog,
     private _notificationService: NotificationService,
     private _observacaoservice: ObservacaoService,
-    private _tutorService: TutorService,
+    private _tutorService: TutorService
   ) {
     this.columns = ['index', 'createdDate', 'empty', 'acao'];
     this.dataSource = new MatTableDataSource();
@@ -44,61 +43,55 @@ export class TutorObservacoesComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-
     this._tutorService.get().subscribe({
-
       next: (tutor) => {
-        
         if (tutor) {
           this.tutor = tutor;
         }
-      }
+      },
     });
 
     this.findAll();
   }
 
   add() {
-
-    this._dialog.open(TutorObservacoesCadastroComponent, {
-      data: {
-        observacao: null,
-        tutor: this.tutor
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-
-      next: (result) => {
-
-        if (result && result.status) {
-          this.findAll();
-        }
-      }
-    });
+    this._dialog
+      .open(TutorObservacoesCadastroComponent, {
+        data: {
+          observacao: null,
+          tutor: this.tutor,
+        },
+        width: '100%',
+      })
+      .afterClosed()
+      .subscribe({
+        next: (result) => {
+          if (result && result.status) {
+            this.findAll();
+          }
+        },
+      });
   }
 
   delete(observacao: Observacao) {
-    
-    this._dialog.open(TutorObservacoesExcluirComponent, {
-      data: {
-        observacao: observacao
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-
-      next: (result) => {
-
-        if (result && result.status) {
-          this.findAll();
-        }
-      }
-    });
+    this._dialog
+      .open(TutorObservacoesExcluirComponent, {
+        data: {
+          observacao: observacao,
+        },
+        width: '100%',
+      })
+      .afterClosed()
+      .subscribe({
+        next: (result) => {
+          if (result && result.status) {
+            this.findAll();
+          }
+        },
+      });
   }
 
   async findAll() {
-
     const page = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
     const sort = this.sort.active;
@@ -107,23 +100,28 @@ export class TutorObservacoesComponent implements AfterViewInit {
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
 
-    this._observacaoservice.search(this.tutor.id, page, size, sort, direction).subscribe({
+    this._observacaoservice
+      .search(this.tutor.id, page, size, sort, direction)
+      .subscribe({
+        complete: () => {
+          this.isLoadingResults = false;
+        },
 
-      complete: () => {
-        this.isLoadingResults = false;
-      },
+        next: (observacoes) => {
+          this.dataSource.data = observacoes.content;
+          this.resultsLength = observacoes.totalElements;
+        },
 
-      next: (observacoes) => {
-        this.dataSource.data = observacoes.content;
-        this.resultsLength = observacoes.totalElements;
-      },
-
-      error: (error) => {
-        this.isLoadingResults = false;
-        console.error(error);
-        this._notificationService.show(MessageUtils.OBSERVACAO.LIST_GET_FAIL + MessageUtils.getMessage(error), NotificationType.FAIL);
-      }
-    });
+        error: (error) => {
+          this.isLoadingResults = false;
+          console.error(error);
+          this._notificationService.show(
+            MessageUtils.OBSERVACAO.LIST_GET_FAIL +
+              MessageUtils.getMessage(error),
+            NotificationType.FAIL
+          );
+        },
+      });
   }
 
   pageChange() {
@@ -136,22 +134,21 @@ export class TutorObservacoesComponent implements AfterViewInit {
   }
 
   update(observacao: Observacao) {
-
-    this._dialog.open(TutorObservacoesCadastroComponent, {
-      data: {
-        observacao: observacao,
-        tutor: this.tutor
-      },
-      width: '100%'
-    })
-    .afterClosed().subscribe({
-
-      next: (result) => {
-
-        if (result && result.status) {
-          this.findAll();
-        }
-      }
-    });
+    this._dialog
+      .open(TutorObservacoesCadastroComponent, {
+        data: {
+          observacao: observacao,
+          tutor: this.tutor,
+        },
+        width: '100%',
+      })
+      .afterClosed()
+      .subscribe({
+        next: (result) => {
+          if (result && result.status) {
+            this.findAll();
+          }
+        },
+      });
   }
 }
