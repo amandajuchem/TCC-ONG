@@ -1,108 +1,136 @@
 <app-breadcrumbs></app-breadcrumbs>
 
 <div class="row mb-3">
-    <div class="col-12">
+  <div class="col-12">
+    <mat-card>
+      <mat-card-header class="pb-2">
+        <div class="mat-card-header-text">
+          <div class="row">
+            <div class="col px-0">
+              <h2 class="m-0 text-center">Usuários</h2>
+            </div>
+          </div>
+        </div>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="row mb-3">
+          <div class="col-12 col-md-11 mb-3 mb-md-0">
+            <mat-form-field
+              appearance="outline"
+              class="w-100"
+              style="margin-bottom: -1.25em"
+            >
+              <mat-label>Buscar</mat-label>
+              <input
+                type="text"
+                matInput
+                [(ngModel)]="filterString"
+                (keyup.enter)="search()"
+                placeholder="Nome, CPF (sem pontuação) ou Setor"
+              />
+              <button mat-icon-button matSuffix (click)="search()">
+                <mat-icon>search</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
+
+          <div class="col-12 col-md-1">
+            <div class="d-flex align-items-center justify-content-center h-100">
+              <button
+                mat-icon-button
+                class="bg-success text-white"
+                title="Cadastrar"
+                (click)="add()"
+              >
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<div [hidden]="(usuarios && usuarios.length == 0) || isLoadingResults">
+  <div class="row">
+    <div class="col-12 col-md-3 mb-3" *ngFor="let usuario of usuarios">
+      <a class="text-decoration-none text-dark card-link" (click)="show(usuario)">
         <mat-card>
-            <mat-card-header class="pb-2">
-                <div class="mat-card-header-text">
-                    <div class="row">
-                        <div class="col px-0">
-                            <h2 class="m-0 text-center">Usuários</h2>
-                        </div>
-                    </div>
-                </div>
-            </mat-card-header>
-
-            <mat-card-content>
-                <div class="row mb-3">
-                    <div class="col-12 col-md-11 mb-3 mb-md-0">
-                        <mat-form-field appearance="outline" class="w-100" style="margin-bottom: -1.25em;">
-                            <mat-label>Buscar</mat-label>
-                            <input type="text" matInput [(ngModel)]="filterString" (keyup.enter)="search()" placeholder="Nome, CPF (sem pontuação) ou Setor">
-                            <button mat-icon-button matSuffix (click)="search()">
-                                <mat-icon>search</mat-icon>
-                            </button>
-                        </mat-form-field>
-                    </div>
-
-                    <div class="col-12 col-md-1">
-                        <div class="d-flex align-items-center justify-content-center h-100">
-                            <button mat-icon-button class="bg-success text-white" title="Cadastrar" (click)="add()">
-                                <mat-icon>add</mat-icon>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </mat-card-content>
+          <mat-card-content class="p-3">
+            <div class="mb-3 text-center">
+              <img
+                [src]="
+                  usuario.foto
+                    ? apiURL + '/imagens/search?value=' + usuario.foto.nome
+                    : '/assets/images/usuarios.png'
+                "
+                height="150px"
+                [ngClass]="usuario.foto ? 'rounded-circle' : ''"
+              />
+            </div>
+            <div>
+              <p class="m-0 fw-bold">{{ usuario.nome }}</p>
+              <p class="m-0">{{ usuario.cpf | mask : "CPF_CNPJ" }}</p>
+              <p class="m-0">{{ usuario.setor }}</p>
+            </div>
+          </mat-card-content>
         </mat-card>
+      </a>
     </div>
+  </div>
 </div>
 
 <div [hidden]="(usuarios && usuarios.length == 0) || isLoadingResults">
-    <div class="row">
-        <div class="col-12 col-md-3 mb-3" *ngFor="let usuario of usuarios">
-            <a class="text-decoration-none text-dark" (click)="show(usuario)">
-                <mat-card>
-                    <mat-card-content class="p-3">
-                        <div class="mb-3 text-center">
-                            <img [src]="usuario.foto ? apiURL + '/imagens/search?value=' + usuario.foto.nome : '/assets/images/usuarios.png'" height="150px" 
-                                [ngClass]="usuario.foto ? 'rounded-circle' : ''">
-                        </div>
-                        <div>
-                            <p class="m-0 fw-bold">{{usuario.nome}}</p>
-                            <p class="m-0">{{usuario.cpf | mask: 'CPF_CNPJ'}}</p>
-                            <p class="m-0">{{usuario.setor}}</p>
-                        </div>
-                    </mat-card-content>
-                </mat-card>
-            </a>
-        </div>
+  <div class="row mb-3">
+    <div class="col-12">
+      <mat-card>
+        <mat-card-content>
+          <mat-paginator
+            showFirstLastButtons
+            [length]="resultsLength"
+            [pageSize]="10"
+            [pageSizeOptions]="[10, 25, 50, 100]"
+            (page)="pageChange($event)"
+          ></mat-paginator>
+        </mat-card-content>
+      </mat-card>
     </div>
-</div>
-
-<div [hidden]="(usuarios && usuarios.length == 0) || isLoadingResults">
-    <div class="row mb-3">
-        <div class="col-12">
-            <mat-card>
-                <mat-card-content>
-                    <mat-paginator showFirstLastButtons [length]="resultsLength" [pageSize]="10" [pageSizeOptions]="[10, 25, 50, 100]" (page)="pageChange($event)"></mat-paginator>
-                </mat-card-content>
-            </mat-card>
-        </div>
-    </div>
+  </div>
 </div>
 
 <div [hidden]="!isLoadingResults">
-    <div class="row">
-        <div class="col-12">
-            <mat-card>
-                <mat-card-content>
-                    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-                    <p class="text-center pt-3">Obtendo dados</p>
-                </mat-card-content>
-            </mat-card>
-        </div>
+  <div class="row">
+    <div class="col-12">
+      <mat-card>
+        <mat-card-content>
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+          <p class="text-center pt-3">Obtendo dados</p>
+        </mat-card-content>
+      </mat-card>
     </div>
+  </div>
 </div>
 
 <div [hidden]="(usuarios && usuarios.length > 0) || isLoadingResults">
-    <mat-card>
-        <mat-card-content>
-            <div class="row">
-                <div class="col-12">
-                    <div class="text-center">
-                        <img src="/assets/images/nao-encontrado.png" width="100px">
-                    </div>
-                </div>
-            </div>
+  <mat-card>
+    <mat-card-content>
+      <div class="row">
+        <div class="col-12">
+          <div class="text-center">
+            <img src="/assets/images/nao-encontrado.png" width="100px" />
+          </div>
+        </div>
+      </div>
 
-            <div class="row">
-                <div class="col-12">
-                    <div class="text-center">
-                        <h2 class="m-0">Não há dados a serem exibidos!</h2>
-                    </div>
-                </div>
-            </div>
-        </mat-card-content>
-    </mat-card>
+      <div class="row">
+        <div class="col-12">
+          <div class="text-center">
+            <h2 class="m-0">Não há dados a serem exibidos!</h2>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
 </div>

@@ -47,7 +47,7 @@ export class BreadcrumbsComponent implements OnInit {
       name = 'Cadastro';
     }
 
-    if (path.includes('animais')) {
+    if (path.includes('animais') && !path.includes('cadastro')) {
       this._animalService.get().subscribe({
         next: (animal) => {
           name = animal ? animal.nome.toUpperCase() : '';
@@ -55,7 +55,7 @@ export class BreadcrumbsComponent implements OnInit {
       });
     }
 
-    if (path.includes('tutores')) {
+    if (path.includes('tutores') && !path.includes('cadastro')) {
       this._tutorService.get().subscribe({
         next: (tutor) => {
           name = tutor ? tutor.nome.toUpperCase() : '';
@@ -63,7 +63,7 @@ export class BreadcrumbsComponent implements OnInit {
       });
     }
 
-    if (path.includes('usuarios')) {
+    if (path.includes('usuarios') && !path.includes('cadastro')) {
       this._usuarioService.get().subscribe({
         next: (usuario) => {
           name = usuario ? usuario.nome.toUpperCase() : '';

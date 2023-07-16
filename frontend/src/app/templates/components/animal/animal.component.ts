@@ -16,6 +16,7 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 export class AnimalComponent implements OnInit {
   animal!: Animal | null;
   authentication!: Authentication;
+  isLoading!: boolean;
 
   constructor(
     private _activatedRoute: ActivatedRoute,
@@ -26,20 +27,24 @@ export class AnimalComponent implements OnInit {
 
   ngOnInit(): void {
     this.authentication = this._authService.getAuthentication();
+    this.isLoading = true;
 
     this._activatedRoute.params.subscribe({
       next: (params: any) => {
         if (params && params.id) {
           if (params.id.includes('cadastro')) {
             this._animalService.set(null);
+            this.isLoading = false;
           } else {
             this._animalService.findById(params.id).subscribe({
               next: (animal) => {
                 this._animalService.set(animal);
+                this.isLoading = false;
               },
 
               error: (error) => {
                 console.error(error);
+                this.isLoading = false;
                 this._notificationService.show(
                   MessageUtils.ANIMAL.GET_FAIL + MessageUtils.getMessage(error),
                   NotificationType.FAIL

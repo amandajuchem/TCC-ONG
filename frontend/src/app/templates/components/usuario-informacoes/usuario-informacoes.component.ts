@@ -13,6 +13,7 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 import { environment } from 'src/environments/environment';
 
 import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-imagem.component';
+import { FormUtils } from 'src/app/utils/form-utils';
 
 @Component({
   selector: 'app-usuario-informacoes',
@@ -85,10 +86,10 @@ export class UsuarioInformacoesComponent implements OnInit {
   buildForm(usuario: Usuario | null) {
     this.form = this._formBuilder.group({
       id: [usuario?.id, Validators.nullValidator],
-      nome: [usuario?.nome, Validators.required],
-      cpf: [usuario?.cpf, Validators.required],
-      senha: [usuario?.senha, Validators.required],
-      setor: [usuario?.setor, Validators.required],
+      nome: [usuario?.nome, [Validators.required, Validators.maxLength(100)]],
+      cpf: [usuario?.cpf, [Validators.required, Validators.maxLength(11)]],
+      senha: [usuario?.senha, [Validators.required, Validators.maxLength(255)]],
+      setor: [usuario?.setor, [Validators.required, Validators.maxLength(20)]],
       status: [usuario?.status, Validators.required],
       foto: [usuario?.foto, Validators.nullValidator],
     });
@@ -107,58 +108,68 @@ export class UsuarioInformacoesComponent implements OnInit {
         ]);
   }
 
+  getErrorMessage(controlName: string) {
+    return FormUtils.getErrorMessage(this.form, controlName);
+  }
+
+  hasError(controlName: string) {
+    return FormUtils.hasError(this.form, controlName);
+  }
+
   removeFoto() {
     this.foto = null;
     this.form.get('foto')?.patchValue(null);
   }
 
   submit() {
-    const usuario: Usuario = Object.assign({}, this.form.getRawValue());
-    const imagem: File = this.foto?.file;
+    if (this.form.valid) {
+      const usuario: Usuario = Object.assign({}, this.form.getRawValue());
+      const imagem: File = this.foto?.file;
 
-    if (usuario.id) {
-      this._usuarioService.update(usuario, imagem).subscribe({
-        next: (usuario) => {
-          this.foto ? (this.foto.file = null) : null;
-          this._usuarioService.set(usuario);
-          this._notificationService.show(
-            MessageUtils.USUARIO.UPDATE_SUCCESS,
-            NotificationType.SUCCESS
-          );
-        },
+      if (usuario.id) {
+        this._usuarioService.update(usuario, imagem).subscribe({
+          next: (usuario) => {
+            this.foto ? (this.foto.file = null) : null;
+            this._usuarioService.set(usuario);
+            this._notificationService.show(
+              MessageUtils.USUARIO.UPDATE_SUCCESS,
+              NotificationType.SUCCESS
+            );
+          },
 
-        error: (error) => {
-          console.error(error);
-          this._notificationService.show(
-            MessageUtils.USUARIO.UPDATE_FAIL + MessageUtils.getMessage(error),
-            NotificationType.FAIL
-          );
-        },
-      });
-    } else {
-      this._usuarioService.save(usuario, imagem).subscribe({
-        next: (usuario) => {
-          this.foto ? (this.foto.file = null) : null;
-          this._router.navigate([
-            '/' +
-              this.authentication.role.toLowerCase() +
-              '/usuarios/' +
-              usuario.id,
-          ]);
-          this._notificationService.show(
-            MessageUtils.USUARIO.SAVE_SUCCESS,
-            NotificationType.SUCCESS
-          );
-        },
+          error: (error) => {
+            console.error(error);
+            this._notificationService.show(
+              MessageUtils.USUARIO.UPDATE_FAIL + MessageUtils.getMessage(error),
+              NotificationType.FAIL
+            );
+          },
+        });
+      } else {
+        this._usuarioService.save(usuario, imagem).subscribe({
+          next: (usuario) => {
+            this.foto ? (this.foto.file = null) : null;
+            this._router.navigate([
+              '/' +
+                this.authentication.role.toLowerCase() +
+                '/usuarios/' +
+                usuario.id,
+            ]);
+            this._notificationService.show(
+              MessageUtils.USUARIO.SAVE_SUCCESS,
+              NotificationType.SUCCESS
+            );
+          },
 
-        error: (error) => {
-          console.error(error);
-          this._notificationService.show(
-            MessageUtils.USUARIO.SAVE_FAIL + MessageUtils.getMessage(error),
-            NotificationType.FAIL
-          );
-        },
-      });
+          error: (error) => {
+            console.error(error);
+            this._notificationService.show(
+              MessageUtils.USUARIO.SAVE_FAIL + MessageUtils.getMessage(error),
+              NotificationType.FAIL
+            );
+          },
+        });
+      }
     }
   }
 

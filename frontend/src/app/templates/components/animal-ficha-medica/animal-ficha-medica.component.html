@@ -35,6 +35,9 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Comorbidades</mat-label>
         <textarea matInput formControlName="comorbidades"></textarea>
+        <mat-error *ngIf="hasError('comorbidades')">{{
+          getErrorMessage("comorbidades")
+        }}</mat-error>
       </mat-form-field>
     </div>
   </div>
@@ -47,6 +50,9 @@
           <mat-option [value]="true">Sim</mat-option>
           <mat-option [value]="false">Não</mat-option>
         </mat-select>
+        <mat-error *ngIf="hasError('castrado')">{{
+          getErrorMessage("castrado")
+        }}</mat-error>
       </mat-form-field>
     </div>
   </div>

@@ -32,7 +32,7 @@
                   mat-icon-button
                   title="Salvar"
                   (click)="submit()"
-                  *ngIf="form.enabled && form.valid"
+                  *ngIf="form.enabled"
                 >
                   <mat-icon>save</mat-icon>
                 </button>
@@ -76,6 +76,9 @@
                 >
                   <mat-icon>search</mat-icon>
                 </button>
+                <mat-error *ngIf="hasError('animal')">{{
+                  getErrorMessage("animal")
+                }}</mat-error>
               </mat-form-field>
             </div>
 
@@ -98,6 +101,9 @@
                 >
                   <mat-icon>search</mat-icon>
                 </button>
+                <mat-error *ngIf="hasError('veterinario')">{{
+                  getErrorMessage("veterinario")
+                }}</mat-error>
               </mat-form-field>
             </div>
           </div>
@@ -113,6 +119,9 @@
                   required
                   [disabled]="!form.enabled"
                 ></textarea>
+                <mat-error *ngIf="hasError('comorbidades')">{{
+                  getErrorMessage("comorbidades")
+                }}</mat-error>
               </mat-form-field>
             </div>
           </div>
@@ -145,6 +154,9 @@
                   #pickerDataHoraAtendimento
                   (closed)="dateChange()"
                 ></ngx-mat-datetime-picker>
+                <mat-error *ngIf="hasError('dataHora')">{{
+                  getErrorMessage("dataHora")
+                }}</mat-error>
               </mat-form-field>
             </div>
 
@@ -160,6 +172,9 @@
                   <mat-option value="OUTRO">Outro</mat-option>
                   <mat-option value="VALE_CASTRACAO">Vale Castração</mat-option>
                 </mat-select>
+                <mat-error *ngIf="hasError('motivo')">{{
+                  getErrorMessage("motivo")
+                }}</mat-error>
               </mat-form-field>
             </div>
           </div>
@@ -169,6 +184,9 @@
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Diagnóstico</mat-label>
                 <textarea matInput formControlName="diagnostico"></textarea>
+                <mat-error *ngIf="hasError('diagnostico')">{{
+                  getErrorMessage("diagnostico")
+                }}</mat-error>
               </mat-form-field>
             </div>
           </div>
@@ -178,6 +196,9 @@
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Posologia</mat-label>
                 <textarea matInput formControlName="posologia"></textarea>
+                <mat-error *ngIf="hasError('posologia')">{{
+                  getErrorMessage("posologia")
+                }}</mat-error>
               </mat-form-field>
             </div>
           </div>

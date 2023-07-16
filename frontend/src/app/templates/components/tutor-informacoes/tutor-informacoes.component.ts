@@ -9,6 +9,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ImagemService } from 'src/app/services/imagem.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { TutorService } from 'src/app/services/tutor.service';
+import { FormUtils } from 'src/app/utils/form-utils';
 import { MessageUtils } from 'src/app/utils/message-utils';
 import { environment } from 'src/environments/environment';
 
@@ -93,10 +94,13 @@ export class TutorInformacoesComponent implements OnInit {
   buildForm(tutor: Tutor | null) {
     this.form = this._formBuilder.group({
       id: [tutor?.id, Validators.nullValidator],
-      nome: [tutor?.nome, Validators.required],
-      cpf: [tutor?.cpf, Validators.required],
-      rg: [tutor?.rg, Validators.nullValidator],
-      situacao: [tutor?.situacao, Validators.required],
+      nome: [tutor?.nome, [Validators.required, Validators.maxLength(100)]],
+      cpf: [tutor?.cpf, [Validators.required, Validators.maxLength(11)]],
+      rg: [tutor?.rg, [Validators.maxLength(13)]],
+      situacao: [
+        tutor?.situacao,
+        [Validators.required, Validators.maxLength(10)],
+      ],
       foto: [tutor?.foto, Validators.nullValidator],
 
       telefones: this._formBuilder.array(
@@ -104,7 +108,10 @@ export class TutorInformacoesComponent implements OnInit {
           ? tutor.telefones.map((telefone) =>
               this._formBuilder.group({
                 id: [telefone.id, Validators.nullValidator],
-                numero: [telefone.numero, Validators.required],
+                numero: [
+                  telefone.numero,
+                  [Validators.required, Validators.maxLength(11)],
+                ],
               })
             )
           : []
@@ -149,6 +156,14 @@ export class TutorInformacoesComponent implements OnInit {
       });
   }
 
+  getErrorMessage(controlName: string) {
+    return FormUtils.getErrorMessage(this.form, controlName);
+  }
+
+  hasError(controlName: string) {
+    return FormUtils.hasError(this.form, controlName);
+  }
+
   get telefones() {
     return this.form.controls['telefones'] as FormArray;
   }
@@ -163,52 +178,54 @@ export class TutorInformacoesComponent implements OnInit {
   }
 
   submit() {
-    const tutor: Tutor = Object.assign({}, this.form.getRawValue());
-    const imagem: File = this.foto?.file;
+    if (this.form.valid) {
+      const tutor: Tutor = Object.assign({}, this.form.getRawValue());
+      const imagem: File = this.foto?.file;
 
-    if (tutor.id) {
-      this._tutorService.update(tutor, imagem).subscribe({
-        next: (tutor) => {
-          this.foto ? (this.foto.file = null) : null;
-          this._tutorService.set(tutor);
-          this._notificationService.show(
-            MessageUtils.TUTOR.UPDATE_SUCCESS,
-            NotificationType.SUCCESS
-          );
-        },
+      if (tutor.id) {
+        this._tutorService.update(tutor, imagem).subscribe({
+          next: (tutor) => {
+            this.foto ? (this.foto.file = null) : null;
+            this._tutorService.set(tutor);
+            this._notificationService.show(
+              MessageUtils.TUTOR.UPDATE_SUCCESS,
+              NotificationType.SUCCESS
+            );
+          },
 
-        error: (error) => {
-          console.error(error);
-          this._notificationService.show(
-            MessageUtils.TUTOR.UPDATE_FAIL + MessageUtils.getMessage(error),
-            NotificationType.FAIL
-          );
-        },
-      });
-    } else {
-      this._tutorService.save(tutor, imagem).subscribe({
-        next: (tutor) => {
-          this.foto ? (this.foto.file = null) : null;
-          this._router.navigate([
-            '/' +
-              this.authentication.role.toLowerCase() +
-              '/tutores/' +
-              tutor.id,
-          ]);
-          this._notificationService.show(
-            MessageUtils.TUTOR.SAVE_SUCCESS,
-            NotificationType.SUCCESS
-          );
-        },
+          error: (error) => {
+            console.error(error);
+            this._notificationService.show(
+              MessageUtils.TUTOR.UPDATE_FAIL + MessageUtils.getMessage(error),
+              NotificationType.FAIL
+            );
+          },
+        });
+      } else {
+        this._tutorService.save(tutor, imagem).subscribe({
+          next: (tutor) => {
+            this.foto ? (this.foto.file = null) : null;
+            this._router.navigate([
+              '/' +
+                this.authentication.role.toLowerCase() +
+                '/tutores/' +
+                tutor.id,
+            ]);
+            this._notificationService.show(
+              MessageUtils.TUTOR.SAVE_SUCCESS,
+              NotificationType.SUCCESS
+            );
+          },
 
-        error: (error) => {
-          console.error(error);
-          this._notificationService.show(
-            MessageUtils.TUTOR.SAVE_FAIL + MessageUtils.getMessage(error),
-            NotificationType.FAIL
-          );
-        },
-      });
+          error: (error) => {
+            console.error(error);
+            this._notificationService.show(
+              MessageUtils.TUTOR.SAVE_FAIL + MessageUtils.getMessage(error),
+              NotificationType.FAIL
+            );
+          },
+        });
+      }
     }
   }
 }

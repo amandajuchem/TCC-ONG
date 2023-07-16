@@ -13,6 +13,9 @@
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Observação</mat-label>
             <textarea matInput formControlName="conteudo"></textarea>
+            <mat-error *ngIf="hasError('conteudo')">{{
+              getErrorMessage("conteudo")
+            }}</mat-error>
           </mat-form-field>
         </div>
       </div>

@@ -15,6 +15,7 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 })
 export class TutorComponent implements OnInit {
   authentication!: Authentication;
+  isLoading!: boolean;
   tutor!: Tutor | null;
 
   constructor(
@@ -26,20 +27,24 @@ export class TutorComponent implements OnInit {
 
   ngOnInit(): void {
     this.authentication = this._authService.getAuthentication();
+    this.isLoading = true;
 
     this._activatedRoute.params.subscribe({
       next: (params: any) => {
         if (params && params.id) {
           if (params.id.includes('cadastro')) {
             this._tutorService.set(null);
+            this.isLoading = false;
           } else {
             this._tutorService.findById(params.id).subscribe({
               next: (tutor) => {
                 this._tutorService.set(tutor);
+                this.isLoading = false;
               },
 
               error: (error) => {
                 console.error(error);
+                this.isLoading = false;
                 this._notificationService.show(
                   MessageUtils.TUTOR.GET_FAIL + MessageUtils.getMessage(error),
                   NotificationType.FAIL

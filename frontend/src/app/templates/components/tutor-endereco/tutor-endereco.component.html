@@ -35,6 +35,9 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Rua</mat-label>
         <input matInput formControlName="rua" />
+        <mat-error *ngIf="hasError('rua')">{{
+          getErrorMessage("rua")
+        }}</mat-error>
       </mat-form-field>
     </div>
 
@@ -42,6 +45,9 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>N°</mat-label>
         <input matInput formControlName="numeroResidencia" />
+        <mat-error *ngIf="hasError('numeroResidencia')">{{
+          getErrorMessage("numeroResidencia")
+        }}</mat-error>
       </mat-form-field>
     </div>
 
@@ -49,6 +55,9 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Bairro</mat-label>
         <input matInput formControlName="bairro" />
+        <mat-error *ngIf="hasError('bairro')">{{
+          getErrorMessage("bairro")
+        }}</mat-error>
       </mat-form-field>
     </div>
   </div>
@@ -58,6 +67,9 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Complemento</mat-label>
         <input matInput formControlName="complemento" />
+        <mat-error *ngIf="hasError('complemento')">{{
+          getErrorMessage("complemento")
+        }}</mat-error>
       </mat-form-field>
     </div>
   </div>
@@ -97,6 +109,9 @@
           <mat-option value="SERGIPE">Sergipe</mat-option>
           <mat-option value="TOCANTINS">Tocantins</mat-option>
         </mat-select>
+        <mat-error *ngIf="hasError('estado')">{{
+          getErrorMessage("estado")
+        }}</mat-error>
       </mat-form-field>
     </div>
 
@@ -104,6 +119,9 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Cidade</mat-label>
         <input matInput formControlName="cidade" />
+        <mat-error *ngIf="hasError('cidade')">{{
+          getErrorMessage("cidade")
+        }}</mat-error>
       </mat-form-field>
     </div>
 
@@ -111,6 +129,9 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>CEP</mat-label>
         <input matInput formControlName="cep" mask="00000-000" />
+        <mat-error *ngIf="hasError('cep')">{{
+          getErrorMessage("cep")
+        }}</mat-error>
       </mat-form-field>
     </div>
   </div>

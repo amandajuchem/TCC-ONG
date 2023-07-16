@@ -14,7 +14,7 @@
           mat-icon-button
           title="Salvar"
           (click)="submit()"
-          *ngIf="form.enabled && form.valid"
+          *ngIf="form.enabled"
         >
           <mat-icon>save</mat-icon>
         </button>
@@ -85,6 +85,9 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Nome</mat-label>
         <input matInput formControlName="nome" />
+        <mat-error *ngIf="hasError('nome')">{{
+          getErrorMessage("nome")
+        }}</mat-error>
       </mat-form-field>
     </div>
   </div>
@@ -92,8 +95,11 @@
   <div class="row">
     <div class="col-12 col-md-3">
       <mat-form-field appearance="outline" class="w-100">
-        <mat-label>idade</mat-label>
+        <mat-label>Idade</mat-label>
         <input matInput formControlName="idade" mask="990" />
+        <mat-error *ngIf="hasError('idade')">{{
+          getErrorMessage("idade")
+        }}</mat-error>
       </mat-form-field>
     </div>
 
@@ -104,6 +110,9 @@
           <mat-option value="FEMEA">Fêmea</mat-option>
           <mat-option value="MACHO">Macho</mat-option>
         </mat-select>
+        <mat-error *ngIf="hasError('sexo')">{{
+          getErrorMessage("sexo")
+        }}</mat-error>
       </mat-form-field>
     </div>
 
@@ -111,6 +120,9 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Cor</mat-label>
         <input matInput formControlName="cor" />
+        <mat-error *ngIf="hasError('cor')">{{
+          getErrorMessage("cor")
+        }}</mat-error>
       </mat-form-field>
     </div>
 
@@ -118,6 +130,9 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Raça</mat-label>
         <input matInput formControlName="raca" />
+        <mat-error *ngIf="hasError('raca')">{{
+          getErrorMessage("raca")
+        }}</mat-error>
       </mat-form-field>
     </div>
   </div>
@@ -131,6 +146,9 @@
           <mat-option value="GATO">Gato</mat-option>
           <mat-option value="OUTRO">Outro</mat-option>
         </mat-select>
+        <mat-error *ngIf="hasError('especie')">{{
+          getErrorMessage("especie")
+        }}</mat-error>
       </mat-form-field>
     </div>
 
@@ -143,6 +161,9 @@
           <mat-option value="MEDIO">Medio</mat-option>
           <mat-option value="GRANDE">Grande</mat-option>
         </mat-select>
+        <mat-error *ngIf="hasError('porte')">{{
+          getErrorMessage("porte")
+        }}</mat-error>
       </mat-form-field>
     </div>
 
@@ -155,6 +176,9 @@
           <mat-option value="ESPERANDO">Esperando</mat-option>
           <mat-option value="FALECIDO">Falecido</mat-option>
         </mat-select>
+        <mat-error *ngIf="hasError('situacao')">{{
+          getErrorMessage("situacao")
+        }}</mat-error>
       </mat-form-field>
     </div>
   </div>

@@ -5,6 +5,7 @@ import { Tutor } from 'src/app/entities/tutor';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { NotificationService } from 'src/app/services/notification.service';
 import { TutorService } from 'src/app/services/tutor.service';
+import { FormUtils } from 'src/app/utils/form-utils';
 import { MessageUtils } from 'src/app/utils/message-utils';
 
 @Component({
@@ -36,13 +37,31 @@ export class TutorEnderecoComponent implements OnInit {
   buildForm(tutor: Tutor) {
     this.form = this._formBuilder.group({
       id: [tutor.endereco?.id, Validators.nullValidator],
-      rua: [tutor.endereco?.rua, Validators.required],
-      numeroResidencia: [tutor.endereco?.numeroResidencia, Validators.required],
-      bairro: [tutor.endereco?.bairro, Validators.required],
-      complemento: [tutor.endereco?.complemento, Validators.nullValidator],
-      cidade: [tutor.endereco?.cidade, Validators.required],
-      estado: [tutor.endereco?.estado, Validators.required],
-      cep: [tutor.endereco?.cep, Validators.required],
+      rua: [
+        tutor.endereco?.rua,
+        [Validators.required, Validators.maxLength(100)],
+      ],
+      numeroResidencia: [
+        tutor.endereco?.numeroResidencia,
+        [Validators.required, Validators.maxLength(10)],
+      ],
+      bairro: [
+        tutor.endereco?.bairro,
+        [Validators.required, Validators.maxLength(50)],
+      ],
+      complemento: [tutor.endereco?.complemento, [Validators.maxLength(100)]],
+      cidade: [
+        tutor.endereco?.cidade,
+        [Validators.required, Validators.maxLength(100)],
+      ],
+      estado: [
+        tutor.endereco?.estado,
+        [Validators.required, Validators.maxLength(25)],
+      ],
+      cep: [
+        tutor.endereco?.cep,
+        [Validators.required, Validators.maxLength(8)],
+      ],
     });
 
     this.form.disable();
@@ -52,29 +71,39 @@ export class TutorEnderecoComponent implements OnInit {
     this.buildForm(this.tutor);
   }
 
+  getErrorMessage(controlName: string) {
+    return FormUtils.getErrorMessage(this.form, controlName);
+  }
+
+  hasError(controlName: string) {
+    return FormUtils.hasError(this.form, controlName);
+  }
+
   submit() {
-    const endereco: Endereco = Object.assign({}, this.form.getRawValue());
+    if (this.form.valid) {
+      const endereco: Endereco = Object.assign({}, this.form.getRawValue());
 
-    this.tutor.endereco = endereco;
-    this.tutor.adocoes = [];
-    this.tutor.observacoes = [];
+      this.tutor.endereco = endereco;
+      this.tutor.adocoes = [];
+      this.tutor.observacoes = [];
 
-    this._tutorService.update(this.tutor, null).subscribe({
-      next: (tutor) => {
-        this._tutorService.set(tutor);
-        this._notificationService.show(
-          MessageUtils.TUTOR.UPDATE_SUCCESS,
-          NotificationType.SUCCESS
-        );
-      },
+      this._tutorService.update(this.tutor, null).subscribe({
+        next: (tutor) => {
+          this._tutorService.set(tutor);
+          this._notificationService.show(
+            MessageUtils.TUTOR.UPDATE_SUCCESS,
+            NotificationType.SUCCESS
+          );
+        },
 
-      error: (error) => {
-        console.error(error);
-        this._notificationService.show(
-          MessageUtils.TUTOR.UPDATE_FAIL + MessageUtils.getMessage(error),
-          NotificationType.FAIL
-        );
-      },
-    });
+        error: (error) => {
+          console.error(error);
+          this._notificationService.show(
+            MessageUtils.TUTOR.UPDATE_FAIL + MessageUtils.getMessage(error),
+            NotificationType.FAIL
+          );
+        },
+      });
+    }
   }
 }

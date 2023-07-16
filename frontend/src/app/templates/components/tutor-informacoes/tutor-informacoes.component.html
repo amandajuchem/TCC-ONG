@@ -14,7 +14,7 @@
           mat-icon-button
           title="Salvar"
           (click)="submit()"
-          *ngIf="form.enabled && form.valid"
+          *ngIf="form.enabled"
         >
           <mat-icon>save</mat-icon>
         </button>
@@ -85,6 +85,9 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Nome</mat-label>
         <input matInput formControlName="nome" />
+        <mat-error *ngIf="hasError('nome')">{{
+          getErrorMessage("nome")
+        }}</mat-error>
       </mat-form-field>
     </div>
   </div>
@@ -94,6 +97,9 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>CPF</mat-label>
         <input matInput formControlName="cpf" mask="CPF_CNPJ" />
+        <mat-error *ngIf="hasError('cpf')">{{
+          getErrorMessage("cpf")
+        }}</mat-error>
       </mat-form-field>
     </div>
 
@@ -101,6 +107,9 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>RG</mat-label>
         <input matInput formControlName="rg" />
+        <mat-error *ngIf="hasError('rg')">{{
+          getErrorMessage("rg")
+        }}</mat-error>
       </mat-form-field>
     </div>
 
@@ -112,6 +121,9 @@
           <mat-option value="DEVOLVEU">Devolveu</mat-option>
           <mat-option value="FALECEU">Faleceu</mat-option>
         </mat-select>
+        <mat-error *ngIf="hasError('situacao')">{{
+          getErrorMessage("situacao")
+        }}</mat-error>
       </mat-form-field>
     </div>
   </div>
@@ -159,6 +171,9 @@
           >
             <mat-icon>close</mat-icon>
           </button>
+          <mat-error *ngIf="hasError('numero')">{{
+            getErrorMessage("numero")
+          }}</mat-error>
         </mat-form-field>
       </div>
     </div>

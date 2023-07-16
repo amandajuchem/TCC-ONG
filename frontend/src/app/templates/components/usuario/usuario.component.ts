@@ -15,7 +15,8 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 })
 export class UsuarioComponent implements OnInit {
   authentication!: Authentication;
-  usuario!: Usuario;
+  isLoading!: boolean;
+  usuario!: Usuario | null;
 
   constructor(
     private _activatedRoute: ActivatedRoute,
@@ -26,20 +27,24 @@ export class UsuarioComponent implements OnInit {
 
   ngOnInit(): void {
     this.authentication = this._authService.getAuthentication();
+    this.isLoading = true;
 
     this._activatedRoute.params.subscribe({
       next: (params: any) => {
         if (params && params.id) {
           if (params.id.includes('cadastro')) {
             this._usuarioService.set(null);
+            this.isLoading = false;
           } else {
             this._usuarioService.findById(params.id).subscribe({
               next: (usuario) => {
                 this._usuarioService.set(usuario);
+                this.isLoading = false;
               },
 
               error: (error) => {
                 console.error(error);
+                this.isLoading = false;
                 this._notificationService.show(
                   MessageUtils.USUARIO.GET_FAIL +
                     MessageUtils.getMessage(error),
@@ -54,9 +59,7 @@ export class UsuarioComponent implements OnInit {
 
     this._usuarioService.get().subscribe({
       next: (usuario) => {
-        if (usuario) {
-          this.usuario = usuario;
-        }
+        this.usuario = usuario;
       },
     });
   }

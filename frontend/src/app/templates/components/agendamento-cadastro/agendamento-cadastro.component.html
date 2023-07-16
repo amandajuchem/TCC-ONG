@@ -32,7 +32,7 @@
                   mat-icon-button
                   title="Salvar"
                   (click)="submit()"
-                  *ngIf="form.enabled && form.valid"
+                  *ngIf="form.enabled"
                 >
                   <mat-icon>save</mat-icon>
                 </button>
@@ -74,6 +74,9 @@
                   #pickerDataHoraAgendamento
                   (closed)="dateChange()"
                 ></ngx-mat-datetime-picker>
+                <mat-error *ngIf="hasError('dataHora')">{{
+                  getErrorMessage("dataHora")
+                }}</mat-error>
               </mat-form-field>
             </div>
 
@@ -96,6 +99,9 @@
                 >
                   <mat-icon>search</mat-icon>
                 </button>
+                <mat-error *ngIf="hasError('animal')">{{
+                  getErrorMessage("animal")
+                }}</mat-error>
               </mat-form-field>
             </div>
 
@@ -118,6 +124,9 @@
                 >
                   <mat-icon>search</mat-icon>
                 </button>
+                <mat-error *ngIf="hasError('veterinario')">{{
+                  getErrorMessage("veterinario")
+                }}</mat-error>
               </mat-form-field>
             </div>
           </div>
@@ -127,6 +136,9 @@
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Descrição</mat-label>
                 <textarea matInput formControlName="descricao"></textarea>
+                <mat-error *ngIf="hasError('descricao')">{{
+                  getErrorMessage("descricao")
+                }}</mat-error>
               </mat-form-field>
             </div>
           </div>

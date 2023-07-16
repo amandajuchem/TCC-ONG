@@ -5,6 +5,7 @@ import { FichaMedica } from 'src/app/entities/ficha-medica';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { AnimalService } from 'src/app/services/animal.service';
 import { NotificationService } from 'src/app/services/notification.service';
+import { FormUtils } from 'src/app/utils/form-utils';
 import { MessageUtils } from 'src/app/utils/message-utils';
 
 @Component({
@@ -47,28 +48,41 @@ export class AnimalFichaMedicaComponent implements OnInit {
     this.buildForm(this.animal);
   }
 
+  getErrorMessage(controlName: string) {
+    return FormUtils.getErrorMessage(this.form, controlName);
+  }
+
+  hasError(controlName: string) {
+    return FormUtils.hasError(this.form, controlName);
+  }
+
   submit() {
-    const fichaMedica: FichaMedica = Object.assign({}, this.form.getRawValue());
+    if (this.form.valid) {
+      const fichaMedica: FichaMedica = Object.assign(
+        {},
+        this.form.getRawValue()
+      );
 
-    this.animal.fichaMedica = fichaMedica;
-    this.animal.adocoes = [];
+      this.animal.fichaMedica = fichaMedica;
+      this.animal.adocoes = [];
 
-    this._animalService.update(this.animal, null).subscribe({
-      next: (animal) => {
-        this._animalService.set(animal);
-        this._notificationService.show(
-          MessageUtils.ANIMAL.UPDATE_SUCCESS,
-          NotificationType.SUCCESS
-        );
-      },
+      this._animalService.update(this.animal, null).subscribe({
+        next: (animal) => {
+          this._animalService.set(animal);
+          this._notificationService.show(
+            MessageUtils.ANIMAL.UPDATE_SUCCESS,
+            NotificationType.SUCCESS
+          );
+        },
 
-      error: (error) => {
-        console.error(error);
-        this._notificationService.show(
-          MessageUtils.ANIMAL.UPDATE_FAIL + MessageUtils.getMessage(error),
-          NotificationType.FAIL
-        );
-      },
-    });
+        error: (error) => {
+          console.error(error);
+          this._notificationService.show(
+            MessageUtils.ANIMAL.UPDATE_FAIL + MessageUtils.getMessage(error),
+            NotificationType.FAIL
+          );
+        },
+      });
+    }
   }
 }

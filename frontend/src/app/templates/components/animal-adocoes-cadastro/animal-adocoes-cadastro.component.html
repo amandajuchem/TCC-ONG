@@ -113,6 +113,113 @@
           </div>
         </div>
       </div>
+      <div class="row">
+        <div class="col-12 col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Data</mat-label>
+            <input
+              matInput
+              [ngxMatDatetimePicker]="pickerDataHora"
+              formControlName="dataHora"
+              readonly
+            />
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="$any(pickerDataHora)"
+            ></mat-datepicker-toggle>
+            <ngx-mat-datetime-picker
+              #pickerDataHora
+              (closed)="dateChange()"
+            ></ngx-mat-datetime-picker>
+            <mat-error *ngIf="hasError('dataHora')">{{
+              getErrorMessage("dataHora")
+            }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Local</mat-label>
+            <mat-select formControlName="local">
+              <mat-option value="EXTERNO">Externo</mat-option>
+              <mat-option value="INTERNO">Interno</mat-option>
+            </mat-select>
+            <mat-error *ngIf="hasError('local')">{{
+              getErrorMessage("local")
+            }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Local de Adoção</mat-label>
+            <mat-select formControlName="localAdocao">
+              <mat-option value="FEIRA">Feira</mat-option>
+              <mat-option value="ONG">ONG</mat-option>
+              <mat-option value="PET_SHOP">Pet Shop</mat-option>
+              <mat-option value="RESGATE">Resgate</mat-option>
+              <mat-option value="RUA">Rua</mat-option>
+              <mat-option value="OUTRO">Outro</mat-option>
+            </mat-select>
+            <mat-error *ngIf="hasError('localAdocao')">{{
+              getErrorMessage("localAdocao")
+            }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Vale Castração</mat-label>
+            <mat-select formControlName="valeCastracao">
+              <mat-option [value]="true">Sim</mat-option>
+              <mat-option [value]="false">Não</mat-option>
+            </mat-select>
+            <mat-error *ngIf="hasError('valeCastracao')">{{
+              getErrorMessage("valeCastracao")
+            }}</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Animal</mat-label>
+            <input
+              matInput
+              [value]="form.get('animal')?.value?.nome"
+              readonly
+              required
+            />
+            <mat-error *ngIf="hasError('animal')">{{
+              getErrorMessage("animal")
+            }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Tutor</mat-label>
+            <input
+              matInput
+              [value]="form.get('tutor')?.value?.nome"
+              readonly
+              required
+            />
+            <button
+              type="button"
+              matSuffix
+              mat-icon-button
+              (click)="selectTutor()"
+            >
+              <mat-icon>search</mat-icon>
+            </button>
+            <mat-error *ngIf="hasError('tutor')">{{
+              getErrorMessage("tutor")
+            }}</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
 
       <div class="row">
         <div
