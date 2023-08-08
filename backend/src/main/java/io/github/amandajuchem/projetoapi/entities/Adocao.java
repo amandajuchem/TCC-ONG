@@ -6,16 +6,14 @@ import io.github.amandajuchem.projetoapi.enums.LocalAdocao;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
-@SuperBuilder
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "tb_adocoes")
@@ -49,10 +47,6 @@ public class Adocao extends AbstractEntity {
 
     @Valid
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private List<Imagem> termoResponsabilidade;
-
-    @Override
-    public boolean equals(Object o) {
-        return super.equals(o);
-    }
 }

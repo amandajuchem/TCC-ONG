@@ -5,15 +5,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
-@SuperBuilder
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "tb_agendamentos")
@@ -32,9 +30,4 @@ public class Agendamento extends AbstractEntity {
 
     @OneToOne
     private Usuario veterinario;
-
-    @Override
-    public boolean equals(Object o) {
-        return super.equals(o);
-    }
 }

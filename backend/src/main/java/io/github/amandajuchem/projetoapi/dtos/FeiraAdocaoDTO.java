@@ -8,11 +8,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-/**
- * The FeiraAdocaoDTO class represents a Data Transfer Object (DTO) for FeiraAdocao entities.
- * It provides a simplified view of a FeiraAdocao object for use in API responses.
- * This class implements the Serializable interface.
- */
 public record FeiraAdocaoDTO(
         UUID id,
         LocalDateTime createdDate,
@@ -25,12 +20,6 @@ public record FeiraAdocaoDTO(
         Set<UsuarioDTO> usuarios
 ) implements Serializable {
 
-    /**
-     * Creates a new FeiraAdocaoDTO instance based on the provided FeiraAdocao object.
-     *
-     * @param feiraAdocao The FeiraAdocao object to convert to FeiraAdocaoDTO.
-     * @return The FeiraAdocaoDTO representing the provided FeiraAdocao object.
-     */
     public static FeiraAdocaoDTO toDTO(FeiraAdocao feiraAdocao) {
 
         return new FeiraAdocaoDTO(

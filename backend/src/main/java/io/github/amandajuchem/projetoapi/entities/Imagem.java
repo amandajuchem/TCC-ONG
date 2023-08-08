@@ -5,32 +5,23 @@ import io.github.amandajuchem.projetoapi.utils.FileUtils;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.*;
 
 import java.io.IOException;
 
-@Data
-@SuperBuilder
+@Getter
+@Setter
+@ToString
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "tb_imagens")
 public class Imagem extends AbstractEntity {
 
     @NotEmpty
-    @Column(name = "nome", length = 25)
+    @Column(name = "nome", length = 25, unique = true)
     private String nome;
 
-    @Override
-    public boolean equals(Object o) {
-        return super.equals(o);
-    }
-
-    /**
-     * Handles post-persist and post-update events to save the image file.
-     */
     @PostPersist
     @PostUpdate
     private void postSave() {
@@ -47,9 +38,6 @@ public class Imagem extends AbstractEntity {
         FileUtils.FILES.clear();
     }
 
-    /**
-     * Handles post-remove event to delete the image file.
-     */
     @PostRemove
     private void postDelete() {
         FileUtils.delete(nome, FileUtils.IMAGES_DIRECTORY);

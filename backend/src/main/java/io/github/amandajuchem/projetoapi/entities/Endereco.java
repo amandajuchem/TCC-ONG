@@ -7,13 +7,11 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.*;
 
-@Data
-@SuperBuilder
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "tb_enderecos")
@@ -46,9 +44,4 @@ public class Endereco extends AbstractEntity {
     @NotEmpty
     @Column(name = "cep", length = 8)
     private String cep;
-
-    @Override
-    public boolean equals(Object o) {
-        return super.equals(o);
-    }
 }

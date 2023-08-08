@@ -5,17 +5,15 @@ import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
-@Data
-@SuperBuilder
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "tb_atendimentos")
@@ -39,10 +37,12 @@ public class Atendimento extends AbstractEntity {
     private String posologia;
 
     @OneToMany
+    @ToString.Exclude
     private Set<Exame> exames;
 
     @Valid
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private List<Imagem> documentos;
 
     @OneToOne
@@ -50,9 +50,4 @@ public class Atendimento extends AbstractEntity {
 
     @OneToOne
     private Usuario veterinario;
-
-    @Override
-    public boolean equals(Object o) {
-        return super.equals(o);
-    }
 }

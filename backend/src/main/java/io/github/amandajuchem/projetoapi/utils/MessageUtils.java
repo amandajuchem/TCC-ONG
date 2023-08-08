@@ -1,8 +1,5 @@
 package io.github.amandajuchem.projetoapi.utils;
 
-/**
- * Utility class for storing common error messages used in the application.
- */
 public class MessageUtils {
     public static final String AUTHENTICATION_FAIL = "Usuário não encontrado ou senha inválida!";
     public static final String ADOCAO_NOT_FOUND = "Adoção não encontrada!";

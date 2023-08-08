@@ -5,10 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.*;
 import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,8 +14,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-@Data
-@SuperBuilder
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "tb_usuarios")
@@ -29,7 +27,7 @@ public class Usuario extends AbstractEntity implements UserDetails {
     private String nome;
 
     @CPF
-    @Column(name = "cpf", length = 11)
+    @Column(name = "cpf", length = 11, unique = true)
     private String cpf;
 
     @NotEmpty
@@ -82,10 +80,5 @@ public class Usuario extends AbstractEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return status;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return super.equals(o);
     }
 }

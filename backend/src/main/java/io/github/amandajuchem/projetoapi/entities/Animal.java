@@ -9,15 +9,13 @@ import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.*;
 
 import java.util.Set;
 
-@Data
-@SuperBuilder
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "tb_animais")
@@ -66,10 +64,6 @@ public class Animal extends AbstractEntity {
 
     @OneToMany(orphanRemoval = true, mappedBy = "animal")
     @JsonManagedReference("referenceAdocaoAnimal")
+    @ToString.Exclude
     private Set<Adocao> adocoes;
-
-    @Override
-    public boolean equals(Object o) {
-        return super.equals(o);
-    }
 }

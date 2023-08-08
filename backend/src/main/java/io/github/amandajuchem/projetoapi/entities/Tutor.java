@@ -6,17 +6,15 @@ import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.*;
 import org.hibernate.validator.constraints.br.CPF;
 
 import java.util.List;
 import java.util.Set;
 
-@Data
-@SuperBuilder
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "tb_tutores")
@@ -28,7 +26,7 @@ public class Tutor extends AbstractEntity {
 
     @NotEmpty
     @CPF
-    @Column(name = "cpf", length = 11)
+    @Column(name = "cpf", length = 11, unique = true)
     private String cpf;
 
     @Column(name = "rg", length = 13)
@@ -45,6 +43,7 @@ public class Tutor extends AbstractEntity {
 
     @Valid
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private List<Telefone> telefones;
 
     @Valid
@@ -53,14 +52,11 @@ public class Tutor extends AbstractEntity {
 
     @OneToMany(mappedBy = "tutor")
     @JsonManagedReference("referenceAdocaoTutor")
+    @ToString.Exclude
     private Set<Adocao> adocoes;
 
     @OneToMany(orphanRemoval = true, mappedBy = "tutor")
     @JsonManagedReference("referenceObservacaoTutor")
+    @ToString.Exclude
     private Set<Observacao> observacoes;
-
-    @Override
-    public boolean equals(Object o) {
-        return super.equals(o);
-    }
 }

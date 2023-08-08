@@ -12,21 +12,12 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.stream.Collectors;
 
-/**
- * Utility class for JWT (JSON Web Token) token generation.
- */
 @Component
 @RequiredArgsConstructor
 public class JWTTokenUtils {
 
     private final JwtEncoder encoder;
 
-    /**
-     * Generates a JWT token based on the provided authentication object.
-     *
-     * @param authentication the authentication object representing the user's authentication details.
-     * @return the generated JWT token.
-     */
     public String generateToken(Authentication authentication) {
 
         final var now = Instant.now();

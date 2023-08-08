@@ -11,11 +11,6 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
-/**
- * The AdocaoDTO class represents a Data Transfer Object (DTO) for Adocao entities.
- * It provides a simplified view of an Adocao object for use in API responses.
- * This class implements the Serializable interface.
- */
 public record AnimalDTO(
         UUID id,
         LocalDateTime createdDate,
@@ -35,12 +30,6 @@ public record AnimalDTO(
         Set<AdocaoDTO> adocoes
 ) implements Serializable {
 
-    /**
-     * Creates a new AnimalDTO instance based on the provided Animal object.
-     *
-     * @param animal The Animal object to convert to AnimalDTO.
-     * @return The AnimalDTO representing the provided Animal object.
-     */
     public static AnimalDTO toDTO(Animal animal) {
 
         return new AnimalDTO(
