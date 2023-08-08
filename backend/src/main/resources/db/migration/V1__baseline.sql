@@ -225,6 +225,8 @@ ALTER TABLE tb_tutores_telefones ADD CONSTRAINT uc_tb_tutores_telefones_telefone
 
 ALTER TABLE tb_usuarios ADD CONSTRAINT uc_tb_usuarios_cpf UNIQUE (cpf);
 
+ALTER TABLE tb_usuarios ADD CONSTRAINT uc_tb_usuarios_nome UNIQUE (nome);
+
 ALTER TABLE tb_adocoes ADD CONSTRAINT FK_TB_ADOCOES_ON_ANIMAL FOREIGN KEY (animal_id) REFERENCES tb_animais (id);
 
 ALTER TABLE tb_adocoes ADD CONSTRAINT FK_TB_ADOCOES_ON_TUTOR FOREIGN KEY (tutor_id) REFERENCES tb_tutores (id);

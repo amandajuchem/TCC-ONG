@@ -1,6 +1,7 @@
 package io.github.amandajuchem.projetoapi.services;
 
 import io.github.amandajuchem.projetoapi.dtos.TutorDTO;
+import io.github.amandajuchem.projetoapi.entities.FeiraAdocao;
 import io.github.amandajuchem.projetoapi.entities.Tutor;
 import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
@@ -70,12 +71,32 @@ public class TutorService implements AbstractService<Tutor, TutorDTO> {
             throw new ValidationException(MessageUtils.TUTOR_NULL);
         }
 
-        validateRg(tutor.getRg(), tutor);
+        validateNome(tutor);
+        validateCpf(tutor);
+        validateRg(tutor);
     }
 
-    private void validateRg(String rg, Tutor tutor) {
-        if (rg != null && !rg.isEmpty()) {
-            repository.findByRg(rg)
+    private void validateNome(Tutor tutor) {
+        repository.findByNomeIgnoreCase(tutor.getNome())
+                .ifPresent(existingTutor -> {
+                    if (!existingTutor.equals(tutor)) {
+                        throw new ValidationException("Tutor já cadastrado!");
+                    }
+                });
+    }
+
+    private void validateCpf(Tutor tutor) {
+        repository.findByCpf(tutor.getCpf())
+                .ifPresent(existingTutor -> {
+                    if (!existingTutor.equals(tutor)) {
+                        throw new ValidationException("CPF já cadastrado!");
+                    }
+                });
+    }
+
+    private void validateRg(Tutor tutor) {
+        if (tutor.getRg() != null && !tutor.getRg().isEmpty()) {
+            repository.findByRg(tutor.getRg())
                     .ifPresent(existingTutor -> {
                         if (!existingTutor.equals(tutor)) {
                             throw new ValidationException("RG já cadastrado!");

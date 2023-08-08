@@ -23,7 +23,7 @@ import java.util.List;
 public class Usuario extends AbstractEntity implements UserDetails {
 
     @NotEmpty
-    @Column(name = "nome", length = 100)
+    @Column(name = "nome", length = 100, unique = true)
     private String nome;
 
     @CPF

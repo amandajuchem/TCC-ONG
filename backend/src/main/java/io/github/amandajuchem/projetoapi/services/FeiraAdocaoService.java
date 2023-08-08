@@ -71,5 +71,16 @@ public class FeiraAdocaoService implements AbstractService<FeiraAdocao, FeiraAdo
         if (feiraAdocao == null) {
             throw new ValidationException(MessageUtils.FEIRA_ADOCAO_NULL);
         }
+
+        validateNome(feiraAdocao);
+    }
+
+    private void validateNome(FeiraAdocao feiraAdocao) {
+        repository.findByNomeIgnoreCase(feiraAdocao.getNome())
+                .ifPresent(existingFeiraAdocao -> {
+                    if (!existingFeiraAdocao.equals(feiraAdocao)) {
+                        throw new ValidationException("Feira de adoção já cadastrada!");
+                    }
+                });
     }
 }

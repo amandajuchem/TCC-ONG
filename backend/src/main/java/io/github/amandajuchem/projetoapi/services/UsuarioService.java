@@ -1,6 +1,7 @@
 package io.github.amandajuchem.projetoapi.services;
 
 import io.github.amandajuchem.projetoapi.dtos.UsuarioDTO;
+import io.github.amandajuchem.projetoapi.entities.Tutor;
 import io.github.amandajuchem.projetoapi.entities.Usuario;
 import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
@@ -95,5 +96,26 @@ public class UsuarioService implements AbstractService<Usuario, UsuarioDTO>, Use
         if (usuario == null) {
             throw new ValidationException(MessageUtils.USUARIO_NULL);
         }
+
+        validateNome(usuario);
+        validateCpf(usuario);
+    }
+
+    private void validateNome(Usuario usuario) {
+        repository.findByNomeIgnoreCase(usuario.getNome())
+                .ifPresent(existingUser -> {
+                    if (!existingUser.equals(usuario)) {
+                        throw new ValidationException("Tutor já cadastrado!");
+                    }
+                });
+    }
+
+    private void validateCpf(Usuario usuario) {
+        repository.findByCpf(usuario.getCpf())
+                .ifPresent(existingUser -> {
+                    if (!existingUser.equals(usuario)) {
+                        throw new ValidationException("CPF já cadastrado!");
+                    }
+                });
     }
 }

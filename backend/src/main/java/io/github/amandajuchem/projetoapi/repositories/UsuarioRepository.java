@@ -22,6 +22,14 @@ public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
     Optional<Usuario> findByCpf(String cpf);
 
     /**
+     * Retrieves a user by name case-insensitive.
+     *
+     * @param nome The name of the user.
+     * @return An Optional containing the user entity if found, or an empty Optional if not found.
+     */
+    Optional<Usuario> findByNomeIgnoreCase(String nome);
+
+    /**
      * Search for users by value.
      *
      * @param value The value to search for (name, CPF, or setor) case-insensitive.
