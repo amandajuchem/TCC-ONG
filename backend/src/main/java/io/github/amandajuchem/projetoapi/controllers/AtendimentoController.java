@@ -16,10 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -110,7 +107,7 @@ public class AtendimentoController implements AbstractController<Atendimento, At
                         .build();
 
                 if (atendimento.getDocumentos() == null) {
-                    atendimento.setDocumentos(Collections.emptyList());
+                    atendimento.setDocumentos(new ArrayList<>());
                 }
 
                 atendimento.getDocumentos().add(imagem);

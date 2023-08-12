@@ -54,16 +54,10 @@ public class UsuarioController implements AbstractController<Usuario, UsuarioDTO
         return service.findById(id);
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ResponseStatus(CREATED)
-    public UsuarioDTO save(@RequestPart @Valid Usuario usuario,
-                           @RequestPart(required = false) MultipartFile foto) throws FileNotFoundException {
-        handleFoto(usuario, foto);
-        return save(usuario);
-    }
-
     @Override
-    public UsuarioDTO save(Usuario usuario) {
+    @PostMapping
+    @ResponseStatus(CREATED)
+    public UsuarioDTO save(@RequestBody @Valid Usuario usuario) {
         return service.save(usuario);
     }
 
@@ -78,33 +72,15 @@ public class UsuarioController implements AbstractController<Usuario, UsuarioDTO
         return service.search(value, page, size, sort, direction);
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ResponseStatus(OK)
-    public UsuarioDTO update(@PathVariable UUID id,
-                             @RequestPart @Valid Usuario usuario,
-                             @RequestPart(required = false) MultipartFile foto) throws FileNotFoundException {
-        if (usuario.getId().equals(id)) {
-            handleFoto(usuario, foto);
-            return update(id, usuario);
-        }
-        throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);
-    }
-
     @Override
-    public UsuarioDTO update(UUID id, Usuario usuario) {
-        return service.save(usuario);
-    }
+    @PutMapping("/{id}")
+    @ResponseStatus(OK)
+    public UsuarioDTO update(@PathVariable UUID id, @RequestBody @Valid Usuario usuario) {
 
-    private void handleFoto(Usuario usuario, MultipartFile foto) {
-
-        if (foto != null) {
-
-            final var imagem = Imagem.builder()
-                    .nome(System.currentTimeMillis() + "." + FileUtils.getExtension(Objects.requireNonNull(foto.getOriginalFilename())))
-                    .build();
-
-            usuario.setFoto(imagem);
-            FileUtils.FILES.put(imagem.getNome(), foto);
+        if (usuario.getId().equals(id)) {
+            return service.save(usuario);
         }
+
+        throw new ValidationException(MessageUtils.ARGUMENT_NOT_VALID);
     }
 }

@@ -1,0 +1,21 @@
+<mat-toolbar>
+  <mat-toolbar-row>
+    <a
+      class="text-white"
+      (click)="redirectToPainel()"
+      >NOME DO PROJETO</a
+    >
+    <span class="spacer"></span>
+    <div *ngIf="usuario">
+      <button mat-button [matMenuTriggerFor]="menuUsuario">
+        {{ usuario.nome.toUpperCase() }}
+      </button>
+      <mat-menu #menuUsuario="matMenu">
+        <button mat-menu-item class="text-danger" (click)="logout()">
+          <mat-icon>exit_to_app</mat-icon>
+          <span>Sair</span>
+        </button>
+      </mat-menu>
+    </div>
+  </mat-toolbar-row>
+</mat-toolbar>

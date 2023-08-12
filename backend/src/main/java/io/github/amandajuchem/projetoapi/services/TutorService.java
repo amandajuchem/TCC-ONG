@@ -1,7 +1,6 @@
 package io.github.amandajuchem.projetoapi.services;
 
 import io.github.amandajuchem.projetoapi.dtos.TutorDTO;
-import io.github.amandajuchem.projetoapi.entities.FeiraAdocao;
 import io.github.amandajuchem.projetoapi.entities.Tutor;
 import io.github.amandajuchem.projetoapi.exceptions.ObjectNotFoundException;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;

@@ -70,17 +70,8 @@ export class TutorService implements AbstractService<Tutor> {
    * @param foto 
    * @returns 
    */
-  save(tutor: Tutor, foto: any) {
-
-    const formData = new FormData();
-
-    formData.append('tutor', new Blob([JSON.stringify(tutor)], { type: 'application/json' }));
-
-    if (foto) {
-      formData.append('foto', new Blob([foto], { type: 'multipart/form-data' }), 'foto.png');
-    }
-
-    return this._http.post<Tutor>(this._baseURL, formData);
+  save(tutor: Tutor) {
+    return this._http.post<Tutor>(this._baseURL, tutor);
   }
 
   /**
@@ -120,16 +111,7 @@ export class TutorService implements AbstractService<Tutor> {
    * @param foto 
    * @returns 
    */
-  update(tutor: Tutor, foto: any) {
-    
-    const formData = new FormData();
-
-    formData.append('tutor', new Blob([JSON.stringify(tutor)], { type: 'application/json' }));
-
-    if (foto) {
-      formData.append('foto', new Blob([foto], { type: 'multipart/form-data' }), 'foto.png');
-    }
-
-    return this._http.put<Tutor>(this._baseURL + '/' + tutor.id, formData);
+  update(tutor: Tutor) {
+    return this._http.put<Tutor>(this._baseURL + '/' + tutor.id, tutor);
   }
 }

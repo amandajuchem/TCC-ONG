@@ -1,0 +1,141 @@
+<form [formGroup]="form" *ngIf="form" class="overflow-hidden pt-3">
+  <div class="mb-3">
+    <div class="row">
+      <div class="col-12">
+        <div class="text-center">
+          <img src="assets/images/tutores.png" width="128px" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="nome" />
+        <mat-error *ngIf="hasError('nome')">{{
+          getErrorMessage("nome")
+        }}</mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12 col-md-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>CPF</mat-label>
+        <input matInput formControlName="cpf" mask="CPF_CNPJ" />
+        <mat-error *ngIf="hasError('cpf')">{{
+          getErrorMessage("cpf")
+        }}</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="col-12 col-md-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>RG</mat-label>
+        <input matInput formControlName="rg" />
+        <mat-error *ngIf="hasError('rg')">{{
+          getErrorMessage("rg")
+        }}</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="col-12 col-md-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Situação</mat-label>
+        <mat-select formControlName="situacao">
+          <mat-option value="ADOTOU">Adotou</mat-option>
+          <mat-option value="DEVOLVEU">Devolveu</mat-option>
+          <mat-option value="FALECEU">Faleceu</mat-option>
+        </mat-select>
+        <mat-error *ngIf="hasError('situacao')">{{
+          getErrorMessage("situacao")
+        }}</mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div formArrayName="telefones">
+    <div class="mb-3">
+      <div class="row">
+        <div class="col-7 col-md-10">
+          <div class="d-flex align-items-center justify-content-start h-100">
+            <h3 class="m-0 text-dark">Telefones</h3>
+          </div>
+        </div>
+
+        <div class="col-5 col-md-2">
+          <button
+            mat-button
+            type="button"
+            title="Adicionar Telefone"
+            class="w-100 border"
+            (click)="addTelefone()"
+          >
+            Adicionar Telefone
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <div class="row">
+        <div
+          class="col-12 col-md-3"
+          *ngFor="let telefone of telefones.controls; let i = index"
+        >
+          <mat-form-field
+            appearance="outline"
+            class="w-100"
+            [formGroupName]="i"
+          >
+            <mat-label>Telefone</mat-label>
+            <input
+              matInput
+              formControlName="numero"
+              mask="(00) 0000-0000||(00) 0 0000-0000"
+            />
+            <button
+              matSuffix
+              mat-icon-button
+              title="Remover Telefone"
+              (click)="removeTelefone(i)"
+              *ngIf="form.enabled"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
+            <mat-error *ngIf="hasError('numero')">{{
+              getErrorMessage("numero")
+            }}</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="text-end">
+        <button
+          mat-button
+          title="Salvar"
+          class="bg-success text-white px-4 me-3"
+          (click)="submit()"
+        >
+          Salvar
+        </button>
+
+        <button
+          mat-button
+          title="Voltar"
+          class="bg-secondary text-white px-4"
+          (click)="redirectToTutorList()"
+        >
+          Voltar
+        </button>
+      </div>
+    </div>
+  </div>
+</form>

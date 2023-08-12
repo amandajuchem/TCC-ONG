@@ -38,10 +38,6 @@ public class Tutor extends AbstractEntity {
     private Situacao situacao;
 
     @Valid
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    private Imagem foto;
-
-    @Valid
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<Telefone> telefones;

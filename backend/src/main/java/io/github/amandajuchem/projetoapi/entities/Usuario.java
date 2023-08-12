@@ -43,10 +43,6 @@ public class Usuario extends AbstractEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Setor setor;
 
-    @Valid
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    private Imagem foto;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(setor.name()));

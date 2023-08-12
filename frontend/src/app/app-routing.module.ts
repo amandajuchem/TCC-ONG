@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+import { LoginComponent } from './components/login/login.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 import { AuthGuard } from './guards/auth.guard';
-import { LoginComponent } from './templates/components/login/login.component';
-import { NotFoundComponent } from './templates/components/not-found/not-found.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -11,7 +11,7 @@ const routes: Routes = [
   {
     path: 'administracao',
     loadChildren: () =>
-      import('./templates/modules/administracao/administracao.module').then(
+      import('./modules/administracao/administracao.module').then(
         (m) => m.AdministracaoModule
       ),
     canActivate: [AuthGuard],
@@ -19,7 +19,7 @@ const routes: Routes = [
   {
     path: 'funcionario',
     loadChildren: () =>
-      import('./templates/modules/funcionario/funcionario.module').then(
+      import('./modules/funcionario/funcionario.module').then(
         (m) => m.FuncionarioModule
       ),
     canActivate: [AuthGuard],
@@ -27,7 +27,7 @@ const routes: Routes = [
   {
     path: 'veterinario',
     loadChildren: () =>
-      import('./templates/modules/veterinario/veterinario.module').then(
+      import('./modules/veterinario/veterinario.module').then(
         (m) => m.VeterinarioModule
       ),
     canActivate: [AuthGuard],

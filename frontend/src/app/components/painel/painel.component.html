@@ -1,0 +1,131 @@
+<app-breadcrumbs></app-breadcrumbs>
+
+<div class="row">
+  <div class="col-12 col-md-3 mb-3">
+    <div class="card-link" (click)="redirectToAgendamentoList()">
+      <mat-card>
+        <mat-card-content>
+          <div class="text-center">
+            <img src="assets/images/agendamentos.png" width="64px" />
+          </div>
+        </mat-card-content>
+        <mat-card-footer>
+          <div class="text-center pt-3">
+            <h2 class="text-dark">Agendamentos</h2>
+          </div>
+        </mat-card-footer>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-3 mb-3">
+    <div class="card-link" (click)="redirectToAnimalList()">
+      <mat-card>
+        <mat-card-content>
+          <div class="text-center">
+            <img src="assets/images/animais.png" width="64px" />
+          </div>
+        </mat-card-content>
+        <mat-card-footer>
+          <div class="text-center pt-3">
+            <h2 class="text-dark">Animais</h2>
+          </div>
+        </mat-card-footer>
+      </mat-card>
+    </div>
+  </div>
+
+  <div
+    class="col-12 col-md-3 mb-3"
+    *ngIf="
+      authentication.role === 'ADMINISTRACAO' ||
+      authentication.role === 'VETERINARIO'
+    "
+  >
+    <div class="card-link" (click)="redirectToAtendimentoList()">
+      <mat-card>
+        <mat-card-content>
+          <div class="text-center">
+            <img src="assets/images/atendimentos.png" width="64px" />
+          </div>
+        </mat-card-content>
+        <mat-card-footer>
+          <div class="text-center pt-3">
+            <h2 class="text-dark">Atendimentos</h2>
+          </div>
+        </mat-card-footer>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-3 mb-3">
+    <div class="card-link" (click)="redirectToExameList()">
+      <mat-card>
+        <mat-card-content>
+          <div class="text-center">
+            <img src="assets/images/exames.png" width="64px" />
+          </div>
+        </mat-card-content>
+        <mat-card-footer>
+          <div class="text-center pt-3">
+            <h2 class="text-dark">Exames</h2>
+          </div>
+        </mat-card-footer>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-3 mb-3">
+    <div class="card-link" (click)="redirectToFeiraAdocaoList()">
+      <mat-card>
+        <mat-card-content>
+          <div class="text-center">
+            <img src="assets/images/feira-adocao.png" width="64px" />
+          </div>
+        </mat-card-content>
+        <mat-card-footer>
+          <div class="text-center pt-3">
+            <h2 class="text-dark">Feiras de Adoção</h2>
+          </div>
+        </mat-card-footer>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-3 mb-3">
+    <div class="card-link" (click)="redirectToTutorList()">
+      <mat-card>
+        <mat-card-content>
+          <div class="text-center">
+            <img src="assets/images/tutores.png" width="64px" />
+          </div>
+        </mat-card-content>
+        <mat-card-footer>
+          <div class="text-center pt-3">
+            <h2 class="text-dark">Tutores</h2>
+          </div>
+        </mat-card-footer>
+      </mat-card>
+    </div>
+  </div>
+
+  <div
+    class="col-12 col-md-3 mb-3"
+    *ngIf="authentication.role === 'ADMINISTRACAO'"
+  >
+    <div class="card-link" (click)="redirectToUsuarioList()">
+      <mat-card>
+        <mat-card-content>
+          <div class="text-center">
+            <img src="assets/images/usuarios.png" width="64px" />
+          </div>
+        </mat-card-content>
+        <mat-card-footer>
+          <div class="text-center pt-3">
+            <h2 class="text-dark">Usuários</h2>
+          </div>
+        </mat-card-footer>
+      </mat-card>
+    </div>
+  </div>
+</div>

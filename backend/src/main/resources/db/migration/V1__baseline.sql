@@ -178,7 +178,6 @@ CREATE TABLE tb_tutores (
    cpf VARCHAR(11),
    rg VARCHAR(13),
    situacao VARCHAR(10) NOT NULL,
-   foto_id UUID,
    endereco_id UUID,
    CONSTRAINT pk_tb_tutores PRIMARY KEY (id)
 );
@@ -199,7 +198,6 @@ CREATE TABLE tb_usuarios (
    senha VARCHAR(255),
    status BOOLEAN NOT NULL,
    setor VARCHAR(20) NOT NULL,
-   foto_id UUID,
    CONSTRAINT pk_tb_usuarios PRIMARY KEY (id)
 );
 
@@ -246,10 +244,6 @@ ALTER TABLE tb_atendimentos ADD CONSTRAINT FK_TB_ATENDIMENTOS_ON_VETERINARIO FOR
 ALTER TABLE tb_observacoes ADD CONSTRAINT FK_TB_OBSERVACOES_ON_TUTOR FOREIGN KEY (tutor_id) REFERENCES tb_tutores (id);
 
 ALTER TABLE tb_tutores ADD CONSTRAINT FK_TB_TUTORES_ON_ENDERECO FOREIGN KEY (endereco_id) REFERENCES tb_enderecos (id);
-
-ALTER TABLE tb_tutores ADD CONSTRAINT FK_TB_TUTORES_ON_FOTO FOREIGN KEY (foto_id) REFERENCES tb_imagens (id);
-
-ALTER TABLE tb_usuarios ADD CONSTRAINT FK_TB_USUARIOS_ON_FOTO FOREIGN KEY (foto_id) REFERENCES tb_imagens (id);
 
 ALTER TABLE tb_adocoes_termo_responsabilidade ADD CONSTRAINT fk_tbadoterres_on_adocao FOREIGN KEY (tb_adocoes_id) REFERENCES tb_adocoes (id);
 

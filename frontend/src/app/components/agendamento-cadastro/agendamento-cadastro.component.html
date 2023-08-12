@@ -1,0 +1,135 @@
+<app-breadcrumbs></app-breadcrumbs>
+
+<div class="mb-3">
+  <div class="row">
+    <div class="col-12">
+      <form [formGroup]="form" *ngIf="form">
+        <mat-card>
+          <mat-card-header>
+            <div class="mat-card-header-text">
+              <div class="text-center">
+                <h2 class="m-0">
+                  {{ agendamento ? "Agendamento" : "Cadastrar Agendamento" }}
+                </h2>
+              </div>
+            </div>
+          </mat-card-header>
+  
+          <mat-card-content class="p-3">
+            <div class="row">
+              <div class="col-12 col-md-3">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Data</mat-label>
+                  <input
+                    matInput
+                    [ngxMatDatetimePicker]="pickerDataHoraAgendamento"
+                    formControlName="dataHora"
+                    readonly
+                  />
+                  <mat-datepicker-toggle
+                    matIconSuffix
+                    [for]="$any(pickerDataHoraAgendamento)"
+                  ></mat-datepicker-toggle>
+                  <ngx-mat-datetime-picker
+                    #pickerDataHoraAgendamento
+                    (closed)="dateChange()"
+                  ></ngx-mat-datetime-picker>
+                  <mat-error *ngIf="hasError('dataHora')">{{
+                    getErrorMessage("dataHora")
+                  }}</mat-error>
+                </mat-form-field>
+              </div>
+  
+              <div class="col-12 col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Animal</mat-label>
+                  <input
+                    matInput
+                    [value]="form.get('animal')?.value?.nome"
+                    readonly
+                    required
+                    [disabled]="form.disabled"
+                  />
+                  <button
+                    type="button"
+                    matSuffix
+                    mat-icon-button
+                    (click)="selectAnimal()"
+                    [disabled]="form.disabled"
+                  >
+                    <mat-icon>search</mat-icon>
+                  </button>
+                  <mat-error *ngIf="hasError('animal')">{{
+                    getErrorMessage("animal")
+                  }}</mat-error>
+                </mat-form-field>
+              </div>
+  
+              <div class="col-12 col-md-5">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Veterinário</mat-label>
+                  <input
+                    matInput
+                    [value]="form.get('veterinario')?.value?.nome"
+                    readonly
+                    required
+                    [disabled]="form.disabled"
+                  />
+                  <button
+                    type="button"
+                    matSuffix
+                    mat-icon-button
+                    (click)="selectVeterinario()"
+                    [disabled]="form.disabled"
+                  >
+                    <mat-icon>search</mat-icon>
+                  </button>
+                  <mat-error *ngIf="hasError('veterinario')">{{
+                    getErrorMessage("veterinario")
+                  }}</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+  
+            <div class="row">
+              <div class="col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Descrição</mat-label>
+                  <textarea matInput formControlName="descricao"></textarea>
+                  <mat-error *ngIf="hasError('descricao')">{{
+                    getErrorMessage("descricao")
+                  }}</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-card-content>
+          <mat-card-footer class="px-3 pb-3">
+            <div class="row">
+              <div class="col-12">
+                <div class="text-end">
+                  <button
+                    mat-button
+                    title="Salvar"
+                    class="bg-success text-white px-4 me-3"
+                    (click)="submit()"
+                  >
+                    Salvar
+                  </button>
+  
+                  <button
+                    mat-button
+                    title="Voltar"
+                    class="bg-secondary text-white px-4"
+                    (click)="redirectToAgendamentoList()"
+                  >
+                    Voltar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </mat-card-footer>
+        </mat-card>
+      </form>
+    </div>
+  </div>
+</div>

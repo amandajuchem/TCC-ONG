@@ -2,18 +2,18 @@ import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/c
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { AuthService } from '../services/auth.service';
+import { AuthenticationService } from '../services/authentication.service';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
 
-  constructor(private _authService: AuthService) { }
+  constructor(private _authenticationService: AuthenticationService) { }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
 
     if (!request.url.includes('/auth/token')) {
     
-      const authentication = this._authService.getAuthentication();
+      const authentication = this._authenticationService.getAuthentication();
 
       if (authentication) {
 

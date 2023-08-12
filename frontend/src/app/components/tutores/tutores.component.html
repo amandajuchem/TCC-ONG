@@ -1,0 +1,125 @@
+<app-breadcrumbs></app-breadcrumbs>
+
+<div class="mb-3">
+  <div class="row">
+    <div class="col-12">
+      <mat-card>
+        <mat-card-header>
+          <div class="mat-card-header-text">
+            <div class="text-center">
+              <h2 class="m-0">Tutores</h2>
+            </div>
+          </div>
+        </mat-card-header>
+
+        <mat-card-content class="p-3">
+          <div class="row">
+            <div class="col-12 col-md-10 mb-3 mb-md-0">
+              <mat-form-field
+                appearance="outline"
+                class="w-100"
+                style="margin-bottom: -1.25em"
+              >
+                <mat-label>Buscar</mat-label>
+                <input
+                  type="text"
+                  matInput
+                  [(ngModel)]="filterString"
+                  (keyup.enter)="search()"
+                  placeholder="Nome, CPF (sem pontuação) ou RG"
+                />
+                <button mat-icon-button matSuffix (click)="search()">
+                  <mat-icon>search</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+
+            <div class="col-12 col-md-2">
+              <button
+                mat-button
+                class="bg-success text-white w-100"
+                title="Cadastrar"
+                style="min-height: 56px"
+                (click)="add()"
+              >
+                Cadastrar
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<div class="mb-3">
+  <div
+    class="row"
+    [hidden]="(tutores && tutores.length == 0) || isLoadingResults"
+  >
+    <div class="col-12 col-md-3" *ngFor="let tutor of tutores">
+      <mat-card>
+        <mat-card-content class="p-3">
+          <div class="mb-3 text-center">
+            <img src="/assets/images/tutores.png" width="128px" />
+          </div>
+          <div>
+            <p class="mb-1 fw-bold">{{ tutor.nome }}</p>
+            <p class="mb-1">{{ tutor.cpf | mask : "CPF_CNPJ" }}</p>
+            <p class="mb-1">{{ tutor.situacao }}</p>
+          </div>
+        </mat-card-content>
+        <mat-card-footer class="px-3 pb-3">
+          <div class="row">
+            <div class="col-6">
+              <button
+                mat-button
+                class="bg-secondary text-white w-100"
+                (click)="update(tutor)"
+              >
+                Editar
+              </button>
+            </div>
+            <div class="col-6">
+              <button
+                mat-button
+                class="bg-danger text-white w-100"
+                (click)="delete(tutor)"
+              >
+                Excluir
+              </button>
+            </div>
+          </div>
+        </mat-card-footer>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<div class="mb-3">
+  <div [hidden]="(tutores && tutores.length == 0) || isLoadingResults">
+    <div class="row">
+      <div class="col-12">
+        <mat-card>
+          <mat-card-content>
+            <mat-paginator
+              showFirstLastButtons
+              [length]="resultsLength"
+              [pageSize]="10"
+              [pageSizeOptions]="[10, 25, 50, 100]"
+              (page)="pageChange($event)"
+            ></mat-paginator>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="isLoadingResults">
+  <app-loading [hasCard]="true"></app-loading>
+</div>
+
+<div [hidden]="(tutores && tutores.length > 0) || isLoadingResults">
+  <app-no-content [hasCard]="true"></app-no-content>
+</div>

@@ -17,8 +17,7 @@ public record UsuarioDTO(
         String cpf,
         String senha,
         Boolean status,
-        Setor setor,
-        ImagemDTO foto
+        Setor setor
 ) implements Serializable {
 
     public static UsuarioDTO toDTO(Usuario usuario) {
@@ -33,8 +32,7 @@ public record UsuarioDTO(
                 usuario.getCpf(),
                 usuario.getSenha(),
                 usuario.getStatus(),
-                usuario.getSetor(),
-                usuario.getFoto() != null ? ImagemDTO.toDTO(usuario.getFoto()) : null
+                usuario.getSetor()
         );
     }
 }

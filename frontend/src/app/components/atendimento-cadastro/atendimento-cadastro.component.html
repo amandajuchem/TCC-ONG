@@ -1,0 +1,330 @@
+<app-breadcrumbs></app-breadcrumbs>
+
+<div class="mb-3">
+  <div class="row">
+    <div class="col-12">
+      <form [formGroup]="form" *ngIf="form">
+        <mat-card>
+          <mat-card-header>
+            <div class="mat-card-header-text">
+              <div class="text-center">
+                <h2 class="m-0">
+                  {{ atendimento ? "Atendimento" : "Cadastrar Atendimento" }}
+                </h2>
+              </div>
+            </div>
+          </mat-card-header>
+
+          <mat-card-content class="p-3">
+            <div class="row">
+              <div class="col-12 col-md-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Animal</mat-label>
+                  <input
+                    matInput
+                    [value]="form.get('animal')?.value?.nome"
+                    readonly
+                    required
+                    [disabled]="!form.enabled"
+                  />
+                  <button
+                    type="button"
+                    matSuffix
+                    mat-icon-button
+                    (click)="selectAnimal()"
+                    [disabled]="!form.enabled"
+                  >
+                    <mat-icon>search</mat-icon>
+                  </button>
+                  <mat-error *ngIf="hasError('animal')">{{
+                    getErrorMessage("animal")
+                  }}</mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="col-12 col-md-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Veterinário</mat-label>
+                  <input
+                    matInput
+                    [value]="form.get('veterinario')?.value?.nome"
+                    readonly
+                    required
+                    [disabled]="!form.enabled"
+                  />
+                  <button
+                    type="button"
+                    matSuffix
+                    mat-icon-button
+                    (click)="selectVeterinario()"
+                    [disabled]="!form.enabled"
+                  >
+                    <mat-icon>search</mat-icon>
+                  </button>
+                  <mat-error *ngIf="hasError('veterinario')">{{
+                    getErrorMessage("veterinario")
+                  }}</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Comorbidades</mat-label>
+                  <textarea
+                    matInput
+                    [value]="form.get('comorbidades')?.value"
+                    readonly
+                    required
+                    [disabled]="!form.enabled"
+                  ></textarea>
+                  <mat-error *ngIf="hasError('comorbidades')">{{
+                    getErrorMessage("comorbidades")
+                  }}</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 col-md-3">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Data do atendimento</mat-label>
+                  <input
+                    matInput
+                    [ngxMatDatetimePicker]="pickerDataHoraAtendimento"
+                    formControlName="dataHora"
+                    readonly
+                  />
+                  <mat-datepicker-toggle
+                    matIconSuffix
+                    [for]="$any(pickerDataHoraAtendimento)"
+                  ></mat-datepicker-toggle>
+                  <ngx-mat-datetime-picker
+                    #pickerDataHoraAtendimento
+                    (closed)="dateChange()"
+                  ></ngx-mat-datetime-picker>
+                  <mat-error *ngIf="hasError('dataHora')">{{
+                    getErrorMessage("dataHora")
+                  }}</mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="col-12 col-md-9">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Motivo</mat-label>
+                  <mat-select formControlName="motivo">
+                    <mat-option value="ATROPELAMENTO">Atropelamento</mat-option>
+                    <mat-option value="CASTRACAO_SOLIDARIA"
+                      >Castração Solidária</mat-option
+                    >
+                    <mat-option value="MAUS_TRATOS">Maus tratos</mat-option>
+                    <mat-option value="OUTRO">Outro</mat-option>
+                    <mat-option value="VALE_CASTRACAO"
+                      >Vale Castração</mat-option
+                    >
+                  </mat-select>
+                  <mat-error *ngIf="hasError('motivo')">{{
+                    getErrorMessage("motivo")
+                  }}</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Diagnóstico</mat-label>
+                  <textarea matInput formControlName="diagnostico"></textarea>
+                  <mat-error *ngIf="hasError('diagnostico')">{{
+                    getErrorMessage("diagnostico")
+                  }}</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Posologia</mat-label>
+                  <textarea matInput formControlName="posologia"></textarea>
+                  <mat-error *ngIf="hasError('posologia')">{{
+                    getErrorMessage("posologia")
+                  }}</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <div class="row">
+                <div class="col-7 col-md-10">
+                  <div
+                    class="d-flex align-items-center justify-content-start h-100"
+                  >
+                    <h3 class="m-0 text-dark">Exames</h3>
+                  </div>
+                </div>
+
+                <div class="col-5 col-md-2">
+                  <div
+                    class="d-flex align-items-center justify-content-end h-100"
+                  >
+                    <button
+                      mat-button
+                      type="button"
+                      title="Adicionar Exame"
+                      class="w-100 border"
+                      (click)="addExame()"
+                    >
+                      Adicionar Exame
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <div class="row">
+                <div
+                  class="col-12 col-md-6"
+                  *ngFor="let exame of form.get('exames')?.value"
+                >
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Exame</mat-label>
+                    <input
+                      matInput
+                      [value]="exame.nome"
+                      readonly
+                      [disabled]="!form.enabled"
+                    />
+                    <button
+                      matSuffix
+                      mat-icon-button
+                      (click)="removeExame(exame)"
+                      [disabled]="!form.enabled"
+                    >
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <div class="row">
+                <div class="col-7 col-md-10">
+                  <div
+                    class="d-flex align-items-center justify-content-start h-100"
+                  >
+                    <h3 class="m-0 text-dark">Documentos</h3>
+                  </div>
+                </div>
+
+                <div class="col-5 col-md-2">
+                  <div
+                    class="d-flex align-items-center justify-content-end h-100"
+                  >
+                    <button
+                      mat-button
+                      type="button"
+                      title="Adicionar Imagem"
+                      class="w-100 border"
+                      (click)="addImagem()"
+                    >
+                      Adicionar Imagem
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <div class="row">
+                <div
+                  class="col-12 col-md-3 mb-3"
+                  *ngFor="let documento of documentos"
+                >
+                  <mat-card>
+                    <img
+                      mat-card-image
+                      [src]="
+                        documento.nome
+                          ? apiURL + '/imagens/search?value=' + documento.nome
+                          : documento.data
+                      "
+                    />
+                    <mat-card-footer class="p-2">
+                      <div class="text-center">
+                        <button
+                          type="button"
+                          mat-icon-button
+                          class="me-3"
+                          title="Baixar Imagem"
+                          (click)="downloadImagem(documento)"
+                          *ngIf="documento.nome"
+                        >
+                          <mat-icon>download</mat-icon>
+                        </button>
+                        <button
+                          type="button"
+                          mat-icon-button
+                          class="ms-3"
+                          title="Excluir Imagem"
+                          (click)="removeImagem(documento)"
+                        >
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      </div>
+                    </mat-card-footer>
+                  </mat-card>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <div class="row">
+                <div class="col-12">
+                  <div class="text-center">
+                    <button
+                      mat-button
+                      type="button"
+                      title="Importar Dados"
+                      class="px-4 border"
+                      (click)="importFromAgendamento()"
+                    >
+                      Importar Dados
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12">
+                <div class="text-end">
+                  <button
+                    mat-button
+                    title="Salvar"
+                    class="bg-success text-white px-4 me-3"
+                    (click)="submit()"
+                  >
+                    Salvar
+                  </button>
+
+                  <button
+                    mat-button
+                    title="Voltar"
+                    class="bg-secondary text-white px-4"
+                    (click)="redirectToAtendimentoList()"
+                  >
+                    Voltar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </form>
+    </div>
+  </div>
+</div>

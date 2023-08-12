@@ -7,5 +7,4 @@ export interface Usuario extends AbstractEntity {
     senha: string;
     setor: Setor;
     status: boolean;
-    foto: any;
 }
