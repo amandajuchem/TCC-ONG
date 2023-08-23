@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Authentication } from 'src/app/entities/authentication';
 import { Usuario } from 'src/app/entities/usuario';
 import { NotificationType } from 'src/app/enums/notification-type';
-import { AuthenticationService } from 'src/app/services/authentication.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
@@ -14,19 +12,16 @@ import { MessageUtils } from 'src/app/utils/message-utils';
   styleUrls: ['./usuario.component.sass'],
 })
 export class UsuarioComponent implements OnInit {
-  authentication!: Authentication;
   isLoading!: boolean;
   usuario!: Usuario | null;
 
   constructor(
     private _activatedRoute: ActivatedRoute,
-    private _authenticationService: AuthenticationService,
     private _notificationService: NotificationService,
     private _usuarioService: UsuarioService
   ) {}
 
   ngOnInit(): void {
-    this.authentication = this._authenticationService.getAuthentication();
     this.isLoading = true;
 
     this._activatedRoute.params.subscribe({

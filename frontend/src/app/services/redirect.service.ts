@@ -15,8 +15,14 @@ export class RedirectService {
     private _authenticationService: AuthenticationService,
     private _router: Router
   ) {
-    this._authentication = this._authenticationService.getAuthentication();
-    this._baseURL = '/' + this._authentication.role.toLowerCase();
+    this._authenticationService.getAuthenticationAsObservable().subscribe({
+      next: (authentication) => {
+        if (authentication) {
+          this._authentication = authentication;
+          this._baseURL = '/' + this._authentication.role.toLowerCase();
+        }
+      },
+    });
   }
 
   toAgendamentoList() {

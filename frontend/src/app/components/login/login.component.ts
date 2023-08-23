@@ -22,14 +22,10 @@ export class LoginComponent implements OnInit {
     private _redirectService: RedirectService
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.hide = true;
-
-    if (this._authenticationService.isAuthenticated()) {
-      this.redirect();
-    } else {
-      this.buildForm();
-    }
+    const isAuthenticated = await this._authenticationService.isAuthenticated();
+    isAuthenticated ? this._redirectService.toPainel() : this.buildForm();
   }
 
   buildForm() {
@@ -39,17 +35,13 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  redirect() {
-    this._redirectService.toPainel();
-  }
-
   submit() {
     const user = Object.assign({}, this.form.value);
 
-    this._authenticationService.login(user).subscribe({
+    this._authenticationService.token(user).subscribe({
       next: (authentication) => {
         this._authenticationService.setAuthentication(authentication);
-        this.redirect();
+        this._redirectService.toPainel();
       },
 
       error: (error) => {

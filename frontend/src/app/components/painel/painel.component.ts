@@ -16,7 +16,17 @@ export class PainelComponent {
     private _authenticationService: AuthenticationService,
     private _redirectService: RedirectService
   ) {
-    this.authentication = this._authenticationService.getAuthentication();
+    this._authenticationService.getAuthenticationAsObservable().subscribe({
+      next: (authentication) => {
+        if (authentication) {
+          this.authentication = authentication;
+        }
+      },
+    });
+  }
+
+  hasRoles(roles: Array<string>) {
+    return this._authenticationService.hasRoles(roles);
   }
 
   redirectToAgendamentoList() {

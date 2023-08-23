@@ -30,7 +30,13 @@ export class BreadcrumbsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this._authentication = this._authenticationService.getAuthentication();
+    this._authenticationService.getAuthenticationAsObservable().subscribe({
+      next: (authentication) => {
+        if (authentication) {
+          this._authentication = authentication;
+        }
+      },
+    });
     this.isBuilding = true;
     this.routes = this.getRoutes();
   }

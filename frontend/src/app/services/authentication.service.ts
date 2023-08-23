@@ -1,63 +1,74 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 import { Authentication } from '../entities/authentication';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthenticationService {
+  private _baseURL: string = `${environment.apiURL}/auth`;
+  private _jwtHelper: JwtHelperService = new JwtHelperService();
+  private _subject = new BehaviorSubject<Authentication | null>(null);
 
-  private _baseURL: string = environment.apiURL + '/auth';
-  private _jwtHelper: JwtHelperService;
+  constructor(private _http: HttpClient) {}
 
-  constructor(
-    private _http: HttpClient, 
-  ) {
-    this._jwtHelper = new JwtHelperService();
-  }
+  getAuthentication(): Authentication | null {
+    if (!this._subject.getValue()) {
+      const access_token = localStorage.getItem('access_token');
 
-  getAuthentication(): Authentication {
-    const authenticationString = localStorage.getItem("authentication");
-    const authentication: Authentication =  authenticationString ? JSON.parse(authenticationString) : null;
-    return authentication;
-  }
+      if (access_token) {
+        const decodedToken = this._jwtHelper.decodeToken(access_token);
+        const authentication: Authentication = {
+          access_token: access_token,
+          username: decodedToken.sub,
+          role: decodedToken.scope,
+        };
 
-  isAuthenticated() {
-
-    const authentication = this.getAuthentication();
-
-    if (authentication) {
-
-      const token = authentication.access_token.substring(7);
-
-      if (token) {
-        return !this._jwtHelper.isTokenExpired(token);
+        this._subject.next(authentication);
+        return authentication;
       }
     }
 
-    return false;
+    return this._subject.getValue();
   }
 
-  login(user: any) {
-    return this._http.post<Authentication>(this._baseURL + '/token', user);
+  getAuthenticationAsObservable() {
+    return this._subject.asObservable();
+  }
+
+  hasRoles(roles: Array<string>) {
+    const authentication = this.getAuthentication();
+    return (
+      !!authentication &&
+      roles
+        .map((role) => role.toLowerCase())
+        .includes(authentication.role.toLowerCase())
+    );
+  }
+
+  isAuthenticated(): boolean {
+    const authentication = this.getAuthentication();
+    return (
+      !!authentication &&
+      !this._jwtHelper.isTokenExpired(authentication.access_token)
+    );
+  }
+
+  token(user: any) {
+    return this._http.post<Authentication>(`${this._baseURL}/token`, user);
   }
 
   logout() {
-    localStorage.removeItem("authentication");
+    localStorage.removeItem('access_token');
+    this._subject.next(null);
   }
 
   setAuthentication(authentication: Authentication) {
-
-    if (localStorage.getItem("authentication")) {
-      localStorage.removeItem("authentication");
-    }
-
-    authentication.username = this._jwtHelper.decodeToken(authentication.access_token).sub;
-    authentication.role = this._jwtHelper.decodeToken(authentication.access_token).scope;
-    
-    localStorage.setItem("authentication", JSON.stringify(authentication));
+    localStorage.setItem('access_token', authentication.access_token);
+    this.getAuthentication();
   }
 }

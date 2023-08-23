@@ -31,8 +31,15 @@ export class UsuarioInformacoesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this._authentication = this._authenticationService.getAuthentication();
     this.hide = true;
+    
+    this._authenticationService.getAuthenticationAsObservable().subscribe({
+      next: (authentication) => {
+        if (authentication) {
+          this._authentication = authentication;
+        }
+      },
+    });
 
     this._usuarioService.get().subscribe({
       next: (usuario) => {

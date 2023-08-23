@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Authentication } from 'src/app/entities/authentication';
 import { Usuario } from 'src/app/entities/usuario';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { AuthenticationService } from 'src/app/services/authentication.service';
@@ -14,6 +15,7 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 })
 export class ToolbarComponent implements OnInit {
   usuario!: Usuario;
+  private _authentication!: Authentication;
 
   constructor(
     private _authenticationService: AuthenticationService,
@@ -23,11 +25,19 @@ export class ToolbarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this._authenticationService.getAuthenticationAsObservable().subscribe({
+      next: (authentication) => {
+        if (authentication) {
+          this._authentication = authentication;
+          this.loadUser();
+        }
+      },
+    });
+  }
 
-    const authentication = this._authenticationService.getAuthentication();
-
+  loadUser() {
     this._usuarioService
-      .search(authentication.username, 0, 1, 'nome', 'asc')
+      .search(this._authentication.username, 0, 1, 'nome', 'asc')
       .subscribe({
         next: (usuarios) => {
           this.usuario = usuarios.content[0];

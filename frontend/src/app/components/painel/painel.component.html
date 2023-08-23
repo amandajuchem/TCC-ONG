@@ -37,10 +37,7 @@
 
   <div
     class="col-12 col-md-3 mb-3"
-    *ngIf="
-      authentication.role === 'ADMINISTRACAO' ||
-      authentication.role === 'VETERINARIO'
-    "
+    *ngIf="hasRoles(['ADMINISTRACAO', 'VETERINARIO'])"
   >
     <div class="card-link" (click)="redirectToAtendimentoList()">
       <mat-card>
@@ -111,7 +108,7 @@
 
   <div
     class="col-12 col-md-3 mb-3"
-    *ngIf="authentication.role === 'ADMINISTRACAO'"
+    *ngIf="hasRoles(['ADMINISTRACAO'])"
   >
     <div class="card-link" (click)="redirectToUsuarioList()">
       <mat-card>
