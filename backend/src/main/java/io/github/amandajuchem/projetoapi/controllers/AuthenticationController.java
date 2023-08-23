@@ -1,7 +1,7 @@
 package io.github.amandajuchem.projetoapi.controllers;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.github.amandajuchem.projetoapi.utils.JWTTokenUtils;
+import io.github.amandajuchem.projetoapi.utils.JWTUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
-    private final JWTTokenUtils jwtTokenUtils;
+    private final JWTUtils jwtUtils;
 
     /**
      * Login method to generate an authentication token.
@@ -38,7 +38,7 @@ public class AuthenticationController {
         final var password = object.get("password").asText();
         final var authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password, Collections.emptyList()));
         final var responseBody = new HashMap<String, Object>();
-        final var token = jwtTokenUtils.generateToken(authentication);
+        final var token = jwtUtils.generateToken(authentication);
 
         responseBody.put("access_token", token);
 

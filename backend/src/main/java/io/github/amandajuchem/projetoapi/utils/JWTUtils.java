@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class JWTTokenUtils {
+public class JWTUtils {
 
     private final JwtEncoder encoder;
 
