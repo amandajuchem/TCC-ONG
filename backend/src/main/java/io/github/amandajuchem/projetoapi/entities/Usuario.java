@@ -1,8 +1,10 @@
 package io.github.amandajuchem.projetoapi.entities;
 
 import io.github.amandajuchem.projetoapi.enums.Setor;
-import jakarta.persistence.*;
-import jakarta.validation.Valid;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
