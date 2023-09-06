@@ -6,16 +6,16 @@ app:
 
 spring:
   datasource:
-    driver-class-name: org.h2.Driver
-    password: password
-    username: sa
-    url: jdbc:h2:mem:database-test
+    url: jdbc:postgresql://localhost:5432/projeto
+    username: projeto
+    password: projeto
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: validate
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     show-sql: false
   servlet:
@@ -23,3 +23,9 @@ spring:
       max-file-size: 10MB
   web:
     locale: pt_BR
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui

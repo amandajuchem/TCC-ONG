@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    restart: unless-stopped
+    env_file: 
+      - .env
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - projeto-network
+  
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    env_file: 
+      - .env
+    ports:
+      - "8081:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    networks:
+      - projeto-network
+
+  projeto-backend:
+    image: edsonisaac/projeto-backend:latest
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - pgadmin
+    env_file: 
+      - .env
+    ports:
+      - "8080:8080"
+    volumes:
+      - projeto-backend-data:/var/lib/projeto-backend
+    networks:
+      - projeto-network
+  
+  projeto-frontend:
+    image: edsonisaac/projeto-frontend:latest
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - pgadmin
+      - projeto-backend
+    env_file:
+      - .env
+    ports:
+      - "80:80"
+    volumes:
+      - projeto-frontend-data:/var/lib/projeto-frontend
+    networks:
+      - projeto-network
+
+volumes:
+  postgres-data:
+  pgadmin-data:
+  projeto-backend-data:
+  projeto-frontend-data:
+
+networks:
+  projeto-network:
+    driver: bridge
