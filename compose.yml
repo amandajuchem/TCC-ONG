@@ -4,28 +4,33 @@ services:
   postgres:
     image: postgres:latest
     restart: unless-stopped
-    env_file: 
-      - .env
+    environment:
+      - POSTGRES_DB=projeto
+      - POSTGRES_USER=projeto
+      - POSTGRES_PASSWORD=projeto
     ports:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:
-      - projeto-network
-  
+      projeto-network:
+        ipv4_address: 172.18.0.2
+
   pgadmin:
     image: dpage/pgadmin4:latest
     restart: unless-stopped
     depends_on:
       - postgres
-    env_file: 
-      - .env
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=amandajuchem@hotmail.com
+      - PGADMIN_DEFAULT_PASSWORD=03129686550
     ports:
       - "8081:80"
     volumes:
       - pgadmin-data:/var/lib/pgadmin
     networks:
-      - projeto-network
+      projeto-network:
+        ipv4_address: 172.18.0.3
 
   projeto-backend:
     image: edsonisaac/projeto-backend:latest
@@ -33,15 +38,18 @@ services:
     depends_on:
       - postgres
       - pgadmin
-    env_file: 
-      - .env
+    environment:
+      - POSTGRES_URL=jdbc:postgresql://172.18.0.2:5432/projeto
+      - POSTGRES_USER=projeto
+      - POSTGRES_PASSWORD=projeto
     ports:
       - "8080:8080"
     volumes:
       - projeto-backend-data:/var/lib/projeto-backend
     networks:
-      - projeto-network
-  
+      projeto-network:
+        ipv4_address: 172.18.0.4
+
   projeto-frontend:
     image: edsonisaac/projeto-frontend:latest
     restart: unless-stopped
@@ -49,14 +57,13 @@ services:
       - postgres
       - pgadmin
       - projeto-backend
-    env_file:
-      - .env
     ports:
       - "80:80"
     volumes:
       - projeto-frontend-data:/var/lib/projeto-frontend
     networks:
-      - projeto-network
+      projeto-network:
+        ipv4_address: 172.18.0.5
 
 volumes:
   postgres-data:
@@ -67,3 +74,6 @@ volumes:
 networks:
   projeto-network:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/24
