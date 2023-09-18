@@ -36,7 +36,7 @@ public class Atendimento extends AbstractEntity {
     @Column(name = "posologia", columnDefinition = "VARCHAR")
     private String posologia;
 
-    @OneToMany
+    @ManyToMany
     @ToString.Exclude
     private Set<Exame> exames;
 

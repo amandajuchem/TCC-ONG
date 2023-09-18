@@ -181,6 +181,13 @@
                   </div>
                 </div>
               </div>
+              <div class="row">
+                <div class="col-12">
+                  <mat-error *ngIf="hasError('exames')">{{
+                    getErrorMessage("exames")
+                  }}</mat-error>
+                </div>
+              </div>
             </div>
 
             <div class="mb-3">

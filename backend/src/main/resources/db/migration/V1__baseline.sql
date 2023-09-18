@@ -226,9 +226,6 @@ ALTER TABLE tb_adocoes_termo_responsabilidade
 ALTER TABLE tb_atendimentos_documentos
     ADD CONSTRAINT uc_tb_atendimentos_documentos_documentos UNIQUE (documentos_id);
 
-ALTER TABLE tb_atendimentos_exames
-    ADD CONSTRAINT uc_tb_atendimentos_exames_exames UNIQUE (exames_id);
-
 ALTER TABLE tb_exames
     ADD CONSTRAINT uc_tb_exames_nome UNIQUE (nome);
 
