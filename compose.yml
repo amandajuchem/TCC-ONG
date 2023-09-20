@@ -16,22 +16,6 @@ services:
       projeto-network:
         ipv4_address: 172.18.0.2
 
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    restart: unless-stopped
-    depends_on:
-      - postgres
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=amandajuchem@hotmail.com
-      - PGADMIN_DEFAULT_PASSWORD=03129686550
-    ports:
-      - "8081:80"
-    volumes:
-      - pgadmin-data:/var/lib/pgadmin
-    networks:
-      projeto-network:
-        ipv4_address: 172.18.0.3
-
   projeto-backend:
     image: edsonisaac/projeto-backend:latest
     restart: unless-stopped
@@ -48,7 +32,7 @@ services:
       - projeto-backend-data:/var/lib/projeto-backend
     networks:
       projeto-network:
-        ipv4_address: 172.18.0.4
+        ipv4_address: 172.18.0.3
 
   projeto-frontend:
     image: edsonisaac/projeto-frontend:latest
@@ -63,11 +47,10 @@ services:
       - projeto-frontend-data:/var/lib/projeto-frontend
     networks:
       projeto-network:
-        ipv4_address: 172.18.0.5
+        ipv4_address: 172.18.0.4
 
 volumes:
   postgres-data:
-  pgadmin-data:
   projeto-backend-data:
   projeto-frontend-data:
 
