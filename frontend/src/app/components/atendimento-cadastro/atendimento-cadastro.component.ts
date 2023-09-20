@@ -67,14 +67,9 @@ export class AtendimentoCadastroComponent implements OnInit {
               next: (atendimento) => {
                 this.atendimento = atendimento;
                 this.buildForm(atendimento);
-                this.dataSourceExames.data = atendimento.exames;
-                this.dataSourceExames._updateChangeSubscription();
 
-                if (atendimento.documentos) {
-                  atendimento.documentos.forEach((d: any) => {
-                    this.documentos.push({ id: d.id, nome: d.nome });
-                  });
-                }
+                // this.dataSourceExames.data = atendimento.exames;
+                // this.dataSourceExames._updateChangeSubscription();
               },
 
               error: (error) => {
@@ -160,10 +155,9 @@ export class AtendimentoCadastroComponent implements OnInit {
         atendimento?.motivo,
         [Validators.required, Validators.maxLength(25)],
       ],
-      diagnostico: [atendimento?.diagnostico, Validators.required],
-      posologia: [atendimento?.posologia, Validators.required],
-      exames: [atendimento?.exames, Validators.required],
-      documentos: [atendimento?.documentos, Validators.nullValidator],
+      diagnostico: [atendimento?.diagnostico, Validators.nullValidator],
+      posologia: [atendimento?.posologia, Validators.nullValidator],
+      exames: [atendimento?.examesRealizados, Validators.nullValidator],
     });
   }
 

@@ -8,7 +8,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -28,11 +27,9 @@ public class Atendimento extends AbstractEntity {
     @Enumerated(EnumType.STRING)
     private Motivo motivo;
 
-    @NotEmpty
     @Column(name = "diagnostico", columnDefinition = "VARCHAR")
     private String diagnostico;
 
-    @NotEmpty
     @Column(name = "posologia", columnDefinition = "VARCHAR")
     private String posologia;
 
