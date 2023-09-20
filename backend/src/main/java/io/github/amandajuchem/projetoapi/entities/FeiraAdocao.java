@@ -2,6 +2,7 @@ package io.github.amandajuchem.projetoapi.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -26,11 +27,11 @@ public class FeiraAdocao extends AbstractEntity {
     @Column(name = "data_hora")
     private LocalDateTime dataHora;
 
-    @OneToMany
+    @ManyToMany
     @ToString.Exclude
     private Set<Animal> animais;
 
-    @OneToMany
+    @ManyToMany
     @ToString.Exclude
     private Set<Usuario> usuarios;
 }

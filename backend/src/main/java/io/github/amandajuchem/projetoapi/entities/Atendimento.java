@@ -36,14 +36,10 @@ public class Atendimento extends AbstractEntity {
     @Column(name = "posologia", columnDefinition = "VARCHAR")
     private String posologia;
 
+    @Valid
     @ManyToMany
     @ToString.Exclude
-    private Set<Exame> exames;
-
-    @Valid
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude
-    private List<Imagem> documentos;
+    private Set<ExameRealizado> examesRealizados;
 
     @OneToOne
     private Animal animal;

@@ -70,17 +70,11 @@ CREATE TABLE tb_atendimentos
     CONSTRAINT pk_tb_atendimentos PRIMARY KEY (id)
 );
 
-CREATE TABLE tb_atendimentos_documentos
+CREATE TABLE tb_atendimentos_exames_realizados
 (
-    documentos_id      UUID NOT NULL,
-    tb_atendimentos_id UUID NOT NULL
-);
-
-CREATE TABLE tb_atendimentos_exames
-(
-    exames_id          UUID NOT NULL,
-    tb_atendimentos_id UUID NOT NULL,
-    CONSTRAINT pk_tb_atendimentos_exames PRIMARY KEY (exames_id, tb_atendimentos_id)
+    exames_realizados_id UUID NOT NULL,
+    tb_atendimentos_id   UUID NOT NULL,
+    CONSTRAINT pk_tb_atendimentos_examesrealizados PRIMARY KEY (exames_realizados_id, tb_atendimentos_id)
 );
 
 CREATE TABLE tb_enderecos
@@ -110,6 +104,18 @@ CREATE TABLE tb_exames
     nome               VARCHAR(100),
     categoria          VARCHAR(25),
     CONSTRAINT pk_tb_exames PRIMARY KEY (id)
+);
+
+CREATE TABLE tb_exames_realizados
+(
+    id                 UUID NOT NULL,
+    created_date       TIMESTAMP WITHOUT TIME ZONE,
+    last_modified_date TIMESTAMP WITHOUT TIME ZONE,
+    created_by_user    VARCHAR(11),
+    modified_by_user   VARCHAR(11),
+    exame_id           UUID,
+    imagem_id          UUID,
+    CONSTRAINT pk_tb_exames_realizados PRIMARY KEY (id)
 );
 
 CREATE TABLE tb_feiras_adocao
@@ -223,20 +229,11 @@ CREATE TABLE tb_usuarios
 ALTER TABLE tb_adocoes_termo_responsabilidade
     ADD CONSTRAINT uc_tb_adocoes_termo_responsabilidade_termoresponsabilidade UNIQUE (termo_responsabilidade_id);
 
-ALTER TABLE tb_atendimentos_documentos
-    ADD CONSTRAINT uc_tb_atendimentos_documentos_documentos UNIQUE (documentos_id);
-
 ALTER TABLE tb_exames
     ADD CONSTRAINT uc_tb_exames_nome UNIQUE (nome);
 
-ALTER TABLE tb_feiras_adocao_animais
-    ADD CONSTRAINT uc_tb_feiras_adocao_animais_animais UNIQUE (animais_id);
-
 ALTER TABLE tb_feiras_adocao
     ADD CONSTRAINT uc_tb_feiras_adocao_nome UNIQUE (nome);
-
-ALTER TABLE tb_feiras_adocao_usuarios
-    ADD CONSTRAINT uc_tb_feiras_adocao_usuarios_usuarios UNIQUE (usuarios_id);
 
 ALTER TABLE tb_imagens
     ADD CONSTRAINT uc_tb_imagens_nome UNIQUE (nome);
@@ -277,6 +274,12 @@ ALTER TABLE tb_atendimentos
 ALTER TABLE tb_atendimentos
     ADD CONSTRAINT FK_TB_ATENDIMENTOS_ON_VETERINARIO FOREIGN KEY (veterinario_id) REFERENCES tb_usuarios (id);
 
+ALTER TABLE tb_exames_realizados
+    ADD CONSTRAINT FK_TB_EXAMES_REALIZADOS_ON_EXAME FOREIGN KEY (exame_id) REFERENCES tb_exames (id);
+
+ALTER TABLE tb_exames_realizados
+    ADD CONSTRAINT FK_TB_EXAMES_REALIZADOS_ON_IMAGEM FOREIGN KEY (imagem_id) REFERENCES tb_imagens (id);
+
 ALTER TABLE tb_observacoes
     ADD CONSTRAINT FK_TB_OBSERVACOES_ON_TUTOR FOREIGN KEY (tutor_id) REFERENCES tb_tutores (id);
 
@@ -289,17 +292,11 @@ ALTER TABLE tb_adocoes_termo_responsabilidade
 ALTER TABLE tb_adocoes_termo_responsabilidade
     ADD CONSTRAINT fk_tbadoterres_on_imagem FOREIGN KEY (termo_responsabilidade_id) REFERENCES tb_imagens (id);
 
-ALTER TABLE tb_atendimentos_documentos
-    ADD CONSTRAINT fk_tbatedoc_on_atendimento FOREIGN KEY (tb_atendimentos_id) REFERENCES tb_atendimentos (id);
+ALTER TABLE tb_atendimentos_exames_realizados
+    ADD CONSTRAINT fk_tbateexarea_on_atendimento FOREIGN KEY (tb_atendimentos_id) REFERENCES tb_atendimentos (id);
 
-ALTER TABLE tb_atendimentos_documentos
-    ADD CONSTRAINT fk_tbatedoc_on_imagem FOREIGN KEY (documentos_id) REFERENCES tb_imagens (id);
-
-ALTER TABLE tb_atendimentos_exames
-    ADD CONSTRAINT fk_tbateexa_on_atendimento FOREIGN KEY (tb_atendimentos_id) REFERENCES tb_atendimentos (id);
-
-ALTER TABLE tb_atendimentos_exames
-    ADD CONSTRAINT fk_tbateexa_on_exame FOREIGN KEY (exames_id) REFERENCES tb_exames (id);
+ALTER TABLE tb_atendimentos_exames_realizados
+    ADD CONSTRAINT fk_tbateexarea_on_exame_realizado FOREIGN KEY (exames_realizados_id) REFERENCES tb_exames_realizados (id);
 
 ALTER TABLE tb_feiras_adocao_animais
     ADD CONSTRAINT fk_tbfeiadoani_on_animal FOREIGN KEY (animais_id) REFERENCES tb_animais (id);

@@ -100,16 +100,18 @@ export class FeiraAdocaoCadastroComponent implements OnInit {
       .subscribe({
         next: (result) => {
           if (result && result.status) {
-            let animais = this.dataSourceAnimais.data;
+            const animais = this.dataSourceAnimais.data;
 
             result.animais
+              // Remove os animais que já foram inseridos anteriormente, evitando assim duplicações
               .filter(
                 (a: Animal) => !animais.some((animal) => animal.id === a.id)
               )
+              // Adiciona os animais a tabela
               .forEach((animal: Animal) => {
                 this.dataSourceAnimais.data.push(animal);
-              });
-
+              })
+            ;
             this.dataSourceAnimais._updateChangeSubscription();
           }
         },
@@ -128,16 +130,18 @@ export class FeiraAdocaoCadastroComponent implements OnInit {
       .subscribe({
         next: (result) => {
           if (result && result.status) {
-            let usuarios = this.dataSourceUsuarios.data;
+            const usuarios = this.dataSourceUsuarios.data;
 
             result.usuarios
+              // Remove os usuários que já foram inseridos anteriormente, evitando assim duplicações
               .filter(
                 (u: Usuario) => !usuarios.some((usuario) => usuario.id === u.id)
               )
+              // Adiciona os usuários a tabela
               .forEach((usuario: Usuario) => {
                 this.dataSourceUsuarios.data.push(usuario);
-              });
-
+              })
+            ;
             this.dataSourceUsuarios._updateChangeSubscription();
           }
         },

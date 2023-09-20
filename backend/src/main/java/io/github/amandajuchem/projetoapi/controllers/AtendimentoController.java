@@ -60,7 +60,7 @@ public class AtendimentoController implements AbstractController<Atendimento, At
     @ResponseStatus(CREATED)
     public AtendimentoDTO save(@RequestPart @Valid Atendimento atendimento,
                                @RequestPart(required = false) List<MultipartFile> documentos) throws FileNotFoundException, InterruptedException {
-        handleDocumentos(atendimento, documentos);
+        //handleDocumentos(atendimento, documentos);
         return save(atendimento);
     }
 
@@ -84,10 +84,10 @@ public class AtendimentoController implements AbstractController<Atendimento, At
     @ResponseStatus(OK)
     public AtendimentoDTO update(@PathVariable UUID id,
                                  @RequestPart @Valid Atendimento atendimento,
-                                 @RequestPart(required = false) List<MultipartFile> documentos) throws FileNotFoundException, InterruptedException {
+                                 @RequestPart(required = false) List<MultipartFile> examesRealizados) throws FileNotFoundException, InterruptedException {
 
         if (atendimento.getId().equals(id)) {
-            handleDocumentos(atendimento, documentos);
+            //handleDocumentos(atendimento, documentos);
             return update(id, atendimento);
         }
 
@@ -99,24 +99,24 @@ public class AtendimentoController implements AbstractController<Atendimento, At
         return service.save(atendimento);
     }
 
-    private void handleDocumentos(Atendimento atendimento, List<MultipartFile> documentos) throws InterruptedException {
-
-        if (documentos != null) {
-
-            for (MultipartFile documento : documentos) {
-
-                final var imagem = Imagem.builder()
-                        .nome(System.currentTimeMillis() + "." + FileUtils.getExtension(Objects.requireNonNull(documento.getOriginalFilename())))
-                        .build();
-
-                if (atendimento.getDocumentos() == null) {
-                    atendimento.setDocumentos(new ArrayList<>());
-                }
-
-                atendimento.getDocumentos().add(imagem);
-                FileUtils.FILES.put(imagem.getNome(), documento);
-                Thread.sleep(10);
-            }
-        }
-    }
+//    private void handleExamesRealizados(Atendimento atendimento, List<MultipartFile> documentos) throws InterruptedException {
+//
+//        if (documentos != null) {
+//
+//            for (MultipartFile documento : documentos) {
+//
+//                final var imagem = Imagem.builder()
+//                        .nome(System.currentTimeMillis() + "." + FileUtils.getExtension(Objects.requireNonNull(documento.getOriginalFilename())))
+//                        .build();
+//
+//                if (atendimento.getDocumentos() == null) {
+//                    atendimento.setDocumentos(new ArrayList<>());
+//                }
+//
+//                atendimento.getDocumentos().add(imagem);
+//                FileUtils.FILES.put(imagem.getNome(), documento);
+//                Thread.sleep(10);
+//            }
+//        }
+//    }
 }
