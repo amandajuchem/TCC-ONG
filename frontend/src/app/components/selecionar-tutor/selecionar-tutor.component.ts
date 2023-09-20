@@ -21,7 +21,7 @@ export class SelecionarTutorComponent implements AfterViewInit {
   filterString!: string;
   isLoadingResults!: boolean;
   resultsLength!: number;
-  tutor!: Tutor;
+  tutor!: Tutor | null;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -114,7 +114,7 @@ export class SelecionarTutorComponent implements AfterViewInit {
   }
 
   select(tutor: Tutor) {
-    this.tutor = tutor;
+    this.tutor = this.tutor ? null : tutor;
   }
 
   sortChange() {

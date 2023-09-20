@@ -16,7 +16,7 @@ import { OperatorUtils } from 'src/app/utils/operator-utils';
   styleUrls: ['./selecionar-animal.component.sass'],
 })
 export class SelecionarAnimalComponent implements AfterViewInit {
-  animal!: Animal;
+  animal!: Animal | null;
   animais!: Array<Animal>;
   columns!: Array<string>;
   dataSource!: MatTableDataSource<Animal>;
@@ -117,7 +117,12 @@ export class SelecionarAnimalComponent implements AfterViewInit {
   }
 
   select(animal: Animal) {
-    this._data.multiplus ? this.animais.push(animal) : (this.animal = animal);
+    if (this._data.multiplus) {
+      const exists = this.animais.some(a => animal.id === a.id);
+      this.animais = exists ? this.animais.filter(a => animal.id !== a.id) : [...this.animais, animal];
+    } else {
+      this.animal = (this.animal && this.animal.id === animal.id) ? null : animal;
+    }
   }
 
   selected(animal: Animal) {

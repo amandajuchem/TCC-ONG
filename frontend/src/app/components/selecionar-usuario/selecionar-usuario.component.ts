@@ -21,7 +21,7 @@ export class SelecionarUsuarioComponent implements AfterViewInit {
   filterString!: string;
   isLoadingResults!: boolean;
   resultsLength!: number;
-  usuario!: Usuario;
+  usuario!: Usuario | null;
   usuarios!: Array<Usuario>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -118,9 +118,13 @@ export class SelecionarUsuarioComponent implements AfterViewInit {
 
   select(usuario: Usuario) {
     if (!this._data.setor || this._data.setor === usuario.setor) {
-      this._data.multiplus
-        ? this.usuarios.push(usuario)
-        : (this.usuario = usuario);
+
+      if (this._data.multiplus) {
+        const exists = this.usuarios.some(u => usuario.id === u.id);
+        this.usuarios = exists ? this.usuarios.filter(u => usuario.id !== u.id) : [...this.usuarios, usuario];
+      } else {
+        this.usuario = (this.usuario && this.usuario.id === usuario.id) ? null : usuario;
+      }
     }
   }
 

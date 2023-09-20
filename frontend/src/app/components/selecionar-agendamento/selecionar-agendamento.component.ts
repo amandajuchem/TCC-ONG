@@ -17,7 +17,7 @@ import { OperatorUtils } from 'src/app/utils/operator-utils';
   styleUrls: ['./selecionar-agendamento.component.sass'],
 })
 export class SelecionarAgendamentoComponent implements AfterViewInit {
-  agendamento!: Agendamento;
+  agendamento!: Agendamento | null;
   agendamentos!: Array<Agendamento>;
   columns!: Array<string>;
   dataSource!: MatTableDataSource<Agendamento>;
@@ -136,9 +136,12 @@ export class SelecionarAgendamentoComponent implements AfterViewInit {
   }
 
   select(agendamento: Agendamento) {
-    this._data.multiplus
-      ? this.agendamentos.push(agendamento)
-      : (this.agendamento = agendamento);
+    if (this._data.multiplus) {
+      const exists = this.agendamentos.some(a => agendamento.id === a.id);
+      this.agendamentos = exists ? this.agendamentos.filter(a => agendamento.id !== a.id) : [...this.agendamentos, agendamento];
+    } else {
+      this.agendamento = (this.agendamento && this.agendamento.id === agendamento.id) ? null : agendamento;
+    }
   }
 
   isSelected(agendamento: Agendamento) {
@@ -164,10 +167,12 @@ export class SelecionarAgendamentoComponent implements AfterViewInit {
   }
 
   submit() {
-    this._dialogRef.close({
-      status: true,
-      agendamento: this.agendamento,
-      agendamentos: this.agendamentos,
-    });
+    if (this.agendamento || this.agendamentos.length > 0) {
+      this._dialogRef.close({
+        status: true,
+        agendamento: this.agendamento,
+        agendamentos: this.agendamentos,
+      });
+    }
   }
 }

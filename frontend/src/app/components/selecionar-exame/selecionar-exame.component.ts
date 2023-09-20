@@ -18,7 +18,7 @@ import { OperatorUtils } from 'src/app/utils/operator-utils';
 export class SelecionarExameComponent implements AfterViewInit {
   columns!: Array<string>;
   dataSource!: MatTableDataSource<Exame>;
-  exame!: Exame;
+  exame!: Exame | null;
   filterString!: string;
   isLoadingResults!: boolean;
   resultsLength!: number;
@@ -114,7 +114,7 @@ export class SelecionarExameComponent implements AfterViewInit {
   }
 
   select(exame: Exame) {
-    this.exame = exame;
+    this.exame = this.exame ? null : exame;
   }
 
   sortChange() {
