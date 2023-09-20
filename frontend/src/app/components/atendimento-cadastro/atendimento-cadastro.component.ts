@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { Agendamento } from 'src/app/entities/agendamento';
 import { Atendimento } from 'src/app/entities/atendimento';
@@ -30,8 +33,13 @@ import { SelecionarUsuarioComponent } from '../selecionar-usuario/selecionar-usu
 export class AtendimentoCadastroComponent implements OnInit {
   apiURL!: string;
   atendimento!: Atendimento;
+  columnsExames!: Array<string>;
+  dataSourceExames!: MatTableDataSource<Exame>;
   documentos!: Array<any>;
   form!: FormGroup;
+
+  @ViewChild('examesPaginator') examesPaginator!: MatPaginator;
+  @ViewChild('examesSort') examesSort!: MatSort;
 
   constructor(
     private _activatedRoute: ActivatedRoute,
@@ -41,12 +49,14 @@ export class AtendimentoCadastroComponent implements OnInit {
     private _imagemService: ImagemService,
     private _notificationService: NotificationService,
     private _redirectService: RedirectService
-  ) {}
+  ) {
+    this.apiURL = environment.apiURL;
+    this.columnsExames = ['index', 'nome', 'categoria', 'acao'];
+    this.dataSourceExames = new MatTableDataSource();
+    this.documentos = [];
+  }
 
   ngOnInit(): void {
-    this.apiURL = environment.apiURL;
-    this.documentos = [];
-
     this._activatedRoute.params.subscribe({
       next: (params: any) => {
         if (params && params.id) {
@@ -57,6 +67,8 @@ export class AtendimentoCadastroComponent implements OnInit {
               next: (atendimento) => {
                 this.atendimento = atendimento;
                 this.buildForm(atendimento);
+                this.dataSourceExames.data = atendimento.exames;
+                this.dataSourceExames._updateChangeSubscription();
 
                 if (atendimento.documentos) {
                   atendimento.documentos.forEach((d: any) => {
@@ -125,6 +137,8 @@ export class AtendimentoCadastroComponent implements OnInit {
 
             if (!exists) {
               exames.push(result.exame);
+              this.dataSourceExames.data = exames;
+              this.dataSourceExames._updateChangeSubscription();
               this.form.get('exames')?.patchValue(exames);
             }
           }
@@ -217,7 +231,10 @@ export class AtendimentoCadastroComponent implements OnInit {
 
   removeExame(exame: Exame) {
     let exames: Array<Exame> = this.form.get('exames')?.value;
-    exames = exames.filter((e) => e.id != exame.id);
+    exames = exames.filter((e) => e.id !== exame.id);
+
+    this.dataSourceExames.data = exames;
+    this.dataSourceExames._updateChangeSubscription();
     this.form.get('exames')?.patchValue(exames);
   }
 
@@ -287,6 +304,7 @@ export class AtendimentoCadastroComponent implements OnInit {
       const imagens: Array<File> = this.documentos
         .filter((d: any) => d.file)
         .map((d: any) => d.file);
+
       atendimento.dataHora = DateUtils.addHours(
         atendimento.dataHora,
         DateUtils.offsetBrasilia
