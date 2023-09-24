@@ -45,6 +45,9 @@ public class Adocao extends AbstractEntity {
     @JsonBackReference("referenceAdocaoTutor")
     private Tutor tutor;
 
+    @ManyToOne
+    private FeiraAdocao feiraAdocao;
+
     @Valid
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude

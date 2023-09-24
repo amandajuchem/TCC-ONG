@@ -2,6 +2,7 @@ package io.github.amandajuchem.projetoapi.dtos;
 
 import io.github.amandajuchem.projetoapi.entities.Tutor;
 import io.github.amandajuchem.projetoapi.enums.Situacao;
+import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -24,6 +25,12 @@ public record TutorDTO(
         Set<AdocaoDTO> adocoes,
         Set<ObservacaoDTO> observacoes
 ) implements Serializable {
+
+    public static Tutor toTutor(TutorDTO tutorDTO) {
+        final var tutor = new Tutor();
+        BeanUtils.copyProperties(tutorDTO, tutor);
+        return tutor;
+    }
 
     public static TutorDTO toDTO(Tutor tutor) {
 

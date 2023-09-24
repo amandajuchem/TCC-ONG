@@ -50,7 +50,10 @@ export class TutoresComponent implements AfterViewInit {
         data: {
           tutor: tutor,
         },
+        disableClose: true,
         width: '100%',
+        minHeight: 'auto',
+        maxHeight: '100vh'
       })
       .afterClosed()
       .subscribe({

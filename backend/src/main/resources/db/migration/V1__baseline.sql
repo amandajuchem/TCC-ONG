@@ -11,6 +11,7 @@ CREATE TABLE tb_adocoes
     vale_castracao     BOOLEAN                     NOT NULL,
     animal_id          UUID,
     tutor_id           UUID,
+    feira_adocao_id    UUID,
     CONSTRAINT pk_tb_adocoes PRIMARY KEY (id)
 );
 
@@ -252,6 +253,9 @@ ALTER TABLE tb_usuarios
 
 ALTER TABLE tb_adocoes
     ADD CONSTRAINT FK_TB_ADOCOES_ON_ANIMAL FOREIGN KEY (animal_id) REFERENCES tb_animais (id);
+
+ALTER TABLE tb_adocoes
+    ADD CONSTRAINT FK_TB_ADOCOES_ON_FEIRAADOCAO FOREIGN KEY (feira_adocao_id) REFERENCES tb_feiras_adocao (id);
 
 ALTER TABLE tb_adocoes
     ADD CONSTRAINT FK_TB_ADOCOES_ON_TUTOR FOREIGN KEY (tutor_id) REFERENCES tb_tutores (id);

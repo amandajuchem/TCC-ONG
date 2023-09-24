@@ -57,7 +57,10 @@ export class AtendimentosComponent implements AfterViewInit {
         data: {
           atendimento: atendimento,
         },
+        disableClose: true,
         width: '100%',
+        minHeight: 'auto',
+        maxHeight: '100vh'
       })
       .afterClosed()
       .subscribe({

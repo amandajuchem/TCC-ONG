@@ -60,7 +60,10 @@ export class AnimalInformacoesComponent implements OnInit {
         data: {
           multiple: false,
         },
+        disableClose: true,
         width: '100%',
+        minHeight: 'auto',
+        maxHeight: '100vh'
       })
       .afterClosed()
       .subscribe((result) => {

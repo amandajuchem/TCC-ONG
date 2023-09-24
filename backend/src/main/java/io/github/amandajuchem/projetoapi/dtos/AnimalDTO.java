@@ -5,6 +5,7 @@ import io.github.amandajuchem.projetoapi.enums.Especie;
 import io.github.amandajuchem.projetoapi.enums.Porte;
 import io.github.amandajuchem.projetoapi.enums.Sexo;
 import io.github.amandajuchem.projetoapi.enums.Situacao;
+import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -29,6 +30,12 @@ public record AnimalDTO(
         FichaMedicaDTO fichaMedica,
         Set<AdocaoDTO> adocoes
 ) implements Serializable {
+
+    public static Animal toAnimal(AnimalDTO animalDTO) {
+        final var animal = new Animal();
+        BeanUtils.copyProperties(animalDTO, animal);
+        return animal;
+    }
 
     public static AnimalDTO toDTO(Animal animal) {
 

@@ -3,6 +3,7 @@ package io.github.amandajuchem.projetoapi.dtos;
 import io.github.amandajuchem.projetoapi.entities.Adocao;
 import io.github.amandajuchem.projetoapi.enums.Local;
 import io.github.amandajuchem.projetoapi.enums.LocalAdocao;
+import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -22,8 +23,15 @@ public record AdocaoDTO(
         Boolean valeCastracao,
         AnimalDTO animal,
         TutorDTO tutor,
+        FeiraAdocaoDTO feiraAdocao,
         Set<ImagemDTO> termoResponsabilidade
 ) implements Serializable {
+
+    public static Adocao toAdocao(AdocaoDTO adocaoDTO) {
+        final var adocao = new Adocao();
+        BeanUtils.copyProperties(adocaoDTO, adocao);
+        return adocao;
+    }
 
     public static AdocaoDTO toDTO(Adocao adocao) {
 
@@ -39,6 +47,7 @@ public record AdocaoDTO(
                 adocao.getValeCastracao(),
                 adocao.getAnimal() != null ? AnimalDTO.toDTO(adocao.getAnimal()) : null,
                 adocao.getTutor() != null ? TutorDTO.toDTO(adocao.getTutor()) : null,
+                adocao.getFeiraAdocao() != null ? FeiraAdocaoDTO.toDTO(adocao.getFeiraAdocao()) : null,
                 adocao.getTermoResponsabilidade() != null ? adocao.getTermoResponsabilidade().stream().map(ImagemDTO::toDTO).collect(Collectors.toSet()) : null
         );
     }

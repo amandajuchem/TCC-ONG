@@ -63,7 +63,10 @@ export class TutorObservacoesComponent implements AfterViewInit {
           observacao: null,
           tutor: this.tutor,
         },
+        disableClose: true,
         width: '100%',
+        minHeight: 'auto',
+        maxHeight: '100vh'
       })
       .afterClosed()
       .subscribe({
@@ -81,7 +84,10 @@ export class TutorObservacoesComponent implements AfterViewInit {
         data: {
           observacao: observacao,
         },
+        disableClose: true,
         width: '100%',
+        minHeight: 'auto',
+        maxHeight: '100vh'
       })
       .afterClosed()
       .subscribe({
@@ -146,7 +152,10 @@ export class TutorObservacoesComponent implements AfterViewInit {
           observacao: observacao,
           tutor: this.tutor,
         },
+        disableClose: true,
         width: '100%',
+        minHeight: 'auto',
+        maxHeight: '100vh'
       })
       .afterClosed()
       .subscribe({

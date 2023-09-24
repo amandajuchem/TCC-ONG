@@ -54,7 +54,10 @@ export class ExamesComponent implements AfterViewInit {
         data: {
           exame: exame,
         },
+        disableClose: true,
         width: '100%',
+        minHeight: 'auto',
+        maxHeight: '100vh'
       })
       .afterClosed()
       .subscribe({

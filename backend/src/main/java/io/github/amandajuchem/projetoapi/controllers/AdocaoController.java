@@ -1,10 +1,13 @@
 package io.github.amandajuchem.projetoapi.controllers;
 
 import io.github.amandajuchem.projetoapi.dtos.AdocaoDTO;
+import io.github.amandajuchem.projetoapi.dtos.AnimalDTO;
 import io.github.amandajuchem.projetoapi.entities.Adocao;
 import io.github.amandajuchem.projetoapi.entities.Imagem;
+import io.github.amandajuchem.projetoapi.enums.Situacao;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.AdocaoService;
+import io.github.amandajuchem.projetoapi.services.AnimalService;
 import io.github.amandajuchem.projetoapi.utils.FileUtils;
 import io.github.amandajuchem.projetoapi.utils.MessageUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,10 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -30,13 +30,14 @@ import static org.springframework.http.HttpStatus.OK;
 @Tag(name = "Adoções", description = "Endpoints for adoptions management")
 public class AdocaoController implements AbstractController<Adocao, AdocaoDTO> {
 
-    private final AdocaoService service;
+    private final AdocaoService adocaoService;
+    private final AnimalService animalService;
 
     @Override
     @DeleteMapping("/{id}")
     @ResponseStatus(OK)
     public void delete(@PathVariable UUID id) {
-        service.delete(id);
+        adocaoService.delete(id);
     }
 
     @Override
@@ -46,14 +47,14 @@ public class AdocaoController implements AbstractController<Adocao, AdocaoDTO> {
                                    @RequestParam(required = false, defaultValue = "10") Integer size,
                                    @RequestParam(required = false, defaultValue = "dataHora") String sort,
                                    @RequestParam(required = false, defaultValue = "desc") String direction) {
-        return service.findAll(page, size, sort, direction);
+        return adocaoService.findAll(page, size, sort, direction);
     }
 
     @Override
     @GetMapping("/{id}")
     @ResponseStatus(OK)
     public AdocaoDTO findById(@PathVariable UUID id) {
-        return service.findById(id);
+        return adocaoService.findById(id);
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -66,7 +67,7 @@ public class AdocaoController implements AbstractController<Adocao, AdocaoDTO> {
 
     @Override
     public AdocaoDTO save(Adocao adocao) {
-        return service.save(adocao);
+        return handleAdocao(adocao);
     }
 
     @Override
@@ -77,7 +78,7 @@ public class AdocaoController implements AbstractController<Adocao, AdocaoDTO> {
                                   @RequestParam(required = false, defaultValue = "10") Integer size,
                                   @RequestParam(required = false, defaultValue = "dataHora") String sort,
                                   @RequestParam(required = false, defaultValue = "desc") String direction) {
-        return service.search(value, page, size, sort, direction);
+        return adocaoService.search(value, page, size, sort, direction);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -96,7 +97,20 @@ public class AdocaoController implements AbstractController<Adocao, AdocaoDTO> {
 
     @Override
     public AdocaoDTO update(UUID id, Adocao adocao) {
-        return service.save(adocao);
+        return handleAdocao(adocao);
+    }
+
+    private AdocaoDTO handleAdocao(Adocao adocao) {
+        final var animalId = adocao.getAnimal().getId();
+        adocao = AdocaoDTO.toAdocao(adocaoService.save(adocao));
+        final var animal = AnimalDTO.toAnimal(animalService.findById(animalId));
+
+        animal.setSituacao(Situacao.ADOTADO);
+        animal.setAdocoes(Collections.emptySet());
+        animalService.save(animal);
+        adocao.setAnimal(animal);
+
+        return AdocaoDTO.toDTO(adocao);
     }
 
     private void handleTermoResponsabilidade(Adocao adocao, List<MultipartFile> termoResponsabilidade) throws InterruptedException {

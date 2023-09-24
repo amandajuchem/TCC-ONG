@@ -37,14 +37,7 @@ export class FeirasAdocaoComponent implements AfterViewInit {
     private _notificationService: NotificationService,
     private _redirectService: RedirectService
   ) {
-    this.columns = [
-      'index',
-      'dataHora',
-      'nome',
-      'totalAnimais',
-      'totalUsuarios',
-      'acao',
-    ];
+    this.columns = ['index', 'dataHora', 'nome', 'acao'];
     this.dataSource = new MatTableDataSource();
     this.isLoadingResults = true;
     this.resultsLength = 0;
@@ -64,13 +57,16 @@ export class FeirasAdocaoComponent implements AfterViewInit {
         data: {
           feiraAdocao: feiraAdocao,
         },
+        disableClose: true,
         width: '100%',
+        minHeight: 'auto',
+        maxHeight: '100vh'
       })
       .afterClosed()
       .subscribe({
         next: (result) => {
           if (result && result.status) {
-            this.search('date');
+            this.findAll();
           }
         },
       });

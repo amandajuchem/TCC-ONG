@@ -2,6 +2,8 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Adocao } from 'src/app/entities/adocao';
+import { FeiraAdocao } from 'src/app/entities/feira-adocao';
+import { LocalAdocao } from 'src/app/enums/local-adocao';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { AdocaoService } from 'src/app/services/adocao.service';
 import { ImagemService } from 'src/app/services/imagem.service';
@@ -11,6 +13,7 @@ import { FormUtils } from 'src/app/utils/form-utils';
 import { MessageUtils } from 'src/app/utils/message-utils';
 import { environment } from 'src/environments/environment';
 
+import { SelecionarFeiraAdocaoComponent } from '../selecionar-feira-adocao/selecionar-feira-adocao.component';
 import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-imagem.component';
 import { SelecionarTutorComponent } from '../selecionar-tutor/selecionar-tutor.component';
 
@@ -22,6 +25,7 @@ import { SelecionarTutorComponent } from '../selecionar-tutor/selecionar-tutor.c
 export class AnimalAdocoesCadastroComponent implements OnInit {
   apiURL!: string;
   form!: FormGroup;
+  feirasAdocao!: Array<FeiraAdocao>;
   termoResponsabilidade!: Array<any>;
 
   constructor(
@@ -37,7 +41,7 @@ export class AnimalAdocoesCadastroComponent implements OnInit {
   ngOnInit(): void {
     this.apiURL = environment.apiURL;
     this.termoResponsabilidade = [];
-
+ 
     if (this.data.adocao) {
       this.buildForm(this.data.adocao);
 
@@ -57,7 +61,10 @@ export class AnimalAdocoesCadastroComponent implements OnInit {
         data: {
           multiple: true,
         },
+        disableClose: true,
         width: '100%',
+        minHeight: 'auto',
+        maxHeight: '100vh'
       })
       .afterClosed()
       .subscribe({
@@ -85,6 +92,10 @@ export class AnimalAdocoesCadastroComponent implements OnInit {
       localAdocao: [
         adocao?.localAdocao,
         [Validators.required, Validators.maxLength(10)],
+      ],
+      feiraAdocao: [
+        adocao?.feiraAdocao,
+        adocao?.localAdocao === LocalAdocao.FEIRA ? Validators.required : Validators.nullValidator
       ],
       valeCastracao: [adocao?.valeCastracao, Validators.required],
       animal: [this.data.animal, Validators.required],
@@ -125,6 +136,20 @@ export class AnimalAdocoesCadastroComponent implements OnInit {
     return FormUtils.hasError(this.form, controlName);
   }
 
+  localAdocaoChange(event: any) {
+
+    if (event.value === LocalAdocao.FEIRA) {
+      this.form.get('feiraAdocao')?.removeValidators(Validators.nullValidator);
+      this.form.get('feiraAdocao')?.addValidators(Validators.required);
+    }
+    else {
+      this.form.get('feiraAdocao')?.removeValidators(Validators.required);
+      this.form.get('feiraAdocao')?.addValidators(Validators.nullValidator);
+    }
+
+    this.form.get('feiraAdocao')?.patchValue(undefined);
+  }
+
   removeImagem(imagem: any) {
     if (this.form.get('termoResponsabilidade')?.value) {
       this.form
@@ -141,10 +166,38 @@ export class AnimalAdocoesCadastroComponent implements OnInit {
     );
   }
 
+  selectFeiraAdocao() {
+
+    this._dialog
+      .open(SelecionarFeiraAdocaoComponent, {
+        data: {
+          multiplus: false
+        },
+        disableClose: true,
+        width: '100%',
+        minHeight: 'auto',
+        maxHeight: '100vh'
+      })
+      .afterClosed()
+      .subscribe({
+        next: (result) => {
+          if (result && result.status) {
+            this.form.get('feiraAdocao')?.patchValue(result.feiraAdocao);
+          }
+        },
+      });
+  }
+
   selectTutor() {
     this._dialog
       .open(SelecionarTutorComponent, {
+        data: {
+          multiplus: false
+        },
+        disableClose: true,
         width: '100%',
+        minHeight: 'auto',
+        maxHeight: '100vh'
       })
       .afterClosed()
       .subscribe({
@@ -169,12 +222,12 @@ export class AnimalAdocoesCadastroComponent implements OnInit {
 
       if (adocao.id) {
         this._adocaoService.update(adocao, images).subscribe({
-          complete: () => {
+          next: (adocao) => {
             this._notificationService.show(
               MessageUtils.ADOCAO.UPDATE_SUCCESS,
               NotificationType.SUCCESS
             );
-            this._dialogRef.close({ status: true });
+            this._dialogRef.close({ status: true, adocao: adocao });
           },
 
           error: (error) => {
@@ -187,12 +240,12 @@ export class AnimalAdocoesCadastroComponent implements OnInit {
         });
       } else {
         this._adocaoService.save(adocao, images).subscribe({
-          complete: () => {
+          next: (adocao) => {
             this._notificationService.show(
               MessageUtils.ADOCAO.SAVE_SUCCESS,
               NotificationType.SUCCESS
             );
-            this._dialogRef.close({ status: true });
+            this._dialogRef.close({ status: true, adocao: adocao });
           },
 
           error: (error) => {

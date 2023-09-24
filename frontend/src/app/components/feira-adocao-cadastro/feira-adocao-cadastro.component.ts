@@ -18,6 +18,8 @@ import { MessageUtils } from 'src/app/utils/message-utils';
 
 import { SelecionarAnimalComponent } from '../selecionar-animal/selecionar-animal.component';
 import { SelecionarUsuarioComponent } from '../selecionar-usuario/selecionar-usuario.component';
+import { Adocao } from 'src/app/entities/adocao';
+import { AdocaoService } from 'src/app/services/adocao.service';
 
 @Component({
   selector: 'app-feira-adocao-cadastro',
@@ -25,6 +27,7 @@ import { SelecionarUsuarioComponent } from '../selecionar-usuario/selecionar-usu
   styleUrls: ['./feira-adocao-cadastro.component.sass'],
 })
 export class FeiraAdocaoCadastroComponent implements OnInit {
+  adocoes!: Array<Adocao>;
   dataSourceAnimais!: MatTableDataSource<Animal>;
   dataSourceUsuarios!: MatTableDataSource<Usuario>;
   columnsAnimais!: Array<string>;
@@ -38,6 +41,7 @@ export class FeiraAdocaoCadastroComponent implements OnInit {
   @ViewChild('usuariosSort') usuariosSort!: MatSort;
 
   constructor(
+    private _adocaoService: AdocaoService,
     private _activatedRoute: ActivatedRoute,
     private _dialog: MatDialog,
     private _feiraAdocaoService: FeiraAdocaoService,
@@ -45,16 +49,10 @@ export class FeiraAdocaoCadastroComponent implements OnInit {
     private _notificationService: NotificationService,
     private _redirectService: RedirectService
   ) {
+    this.adocoes = [];
     this.dataSourceAnimais = new MatTableDataSource();
     this.dataSourceUsuarios = new MatTableDataSource();
-    this.columnsAnimais = [
-      'index',
-      'nome',
-      'especie',
-      'porte',
-      'idade',
-      'acao',
-    ];
+    this.columnsAnimais = ['index', 'nome', 'especie', 'adotado', 'acao'];
     this.columnsUsuarios = ['index', 'nome', 'setor', 'acao'];
   }
 
@@ -82,6 +80,8 @@ export class FeiraAdocaoCadastroComponent implements OnInit {
                 );
               },
             });
+
+            this.findAllAdocoes(params.id, 0);
           }
         }
       },
@@ -94,7 +94,10 @@ export class FeiraAdocaoCadastroComponent implements OnInit {
         data: {
           multiplus: true,
         },
+        disableClose: true,
         width: '100%',
+        minHeight: 'auto',
+        maxHeight: '100vh'
       })
       .afterClosed()
       .subscribe({
@@ -110,8 +113,7 @@ export class FeiraAdocaoCadastroComponent implements OnInit {
               // Adiciona os animais a tabela
               .forEach((animal: Animal) => {
                 this.dataSourceAnimais.data.push(animal);
-              })
-            ;
+              });
             this.dataSourceAnimais._updateChangeSubscription();
           }
         },
@@ -124,7 +126,10 @@ export class FeiraAdocaoCadastroComponent implements OnInit {
         data: {
           multiplus: true,
         },
+        disableClose: true,
         width: '100%',
+        minHeight: 'auto',
+        maxHeight: '100vh'
       })
       .afterClosed()
       .subscribe({
@@ -140,8 +145,7 @@ export class FeiraAdocaoCadastroComponent implements OnInit {
               // Adiciona os usuários a tabela
               .forEach((usuario: Usuario) => {
                 this.dataSourceUsuarios.data.push(usuario);
-              })
-            ;
+              });
             this.dataSourceUsuarios._updateChangeSubscription();
           }
         },
@@ -173,12 +177,48 @@ export class FeiraAdocaoCadastroComponent implements OnInit {
     }
   }
 
+  findAllAdocoes(id: string, page: number) {
+    const size = 10;
+    const sort = 'dataHora';
+    const direction = 'desc';
+
+    this._adocaoService.search(id, page, size, sort, direction).subscribe({
+      next: (adocoes) => {
+        
+        this.adocoes.push(...adocoes.content);
+        this.adocoes.forEach(adocao => {
+
+          if (!this.dataSourceAnimais.data.some(animal => animal.id === adocao.animal.id)) {
+            this.dataSourceAnimais.data.push(adocao.animal);
+            this.dataSourceAnimais._updateChangeSubscription();
+          }
+        });
+
+        if ((adocoes.totalPages - 1) !== page) {
+          this.findAllAdocoes(id, page + 1);
+        }
+      },
+
+      error: (error) => {
+        console.error(error);
+        this._notificationService.show(
+          MessageUtils.ADOCAO.LIST_GET_FAIL + MessageUtils.getMessage(error),
+          NotificationType.FAIL
+        );
+      },
+    });
+  }
+
   getErrorMessage(controlName: string) {
     return FormUtils.getErrorMessage(this.form, controlName);
   }
 
   hasError(controlName: string) {
     return FormUtils.hasError(this.form, controlName);
+  }
+
+  isAdotado(animal: Animal) {
+    return this.adocoes.some((adocao) => adocao.animal.id === animal.id);
   }
 
   removeAnimal(animal: Animal) {

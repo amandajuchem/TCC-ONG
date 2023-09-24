@@ -53,7 +53,10 @@ export class AnimaisComponent implements AfterViewInit {
         data: {
           animal: animal,
         },
+        disableClose: true,
         width: '100%',
+        minHeight: 'auto',
+        maxHeight: '100vh'
       })
       .afterClosed()
       .subscribe({

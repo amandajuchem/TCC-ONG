@@ -98,7 +98,10 @@ export class AgendamentoCadastroComponent implements OnInit {
         data: {
           multiplus: false,
         },
+        disableClose: true,
         width: '100%',
+        minHeight: 'auto',
+        maxHeight: '100vh'
       })
       .afterClosed()
       .subscribe({
@@ -116,7 +119,10 @@ export class AgendamentoCadastroComponent implements OnInit {
         data: {
           setor: Setor.VETERINARIO,
         },
+        disableClose: true,
         width: '100%',
+        minHeight: 'auto',
+        maxHeight: '100vh'
       })
       .afterClosed()
       .subscribe({

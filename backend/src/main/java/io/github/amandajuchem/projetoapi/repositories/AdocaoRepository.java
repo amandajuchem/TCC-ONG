@@ -22,7 +22,9 @@ public interface AdocaoRepository extends JpaRepository<Adocao, UUID> {
     @Query("SELECT ad FROM tb_adocoes AS ad " +
             "INNER JOIN ad.animal AS an " +
             "INNER JOIN ad.tutor AS t " +
+            "INNER JOIN ad.feiraAdocao AS fe " +
             "ON cast(an.id as string) = ?1 " +
-            "OR cast(t.id as string) = ?1")
+            "OR cast(t.id as string) = ?1 " +
+            "OR cast(fe.id as string) = ?1")
     Page<Adocao> search(String value, Pageable page);
 }

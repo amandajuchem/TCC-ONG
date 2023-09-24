@@ -1,27 +1,26 @@
 import { DatePipe } from '@angular/common';
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { AfterViewInit, Component, Inject, ViewChild } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Agendamento } from 'src/app/entities/agendamento';
+import { FeiraAdocao } from 'src/app/entities/feira-adocao';
 import { NotificationType } from 'src/app/enums/notification-type';
-import { AgendamentoService } from 'src/app/services/agendamento.service';
+import { FeiraAdocaoService } from 'src/app/services/feira-adocao.service';
 import { NotificationService } from 'src/app/services/notification.service';
-import { RedirectService } from 'src/app/services/redirect.service';
 import { MessageUtils } from 'src/app/utils/message-utils';
 import { OperatorUtils } from 'src/app/utils/operator-utils';
 
-import { AgendamentoExcluirComponent } from '../agendamento-excluir/agendamento-excluir.component';
-
 @Component({
-  selector: 'app-agendamentos',
-  templateUrl: './agendamentos.component.html',
-  styleUrls: ['./agendamentos.component.sass'],
+  selector: 'app-selecionar-feira-adocao',
+  templateUrl: './selecionar-feira-adocao.component.html',
+  styleUrls: ['./selecionar-feira-adocao.component.sass']
 })
-export class AgendamentosComponent implements AfterViewInit {
+export class SelecionarFeiraAdocaoComponent implements AfterViewInit {
   columns!: Array<string>;
-  dataSource!: MatTableDataSource<Agendamento>;
+  dataSource!: MatTableDataSource<FeiraAdocao>;
+  feiraAdocao!: FeiraAdocao | null;
+  feirasAdocao!: Array<FeiraAdocao>;
   filterDate!: Date | null;
   filterString!: string;
   isLoadingResults!: boolean;
@@ -31,45 +30,21 @@ export class AgendamentosComponent implements AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
-    private _agendamentoService: AgendamentoService,
+    @Inject(MAT_DIALOG_DATA) private _data: any,
     private _datePipe: DatePipe,
-    private _dialog: MatDialog,
-    private _notificationService: NotificationService,
-    private _redirectService: RedirectService
+    private _dialogRef: MatDialogRef<SelecionarFeiraAdocaoComponent>,
+    private _feiraAdocaoService: FeiraAdocaoService,
+    private _notificationService: NotificationService
   ) {
-    this.columns = ['index', 'dataHora', 'animal', 'veterinario', 'acao'];
+    this.feirasAdocao = [];
+    this.columns = ['index', 'dataHora', 'nome'];
     this.dataSource = new MatTableDataSource();
     this.isLoadingResults = true;
     this.resultsLength = 0;
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.findAll();
-  }
-
-  add() {
-    this._redirectService.toAgendamento('cadastro');
-  }
-
-  delete(agendamento: Agendamento) {
-    this._dialog
-      .open(AgendamentoExcluirComponent, {
-        data: {
-          agendamento: agendamento,
-        },
-        disableClose: true,
-        width: '100%',
-        minHeight: 'auto',
-        maxHeight: '100vh'
-      })
-      .afterClosed()
-      .subscribe({
-        next: (result) => {
-          if (result && result.status) {
-            this.search('date');
-          }
-        },
-      });
   }
 
   async findAll() {
@@ -81,26 +56,32 @@ export class AgendamentosComponent implements AfterViewInit {
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
 
-    this._agendamentoService.findAll(page, size, sort, direction).subscribe({
+    this._feiraAdocaoService.findAll(page, size, sort, direction).subscribe({
       complete: () => {
         this.isLoadingResults = false;
       },
 
-      next: (agendamentos) => {
-        this.dataSource.data = agendamentos.content;
-        this.resultsLength = agendamentos.totalElements;
+      next: (feirasAdocao) => {
+        this.dataSource.data = feirasAdocao.content;
+        this.resultsLength = feirasAdocao.totalElements;
       },
 
       error: (error) => {
         this.isLoadingResults = false;
         console.error(error);
         this._notificationService.show(
-          MessageUtils.AGENDAMENTO.LIST_GET_FAIL +
+          MessageUtils.FEIRA_ADOCAO.LIST_GET_FAIL +
             MessageUtils.getMessage(error),
           NotificationType.FAIL
         );
       },
     });
+  }
+
+  isSelected(feiraAdocao: FeiraAdocao) {
+    return this._data.multiplus
+      ? this.feirasAdocao?.some((f) => f.id === feiraAdocao.id)
+      : this.feiraAdocao?.id === feiraAdocao.id;
   }
 
   pageChange() {
@@ -136,28 +117,37 @@ export class AgendamentosComponent implements AfterViewInit {
     this.isLoadingResults = true;
     await OperatorUtils.delay(1000);
 
-    this._agendamentoService
+    this._feiraAdocaoService
       .search(value, page, size, sort, direction)
       .subscribe({
         complete: () => {
           this.isLoadingResults = false;
         },
 
-        next: (agendamentos) => {
-          this.dataSource.data = agendamentos.content;
-          this.resultsLength = agendamentos.totalElements;
+        next: (feirasAdocao) => {
+          this.dataSource.data = feirasAdocao.content;
+          this.resultsLength = feirasAdocao.totalElements;
         },
 
         error: (error) => {
           this.isLoadingResults = false;
           console.error(error);
           this._notificationService.show(
-            MessageUtils.AGENDAMENTO.LIST_GET_FAIL +
+            MessageUtils.FEIRA_ADOCAO.LIST_GET_FAIL +
               MessageUtils.getMessage(error),
             NotificationType.FAIL
           );
         },
       });
+  }
+
+  select(feiraAdocao: FeiraAdocao) {
+    if (this._data.multiplus) {
+      const exists = this.feirasAdocao.some(f => feiraAdocao.id === f.id);
+      this.feirasAdocao = exists ? this.feirasAdocao.filter(f => feiraAdocao.id !== f.id) : [...this.feirasAdocao, feiraAdocao];
+    } else {
+      this.feiraAdocao = (this.feiraAdocao && this.feiraAdocao.id === feiraAdocao.id) ? null : feiraAdocao;
+    }
   }
 
   sortChange() {
@@ -176,7 +166,13 @@ export class AgendamentosComponent implements AfterViewInit {
     this.findAll();
   }
 
-  update(agendamento: Agendamento) {
-    this._redirectService.toAgendamento(agendamento.id);
+  submit() {
+    if (this.feiraAdocao || this.feirasAdocao.length > 0) {
+      this._dialogRef.close({
+        status: true,
+        feiraAdocao: this.feiraAdocao,
+        feirasAdocao: this.feirasAdocao,
+      });
+    }
   }
 }

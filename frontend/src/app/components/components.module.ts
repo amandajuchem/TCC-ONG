@@ -56,6 +56,7 @@ import { PainelComponent } from './painel/painel.component';
 import { SelecionarAgendamentoComponent } from './selecionar-agendamento/selecionar-agendamento.component';
 import { SelecionarAnimalComponent } from './selecionar-animal/selecionar-animal.component';
 import { SelecionarExameComponent } from './selecionar-exame/selecionar-exame.component';
+import { SelecionarFeiraAdocaoComponent } from './selecionar-feira-adocao/selecionar-feira-adocao.component';
 import { SelecionarImagemComponent } from './selecionar-imagem/selecionar-imagem.component';
 import { SelecionarTutorComponent } from './selecionar-tutor/selecionar-tutor.component';
 import { SelecionarUsuarioComponent } from './selecionar-usuario/selecionar-usuario.component';
@@ -107,6 +108,7 @@ import { UsuariosComponent } from './usuarios/usuarios.component';
     SelecionarAgendamentoComponent,
     SelecionarAnimalComponent,
     SelecionarExameComponent,
+    SelecionarFeiraAdocaoComponent,
     SelecionarImagemComponent,
     SelecionarTutorComponent,
     SelecionarUsuarioComponent,

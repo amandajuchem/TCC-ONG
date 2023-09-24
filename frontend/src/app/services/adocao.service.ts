@@ -70,8 +70,6 @@ export class AdocaoService implements AbstractService<Adocao> {
       termoResponsabilidade.forEach((imagem: any, index: number) => form.append('termoResponsabilidade', new Blob([imagem], { type: 'multipart/form-data' }), 'imagem' + index + '.png'));
     }
 
-    console.log(form);
-
     return this._http.post<Adocao>(this._baseURL, form);
   }
 

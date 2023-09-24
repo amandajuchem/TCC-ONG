@@ -93,7 +93,10 @@ export class AtendimentoCadastroComponent implements OnInit {
         data: {
           multiple: true,
         },
+        disableClose: true,
         width: '100%',
+        minHeight: 'auto',
+        maxHeight: '100vh'
       })
       .afterClosed()
       .subscribe({
@@ -116,7 +119,13 @@ export class AtendimentoCadastroComponent implements OnInit {
   addExame() {
     this._dialog
       .open(SelecionarExameComponent, {
+        data: {
+          multiplus: false
+        },
+        disableClose: true,
         width: '100%',
+        minHeight: 'auto',
+        maxHeight: '100vh'
       })
       .afterClosed()
       .subscribe({
@@ -196,7 +205,10 @@ export class AtendimentoCadastroComponent implements OnInit {
         data: {
           multiplus: false,
         },
+        disableClose: true,
         width: '100%',
+        minHeight: 'auto',
+        maxHeight: '100vh'
       })
       .afterClosed()
       .subscribe({
@@ -252,7 +264,10 @@ export class AtendimentoCadastroComponent implements OnInit {
         data: {
           multiplus: false,
         },
+        disableClose: true,
         width: '100%',
+        minHeight: 'auto',
+        maxHeight: '100vh'
       })
       .afterClosed()
       .subscribe({
@@ -275,9 +290,13 @@ export class AtendimentoCadastroComponent implements OnInit {
     this._dialog
       .open(SelecionarUsuarioComponent, {
         data: {
+          multiplus: false,
           setor: Setor.VETERINARIO,
         },
+        disableClose: true,
         width: '100%',
+        minHeight: 'auto',
+        maxHeight: '100vh'
       })
       .afterClosed()
       .subscribe({

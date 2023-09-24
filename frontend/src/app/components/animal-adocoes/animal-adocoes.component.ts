@@ -62,13 +62,16 @@ export class AnimalAdocoesComponent implements AfterViewInit {
           adocao: null,
           animal: this.animal,
         },
+        disableClose: true,
         width: '100%',
+        minHeight: 'auto',
+        maxHeight: '100vh'
       })
       .afterClosed()
       .subscribe({
         next: (result) => {
           if (result && result.status) {
-            this.findAll();
+            this._animalService.set(result.adocao.animal);  
           }
         },
       });
@@ -80,7 +83,10 @@ export class AnimalAdocoesComponent implements AfterViewInit {
         data: {
           adocao: adocao,
         },
+        disableClose: true,
         width: '100%',
+        minHeight: 'auto',
+        maxHeight: '100vh'
       })
       .afterClosed()
       .subscribe({
@@ -144,13 +150,16 @@ export class AnimalAdocoesComponent implements AfterViewInit {
           adocao: adocao,
           animal: this.animal,
         },
+        disableClose: true,
         width: '100%',
+        minHeight: 'auto',
+        maxHeight: '100vh'
       })
       .afterClosed()
       .subscribe({
         next: (result) => {
           if (result && result.status) {
-            this.findAll();
+            this._animalService.set(result.adocao.animal);  
           }
         },
       });

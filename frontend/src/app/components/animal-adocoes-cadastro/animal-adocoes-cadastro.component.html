@@ -1,11 +1,51 @@
-<div class="dialog-header ps-3 pt-3 pe-3">
-  <h2 class="m-0">
-    {{ data.observacao ? "Editar Dados da Adoção" : "Cadastrar Adoção" }}
-  </h2>
-</div>
-
-<div class="dialog-content p-3">
-  <form [formGroup]="form" *ngIf="form">
+<form [formGroup]="form" *ngIf="form">
+  <div class="dialog-header ps-3 pt-3 pe-3 overflow-y-auto">
+    <h2 class="m-0">
+      {{ data.observacao ? "Editar Dados da Adoção" : "Cadastrar Adoção" }}
+    </h2>
+  </div>
+  
+  <div class="dialog-content p-3">
+    <div class="row">
+      <div class="col-12 col-md-6">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Animal</mat-label>
+          <input
+            matInput
+            [value]="form.get('animal')?.value?.nome"
+            readonly
+            required
+          />
+          <mat-error *ngIf="hasError('animal')">{{
+            getErrorMessage("animal")
+          }}</mat-error>
+        </mat-form-field>
+      </div>
+  
+      <div class="col-12 col-md-6">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Tutor</mat-label>
+          <input
+            matInput
+            readonly
+            required
+            [value]="form.get('tutor')?.value?.nome"
+          />
+          <button
+            type="button"
+            matSuffix
+            mat-icon-button
+            (click)="selectTutor()"
+          >
+            <mat-icon>search</mat-icon>
+          </button>
+          <mat-error *ngIf="hasError('tutor')">{{
+            getErrorMessage("tutor")
+          }}</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+  
     <div class="row">
       <div class="col-12 col-md-3">
         <mat-form-field appearance="outline" class="w-100">
@@ -29,7 +69,7 @@
           }}</mat-error>
         </mat-form-field>
       </div>
-
+  
       <div class="col-12 col-md-3">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Local</mat-label>
@@ -42,11 +82,11 @@
           }}</mat-error>
         </mat-form-field>
       </div>
-
+  
       <div class="col-12 col-md-3">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Local de Adoção</mat-label>
-          <mat-select formControlName="localAdocao">
+          <mat-select formControlName="localAdocao" (selectionChange)="localAdocaoChange($event)">
             <mat-option value="FEIRA">Feira</mat-option>
             <mat-option value="ONG">ONG</mat-option>
             <mat-option value="PET_SHOP">Pet Shop</mat-option>
@@ -59,7 +99,34 @@
           }}</mat-error>
         </mat-form-field>
       </div>
-
+  
+      <div class="col-12 col-md-3">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Feira de Adoção</mat-label>
+          <input
+            matInput
+            readonly
+            [value]="form.get('feiraAdocao')?.value?.nome"
+            [disabled]="form.get('localAdocao')?.value !== 'FEIRA'"
+            [required]="form.get('localAdocao')?.value === 'FEIRA'"
+          />
+          <button
+            type="button"
+            matSuffix
+            mat-icon-button
+            (click)="selectFeiraAdocao()"
+            [disabled]="form.get('localAdocao')?.value !== 'FEIRA'"
+          >
+            <mat-icon>search</mat-icon>
+          </button>
+          <mat-error *ngIf="hasError('feiraAdocao')">{{
+            getErrorMessage("feiraAdocao")
+          }}</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+  
+    <div class="row">
       <div class="col-12 col-md-3">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Vale Castração</mat-label>
@@ -73,47 +140,7 @@
         </mat-form-field>
       </div>
     </div>
-
-    <div class="row">
-      <div class="col-12 col-md-6">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Animal</mat-label>
-          <input
-            matInput
-            [value]="form.get('animal')?.value?.nome"
-            readonly
-            required
-          />
-          <mat-error *ngIf="hasError('animal')">{{
-            getErrorMessage("animal")
-          }}</mat-error>
-        </mat-form-field>
-      </div>
-
-      <div class="col-12 col-md-6">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Tutor</mat-label>
-          <input
-            matInput
-            [value]="form.get('tutor')?.value?.nome"
-            readonly
-            required
-          />
-          <button
-            type="button"
-            matSuffix
-            mat-icon-button
-            (click)="selectTutor()"
-          >
-            <mat-icon>search</mat-icon>
-          </button>
-          <mat-error *ngIf="hasError('tutor')">{{
-            getErrorMessage("tutor")
-          }}</mat-error>
-        </mat-form-field>
-      </div>
-    </div>
-
+  
     <div class="mb-3">
       <div class="row">
         <div class="col-7 col-md-10">
@@ -121,7 +148,7 @@
             <h3 class="m-0">Termo de Responsabilidade</h3>
           </div>
         </div>
-
+  
         <div class="col-5 col-md-2">
           <div class="d-flex align-items-center justify-content-end h-100">
             <button
@@ -137,7 +164,7 @@
         </div>
       </div>
     </div>
-
+  
     <div class="row">
       <div
         class="col-12 col-md-3 mb-3"
@@ -176,31 +203,33 @@
         </mat-card>
       </div>
     </div>
-  </form>
-</div>
-
-<div class="dialog-footer ps-3 pb-3 pe-3">
-  <div class="row">
-    <div class="col-12">
-      <div class="text-end">
-        <button
-          mat-button
-          title="Salvar"
-          class="bg-success text-white px-4 me-3"
-          (click)="submit()"
-        >
-          Salvar
-        </button>
-
-        <button
-          mat-button
-          mat-dialog-close
-          title="Cancelar"
-          class="bg-secondary text-white px-4"
-        >
-          Cancelar
-        </button>
+  </div>
+  
+  <div class="dialog-footer ps-3 pb-3 pe-3">
+    <div class="row">
+      <div class="col-12">
+        <div class="text-end">
+          <button
+            type="submit"
+            mat-button
+            title="Salvar"
+            class="bg-success text-white px-4 me-3"
+            (click)="submit()"
+          >
+            Salvar
+          </button>
+  
+          <button
+            type="button"
+            mat-button
+            mat-dialog-close
+            title="Cancelar"
+            class="bg-secondary text-white px-4"
+          >
+            Cancelar
+          </button>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</form>
