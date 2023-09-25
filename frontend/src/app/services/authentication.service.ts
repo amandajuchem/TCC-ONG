@@ -17,26 +17,29 @@ export class AuthenticationService {
   constructor(private _http: HttpClient) {}
 
   getAuthentication(): Authentication | null {
-    if (!this._subject.getValue()) {
-      const access_token = localStorage.getItem('access_token');
+    const access_token = localStorage.getItem('access_token');
 
-      if (access_token) {
-        const decodedToken = this._jwtHelper.decodeToken(access_token);
-        const authentication: Authentication = {
-          access_token: access_token,
-          username: decodedToken.sub,
-          role: decodedToken.scope,
-        };
+    if (access_token) {
+      const decodedToken = this._jwtHelper.decodeToken(access_token);
+      const authentication: Authentication = {
+        access_token: access_token,
+        username: decodedToken.sub,
+        role: decodedToken.scope,
+      };
 
-        this._subject.next(authentication);
-        return authentication;
-      }
+      return authentication;
     }
-
-    return this._subject.getValue();
+    
+    return null;
   }
 
   getAuthenticationAsObservable() {
+    const authentication = this._subject.value;
+  
+    if (!authentication) {
+      this._subject.next(this.getAuthentication());
+    }
+
     return this._subject.asObservable();
   }
 
@@ -69,6 +72,6 @@ export class AuthenticationService {
 
   setAuthentication(authentication: Authentication) {
     localStorage.setItem('access_token', authentication.access_token);
-    this.getAuthentication();
+    this._subject.next(this.getAuthentication());
   }
 }

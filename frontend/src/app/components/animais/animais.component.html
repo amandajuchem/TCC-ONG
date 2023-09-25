@@ -57,7 +57,7 @@
 <div class="mb-3">
   <div
     class="row"
-    [hidden]="(animais && animais.length == 0) || isLoadingResults"
+    [hidden]="!animais || animais.length == 0 || isLoadingResults"
   >
     <div class="col-12 col-md-3" *ngFor="let animal of animais; let index = index" [ngClass]="index !== (animais.length - 1) ? 'mb-3' : ''">
       <mat-card>
@@ -109,7 +109,7 @@
 <div class="mb-3">
   <div
     class="row"
-    [hidden]="(animais && animais.length == 0) || isLoadingResults"
+    [hidden]="!animais || animais.length == 0 || isLoadingResults"
   >
     <div class="col-12">
       <mat-card>

@@ -28,7 +28,7 @@ public class JWTUtils {
         final var claims = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
-                .expiresAt(now.plus(12, ChronoUnit.HOURS))
+                .expiresAt(now.plus(1, ChronoUnit.MINUTES))
                 .subject(authentication.getName())
                 .claim("scope", scope)
                 .build();
