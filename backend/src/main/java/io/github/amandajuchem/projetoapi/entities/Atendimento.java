@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -34,9 +35,9 @@ public class Atendimento extends AbstractEntity {
     private String posologia;
 
     @Valid
-    @ManyToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    private Set<ExameRealizado> examesRealizados;
+    private List<ExameRealizado> examesRealizados;
 
     @OneToOne
     private Animal animal;

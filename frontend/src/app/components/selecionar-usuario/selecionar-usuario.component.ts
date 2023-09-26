@@ -74,6 +74,12 @@ export class SelecionarUsuarioComponent implements AfterViewInit {
     });
   }
 
+  isSelected(usuario: Usuario) {
+    return this._data.multiplus
+      ? this.usuarios?.some((u) => u.id === usuario.id)
+      : this.usuario?.id === usuario.id;
+  }
+
   pageChange() {
     if (this.filterString) {
       this.search();
@@ -126,12 +132,6 @@ export class SelecionarUsuarioComponent implements AfterViewInit {
         this.usuario = (this.usuario && this.usuario.id === usuario.id) ? null : usuario;
       }
     }
-  }
-
-  selected(usuario: Usuario) {
-    return this._data.multiplus
-      ? this.usuarios?.some((u) => u.id === usuario.id)
-      : this.usuario?.id === usuario.id;
   }
 
   sortChange() {

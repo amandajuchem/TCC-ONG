@@ -230,6 +230,9 @@ CREATE TABLE tb_usuarios
 ALTER TABLE tb_adocoes_termo_responsabilidade
     ADD CONSTRAINT uc_tb_adocoes_termo_responsabilidade_termoresponsabilidade UNIQUE (termo_responsabilidade_id);
 
+ALTER TABLE tb_atendimentos_exames_realizados
+    ADD CONSTRAINT uc_tb_atendimentos_exames_realizados_examesrealizados UNIQUE (exames_realizados_id);
+
 ALTER TABLE tb_exames
     ADD CONSTRAINT uc_tb_exames_nome UNIQUE (nome);
 

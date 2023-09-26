@@ -62,7 +62,7 @@ export class AnimaisComponent implements AfterViewInit {
       .subscribe({
         next: (result) => {
           if (result) {
-            this.search();
+            this.findAll();
           }
         },
       });

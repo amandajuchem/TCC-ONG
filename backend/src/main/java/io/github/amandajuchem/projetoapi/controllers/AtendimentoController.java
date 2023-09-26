@@ -2,6 +2,7 @@ package io.github.amandajuchem.projetoapi.controllers;
 
 import io.github.amandajuchem.projetoapi.dtos.AtendimentoDTO;
 import io.github.amandajuchem.projetoapi.entities.Atendimento;
+import io.github.amandajuchem.projetoapi.entities.ExameRealizado;
 import io.github.amandajuchem.projetoapi.entities.Imagem;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.AtendimentoService;
@@ -16,10 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -59,8 +57,8 @@ public class AtendimentoController implements AbstractController<Atendimento, At
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(CREATED)
     public AtendimentoDTO save(@RequestPart @Valid Atendimento atendimento,
-                               @RequestPart(required = false) List<MultipartFile> documentos) throws FileNotFoundException, InterruptedException {
-        //handleDocumentos(atendimento, documentos);
+                               @RequestPart(required = false) List<MultipartFile> examesRealizados) throws FileNotFoundException, InterruptedException {
+        handleExamesRealizados(atendimento, examesRealizados);
         return save(atendimento);
     }
 
@@ -87,7 +85,7 @@ public class AtendimentoController implements AbstractController<Atendimento, At
                                  @RequestPart(required = false) List<MultipartFile> examesRealizados) throws FileNotFoundException, InterruptedException {
 
         if (atendimento.getId().equals(id)) {
-            //handleDocumentos(atendimento, documentos);
+            handleExamesRealizados(atendimento, examesRealizados);
             return update(id, atendimento);
         }
 
@@ -99,24 +97,28 @@ public class AtendimentoController implements AbstractController<Atendimento, At
         return service.save(atendimento);
     }
 
-//    private void handleExamesRealizados(Atendimento atendimento, List<MultipartFile> documentos) throws InterruptedException {
-//
-//        if (documentos != null) {
-//
-//            for (MultipartFile documento : documentos) {
-//
-//                final var imagem = Imagem.builder()
-//                        .nome(System.currentTimeMillis() + "." + FileUtils.getExtension(Objects.requireNonNull(documento.getOriginalFilename())))
-//                        .build();
-//
-//                if (atendimento.getDocumentos() == null) {
-//                    atendimento.setDocumentos(new ArrayList<>());
-//                }
-//
-//                atendimento.getDocumentos().add(imagem);
-//                FileUtils.FILES.put(imagem.getNome(), documento);
-//                Thread.sleep(10);
-//            }
-//        }
-//    }
+    private void handleExamesRealizados(Atendimento atendimento, List<MultipartFile> images) throws InterruptedException {
+
+        if (images != null) {
+
+            for (MultipartFile image : images) {
+
+                for (ExameRealizado exameRealizado : atendimento.getExamesRealizados()) {
+
+                    final var imageName = Objects.requireNonNull(image.getOriginalFilename()).split("\\.")[0];
+
+                    if (exameRealizado.getExame().getNome().contains(imageName)) {
+
+                        final var imagem = Imagem.builder()
+                                .nome(System.currentTimeMillis() + "." + FileUtils.getExtension(Objects.requireNonNull(image.getOriginalFilename())))
+                                .build();
+
+                        exameRealizado.setImagem(imagem);
+                        FileUtils.FILES.put(imagem.getNome(), image);
+                        Thread.sleep(10);
+                    }
+                }
+            }
+        }
+    }
 }

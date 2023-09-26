@@ -63,7 +63,7 @@ export class ExamesComponent implements AfterViewInit {
       .subscribe({
         next: (result) => {
           if (result && result.status) {
-            this.search();
+            this.findAll();
           }
         },
       });

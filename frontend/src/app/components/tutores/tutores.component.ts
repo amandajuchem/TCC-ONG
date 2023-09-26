@@ -59,7 +59,7 @@ export class TutoresComponent implements AfterViewInit {
       .subscribe({
         next: (result) => {
           if (result) {
-            this.search();
+            this.findAll();
           }
         },
       });

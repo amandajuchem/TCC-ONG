@@ -180,11 +180,55 @@
                   </div>
                 </div>
               </div>
+            </div>
+
+            <div class="mb-3">
               <div class="row">
-                <div class="col-12">
-                  <mat-error *ngIf="hasError('examesRealizados')">{{
-                    getErrorMessage("examesRealizados")
-                  }}</mat-error>
+                <div
+                  class="col-12 col-md-3"
+                  *ngFor="let exameRealizado of examesRealizados"
+                >
+                  <mat-card>
+                    <img
+                      [src]="
+                        exameRealizado.id
+                          ? apiURL +
+                            '/imagens/search?value=' +
+                            exameRealizado.imagem.nome
+                          : exameRealizado.data
+                      "
+                    />
+                    <mat-card-content class="p-3">
+                      <h4 class="text-center">
+                        {{ exameRealizado.exame.nome }}
+                      </h4>
+                    </mat-card-content>
+                    <mat-card-footer class="px-3 pb-3">
+                      <div class="row">
+                        <div 
+                          *ngIf="exameRealizado.id"
+                          [ngClass]="exameRealizado.id ? 'col-6' : 'col-12'"
+                        >
+                          <button
+                            mat-button
+                            class="bg-secondary text-white w-100"
+                            (click)="downloadImagem(exameRealizado)"
+                          >
+                            Baixar
+                          </button>
+                        </div>
+                        <div [ngClass]="exameRealizado.id ? 'col-6' : 'col-12'">
+                          <button
+                            mat-button
+                            class="bg-danger text-white w-100"
+                            (click)="removeExameRealizado(exameRealizado)"
+                          >
+                            Excluir
+                          </button>
+                        </div>
+                      </div>
+                    </mat-card-footer>
+                  </mat-card>
                 </div>
               </div>
             </div>
@@ -212,6 +256,7 @@
                 <div class="text-end">
                   <button
                     mat-button
+                    type="submit"
                     title="Salvar"
                     class="bg-success text-white px-4 me-3"
                     (click)="submit()"
@@ -221,6 +266,7 @@
 
                   <button
                     mat-button
+                    type="button"
                     title="Voltar"
                     class="bg-secondary text-white px-4"
                     (click)="redirectToAtendimentoList()"

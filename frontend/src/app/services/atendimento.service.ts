@@ -60,16 +60,8 @@ export class AtendimentoService implements AbstractService<Atendimento> {
    * @param documentos 
    * @returns 
    */
-  save(atendimento: Atendimento, documentos: Array<File> | null) {
-
-    const formData: FormData = new FormData();
-
-    formData.append('atendimento', new Blob([JSON.stringify(atendimento)], { type: 'application/json' }));
-
-    if (documentos) {
-      documentos.forEach((imagem: any, index: number) => formData.append('documentos', new Blob([imagem], { type: 'multipart/form-data' }), 'imagem' + index + '.png'));
-    }
-
+  save(atendimento: Atendimento, examesRealizados: Array<any>) {
+    const formData = this._hadleAtendimento(atendimento, examesRealizados);
     return this._http.post<Atendimento>(this._baseURL, formData);
   }
 
@@ -101,16 +93,24 @@ export class AtendimentoService implements AbstractService<Atendimento> {
    * @param documentos 
    * @returns 
    */
-  update(atendimento: Atendimento, documentos: Array<File> | null) {
+  update(atendimento: Atendimento, examesRealizados: Array<any>) {
+    const formData = this._hadleAtendimento(atendimento, examesRealizados);
+    return this._http.put<Atendimento>(this._baseURL + '/' + atendimento.id, formData);
+  }
+
+  private _hadleAtendimento(atendimento: Atendimento, examesRealizados: Array<any>) {
 
     const formData: FormData = new FormData();
 
     formData.append('atendimento', new Blob([JSON.stringify(atendimento)], { type: 'application/json' }));
 
-    if (documentos) {
-      documentos.forEach((imagem: any, index: number) => formData.append('documentos', new Blob([imagem], { type: 'multipart/form-data' }), 'imagem' + index + '.png'));
-    }
+    examesRealizados.forEach(exameRealizado => {
 
-    return this._http.put<Atendimento>(this._baseURL + '/' + atendimento.id, formData);
+      if (exameRealizado.file) {
+        formData.append('examesRealizados', new Blob([exameRealizado.file], { type: 'multipart/form-data' }), exameRealizado.exame.nome + '.png');
+      }
+    });
+
+    return formData;  
   }
 }

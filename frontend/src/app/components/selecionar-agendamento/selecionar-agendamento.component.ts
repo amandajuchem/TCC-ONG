@@ -78,6 +78,12 @@ export class SelecionarAgendamentoComponent implements AfterViewInit {
     });
   }
 
+  isSelected(agendamento: Agendamento) {
+    return this._data.multiplus
+      ? this.agendamentos?.some((a) => a.id === agendamento.id)
+      : this.agendamento?.id === agendamento.id;
+  }
+
   pageChange() {
     if (this.filterDate) {
       this.search('date');
@@ -142,12 +148,6 @@ export class SelecionarAgendamentoComponent implements AfterViewInit {
     } else {
       this.agendamento = (this.agendamento && this.agendamento.id === agendamento.id) ? null : agendamento;
     }
-  }
-
-  isSelected(agendamento: Agendamento) {
-    return this._data.multiplus
-      ? this.agendamentos?.some((a) => a.id === agendamento.id)
-      : this.agendamento?.id === agendamento.id;
   }
 
   sortChange() {

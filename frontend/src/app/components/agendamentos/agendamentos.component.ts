@@ -66,7 +66,7 @@ export class AgendamentosComponent implements AfterViewInit {
       .subscribe({
         next: (result) => {
           if (result && result.status) {
-            this.search('date');
+            this.findAll();
           }
         },
       });

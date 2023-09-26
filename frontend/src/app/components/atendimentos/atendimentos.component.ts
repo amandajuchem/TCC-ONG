@@ -66,7 +66,7 @@ export class AtendimentosComponent implements AfterViewInit {
       .subscribe({
         next: (result) => {
           if (result && result.status) {
-            this.search('date');
+            this.findAll();
           }
         },
       });
