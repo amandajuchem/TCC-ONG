@@ -22,7 +22,9 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID> 
      * @param pageable The pageable object specifying the page information.
      * @return A page of treatment entities matching the search criteria.
      */
-    @Query(value = "SELECT a FROM tb_atendimentos AS a INNER JOIN a.animal AS an INNER JOIN a.veterinario AS v " +
+    @Query("SELECT a FROM tb_atendimentos AS a " +
+            "INNER JOIN a.animal AS an " +
+            "INNER JOIN a.veterinario AS v " +
             "ON cast(a.dataHora as string) LIKE concat('%', ?1, '%') " +
             "OR upper(an.nome) LIKE upper(concat('%', ?1, '%')) " +
             "OR upper(v.nome) LIKE upper(concat('%', ?1, '%'))")

@@ -44,7 +44,7 @@ public interface TutorRepository extends JpaRepository<Tutor, UUID> {
      * @param page  The pageable object specifying the page information.
      * @return A page of tutor entities matching the search criteria.
      */
-    @Query(value = "SELECT t FROM tb_tutores AS t " +
+    @Query("SELECT t FROM tb_tutores AS t " +
             "WHERE upper(t.nome) LIKE upper(concat('%', ?1, '%')) " +
             "OR t.cpf LIKE concat('%', ?1, '%') " +
             "OR t.rg LIKE concat('%', ?1, '%') ")

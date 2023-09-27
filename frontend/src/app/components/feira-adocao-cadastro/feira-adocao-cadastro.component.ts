@@ -20,6 +20,7 @@ import { SelecionarAnimalComponent } from '../selecionar-animal/selecionar-anima
 import { SelecionarUsuarioComponent } from '../selecionar-usuario/selecionar-usuario.component';
 import { Adocao } from 'src/app/entities/adocao';
 import { AdocaoService } from 'src/app/services/adocao.service';
+import { Situacao } from 'src/app/enums/situacao';
 
 @Component({
   selector: 'app-feira-adocao-cadastro',
@@ -93,6 +94,7 @@ export class FeiraAdocaoCadastroComponent implements OnInit {
       .open(SelecionarAnimalComponent, {
         data: {
           multiplus: true,
+          situacao: Situacao.ESPERANDO
         },
         disableClose: true,
         width: '100%',

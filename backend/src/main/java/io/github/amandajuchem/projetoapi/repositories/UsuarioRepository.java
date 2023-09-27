@@ -36,7 +36,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
      * @param page  The pageable object specifying the page information.
      * @return A page of user entities matching the search criteria.
      */
-    @Query(value = "SELECT u FROM tb_usuarios AS u " +
+    @Query("SELECT u FROM tb_usuarios AS u " +
             "WHERE upper(u.nome) LIKE upper(concat('%', ?1, '%')) " +
             "OR u.cpf LIKE concat('%', ?1, '%') " +
             "OR upper(u.setor) LIKE upper(concat('%', ?1, '%'))")

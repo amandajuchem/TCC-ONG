@@ -34,7 +34,7 @@ export class SelecionarAnimalComponent implements AfterViewInit {
     private _notificationService: NotificationService
   ) {
     this.animais = [];
-    this.columns = ['index', 'nome', 'especie', 'porte', 'idade'];
+    this.columns = ['index', 'nome', 'especie', 'situacao'];
     this.dataSource = new MatTableDataSource();
     this.isLoadingResults = true;
     this.resultsLength = 0;
@@ -117,11 +117,13 @@ export class SelecionarAnimalComponent implements AfterViewInit {
   }
 
   select(animal: Animal) {
-    if (this._data.multiplus) {
-      const exists = this.animais.some(a => animal.id === a.id);
-      this.animais = exists ? this.animais.filter(a => animal.id !== a.id) : [...this.animais, animal];
-    } else {
-      this.animal = (this.animal && this.animal.id === animal.id) ? null : animal;
+    if (!this._data.situacao || this._data.situacao === animal.situacao) {
+      if (this._data.multiplus) {
+        const exists = this.animais.some(a => animal.id === a.id);
+        this.animais = exists ? this.animais.filter(a => animal.id !== a.id) : [...this.animais, animal];
+      } else {
+        this.animal = (this.animal && this.animal.id === animal.id) ? null : animal;
+      }
     }
   }
 
