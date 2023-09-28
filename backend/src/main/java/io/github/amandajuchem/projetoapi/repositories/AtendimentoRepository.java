@@ -25,7 +25,7 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID> 
     @Query("SELECT a FROM tb_atendimentos AS a " +
             "INNER JOIN a.animal AS an " +
             "INNER JOIN a.veterinario AS v " +
-            "ON cast(a.dataHora as string) LIKE concat('%', ?1, '%') " +
+            "WHERE cast(a.dataHora as string) LIKE concat('%', ?1, '%') " +
             "OR upper(an.nome) LIKE upper(concat('%', ?1, '%')) " +
             "OR upper(v.nome) LIKE upper(concat('%', ?1, '%'))")
     Page<Atendimento> search(String value, Pageable pageable);

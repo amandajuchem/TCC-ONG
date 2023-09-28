@@ -21,6 +21,6 @@ public interface ObservacaoRepository extends JpaRepository<Observacao, UUID> {
      */
     @Query("SELECT o FROM tb_observacoes AS o " +
             "INNER JOIN o.tutor AS t " +
-            "ON cast(t.id as string) = ?1")
+            "WHERE cast(t.id as string) = ?1")
     Page<Observacao> search(String value, Pageable page);
 }

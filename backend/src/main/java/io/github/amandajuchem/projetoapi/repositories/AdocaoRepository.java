@@ -20,11 +20,12 @@ public interface AdocaoRepository extends JpaRepository<Adocao, UUID> {
      * @return A page of adoption entities matching the search criteria.
      */
     @Query("SELECT ad FROM tb_adocoes AS ad " +
-            "LEFT OUTER JOIN ad.animal AS an " +
-            "LEFT OUTER JOIN ad.tutor AS tu " +
+            "INNER JOIN ad.animal AS an " +
+            "INNER JOIN ad.tutor AS tu " +
             "LEFT OUTER JOIN ad.feiraAdocao AS fe " +
-            "ON cast(an.id as string) = ?1 " +
+            "WHERE cast(an.id as string) = ?1 " +
             "OR cast(tu.id as string) = ?1 " +
             "OR cast(fe.id as string) = ?1")
     Page<Adocao> search(String value, Pageable page);
+
 }
