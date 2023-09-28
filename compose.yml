@@ -21,7 +21,6 @@ services:
     restart: unless-stopped
     depends_on:
       - postgres
-      - pgadmin
     environment:
       - POSTGRES_URL=jdbc:postgresql://172.18.0.2:5432/projeto
       - POSTGRES_USER=projeto
@@ -39,7 +38,6 @@ services:
     restart: unless-stopped
     depends_on:
       - postgres
-      - pgadmin
       - projeto-backend
     ports:
       - "80:80"
