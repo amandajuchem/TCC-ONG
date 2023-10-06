@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -27,6 +28,7 @@ public class UsuarioController implements AbstractController<Usuario, UsuarioDTO
     @Override
     @DeleteMapping("/{id}")
     @ResponseStatus(OK)
+    @PreAuthorize("hasAuthority('SCOPE_ADMINISTRACAO')")
     public void delete(@PathVariable UUID id) {
         service.delete(id);
     }
@@ -34,6 +36,7 @@ public class UsuarioController implements AbstractController<Usuario, UsuarioDTO
     @Override
     @GetMapping
     @ResponseStatus(OK)
+    @PreAuthorize("hasAuthority('SCOPE_ADMINISTRACAO')")
     public Page<UsuarioDTO> findAll(@RequestParam(required = false, defaultValue = "0") Integer page,
                                     @RequestParam(required = false, defaultValue = "10") Integer size,
                                     @RequestParam(required = false, defaultValue = "nome") String sort,
@@ -44,6 +47,7 @@ public class UsuarioController implements AbstractController<Usuario, UsuarioDTO
     @Override
     @GetMapping("/{id}")
     @ResponseStatus(OK)
+    @PreAuthorize("hasAuthority('SCOPE_ADMINISTRACAO')")
     public UsuarioDTO findById(@PathVariable UUID id) {
         return service.findById(id);
     }
@@ -51,6 +55,7 @@ public class UsuarioController implements AbstractController<Usuario, UsuarioDTO
     @Override
     @PostMapping
     @ResponseStatus(CREATED)
+    @PreAuthorize("hasAuthority('SCOPE_ADMINISTRACAO')")
     public UsuarioDTO save(@RequestBody @Valid Usuario usuario) {
         return service.save(usuario);
     }
@@ -69,6 +74,7 @@ public class UsuarioController implements AbstractController<Usuario, UsuarioDTO
     @Override
     @PutMapping("/{id}")
     @ResponseStatus(OK)
+    @PreAuthorize("hasAuthority('SCOPE_ADMINISTRACAO')")
     public UsuarioDTO update(@PathVariable UUID id, @RequestBody @Valid Usuario usuario) {
 
         if (usuario.getId().equals(id)) {
