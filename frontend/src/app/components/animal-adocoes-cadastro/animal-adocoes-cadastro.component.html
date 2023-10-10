@@ -4,7 +4,7 @@
       {{ data.observacao ? "Editar Dados da Adoção" : "Cadastrar Adoção" }}
     </h2>
   </div>
-  
+
   <div class="dialog-content p-3">
     <div class="row">
       <div class="col-12 col-md-6">
@@ -21,7 +21,7 @@
           }}</mat-error>
         </mat-form-field>
       </div>
-  
+
       <div class="col-12 col-md-6">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Tutor</mat-label>
@@ -45,7 +45,7 @@
         </mat-form-field>
       </div>
     </div>
-  
+
     <div class="row">
       <div class="col-12 col-md-3">
         <mat-form-field appearance="outline" class="w-100">
@@ -69,7 +69,7 @@
           }}</mat-error>
         </mat-form-field>
       </div>
-  
+
       <div class="col-12 col-md-3">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Local</mat-label>
@@ -82,11 +82,14 @@
           }}</mat-error>
         </mat-form-field>
       </div>
-  
+
       <div class="col-12 col-md-3">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Local de Adoção</mat-label>
-          <mat-select formControlName="localAdocao" (selectionChange)="localAdocaoChange($event)">
+          <mat-select
+            formControlName="localAdocao"
+            (selectionChange)="localAdocaoChange($event)"
+          >
             <mat-option value="FEIRA">Feira</mat-option>
             <mat-option value="ONG">ONG</mat-option>
             <mat-option value="PET_SHOP">Pet Shop</mat-option>
@@ -99,7 +102,7 @@
           }}</mat-error>
         </mat-form-field>
       </div>
-  
+
       <div class="col-12 col-md-3">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Feira de Adoção</mat-label>
@@ -125,7 +128,7 @@
         </mat-form-field>
       </div>
     </div>
-  
+
     <div class="row">
       <div class="col-12 col-md-3">
         <mat-form-field appearance="outline" class="w-100">
@@ -140,7 +143,7 @@
         </mat-form-field>
       </div>
     </div>
-  
+
     <div class="mb-3">
       <div class="row">
         <div class="col-7 col-md-10">
@@ -148,7 +151,7 @@
             <h3 class="m-0">Termo de Responsabilidade</h3>
           </div>
         </div>
-  
+
         <div class="col-5 col-md-2">
           <div class="d-flex align-items-center justify-content-end h-100">
             <button
@@ -156,39 +159,43 @@
               type="button"
               title="Adicionar Imagem"
               class="w-100 border"
-              (click)="addImagem()"
+              (click)="addArquivos()"
             >
-              Adicionar Imagem
+              Adicionar Arquivos
             </button>
           </div>
         </div>
       </div>
     </div>
-  
+
     <div class="row">
       <div
         class="col-12 col-md-3 mb-3"
         *ngFor="let termo of termoResponsabilidade"
       >
         <mat-card>
-          <img
-            mat-card-image
-            [src]="
-              termo.nome
-                ? apiURL + '/imagens/search?value=' + termo.nome
-                : termo.data
-            "
-          />
+          <mat-card-content>
+            <div class="d-flex align-items-center justify-content-center">
+              <img
+                [src]="
+                  isArquivo(termo) === 'image'
+                    ? 'assets/images/image.png'
+                    : 'assets/images/pdf.png'
+                "
+                width="64px"
+              />
+            </div>
+          </mat-card-content>
           <mat-card-footer class="p-3">
             <div class="row">
-              <div 
+              <div
                 *ngIf="termo.nome"
                 [ngClass]="termo.nome ? 'col-6' : 'col-12'"
               >
                 <button
                   mat-button
                   class="bg-secondary text-white w-100"
-                  (click)="downloadImagem(termo)"
+                  (click)="downloadArquivo(termo)"
                 >
                   Baixar
                 </button>
@@ -197,7 +204,7 @@
                 <button
                   mat-button
                   class="bg-danger text-white w-100"
-                  (click)="removeImagem(termo)"
+                  (click)="removeArquivo(termo)"
                 >
                   Excluir
                 </button>
@@ -208,7 +215,7 @@
       </div>
     </div>
   </div>
-  
+
   <div class="dialog-footer ps-3 pb-3 pe-3">
     <div class="row">
       <div class="col-12">
@@ -222,7 +229,7 @@
           >
             Salvar
           </button>
-  
+
           <button
             type="button"
             mat-button

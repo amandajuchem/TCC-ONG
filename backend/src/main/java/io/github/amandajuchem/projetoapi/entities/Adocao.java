@@ -51,5 +51,5 @@ public class Adocao extends AbstractEntity {
     @Valid
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    private List<Imagem> termoResponsabilidade;
+    private List<Arquivo> termoResponsabilidade;
 }

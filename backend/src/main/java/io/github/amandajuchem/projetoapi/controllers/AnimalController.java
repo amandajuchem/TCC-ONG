@@ -2,7 +2,7 @@ package io.github.amandajuchem.projetoapi.controllers;
 
 import io.github.amandajuchem.projetoapi.dtos.AnimalDTO;
 import io.github.amandajuchem.projetoapi.entities.Animal;
-import io.github.amandajuchem.projetoapi.entities.Imagem;
+import io.github.amandajuchem.projetoapi.entities.Arquivo;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.AnimalService;
 import io.github.amandajuchem.projetoapi.utils.FileUtils;
@@ -97,16 +97,16 @@ public class AnimalController implements AbstractController<Animal, AnimalDTO> {
         return service.save(animal);
     }
 
-    private void handleFoto(Animal animal, MultipartFile foto) {
+    private void handleFoto(Animal animal, MultipartFile file) {
 
-        if (foto != null) {
+        if (file != null) {
 
-            final var imagem = Imagem.builder()
-                    .nome(System.currentTimeMillis() + "." + FileUtils.getExtension(Objects.requireNonNull(foto.getOriginalFilename())))
+            final var arquivo = Arquivo.builder()
+                    .nome(System.currentTimeMillis() + "." + FileUtils.getExtension(Objects.requireNonNull(file.getOriginalFilename())))
                     .build();
 
-            animal.setFoto(imagem);
-            FileUtils.FILES.put(imagem.getNome(), foto);
+            animal.setFoto(arquivo);
+            FileUtils.FILES.put(arquivo.getNome(), file);
         }
     }
 }

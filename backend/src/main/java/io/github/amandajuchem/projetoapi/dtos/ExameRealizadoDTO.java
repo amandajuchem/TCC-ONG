@@ -13,7 +13,7 @@ public record ExameRealizadoDTO(
         String createdByUser,
         String modifiedByUser,
         ExameDTO exame,
-        ImagemDTO imagem
+        ArquivoDTO arquivo
 ) implements Serializable {
 
     public static ExameRealizadoDTO toDTO(ExameRealizado exameRealizado) {
@@ -25,7 +25,7 @@ public record ExameRealizadoDTO(
                 exameRealizado.getCreatedByUser(),
                 exameRealizado.getModifiedByUser(),
                 exameRealizado.getExame() != null ? ExameDTO.toDTO(exameRealizado.getExame()) : null,
-                exameRealizado.getImagem() != null ? ImagemDTO.toDTO(exameRealizado.getImagem()) : null
+                exameRealizado.getArquivo() != null ? ArquivoDTO.toDTO(exameRealizado.getArquivo()) : null
         );
     }
 }

@@ -73,6 +73,7 @@ import { TutoresComponent } from './tutores/tutores.component';
 import { UsuarioInformacoesComponent } from './usuario-informacoes/usuario-informacoes.component';
 import { UsuarioComponent } from './usuario/usuario.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
+import { SelecionarArquivoComponent } from './selecionar-arquivo/selecionar-arquivo.component';
 
 @NgModule({
   declarations: [
@@ -125,6 +126,7 @@ import { UsuariosComponent } from './usuarios/usuarios.component';
     UsuarioComponent,
     UsuarioInformacoesComponent,
     UsuariosComponent,
+    SelecionarArquivoComponent,
   ],
   imports: [
     CommonModule,

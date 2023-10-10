@@ -3,7 +3,7 @@ package io.github.amandajuchem.projetoapi.controllers;
 import io.github.amandajuchem.projetoapi.dtos.AtendimentoDTO;
 import io.github.amandajuchem.projetoapi.entities.Atendimento;
 import io.github.amandajuchem.projetoapi.entities.ExameRealizado;
-import io.github.amandajuchem.projetoapi.entities.Imagem;
+import io.github.amandajuchem.projetoapi.entities.Arquivo;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.AtendimentoService;
 import io.github.amandajuchem.projetoapi.utils.FileUtils;
@@ -97,24 +97,24 @@ public class AtendimentoController implements AbstractController<Atendimento, At
         return service.save(atendimento);
     }
 
-    private void handleExamesRealizados(Atendimento atendimento, List<MultipartFile> images) throws InterruptedException {
+    private void handleExamesRealizados(Atendimento atendimento, List<MultipartFile> files) throws InterruptedException {
 
-        if (images != null) {
+        if (files != null) {
 
-            for (MultipartFile image : images) {
+            for (MultipartFile file : files) {
 
                 for (ExameRealizado exameRealizado : atendimento.getExamesRealizados()) {
 
-                    final var imageName = Objects.requireNonNull(image.getOriginalFilename()).split("\\.")[0];
+                    final var fileName = Objects.requireNonNull(file.getOriginalFilename()).split("\\.")[0];
 
-                    if (exameRealizado.getExame().getNome().contains(imageName)) {
+                    if (exameRealizado.getExame().getNome().contains(fileName)) {
 
-                        final var imagem = Imagem.builder()
-                                .nome(System.currentTimeMillis() + "." + FileUtils.getExtension(Objects.requireNonNull(image.getOriginalFilename())))
+                        final var arquivo = Arquivo.builder()
+                                .nome(System.currentTimeMillis() + "." + FileUtils.getExtension(Objects.requireNonNull(file.getOriginalFilename())))
                                 .build();
 
-                        exameRealizado.setImagem(imagem);
-                        FileUtils.FILES.put(imagem.getNome(), image);
+                        exameRealizado.setArquivo(arquivo);
+                        FileUtils.FILES.put(arquivo.getNome(), file);
                         Thread.sleep(10);
                     }
                 }

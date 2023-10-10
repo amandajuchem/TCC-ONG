@@ -15,8 +15,8 @@ import java.io.IOException;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "tb_imagens")
-public class Imagem extends AbstractEntity {
+@Entity(name = "tb_arquivos")
+public class Arquivo extends AbstractEntity {
 
     @NotEmpty
     @Column(name = "nome", length = 25, unique = true)
@@ -29,7 +29,7 @@ public class Imagem extends AbstractEntity {
         FileUtils.FILES.forEach((key, value) -> {
 
             try {
-                FileUtils.save(key, value, FileUtils.IMAGES_DIRECTORY);
+                FileUtils.save(key, value, FileUtils.FILES_DIRECTORY);
             } catch (IOException e) {
                 throw new OperationFailureException(MessageUtils.OPERATION_FAILURE);
             }
@@ -40,6 +40,6 @@ public class Imagem extends AbstractEntity {
 
     @PostRemove
     private void postDelete() {
-        FileUtils.delete(nome, FileUtils.IMAGES_DIRECTORY);
+        FileUtils.delete(nome, FileUtils.FILES_DIRECTORY);
     }
 }

@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 
 import { Atendimento } from '../entities/atendimento';
 import { Page } from '../entities/page';
+import { FileUtils } from '../utils/file-utils';
 import { AbstractService } from './abstract-service';
 
 @Injectable({
@@ -61,7 +62,8 @@ export class AtendimentoService implements AbstractService<Atendimento> {
    * @returns 
    */
   save(atendimento: Atendimento, examesRealizados: Array<any>) {
-    const formData = this._hadleAtendimento(atendimento, examesRealizados);
+    const formData = this._hadlerAtendimento(atendimento, examesRealizados);
+    console.log(formData);
     return this._http.post<Atendimento>(this._baseURL, formData);
   }
 
@@ -94,11 +96,11 @@ export class AtendimentoService implements AbstractService<Atendimento> {
    * @returns 
    */
   update(atendimento: Atendimento, examesRealizados: Array<any>) {
-    const formData = this._hadleAtendimento(atendimento, examesRealizados);
+    const formData = this._hadlerAtendimento(atendimento, examesRealizados);
     return this._http.put<Atendimento>(this._baseURL + '/' + atendimento.id, formData);
   }
 
-  private _hadleAtendimento(atendimento: Atendimento, examesRealizados: Array<any>) {
+  private _hadlerAtendimento(atendimento: Atendimento, examesRealizados: Array<any>) {
 
     const formData: FormData = new FormData();
 
@@ -107,7 +109,7 @@ export class AtendimentoService implements AbstractService<Atendimento> {
     examesRealizados.forEach(exameRealizado => {
 
       if (exameRealizado.file) {
-        formData.append('examesRealizados', new Blob([exameRealizado.file], { type: 'multipart/form-data' }), exameRealizado.exame.nome + '.png');
+        formData.append('examesRealizados', new Blob([exameRealizado.file], { type: 'multipart/form-data' }), exameRealizado.exame.nome + '.' + FileUtils.getExtension(exameRealizado.file));
       }
     });
 

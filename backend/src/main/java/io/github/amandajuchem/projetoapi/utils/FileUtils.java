@@ -14,8 +14,7 @@ import java.util.Objects;
 public class FileUtils {
 
     public static final Map<String, MultipartFile> FILES = new HashMap<>();
-    public static final String DOCUMENTS_DIRECTORY = File.separator + "data" + File.separator + "files" + File.separator + "documents";
-    public static final String IMAGES_DIRECTORY = File.separator + "data" + File.separator + "files" + File.separator + "images";
+    public static final String FILES_DIRECTORY = File.separator + "data" + File.separator + "files";
 
     public static File find(String filename, String path) throws FileNotFoundException {
         final var file = new File(System.getProperty("user.dir") + path, filename);

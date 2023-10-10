@@ -21,5 +21,5 @@ public class ExameRealizado extends AbstractEntity {
 
     @Valid
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    private Imagem imagem;
+    private Arquivo arquivo;
 }

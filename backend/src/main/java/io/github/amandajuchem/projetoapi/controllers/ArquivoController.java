@@ -16,10 +16,10 @@ import java.io.FileNotFoundException;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/imagens")
+@RequestMapping("/arquivos")
 @RequiredArgsConstructor
-@Tag(name = "Imagens", description = "Endpoints for images management")
-public class ImagemController {
+@Tag(name = "Arquivos", description = "Endpoints for files management")
+public class ArquivoController {
 
     private final ServletContext servletContext;
 
@@ -27,7 +27,7 @@ public class ImagemController {
     @ResponseStatus(OK)
     public ResponseEntity<InputStreamResource> search(@RequestParam String value) throws FileNotFoundException {
 
-        final var file = FileUtils.find(value, FileUtils.IMAGES_DIRECTORY);
+        final var file = FileUtils.find(value, FileUtils.FILES_DIRECTORY);
         final var mediaType = MediaTypeUtils.getMediaTypeForFileName(this.servletContext, file.getName());
         final var resource = new InputStreamResource(new FileInputStream(file));
 

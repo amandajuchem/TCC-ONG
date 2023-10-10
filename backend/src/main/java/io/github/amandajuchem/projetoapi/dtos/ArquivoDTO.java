@@ -1,12 +1,12 @@
 package io.github.amandajuchem.projetoapi.dtos;
 
-import io.github.amandajuchem.projetoapi.entities.Imagem;
+import io.github.amandajuchem.projetoapi.entities.Arquivo;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record ImagemDTO(
+public record ArquivoDTO(
         UUID id,
         LocalDateTime createdDate,
         LocalDateTime lastModifiedDate,
@@ -15,9 +15,9 @@ public record ImagemDTO(
         String nome
 ) implements Serializable {
 
-    public static ImagemDTO toDTO(Imagem imagem) {
+    public static ArquivoDTO toDTO(Arquivo imagem) {
 
-        return new ImagemDTO(
+        return new ArquivoDTO(
                 imagem.getId(),
                 imagem.getCreatedDate(),
                 imagem.getLastModifiedDate(),

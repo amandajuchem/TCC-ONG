@@ -1,5 +1,5 @@
 import { AbstractEntity } from "./abstract-entity";
 
-export interface Imagem extends AbstractEntity {
+export interface Arquivo extends AbstractEntity {
     nome: string;
 }

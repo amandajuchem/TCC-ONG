@@ -3,13 +3,11 @@ package io.github.amandajuchem.projetoapi.entities;
 import io.github.amandajuchem.projetoapi.enums.Motivo;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter

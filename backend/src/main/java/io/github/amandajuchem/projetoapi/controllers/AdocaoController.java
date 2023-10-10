@@ -3,7 +3,7 @@ package io.github.amandajuchem.projetoapi.controllers;
 import io.github.amandajuchem.projetoapi.dtos.AdocaoDTO;
 import io.github.amandajuchem.projetoapi.dtos.AnimalDTO;
 import io.github.amandajuchem.projetoapi.entities.Adocao;
-import io.github.amandajuchem.projetoapi.entities.Imagem;
+import io.github.amandajuchem.projetoapi.entities.Arquivo;
 import io.github.amandajuchem.projetoapi.enums.Situacao;
 import io.github.amandajuchem.projetoapi.exceptions.ValidationException;
 import io.github.amandajuchem.projetoapi.services.AdocaoService;
@@ -119,7 +119,7 @@ public class AdocaoController implements AbstractController<Adocao, AdocaoDTO> {
 
             for (MultipartFile termo : termoResponsabilidade) {
 
-                final var imagem = Imagem.builder()
+                final var imagem = Arquivo.builder()
                         .nome(System.currentTimeMillis() + "." + FileUtils.getExtension(Objects.requireNonNull(termo.getOriginalFilename())))
                         .build();
 

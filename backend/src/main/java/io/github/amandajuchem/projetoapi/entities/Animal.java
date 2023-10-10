@@ -56,7 +56,7 @@ public class Animal extends AbstractEntity {
 
     @Valid
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    private Imagem foto;
+    private Arquivo foto;
 
     @Valid
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)

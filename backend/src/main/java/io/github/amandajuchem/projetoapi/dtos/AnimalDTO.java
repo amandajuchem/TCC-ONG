@@ -26,7 +26,7 @@ public record AnimalDTO(
         String cor,
         Porte porte,
         Situacao situacao,
-        ImagemDTO foto,
+        ArquivoDTO foto,
         FichaMedicaDTO fichaMedica,
         Set<AdocaoDTO> adocoes
 ) implements Serializable {
@@ -53,7 +53,7 @@ public record AnimalDTO(
                 animal.getCor(),
                 animal.getPorte(),
                 animal.getSituacao(),
-                animal.getFoto() != null ? ImagemDTO.toDTO(animal.getFoto()) : null,
+                animal.getFoto() != null ? ArquivoDTO.toDTO(animal.getFoto()) : null,
                 animal.getFichaMedica() != null ? FichaMedicaDTO.toDTO(animal.getFichaMedica()) : null,
                 null
         );

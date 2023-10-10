@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Agendamento } from 'src/app/entities/agendamento';
 import { Atendimento } from 'src/app/entities/atendimento';
 import { Exame } from 'src/app/entities/exame';
-import { Imagem } from 'src/app/entities/imagem';
+import { ExameRealizado } from 'src/app/entities/exame-realizado';
 import { NotificationType } from 'src/app/enums/notification-type';
 import { Setor } from 'src/app/enums/setor';
 import { AtendimentoService } from 'src/app/services/atendimento.service';
@@ -20,10 +20,10 @@ import { environment } from 'src/environments/environment';
 
 import { SelecionarAgendamentoComponent } from '../selecionar-agendamento/selecionar-agendamento.component';
 import { SelecionarAnimalComponent } from '../selecionar-animal/selecionar-animal.component';
+import { SelecionarArquivoComponent } from '../selecionar-arquivo/selecionar-arquivo.component';
 import { SelecionarExameComponent } from '../selecionar-exame/selecionar-exame.component';
-import { SelecionarImagemComponent } from '../selecionar-imagem/selecionar-imagem.component';
 import { SelecionarUsuarioComponent } from '../selecionar-usuario/selecionar-usuario.component';
-import { ExameRealizado } from 'src/app/entities/exame-realizado';
+import { FileUtils } from 'src/app/utils/file-utils';
 
 @Component({
   selector: 'app-atendimento-cadastro',
@@ -90,10 +90,10 @@ export class AtendimentoCadastroComponent implements OnInit {
     );
 
     if (!exists) {
-      const { data, file } = await this.selectImagem();
+      const { file } = await this.selectArquivo();
 
       if (file) {
-        const exameRealizado = { exame, data, file };
+        const exameRealizado = { exame, file };
         this.examesRealizados.push(exameRealizado);
       }
     } else {
@@ -139,11 +139,11 @@ export class AtendimentoCadastroComponent implements OnInit {
     }
   }
 
-  downloadImagem(exameRealizado: ExameRealizado) {
+  downloadArquivo(exameRealizado: ExameRealizado) {
     const link = document.createElement('a');
 
-    link.href = this.apiURL + '/imagens/search?value=' + exameRealizado.imagem.nome;
-    link.download = exameRealizado.imagem.nome;
+    link.href = this.apiURL + '/arquivos/search?value=' + exameRealizado.arquivo.nome;
+    link.download = exameRealizado.arquivo.nome;
     link.click();
     link.remove();
   }
@@ -182,6 +182,27 @@ export class AtendimentoCadastroComponent implements OnInit {
           }
         },
       });
+  }
+
+  isArquivo(arquivo: any): string {
+    
+    console.log(arquivo);
+
+    if (
+      ('file' in arquivo && FileUtils.isImage(arquivo.file)) ||
+      ('nome' in arquivo && FileUtils.isImage(arquivo.nome))
+    ) {
+      return 'image';
+    }
+
+    if (
+      ('file' in arquivo && FileUtils.isPDF(arquivo.file)) ||
+      ('nome' in arquivo && FileUtils.isPDF(arquivo.nome))
+    ) {
+      return 'pdf';
+    }
+
+    return '';
   }
 
   redirectToAtendimentoList() {
@@ -251,10 +272,10 @@ export class AtendimentoCadastroComponent implements OnInit {
     });
   }
 
-  selectImagem() {
+  selectArquivo() {
     return new Promise<any>((resolve, reject) => {
       this._dialog
-        .open(SelecionarImagemComponent, {
+        .open(SelecionarArquivoComponent, {
           data: {
             multiple: false,
           },
@@ -267,10 +288,8 @@ export class AtendimentoCadastroComponent implements OnInit {
         .subscribe({
           next: async (result) => {
             if (result && result.status) {
-              const image = result.images[0];
-              const data = await this._imagemService.toBase64(image);
-              const imagem = { file: image, data: data };
-              resolve(imagem);
+              const arquivo = {file: result.arquivo};
+              resolve(arquivo);
             }
           },
         });
