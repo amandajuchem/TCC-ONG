@@ -70,31 +70,22 @@ public class TutorService implements AbstractService<Tutor, TutorDTO> {
             throw new ValidationException(MessageUtils.TUTOR_NULL);
         }
 
-        validateNome(tutor);
-        validateCpf(tutor);
-        validateRg(tutor);
-    }
-
-    private void validateNome(Tutor tutor) {
         repository.findByNomeIgnoreCase(tutor.getNome())
                 .ifPresent(existingTutor -> {
                     if (!existingTutor.equals(tutor)) {
                         throw new ValidationException("Tutor já cadastrado!");
                     }
                 });
-    }
 
-    private void validateCpf(Tutor tutor) {
         repository.findByCpf(tutor.getCpf())
                 .ifPresent(existingTutor -> {
                     if (!existingTutor.equals(tutor)) {
                         throw new ValidationException("CPF já cadastrado!");
                     }
                 });
-    }
 
-    private void validateRg(Tutor tutor) {
         if (tutor.getRg() != null && !tutor.getRg().isEmpty()) {
+
             repository.findByRg(tutor.getRg())
                     .ifPresent(existingTutor -> {
                         if (!existingTutor.equals(tutor)) {

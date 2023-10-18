@@ -88,6 +88,25 @@ CREATE TABLE tb_atendimentos_exames_realizados
     tb_atendimentos_id   UUID NOT NULL
 );
 
+CREATE TABLE tb_empresas
+(
+    id                 UUID NOT NULL,
+    created_date       TIMESTAMP WITHOUT TIME ZONE,
+    last_modified_date TIMESTAMP WITHOUT TIME ZONE,
+    created_by_user    VARCHAR(11),
+    modified_by_user   VARCHAR(11),
+    nome               VARCHAR(100),
+    cnpj               VARCHAR(14),
+    endereco_id        UUID,
+    CONSTRAINT pk_tb_empresas PRIMARY KEY (id)
+);
+
+CREATE TABLE tb_empresas_telefones
+(
+    tb_empresas_id UUID NOT NULL,
+    telefones_id   UUID NOT NULL
+);
+
 CREATE TABLE tb_enderecos
 (
     id                 UUID        NOT NULL,
@@ -235,6 +254,12 @@ ALTER TABLE tb_arquivos
 ALTER TABLE tb_atendimentos_exames_realizados
     ADD CONSTRAINT uc_tb_atendimentos_exames_realizados_examesrealizados UNIQUE (exames_realizados_id);
 
+ALTER TABLE tb_empresas
+    ADD CONSTRAINT uc_tb_empresas_cnpj UNIQUE (cnpj);
+
+ALTER TABLE tb_empresas_telefones
+    ADD CONSTRAINT uc_tb_empresas_telefones_telefones UNIQUE (telefones_id);
+
 ALTER TABLE tb_exames
     ADD CONSTRAINT uc_tb_exames_nome UNIQUE (nome);
 
@@ -280,6 +305,9 @@ ALTER TABLE tb_atendimentos
 ALTER TABLE tb_atendimentos
     ADD CONSTRAINT FK_TB_ATENDIMENTOS_ON_VETERINARIO FOREIGN KEY (veterinario_id) REFERENCES tb_usuarios (id);
 
+ALTER TABLE tb_empresas
+    ADD CONSTRAINT FK_TB_EMPRESAS_ON_ENDERECO FOREIGN KEY (endereco_id) REFERENCES tb_enderecos (id);
+
 ALTER TABLE tb_exames_realizados
     ADD CONSTRAINT FK_TB_EXAMES_REALIZADOS_ON_ARQUIVO FOREIGN KEY (arquivo_id) REFERENCES tb_arquivos (id);
 
@@ -303,6 +331,12 @@ ALTER TABLE tb_atendimentos_exames_realizados
 
 ALTER TABLE tb_atendimentos_exames_realizados
     ADD CONSTRAINT fk_tbateexarea_on_exame_realizado FOREIGN KEY (exames_realizados_id) REFERENCES tb_exames_realizados (id);
+
+ALTER TABLE tb_empresas_telefones
+    ADD CONSTRAINT fk_tbemptel_on_empresa FOREIGN KEY (tb_empresas_id) REFERENCES tb_empresas (id);
+
+ALTER TABLE tb_empresas_telefones
+    ADD CONSTRAINT fk_tbemptel_on_telefone FOREIGN KEY (telefones_id) REFERENCES tb_telefones (id);
 
 ALTER TABLE tb_feiras_adocao_animais
     ADD CONSTRAINT fk_tbfeiadoani_on_animal FOREIGN KEY (animais_id) REFERENCES tb_animais (id);

@@ -41,6 +41,10 @@ export class PainelComponent {
     this._redirectService.toAtendimentoList();
   }
 
+  redirectToEmpresa() {
+    this._redirectService.toEmpresa();
+  }
+
   redirectToExameList() {
     this._redirectService.toExameList();
   }

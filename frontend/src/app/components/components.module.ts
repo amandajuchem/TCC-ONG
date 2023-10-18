@@ -74,6 +74,9 @@ import { UsuarioInformacoesComponent } from './usuario-informacoes/usuario-infor
 import { UsuarioComponent } from './usuario/usuario.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
 import { SelecionarArquivoComponent } from './selecionar-arquivo/selecionar-arquivo.component';
+import { EmpresaComponent } from './empresa/empresa.component';
+import { EmpresaInformacoesComponent } from './empresa-informacoes/empresa-informacoes.component';
+import { EmpresaEnderecoComponent } from './empresa-endereco/empresa-endereco.component';
 
 @NgModule({
   declarations: [
@@ -127,6 +130,9 @@ import { SelecionarArquivoComponent } from './selecionar-arquivo/selecionar-arqu
     UsuarioInformacoesComponent,
     UsuariosComponent,
     SelecionarArquivoComponent,
+    EmpresaComponent,
+    EmpresaInformacoesComponent,
+    EmpresaEnderecoComponent,
   ],
   imports: [
     CommonModule,

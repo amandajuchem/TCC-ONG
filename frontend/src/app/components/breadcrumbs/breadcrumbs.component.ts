@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Authentication } from 'src/app/entities/authentication';
 import { AnimalService } from 'src/app/services/animal.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { EmpresaService } from 'src/app/services/empresa.service';
 import { TutorService } from 'src/app/services/tutor.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 
@@ -25,6 +26,7 @@ export class BreadcrumbsComponent implements OnInit {
   constructor(
     private _animalService: AnimalService,
     private _authenticationService: AuthenticationService,
+    private _empresaService: EmpresaService,
     private _tutorService: TutorService,
     private _usuarioService: UsuarioService
   ) {}
@@ -53,6 +55,15 @@ export class BreadcrumbsComponent implements OnInit {
       this._animalService.get().subscribe({
         next: (animal) => {
           name = animal ? animal.nome.toUpperCase() : 'Cadastro';
+          this.checkObjectChange();
+        },
+      });
+    }
+
+    else if (path.includes('empresas')) {
+      this._empresaService.get().subscribe({
+        next: (empresa) => {
+          name = empresa ? empresa.nome.toUpperCase() : 'Cadastro';
           this.checkObjectChange();
         },
       });
@@ -113,6 +124,13 @@ export class BreadcrumbsComponent implements OnInit {
             label: 'Atendimentos',
             route:
               '/' + this._authentication.role.toLowerCase() + '/atendimentos',
+            active: index === path.length - 1,
+          });
+          break;
+        case 'empresas':
+          routes.push({
+            label: 'Empresas',
+            route: null,
             active: index === path.length - 1,
           });
           break;

@@ -11,6 +11,8 @@ public class MessageUtils {
     public static final String ARGUMENT_NOT_VALID = "Parâmetros inválidos!";
     public static final String ATENDIMENTO_NOT_FOUND = "Atendimento não encontrado!";
     public static final String ATENDIMENTO_NULL = "Atendimento nulo!";
+    public static final String EMPRESA_NOT_FOUND = "Empresa não encontrada!";
+    public static final String EMPRESA_NULL = "Empresa nula!";
     public static final String EXAME_NOT_FOUND = "Exame não encontrado!";
     public static final String EXAME_NULL = "Exame nulo!";
     public static final String FEIRA_ADOCAO_NOT_FOUND = "Feira de adoção não encontrada!";

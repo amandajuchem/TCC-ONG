@@ -72,10 +72,6 @@ public class ExameService implements AbstractService<Exame, ExameDTO> {
             throw new ValidationException(MessageUtils.EXAME_NULL);
         }
 
-        validateNome(exame);
-    }
-
-    private void validateNome(Exame exame) {
         repository.findByNomeIgnoreCase(exame.getNome())
                 .ifPresent(existingExame -> {
                     if (!existingExame.equals(exame)) {
