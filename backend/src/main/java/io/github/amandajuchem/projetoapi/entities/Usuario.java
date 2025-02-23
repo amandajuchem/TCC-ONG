@@ -1,14 +1,13 @@
 package io.github.amandajuchem.projetoapi.entities;
 
 import io.github.amandajuchem.projetoapi.enums.Setor;
-import jakarta.persistence.*;
-import jakarta.validation.Valid;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.*;
 import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,19 +16,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-@Data
-@SuperBuilder
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "tb_usuarios")
 public class Usuario extends AbstractEntity implements UserDetails {
 
     @NotEmpty
-    @Column(name = "nome", length = 100)
+    @Column(name = "nome", length = 100, unique = true)
     private String nome;
 
     @CPF
-    @Column(name = "cpf", length = 11)
+    @Column(name = "cpf", length = 11, unique = true)
     private String cpf;
 
     @NotEmpty
@@ -44,10 +44,6 @@ public class Usuario extends AbstractEntity implements UserDetails {
     @Column(name = "setor", length = 20)
     @Enumerated(EnumType.STRING)
     private Setor setor;
-
-    @Valid
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    private Imagem foto;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -82,10 +78,5 @@ public class Usuario extends AbstractEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return status;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return super.equals(o);
     }
 }

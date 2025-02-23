@@ -1,0 +1,31 @@
+<app-breadcrumbs *ngIf="!isLoading"></app-breadcrumbs>
+
+<mat-card>
+  <mat-card-header>
+    <div class="mat-card-header-text">
+      <div class="text-center">
+        <h2 class="m-0">{{ animal ? animal.nome : "Cadastrar Animal" }}</h2>
+      </div>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content class="p-3">
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+      <mat-tab label="Informações">
+        <ng-template matTabContent>
+          <app-animal-informacoes></app-animal-informacoes>
+        </ng-template>
+      </mat-tab>
+      <mat-tab label="Ficha Médica" *ngIf="animal">
+        <ng-template matTabContent>
+          <app-animal-ficha-medica></app-animal-ficha-medica>
+        </ng-template>
+      </mat-tab>
+      <mat-tab label="Adoções" *ngIf="animal">
+        <ng-template matTabContent>
+          <app-animal-adocoes></app-animal-adocoes>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card-content>
+</mat-card>

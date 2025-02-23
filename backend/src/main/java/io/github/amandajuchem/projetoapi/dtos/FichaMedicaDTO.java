@@ -6,11 +6,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-/**
- * The FichaMedicaDTO class represents a Data Transfer Object (DTO) for FichaMedica entities.
- * It provides a simplified view of a FichaMedica object for use in API responses.
- * This class implements the Serializable interface.
- */
 public record FichaMedicaDTO(
         UUID id,
         LocalDateTime createdDate,
@@ -21,12 +16,6 @@ public record FichaMedicaDTO(
         Boolean castrado
 ) implements Serializable {
 
-    /**
-     * Creates a new FichaMedicaDTO instance based on the provided FichaMedica object.
-     *
-     * @param fichaMedica The FichaMedica object to convert to FichaMedicaDTO.
-     * @return The FichaMedicaDTO representing the provided FichaMedica object.
-     */
     public static FichaMedicaDTO toDTO(FichaMedica fichaMedica) {
 
         return new FichaMedicaDTO(

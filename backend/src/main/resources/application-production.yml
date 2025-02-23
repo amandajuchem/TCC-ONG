@@ -6,22 +6,16 @@ app:
 
 spring:
   datasource:
-    driver-class-name: org.h2.Driver
-    password: projetoapi
-    url: jdbc:h2:file:./data/database/database
-    username: projetoapi
-  h2:
-    console:
-      enabled: true
-      path: /database/h2-console
-      settings:
-        web-allow-others: true
+    url: ${POSTGRES_URL}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: validate
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     show-sql: false
   servlet:

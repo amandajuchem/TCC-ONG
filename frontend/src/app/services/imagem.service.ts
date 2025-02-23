@@ -11,7 +11,7 @@ export class ImagemService {
 
     if (image) {
 
-      return new Promise((resolve, reject) => {
+      return new Promise<any>((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(image);
         reader.onload = () => resolve(reader.result);

@@ -22,13 +22,21 @@ public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
     Optional<Usuario> findByCpf(String cpf);
 
     /**
+     * Retrieves a user by name case-insensitive.
+     *
+     * @param nome The name of the user.
+     * @return An Optional containing the user entity if found, or an empty Optional if not found.
+     */
+    Optional<Usuario> findByNomeIgnoreCase(String nome);
+
+    /**
      * Search for users by value.
      *
      * @param value The value to search for (name, CPF, or setor) case-insensitive.
      * @param page  The pageable object specifying the page information.
      * @return A page of user entities matching the search criteria.
      */
-    @Query(value = "SELECT u FROM tb_usuarios AS u " +
+    @Query("SELECT u FROM tb_usuarios AS u " +
             "WHERE upper(u.nome) LIKE upper(concat('%', ?1, '%')) " +
             "OR u.cpf LIKE concat('%', ?1, '%') " +
             "OR upper(u.setor) LIKE upper(concat('%', ?1, '%'))")

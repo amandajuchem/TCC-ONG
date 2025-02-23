@@ -1,7 +1,9 @@
 package io.github.amandajuchem.projetoapi.configurations;
 
+import io.github.amandajuchem.projetoapi.entities.Empresa;
 import io.github.amandajuchem.projetoapi.entities.Usuario;
 import io.github.amandajuchem.projetoapi.enums.Setor;
+import io.github.amandajuchem.projetoapi.services.EmpresaService;
 import io.github.amandajuchem.projetoapi.services.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -18,7 +20,8 @@ import java.io.File;
 @RequiredArgsConstructor
 public class ApplicationConfiguration implements CommandLineRunner {
 
-    private final UsuarioService service;
+    private final EmpresaService empresaService;
+    private final UsuarioService usuarioService;
 
     /**
      * Runs the application configuration.
@@ -27,8 +30,9 @@ public class ApplicationConfiguration implements CommandLineRunner {
      */
     @Override
     public void run(String... args) {
-        checkDefaultUsuario();
         createFolders();
+        checkDefaultUsuario();
+        checkDefaultEmpresa();
     }
 
     /**
@@ -49,6 +53,17 @@ public class ApplicationConfiguration implements CommandLineRunner {
         }
     }
 
+    /**
+     * Checks if a default Empresa exists, and if not, saves a default one.
+     */
+    private void checkDefaultEmpresa() {
+
+        final var empresasCount = empresaService.findAll(0, 10, "nome", "asc").getTotalElements();
+        
+        if (empresasCount == 0) {
+            saveDefaultEmpresa();
+        }
+    }
 
     /**
      * Checks if a default Usuario exists, and if not, saves a default one.
@@ -58,12 +73,25 @@ public class ApplicationConfiguration implements CommandLineRunner {
         final var usuario = new Usuario();
 
         try {
-            final var usuarioDTO = service.findByCpf("03129686550");
+            final var usuarioDTO = usuarioService.findByCpf("03129686550");
             BeanUtils.copyProperties(usuarioDTO, usuario);
             saveDefaultUsuario(usuario);
         } catch (Exception ex) {
             saveDefaultUsuario(usuario);
         }
+    }
+
+    /**
+     * Saves a default Empresa with predefined values.
+     */
+    private void saveDefaultEmpresa() {
+
+        final var empresa = new Empresa();
+
+        empresa.setNome("NOME DA EMPRESA");
+        empresa.setCnpj("00000000000000");
+
+        empresaService.save(empresa);
     }
 
     /**
@@ -79,6 +107,6 @@ public class ApplicationConfiguration implements CommandLineRunner {
         usuario.setSetor(Setor.ADMINISTRACAO);
         usuario.setStatus(true);
 
-        service.save(usuario);
+        usuarioService.save(usuario);
     }
 }

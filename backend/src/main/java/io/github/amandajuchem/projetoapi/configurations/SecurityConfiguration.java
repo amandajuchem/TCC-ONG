@@ -79,7 +79,7 @@ public class SecurityConfiguration {
 
         return http
                 .authorizeHttpRequests(requests -> {
-                    requests.requestMatchers(HttpMethod.GET, "/imagens/**").permitAll();
+                    requests.requestMatchers(HttpMethod.GET, "/arquivos/**").permitAll();
                     requests.requestMatchers(HttpMethod.POST, "/auth/token").permitAll();
                     requests.anyRequest().authenticated();
                 })

@@ -44,6 +44,12 @@ export class MessageUtils {
     UPDATE_SUCCESS: `Dados do atendimento atualizados com sucesso! `,
   };
 
+  static EMPRESA = {
+    GET_FAIL: `${MessageUtils.ERROR_PREFIX} obter os dados da empresa! Por favor, contate o suporte técnico! `,
+    UPDATE_FAIL: `${MessageUtils.ERROR_PREFIX} atualizar os dados da empresa! `,
+    UPDATE_SUCCESS: `Dados da empresa atualizados com sucesso! `,
+  }
+
   static EXAME = {
     LIST_GET_FAIL: `${MessageUtils.ERROR_PREFIX} obter a lista de exames! Por favor, contate o suporte técnico! `,
     DELETE_FAIL: `${MessageUtils.ERROR_PREFIX} excluir o exame! `,

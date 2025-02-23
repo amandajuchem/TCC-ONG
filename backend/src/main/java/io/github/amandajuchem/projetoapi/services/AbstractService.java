@@ -63,7 +63,6 @@ public interface AbstractService<T, DTO> {
      * Validates an object.
      *
      * @param object the object to be validated.
-     * @return true if the object is valid.
      */
-    boolean validate(T object);
+    void validate(T object);
 }

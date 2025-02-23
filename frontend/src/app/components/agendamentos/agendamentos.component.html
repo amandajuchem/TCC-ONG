@@ -1,0 +1,220 @@
+<app-breadcrumbs></app-breadcrumbs>
+
+<div class="mb-3">
+  <div class="row">
+    <div class="col-12">
+      <mat-card>
+        <mat-card-header>
+          <div class="mat-card-header-text">
+            <div class="text-center">
+              <h2 class="m-0">Agendamentos</h2>
+            </div>
+          </div>
+        </mat-card-header>
+
+        <mat-card-content class="p-3">
+          <div class="row">
+            <div class="col-12 col-md-3 mb-3 mb-md-0">
+              <mat-form-field
+                appearance="outline"
+                class="w-100"
+                style="margin-bottom: -1.25em"
+              >
+                <mat-label>Buscar</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="filterDate"
+                  [matDatepicker]="pickerDataHora"
+                  placeholder="Data"
+                  readonly
+                />
+                <mat-datepicker-toggle
+                  matIconSuffix
+                  [for]="pickerDataHora"
+                ></mat-datepicker-toggle>
+                <mat-datepicker
+                  #pickerDataHora
+                  (closed)="search('date')"
+                ></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <div class="col-12 col-md-7 mb-3 mb-md-0">
+              <mat-form-field
+                appearance="outline"
+                class="w-100"
+                style="margin-bottom: -1.25em"
+              >
+                <mat-label>Buscar</mat-label>
+                <input
+                  type="text"
+                  matInput
+                  placeholder="Animal ou Veterinário"
+                  [(ngModel)]="filterString"
+                  (keyup.enter)="search('string')"
+                />
+                <button mat-icon-button matSuffix (click)="search('string')">
+                  <mat-icon>search</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+
+            <div class="col-12 col-md-2">
+              <button
+                mat-button
+                class="bg-success text-white w-100"
+                title="Cadastrar"
+                style="min-height: 56px"
+                (click)="add()"
+              >
+                Cadastrar
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<div class="mb-3">
+  <div
+    class="row"
+    [hidden]="(dataSource && dataSource.data.length == 0) || isLoadingResults"
+  >
+    <div class="col-12">
+      <mat-card>
+        <mat-card-content>
+          <div class="table-responsive">
+            <table
+              mat-table
+              [dataSource]="dataSource"
+              class="w-100 border"
+              matSort
+              matSortActive="dataHora"
+              matSortDisableClear
+              matSortDirection="desc"
+              (matSortChange)="sortChange()"
+            >
+              <!-- Index Column -->
+              <ng-container matColumnDef="index">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header
+                  class="col-index"
+                >
+                  #
+                </th>
+                <td mat-cell *matCellDef="let agendamento; let i = index">
+                  {{ i + 1 }}
+                </td>
+              </ng-container>
+
+              <!-- Data Hora Column -->
+              <ng-container matColumnDef="dataHora">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header
+                  class="col-dataHora"
+                >
+                  Data
+                </th>
+                <td mat-cell *matCellDef="let agendamento" class="text-center">
+                  {{ agendamento.dataHora | date : "dd/MM/yyyy HH:mm" }}
+                </td>
+              </ng-container>
+
+              <!-- Animal Column -->
+              <ng-container matColumnDef="animal">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header
+                  class="col-animal"
+                >
+                  Animal
+                </th>
+                <td mat-cell *matCellDef="let agendamento" class="text-center">
+                  {{ agendamento.animal.nome }}
+                </td>
+              </ng-container>
+
+              <!-- Veterinario Column -->
+              <ng-container matColumnDef="veterinario">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header
+                  class="col-veterinario"
+                >
+                  Veterinário
+                </th>
+                <td mat-cell *matCellDef="let agendamento" class="text-center">
+                  {{ agendamento.veterinario.nome }}
+                </td>
+              </ng-container>
+
+              <!-- Ação Column -->
+              <ng-container matColumnDef="acao">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header
+                  class="col-acao"
+                >
+                  &nbsp;
+                </th>
+                <td mat-cell *matCellDef="let agendamento">
+                  <div class="row">
+                    <div class="col-12 col-md-6 my-3 my-md-0">
+                      <button
+                        mat-button
+                        title="Editar"
+                        class="bg-secondary text-white w-100"
+                        (click)="update(agendamento)"
+                      >
+                        Editar
+                      </button>
+                    </div>
+
+                    <div class="col-12 col-md-6 mb-3 mb-md-0">
+                      <button
+                        mat-button
+                        title="Excluir"
+                        class="bg-danger text-white w-100"
+                        (click)="delete(agendamento)"
+                      >
+                        Excluir
+                      </button>
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="columns"></tr>
+              <tr mat-row *matRowDef="let row; columns: columns"></tr>
+            </table>
+
+            <mat-paginator
+              [length]="resultsLength"
+              [pageSizeOptions]="[10, 25, 50, 100]"
+              showFirstLastButtons
+              class="w-100"
+              (page)="pageChange()"
+            ></mat-paginator>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="isLoadingResults">
+  <app-loading [hasCard]="true"></app-loading>
+</div>
+
+<div [hidden]="(dataSource && dataSource.data.length > 0) || isLoadingResults">
+  <app-no-content [hasCard]="true"></app-no-content>
+</div>

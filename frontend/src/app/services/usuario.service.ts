@@ -66,21 +66,11 @@ export class UsuarioService implements AbstractService<Usuario> {
 
   /**
    * 
-   * @param usuario 
-   * @param foto 
+   * @param usuario
    * @returns 
    */
-  save(usuario: Usuario, foto: any) {
-
-    let formData = new FormData();
-
-    formData.append('usuario', new Blob([JSON.stringify(usuario)], { type: 'application/json' }));
-
-    if (foto) {
-      formData.append('foto', new Blob([foto], { type: 'multipart/form-data' }), 'foto.png');
-    }
-
-    return this._http.post<Usuario>(this._baseURL, formData);
+  save(usuario: Usuario) {
+    return this._http.post<Usuario>(this._baseURL, usuario);
   }
 
   /**
@@ -120,16 +110,7 @@ export class UsuarioService implements AbstractService<Usuario> {
    * @param foto 
    * @returns 
    */
-  update(usuario: Usuario, foto: any) {
-
-    let formData = new FormData();
-
-    formData.append('usuario', new Blob([JSON.stringify(usuario)], { type: 'application/json' }));
-
-    if (foto) {
-      formData.append('foto', new Blob([foto], { type: 'multipart/form-data' }), 'foto.png');
-    }
-
-    return this._http.put<Usuario>(this._baseURL + '/' + usuario.id, formData);
+  update(usuario: Usuario) {
+    return this._http.put<Usuario>(this._baseURL + '/' + usuario.id, usuario);
   }
 }

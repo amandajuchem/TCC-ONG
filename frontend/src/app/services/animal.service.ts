@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 import { Animal } from '../entities/animal';
 import { Page } from '../entities/page';
 import { AbstractService } from './abstract-service';
+import { FileUtils } from '../utils/file-utils';
 
 @Injectable({
   providedIn: 'root'
@@ -71,15 +72,7 @@ export class AnimalService implements AbstractService<Animal> {
    * @returns
    */
   save(animal: Animal, foto: any) {
-
-    const formData = new FormData();
-
-    formData.append('animal', new Blob([JSON.stringify(animal)], { type: 'application/json' }));
-
-    if (foto) {
-      formData.append('foto', new Blob([foto], { type: 'multipart/form-data' }), 'foto.png');
-    }
-
+    const formData = this._handlerAnimal(animal, foto);
     return this._http.post<Animal>(this._baseURL, formData);
   }
 
@@ -121,15 +114,19 @@ export class AnimalService implements AbstractService<Animal> {
    * @returns
    */
   update(animal: Animal, foto: any) {
+    const formData = this._handlerAnimal(animal, foto);
+    return this._http.put<Animal>(this._baseURL + '/' + animal.id, formData);
+  }
 
+  private _handlerAnimal(animal: Animal, foto: any) {
     const formData = new FormData();
 
     formData.append('animal', new Blob([JSON.stringify(animal)], { type: 'application/json' }));
 
     if (foto) {
-      formData.append('foto', new Blob([foto], { type: 'multipart/form-data' }), 'foto.png');
+      formData.append('foto', new Blob([foto], { type: 'multipart/form-data' }), 'foto.' + FileUtils.getExtension(foto));
     }
 
-    return this._http.put<Animal>(this._baseURL + '/' + animal.id, formData);
+    return formData;
   }
 }

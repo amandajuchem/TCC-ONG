@@ -6,13 +6,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.*;
 
-@Data
-@SuperBuilder
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "tb_observacoes")
@@ -26,9 +24,4 @@ public class Observacao extends AbstractEntity {
     @JoinColumn(name = "tutor_id")
     @JsonBackReference("referenceObservacaoTutor")
     private Tutor tutor;
-
-    @Override
-    public boolean equals(Object o) {
-        return super.equals(o);
-    }
 }

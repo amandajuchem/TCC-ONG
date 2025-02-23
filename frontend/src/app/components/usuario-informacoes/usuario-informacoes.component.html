@@ -1,0 +1,103 @@
+<form [formGroup]="form" *ngIf="form" class="overflow-hidden pt-3">
+  <div class="mb-3">
+    <div class="row">
+      <div class="col-12">
+        <div class="text-center">
+          <img src="assets/images/usuarios.png" width="128px" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="nome" />
+        <mat-error *ngIf="hasError('nome')">{{
+          getErrorMessage("nome")
+        }}</mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12 col-md-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>CPF</mat-label>
+        <input matInput formControlName="cpf" mask="CPF_CNPJ" />
+        <mat-error *ngIf="hasError('cpf')">{{
+          getErrorMessage("cpf")
+        }}</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="col-12 col-md-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Senha</mat-label>
+        <input
+          matInput
+          formControlName="senha"
+          [type]="hide ? 'password' : 'text'"
+        />
+        <button mat-icon-button matSuffix type="button" (click)="hide = !hide">
+          <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+        </button>
+        <mat-error *ngIf="hasError('senha')">{{
+          getErrorMessage("senha")
+        }}</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="col-12 col-md-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Setor</mat-label>
+        <mat-select formControlName="setor">
+          <mat-option value="ADMINISTRACAO">Administração</mat-option>
+          <mat-option value="FUNCIONARIO">Funcionário</mat-option>
+          <mat-option value="VETERINARIO">Veterinário</mat-option>
+        </mat-select>
+        <mat-error *ngIf="hasError('setor')">{{
+          getErrorMessage("setor")
+        }}</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="col-12 col-md-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Situação</mat-label>
+        <mat-select formControlName="status">
+          <mat-option [value]="true">Ativo</mat-option>
+          <mat-option [value]="false">Inativo</mat-option>
+        </mat-select>
+        <mat-error *ngIf="hasError('status')">{{
+          getErrorMessage("status")
+        }}</mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="text-end">
+        <button
+          mat-button
+          title="Salvar"
+          class="bg-success text-white px-4 me-3"
+          (click)="submit()"
+        >
+          Salvar
+        </button>
+
+        <button
+          mat-button
+          title="Voltar"
+          class="bg-secondary text-white px-4"
+          (click)="redirectToUsuarioList()"
+        >
+          Voltar
+        </button>
+      </div>
+    </div>
+  </div>
+</form>

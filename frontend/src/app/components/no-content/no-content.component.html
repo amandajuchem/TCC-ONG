@@ -1,0 +1,17 @@
+<div *ngIf="hasCard">
+  <mat-card>
+    <mat-card-content>
+      <div class="text-center">
+        <img src="/assets/images/nao-encontrado.png" width="100px" />
+        <p class="mt-3 mb-0">Não há dados a serem exibidos!</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<div *ngIf="!hasCard">
+  <div class="text-center">
+    <img src="/assets/images/nao-encontrado.png" width="100px" />
+    <p class="mt-3 mb-0">Não há dados a serem exibidos!</p>
+  </div>
+</div>

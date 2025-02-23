@@ -9,11 +9,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-/**
- * The AtendimentoDTO class represents a Data Transfer Object (DTO) for Atendimento entities.
- * It provides a simplified view of an Atendimento object for use in API responses.
- * This class implements the Serializable interface.
- */
 public record AtendimentoDTO(
         UUID id,
         LocalDateTime createdDate,
@@ -24,22 +19,15 @@ public record AtendimentoDTO(
         Motivo motivo,
         String diagnostico,
         String posologia,
-        Set<ImagemDTO> documentos,
         AnimalDTO animal,
         UsuarioDTO veterinario,
-        Set<ExameDTO> exames
+        Set<ExameRealizadoDTO> examesRealizados
 ) implements Serializable {
 
-    /**
-     * Creates a new AtendimentoDTO instance based on the provided Atendimento object.
-     *
-     * @param atendimento The Atendimento object to convert to AtendimentoDTO.
-     * @return The AtendimentoDTO representing the provided Atendimento object.
-     */
     public static AtendimentoDTO toDTO(Atendimento atendimento) {
 
         return new AtendimentoDTO(
-            atendimento.getId(),
+                atendimento.getId(),
                 atendimento.getCreatedDate(),
                 atendimento.getLastModifiedDate(),
                 atendimento.getCreatedByUser(),
@@ -48,10 +36,9 @@ public record AtendimentoDTO(
                 atendimento.getMotivo(),
                 atendimento.getDiagnostico(),
                 atendimento.getPosologia(),
-                atendimento.getDocumentos() != null ? atendimento.getDocumentos().stream().map(d -> ImagemDTO.toDTO(d)).collect(Collectors.toSet()) : null,
                 atendimento.getAnimal() != null ? AnimalDTO.toDTO(atendimento.getAnimal()) : null,
                 atendimento.getVeterinario() != null ? UsuarioDTO.toDTO(atendimento.getVeterinario()) : null,
-                atendimento.getExames() != null ? atendimento.getExames().stream().map(e -> ExameDTO.toDTO(e)).collect(Collectors.toSet()) : null
+                atendimento.getExamesRealizados() != null ? atendimento.getExamesRealizados().stream().map(ExameRealizadoDTO::toDTO).collect(Collectors.toSet()) : null
         );
     }
 }

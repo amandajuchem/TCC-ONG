@@ -3,6 +3,7 @@ package io.github.amandajuchem.projetoapi.dtos;
 import io.github.amandajuchem.projetoapi.entities.Adocao;
 import io.github.amandajuchem.projetoapi.enums.Local;
 import io.github.amandajuchem.projetoapi.enums.LocalAdocao;
+import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -10,11 +11,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-/**
- * The AdocaoDTO class represents a Data Transfer Object (DTO) for Adocao entities.
- * It provides a simplified view of an Adocao object for use in API responses.
- * This class implements the Serializable interface.
- */
 public record AdocaoDTO(
         UUID id,
         LocalDateTime createdDate,
@@ -27,15 +23,16 @@ public record AdocaoDTO(
         Boolean valeCastracao,
         AnimalDTO animal,
         TutorDTO tutor,
-        Set<ImagemDTO> termoResponsabilidade
+        FeiraAdocaoDTO feiraAdocao,
+        Set<ArquivoDTO> termoResponsabilidade
 ) implements Serializable {
 
-    /**
-     * Creates a new AdocaoDTO instance based on the provided adoption object.
-     *
-     * @param adocao The adoption object to convert to AdocaoDTO.
-     * @return The AdocaoDTO representing the provided adoption object.
-     */
+    public static Adocao toAdocao(AdocaoDTO adocaoDTO) {
+        final var adocao = new Adocao();
+        BeanUtils.copyProperties(adocaoDTO, adocao);
+        return adocao;
+    }
+
     public static AdocaoDTO toDTO(Adocao adocao) {
 
         return new AdocaoDTO(
@@ -50,7 +47,8 @@ public record AdocaoDTO(
                 adocao.getValeCastracao(),
                 adocao.getAnimal() != null ? AnimalDTO.toDTO(adocao.getAnimal()) : null,
                 adocao.getTutor() != null ? TutorDTO.toDTO(adocao.getTutor()) : null,
-                adocao.getTermoResponsabilidade() != null ? adocao.getTermoResponsabilidade().stream().map(ImagemDTO::toDTO).collect(Collectors.toSet()) : null
+                adocao.getFeiraAdocao() != null ? FeiraAdocaoDTO.toDTO(adocao.getFeiraAdocao()) : null,
+                adocao.getTermoResponsabilidade() != null ? adocao.getTermoResponsabilidade().stream().map(ArquivoDTO::toDTO).collect(Collectors.toSet()) : null
         );
     }
 }

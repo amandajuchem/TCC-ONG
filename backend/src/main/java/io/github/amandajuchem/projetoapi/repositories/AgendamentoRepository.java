@@ -22,8 +22,10 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, UUID> 
      * @param pageable The pageable object specifying the page information.
      * @return A page of scheduling entities matching the search criteria.
      */
-    @Query(value = "SELECT ag FROM tb_agendamentos AS ag INNER JOIN ag.animal AS an INNER JOIN ag.veterinario AS v " +
-            "ON cast(ag.dataHora as string) LIKE concat('%', ?1, '%') " +
+    @Query("SELECT ag FROM tb_agendamentos AS ag " +
+            "INNER JOIN ag.animal AS an " +
+            "INNER JOIN ag.veterinario AS v " +
+            "WHERE cast(ag.dataHora as string) LIKE concat('%', ?1, '%') " +
             "OR upper(an.nome) LIKE upper(concat('%', ?1, '%')) " +
             "OR upper(v.nome) LIKE upper(concat('%', ?1, '%'))")
     Page<Agendamento> search(String value, Pageable pageable);
